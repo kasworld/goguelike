@@ -1,16 +1,14 @@
 # 실행하려면 
 
-## 게임플레이 URL (play URL)
+게임플레이 URL (play URL)
+http://goguelike.iptime.org/
 
-    http://goguelike.iptime.org/
+실행가능 서버 다운 (download binary) : linux(debian,ubuntu,mint) 용 
+http://goguelike.iptime.org/download.zip
 
-## 실행가능 서버 다운 (download binary) : linux(debian,ubuntu,mint) 용 
+Source code https://github.com/kasworld/goguelike
 
-    http://goguelike.iptime.org/download.zip
-
-## 소스코드 
-
-    https://github.com/kasworld/goguelike
+Install https://github.com/kasworld/goguelike/INSTALL.md
 
 # 개요 및 특징  
 

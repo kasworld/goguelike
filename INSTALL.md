@@ -34,7 +34,7 @@ tilemaker로 새 타일(merged.json, merged.png)을 만드려면 (있는것을 �
     의 설치가 필요하다. 
 
 
-# 설치 
+# 소스 코드 설치 
 
 goguelike : https://github.com/kasworld/goguelike2
 
