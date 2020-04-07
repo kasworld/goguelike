@@ -8,7 +8,7 @@ http://goguelike.iptime.org/download.zip
 
 Source code https://github.com/kasworld/goguelike
 
-Install https://github.com/kasworld/goguelike/INSTALL.md
+see INSTALL.md
 
 # 개요 및 특징  
 
