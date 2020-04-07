@@ -1,0 +1,18 @@
+Empty empty potion
+MinorHealing heal 10 hp
+MinorHeal heal 10% hp
+MinorActing heal 10 sp 
+MinorAct heal 10% sp
+MajorHealing heal 50 hp 
+MajorHeal heal 50% hp 
+MajorActing heal 50 sp 
+MajorAct heal 50% sp
+GreatHealing heal 100 hp 
+CompleteHeal heal 100% hp 
+GreatActing heal 100 sp
+CompleteAct heal 100% sp
+MinorSpanHealing heal span 1 hp for 300 turn
+MinorSpanActing heal span 1 sp for 300 turn
+MinorSpanVision enhance sight 1 for 300 turn
+MajorSpanVision enhance sight 5 for 300 turn
+PerfectSpanVision enhance sight max for 300 turn

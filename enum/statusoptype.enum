@@ -1,0 +1,21 @@
+None
+AddHP
+AddSP
+AddHPRate
+AddSPRate
+
+ModSight change sight for 1 turn
+
+RndFaction change to random faction 
+IncFaction change to next faction 
+SetFaction set faction to arg
+ResetFaction reset to born faction
+
+NegBias neg bias value
+RotateBiasRight rotate bias right 
+RotateBiasLeft rotate bias left
+
+SetCondition set condition for 1 turn
+
+ForgetFloor forget this floor tiles
+ForgetOneFloor forget visited floor tiles

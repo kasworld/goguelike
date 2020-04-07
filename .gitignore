@@ -1,15 +1,71 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
 *.so
-*.dylib
+*.ini
+*.pprof
+*.mprof
+*.out
+.*~
+*~
+*.logfiles
+*.pid
 
-# Test binary, built with `go test -c`
+*.sublime-project
+*.sublime-workspace
+.vscode
+
+# Folders
+_obj
+_test
+
+# Architecture specific extensions/prefixes
+*.[568vq]
+[568vq].out
+
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+_testmain.go
+
+*.exe
 *.test
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+# project specific
+#*.config
+#*.png
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+#main/data/*
+#main/clientdata/*
+#main/*.png
+#main/*.pprof
+#main/*.mprof
+#main/*.json
+#main/*.tower
+#release/
+#*.prof
+
+bin/*
+
+core
+
+*_gen.go 
+*_gen_test.go
+
+# *.ttf
+# merged.json
+# merged.png
+highscore.json
+towerdata.json
+webclient.js
+webclient.js.gz
+webclient.js.map
+gopherjsclient.js
+gopherjsclient.js.gz
+gopherjsclient.js.map
+*.wasm
+download.zip
+release.sh

@@ -1,0 +1,14 @@
+[
+ [
+  "NewTerrain w=32 h=32 name=Beginning ao=0 po=0 actturnboost=1",
+  "AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
+  "ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
+  "FinalizeTerrain",
+  "AddRecyclerInRoom display=Recycler count=1 message=Recycle",
+  "AddTrapTeleportsInRoom DstFloor=Beginning count=1 message=Teleport",
+  "#end floor define"
+ ],
+ [
+  "#end tower"
+ ]
+]

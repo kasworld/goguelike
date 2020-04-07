@@ -1,0 +1,16 @@
+Invalid make empty packet error
+EnterTower
+EnterFloor
+LeaveFloor
+LeaveTower
+Ageing // floor 
+Death
+ReadyToRebirth
+Rebirthed
+Broadcast // global chat broadcast from web admin
+ObjectList // every turn
+VPTiles // when viewport changed only
+FloorTiles // reconnect , all floor tiles 
+FoundFieldObj // hidden field obj
+ForgetFloor 
+ActivateTrap

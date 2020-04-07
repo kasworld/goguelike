@@ -1,0 +1,23 @@
+None
+PortalInOut portal in/out
+PortalIn portal oneway
+PortalOut portal out only
+PortalAutoIn portal auto in oneway
+RecycleCarryObj recycle carryobj to money
+Teleport teleport somewhere
+
+ForgetFloor forget current floor
+ForgetOneFloor forget some floor you visited
+AlterFaction change faction randomly
+AllFaction rotate all faction
+
+Bleeding hp damage
+Chilly sp damage
+
+Blind sight 0
+Invisible other cannot see you
+Burden overload limit reduced
+Float float in air
+Greasy greasy body
+Drunken random direction
+Sleepy cannot act

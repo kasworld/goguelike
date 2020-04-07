@@ -1,0 +1,12 @@
+None
+AttackTo
+AttackedFrom
+Kill
+KilledBy
+DamagedByTile
+DeadByTile
+HPDamageFromTrap
+SPDamageFromTrap
+DropCarryObj
+DropMoney
+DropMoneyInsteadOfCarryObj

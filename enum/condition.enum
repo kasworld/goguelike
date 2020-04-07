@@ -1,0 +1,7 @@
+Blind sight 0, your attack miss 50%
+Invisible other ao cannot see you, attack to you miss 50%
+Burden weight limit reduced
+Float  no pickup, no interact to fieldobj, overload half, no slip on slippery tile
+Greasy drop equiped carryobj randomly
+Drunken move/attack dir changed randomly
+Sleep cannot act except killself

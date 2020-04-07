@@ -1,0 +1,38 @@
+Empty empty scroll 
+FloorMap reveal all tile in current floor 
+Teleport teleport random in floor
+
+FactionRnd change faction random
+FactionNext change to next faction
+FactionBorn change born faction
+
+FactionBlack change faction to Black
+FactionMaroon change faction to Maroon
+FactionRed change faction to Red
+FactionGreen change faction to Green
+FactionOlive change faction to Olive
+FactionDarkOrange change faction to DarkOrange
+FactionLime change faction to Lime
+FactionChartreuse change faction to Chartreuse
+FactionYellow change faction to Yellow
+FactionNavy change faction to Navy
+FactionPurple change faction to Purple
+FactionDeepPink change faction to DeepPink
+FactionTeal change faction to Teal
+FactionSalmon change faction to Salmon
+FactionSpringGreen change faction to SpringGreen
+FactionLightGreen change faction to LightGreen
+FactionKhaki change faction to Khaki
+FactionBlue change faction to Blue
+FactionDarkViolet change faction to DarkViolet
+FactionMagenta change faction to Magenta
+FactionDodgerBlue change faction to DodgerBlue
+FactionMediumSlateBlue change faction to MediumSlateBlue
+FactionViolet change faction to Violet
+FactionCyan change faction to Cyan
+FactionAquamarine change faction to Aquamarine
+FactionWhite change faction to White
+
+BiasNeg change bias +/- to -/+
+BiasRotateR rotate bias element right, RGB to BRG 
+BiasRotateL rotate bias element left, RGB to GBR 

@@ -1,0 +1,26 @@
+Invalid make empty packet error
+Login
+Heartbeat
+Chat
+AchieveInfo
+Rebirth
+Meditate
+KillSelf
+Move
+Attack
+Pickup
+Drop
+Equip
+UnEquip
+DrinkPotion
+ReadScroll
+Recycle
+EnterPortal
+MoveFloor
+ActTeleport
+AdminTowerCmd
+AdminFloorCmd
+AdminActiveObjCmd
+AdminFloorMove
+AdminTeleport
+AIPlay

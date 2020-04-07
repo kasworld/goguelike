@@ -1,0 +1,13 @@
+/var/tmp/goguelike*/*.log {
+    #daily
+    rotate 3
+    size 1G
+    missingok
+    nocompress
+    notifempty
+    # create 0640 www-data adm
+    sharedscripts
+    postrotate
+        for aa in /var/tmp/goguelike*.pid ; do kill -USR1 `cat ${aa}` ; done
+    endscript
+}

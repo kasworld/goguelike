@@ -1,0 +1,8 @@
+[
+    [
+        "NewTerrain w=1024 h=1024 name=Floor47 ao=0 po=0",
+        "AddRoomsRand tile=Soil terrace=false align=1 mean=8 stddev=2 repeat=103 min=6",
+        "ConnectRooms tile=Soil connect=1 allconnect=true diagonal=false",
+        "FinalizeTerrain"
+]
+]
