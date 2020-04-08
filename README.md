@@ -1,6 +1,9 @@
 # 실행하려면 
 
-게임플레이 URL (play URL)
+게임플레이 URL (play URL) chrome browser 를 추천 합니다. 
+
+( OS 상관없이  web socket, webassembly, unicode 를 지원하는 브라우져면 됩니다. )
+
 http://goguelike.iptime.org/
 
 실행가능 서버 다운 (download binary) : linux(debian,ubuntu,mint) 용 
