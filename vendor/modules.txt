@@ -1,0 +1,125 @@
+# github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+## explicit
+github.com/golang/freetype/raster
+github.com/golang/freetype/truetype
+# github.com/gorilla/websocket v1.4.2
+## explicit
+github.com/gorilla/websocket
+# github.com/kasworld/actjitter v0.0.0-20191107220721-3c533f25bbd7
+## explicit
+github.com/kasworld/actjitter
+# github.com/kasworld/actpersec v0.0.0-20191019021204-8c24cd60715c
+## explicit
+github.com/kasworld/actpersec
+# github.com/kasworld/argdefault v0.0.0-20191109010013-6dd84fb12d6f
+## explicit
+github.com/kasworld/argdefault
+# github.com/kasworld/configutil v0.0.0-20191216014610-0147549c8f10
+## explicit
+github.com/kasworld/configutil
+# github.com/kasworld/direction v0.0.0-20200404021744-bc9d917fa31b
+## explicit
+github.com/kasworld/direction
+# github.com/kasworld/durjitter v0.0.0-20190506030451-c6b107ee04f5
+## explicit
+github.com/kasworld/durjitter
+# github.com/kasworld/findnear v0.0.0-20190507055216-d04f3f02788f
+## explicit
+github.com/kasworld/findnear
+# github.com/kasworld/fortune v0.0.0-20191213072226-d48d829f9be2
+## explicit
+github.com/kasworld/fortune
+# github.com/kasworld/g2rand v0.0.0-20200315073237-cff14c61a4f0
+## explicit
+github.com/kasworld/g2rand
+# github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888
+## explicit
+github.com/kasworld/go-abs
+# github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93
+## explicit
+github.com/kasworld/go-profile
+# github.com/kasworld/gowasmlib v0.0.0-20200306023233-6d534fae80d1
+## explicit
+github.com/kasworld/gowasmlib/jslog
+github.com/kasworld/gowasmlib/textncount
+github.com/kasworld/gowasmlib/wasmcookie
+github.com/kasworld/gowasmlib/wrapspan
+# github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025
+## explicit
+github.com/kasworld/hitrate
+# github.com/kasworld/htmlcolors v0.0.0-20200329020336-66b48ba18ef9
+## explicit
+github.com/kasworld/htmlcolors
+# github.com/kasworld/ifop v0.0.0-20190506032142-30f140457f43
+## explicit
+github.com/kasworld/ifop
+# github.com/kasworld/intervalduration v0.0.0-20191119062840-82a720a6b837
+## explicit
+github.com/kasworld/intervalduration
+# github.com/kasworld/launcherlib v0.0.0-20190513092519-5ce52b882f53
+## explicit
+github.com/kasworld/launcherlib
+# github.com/kasworld/log v0.0.0-20191101013826-9bd2997eac10
+## explicit
+github.com/kasworld/log/logdestination_file
+github.com/kasworld/log/logdestination_stdio
+github.com/kasworld/log/logdestinationgroup
+github.com/kasworld/log/logdestinationi
+github.com/kasworld/log/logflagi
+github.com/kasworld/log/logflags
+# github.com/kasworld/multirun v0.0.0-20191216055936-decb66787001
+## explicit
+github.com/kasworld/multirun
+# github.com/kasworld/prettystring v0.0.0-20200313054137-8305061037e7
+## explicit
+github.com/kasworld/prettystring
+# github.com/kasworld/primenum v0.0.0-20190503100306-1fcdbc6a31a4
+## explicit
+github.com/kasworld/primenum
+# github.com/kasworld/rangestat v0.0.0-20190508031937-d4380fb43f7a
+## explicit
+github.com/kasworld/rangestat
+# github.com/kasworld/recordduration v0.0.0-20190924031050-aa5da0a840f6
+## explicit
+github.com/kasworld/recordduration
+# github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be
+## explicit
+github.com/kasworld/rect
+# github.com/kasworld/signalhandle v0.0.0-20200408024356-5eb43fdac632
+## explicit
+github.com/kasworld/signalhandle
+# github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a
+## explicit
+github.com/kasworld/uuidstr
+# github.com/kasworld/version v0.0.0-20190507052028-3d2e657a23f8
+## explicit
+github.com/kasworld/version
+# github.com/kasworld/walk2d v0.0.0-20190508054438-4e630929cb37
+## explicit
+github.com/kasworld/walk2d
+# github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f
+## explicit
+github.com/kasworld/weblib
+github.com/kasworld/weblib/retrylistenandserve
+github.com/kasworld/weblib/webprofile
+# github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62
+## explicit
+github.com/kasworld/wrapper
+# github.com/nightlyone/lockfile v1.0.0
+## explicit
+github.com/nightlyone/lockfile
+# github.com/philhofer/fwd v1.0.0
+## explicit
+github.com/philhofer/fwd
+# github.com/smartystreets/goconvey v1.6.4
+## explicit
+# github.com/tinylib/msgp v1.1.2
+## explicit
+github.com/tinylib/msgp/msgp
+# golang.org/x/image v0.0.0-20200119044424-58c23975cae1
+## explicit
+golang.org/x/image/font
+golang.org/x/image/math/fixed
+# gopkg.in/ini.v1 v1.55.0
+## explicit
+gopkg.in/ini.v1

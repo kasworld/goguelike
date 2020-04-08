@@ -1,0 +1,2 @@
+# ifop
+ternary operation functions

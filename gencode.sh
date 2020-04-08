@@ -87,7 +87,7 @@ GenMSGP "enum/tile_flag" tile_flag_gen
 GenMSGP "enum/condition_flag" condition_flag_gen
 
 ################################################################################
-GenMSGP "../htmlcolors" color24
+GenMSGP "vendor/github.com/kasworld/htmlcolors" color24
 
 GenMSGP "protocol_c2t/c2t_error" error_gen
 GenMSGP "protocol_c2t/c2t_idcmd" command_gen
