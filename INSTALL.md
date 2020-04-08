@@ -4,8 +4,6 @@
 
 버전 string 생성시 사용 : sha256sum, awk
 
-release.sh 에서 사용 : 7z, scp, ssh
-
 goimports : 소스 코드 정리, import 해결
 
     go get golang.org/x/tools/cmd/goimports
