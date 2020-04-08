@@ -8,7 +8,9 @@ http://goguelike.iptime.org/download.zip
 
 Source code https://github.com/kasworld/goguelike
 
-see INSTALL.md
+설치 문서 INSTALL.md
+
+지형 스크립트 설명 towerscript.md
 
 # 개요 및 특징  
 
