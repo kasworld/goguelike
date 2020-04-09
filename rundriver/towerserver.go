@@ -35,7 +35,7 @@ func init() {
 }
 
 func printVersion() {
-	fmt.Println("Goguelike2 service tower")
+	fmt.Println("Goguelike service tower")
 	fmt.Println("Build     ", version.GetVersion())
 	fmt.Println("Data      ", gameconst.DataVersion)
 	fmt.Println("Protocol  ", c2t_version.ProtocolVersion)
