@@ -22,7 +22,7 @@ type TextClientConfig struct {
 	SplitLogLevel g2log.LL_Type `argname:""`
 	PidFilename   string        `default:"/tmp/textclient.pid" argname:""`
 
-	ConnectToTower string `default:"goguelike.iptime.org:14101" argname:""`
+	ConnectToTower string `default:"localhost:14101" argname:""`
 	PlayerName     string `default:"Player" argname:""`
 }
 

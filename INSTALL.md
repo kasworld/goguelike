@@ -198,7 +198,7 @@ textclient : debug/test 용 ui없는 client
 
     Usage of ./textclient:
     -ConnectToTower string
-            ConnectToTower (default "goguelike.iptime.org:14101")
+            ConnectToTower (default "localhost:14101")
     -LogDir string
             LogDir (default "/tmp/textclient.logfile")
     -LogLevel uint
