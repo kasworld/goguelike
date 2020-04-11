@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # find -name \*.go ! -name \*_gen.go ! -name \*_string.go ! -name \*_test.go | xargs wc
+# find -name \*.go ! -name \*_gen.go ! -name \*_string.go ! -name \*_test.go ! -path ./vendor/\* | xargs wc
+
 
 DATESTR=`date -Iseconds`
 GITSTR=`git rev-parse HEAD`
