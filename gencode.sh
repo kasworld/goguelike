@@ -14,7 +14,7 @@ genlog -leveldatafile ./g2log/g2log.data -packagename g2log
 cd ..
 
 ################################################################################
-ProtocolT2GFiles="protocol_t2g/t2g_gendata/*.data \
+ProtocolT2GFiles="protocol_t2g/*.enum \
 protocol_t2g/t2g_obj/protocol_noti.go \
 protocol_t2g/t2g_obj/protocol_cmd.go \
 "
@@ -28,7 +28,7 @@ goimports -w .
 cd ..
 
 ################################################################################
-ProtocolC2TFiles="protocol_c2t/c2t_gendata/*.data \
+ProtocolC2TFiles="protocol_c2t/*.enum \
 protocol_c2t/c2t_obj/protocol_objects.go \
 protocol_c2t/c2t_obj/protocol_noti.go \
 protocol_c2t/c2t_obj/protocol_admin.go \
