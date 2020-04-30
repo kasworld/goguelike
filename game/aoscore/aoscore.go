@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/goguelike/enum/factiontype"
 
 	"github.com/kasworld/goguelike/config/leveldata"
-	"github.com/kasworld/goguelike/enum/achievetype_stats"
+	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/uuidstr"
@@ -37,8 +37,8 @@ type ActiveObjScore struct {
 
 	UUID        string
 	NickName    string
-	AchieveStat achievetype_stats.AchieveTypeStat `prettystring:"simple"`
-	ActionStat  c2t_idcmd_stats.CommandIDStat     `prettystring:"simple"`
+	AchieveStat achievetype_vector.AchieveTypeVector `prettystring:"simple"`
+	ActionStat  c2t_idcmd_stats.CommandIDStat        `prettystring:"simple"`
 	Exp         float64
 	Wealth      float64
 	BornFaction factiontype.FactionType

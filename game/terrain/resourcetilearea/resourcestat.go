@@ -11,10 +11,10 @@
 
 package resourcetilearea
 
-import "github.com/kasworld/goguelike/enum/resourcetype_stats"
+import "github.com/kasworld/goguelike/enum/resourcetype_vector"
 
-func (rta ResourceTileArea) CalcStat() *resourcetype_stats.ResourceTypeStat {
-	var rtn resourcetype_stats.ResourceTypeStat
+func (rta ResourceTileArea) CalcStat() *resourcetype_vector.ResourceTypeVector {
+	var rtn resourcetype_vector.ResourceTypeVector
 	for _, xv := range rta {
 		for _, yv := range xv {
 			for i, v := range yv {

@@ -16,10 +16,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/kasworld/goguelike/enum/achievetype_stats"
+	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/aotype"
-	"github.com/kasworld/goguelike/enum/fieldobjacttype_stats"
-	"github.com/kasworld/goguelike/enum/scrolltype_stats"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
@@ -82,15 +82,15 @@ func (ao *ActiveObject) GetInven() gamei.InventoryI {
 	return ao.inven
 }
 
-func (ao *ActiveObject) GetAchieveStat() *achievetype_stats.AchieveTypeStat {
+func (ao *ActiveObject) GetAchieveStat() *achievetype_vector.AchieveTypeVector {
 	return &ao.achieveStat
 }
 
-func (ao *ActiveObject) GetScrollStat() *scrolltype_stats.ScrollTypeStat {
+func (ao *ActiveObject) GetScrollStat() *scrolltype_vector.ScrollTypeVector {
 	return &ao.scrollStat
 }
 
-func (ao *ActiveObject) GetFieldObjActStat() *fieldobjacttype_stats.FieldObjActTypeStat {
+func (ao *ActiveObject) GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector {
 	return &ao.foActStat
 }
 

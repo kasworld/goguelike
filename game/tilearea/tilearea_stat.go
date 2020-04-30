@@ -13,7 +13,7 @@ package tilearea
 
 import (
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/enum/tile_stats"
+	"github.com/kasworld/goguelike/enum/tile_vector"
 )
 
 func (ta TileArea) CalcNotEmptyTileCount() int {
@@ -28,8 +28,8 @@ func (ta TileArea) CalcNotEmptyTileCount() int {
 	return rtn
 }
 
-func (ta TileArea) CalcStat() tile_stats.TileStat {
-	var rtn tile_stats.TileStat
+func (ta TileArea) CalcStat() tile_vector.TileVector {
+	var rtn tile_vector.TileVector
 	for _, xv := range ta {
 		for _, yv := range xv {
 			for i := range rtn {

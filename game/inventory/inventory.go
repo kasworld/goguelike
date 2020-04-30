@@ -16,14 +16,14 @@ import (
 	"sync"
 
 	"github.com/kasworld/goguelike/enum/equipslottype"
-	"github.com/kasworld/goguelike/enum/towerachieve_stats"
+	"github.com/kasworld/goguelike/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 // equip, bag is exclusive
 type Inventory struct {
-	towerAchieveStat *towerachieve_stats.TowerAchieveStat `prettystring:"simple"`
+	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	equipSlot        [equipslottype.EquipSlotType_Count]gamei.EquipObjI
 	mutexBag         sync.RWMutex `prettystring:"hide"`
 	bag              map[string]gamei.CarryingObjectI
@@ -32,7 +32,7 @@ type Inventory struct {
 	poTotalValue     float64
 }
 
-func New(towerAchieveStat *towerachieve_stats.TowerAchieveStat) *Inventory {
+func New(towerAchieveStat *towerachieve_vector.TowerAchieveVector) *Inventory {
 	return &Inventory{
 		bag:              make(map[string]gamei.CarryingObjectI),
 		wallet:           0,

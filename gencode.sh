@@ -50,24 +50,24 @@ echo genenum
 
 
 genenum -typename=Way9Type -packagename=way9type -basedir=enum 
-genenum -typename=ActiveObjType -packagename=aotype -basedir=enum -statstype=int
-genenum -typename=CarryingObjectType -packagename=carryingobjecttype -basedir=enum -statstype=int
-genenum -typename=FieldObjActType -packagename=fieldobjacttype -basedir=enum -statstype=int
+genenum -typename=ActiveObjType -packagename=aotype -basedir=enum -vectortype=int
+genenum -typename=CarryingObjectType -packagename=carryingobjecttype -basedir=enum -vectortype=int
+genenum -typename=FieldObjActType -packagename=fieldobjacttype -basedir=enum -vectortype=int
 genenum -typename=FieldObjDisplayType -packagename=fieldobjdisplaytype -basedir=enum
-genenum -typename=Condition -packagename=condition -basedir=enum -flagtype=uint16 -statstype=int
-genenum -typename=PotionType -packagename=potiontype -basedir=enum -statstype=int
-genenum -typename=ScrollType -packagename=scrolltype -basedir=enum -statstype=int
-genenum -typename=AchieveType -packagename=achievetype -basedir=enum -statstype=float64
-genenum -typename=ResourceType -packagename=resourcetype -basedir=enum -statstype=int
+genenum -typename=Condition -packagename=condition -basedir=enum -flagtype=uint16 -vectortype=int
+genenum -typename=PotionType -packagename=potiontype -basedir=enum -vectortype=int
+genenum -typename=ScrollType -packagename=scrolltype -basedir=enum -vectortype=int
+genenum -typename=AchieveType -packagename=achievetype -basedir=enum -vectortype=float64
+genenum -typename=ResourceType -packagename=resourcetype -basedir=enum -vectortype=int
 genenum -typename=TileOpType -packagename=tileoptype -basedir=enum 
-genenum -typename=EquipSlotType -packagename=equipslottype -basedir=enum -statstype=int
+genenum -typename=EquipSlotType -packagename=equipslottype -basedir=enum -vectortype=int
 genenum -typename=StatusOpType -packagename=statusoptype -basedir=enum
 genenum -typename=TurnResultType -packagename=turnresulttype -basedir=enum
-genenum -typename=Tile -packagename=tile -basedir=enum -flagtype=uint16 -statstype=int
-genenum -typename=TowerAchieve -packagename=towerachieve -basedir=enum -statstype=float64
+genenum -typename=Tile -packagename=tile -basedir=enum -flagtype=uint16 -vectortype=int
+genenum -typename=TowerAchieve -packagename=towerachieve -basedir=enum -vectortype=float64
 genenum -typename=ClientControlType -packagename=clientcontroltype -basedir=enum 
-genenum -typename=FactionType -packagename=factiontype -basedir=enum -statstype=int
-genenum -typename=AIPlan -packagename=aiplan -basedir=enum -statstype=int
+genenum -typename=FactionType -packagename=factiontype -basedir=enum -vectortype=int
+genenum -typename=AIPlan -packagename=aiplan -basedir=enum -vectortype=int
 
 cd enum
 goimports -w .

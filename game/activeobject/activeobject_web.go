@@ -17,11 +17,11 @@ import (
 	"net/http"
 
 	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/enum/achievetype_stats"
+	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/factiontype"
-	"github.com/kasworld/goguelike/enum/fieldobjacttype_stats"
-	"github.com/kasworld/goguelike/enum/potiontype_stats"
-	"github.com/kasworld/goguelike/enum/scrolltype_stats"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike/enum/potiontype_vector"
+	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/game/activeobject/serverai2"
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
@@ -49,7 +49,7 @@ func (ao *ActiveObject) GetActStats() *c2t_idcmd_stats.CommandIDStat {
 	return &ao.aoActionStat
 }
 
-func (ao *ActiveObject) GetPotionStat() *potiontype_stats.PotionTypeStat {
+func (ao *ActiveObject) GetPotionStat() *potiontype_vector.PotionTypeVector {
 	return &ao.potionStat
 }
 
@@ -61,10 +61,10 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	tplIndex, err := template.New(
 		"index").Funcs(
 		c2t_idcmd_stats.IndexFn).Funcs(
-		potiontype_stats.IndexFn).Funcs(
-		scrolltype_stats.IndexFn).Funcs(
-		fieldobjacttype_stats.IndexFn).Funcs(
-		achievetype_stats.IndexFn).Parse(`
+		potiontype_vector.IndexFn).Funcs(
+		scrolltype_vector.IndexFn).Funcs(
+		fieldobjacttype_vector.IndexFn).Funcs(
+		achievetype_vector.IndexFn).Parse(`
 	<html> <head>
 	<title>ActiveObject</title>
 	</head>
@@ -152,38 +152,38 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	<br/>
 	{{with .GetAchieveStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + achievetype_stats.HTML_tableheader + `
+		` + achievetype_vector.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + achievetype_stats.HTML_row + `
+		` + achievetype_vector.HTML_row + `
 		{{end}}
-		` + achievetype_stats.HTML_tableheader + `
+		` + achievetype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
 	{{with .GetPotionStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + potiontype_stats.HTML_tableheader + `
+		` + potiontype_vector.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + potiontype_stats.HTML_row + `
+		` + potiontype_vector.HTML_row + `
 		{{end}}
-		` + potiontype_stats.HTML_tableheader + `
+		` + potiontype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
 	{{with .GetScrollStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + scrolltype_stats.HTML_tableheader + `
+		` + scrolltype_vector.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + scrolltype_stats.HTML_row + `
+		` + scrolltype_vector.HTML_row + `
 		{{end}}
-		` + scrolltype_stats.HTML_tableheader + `
+		` + scrolltype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
 	{{with .GetFieldObjActStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + fieldobjacttype_stats.HTML_tableheader + `
+		` + fieldobjacttype_vector.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + fieldobjacttype_stats.HTML_row + `
+		` + fieldobjacttype_vector.HTML_row + `
 		{{end}}
-		` + fieldobjacttype_stats.HTML_tableheader + `
+		` + fieldobjacttype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
 	{{with .GetActStats}}

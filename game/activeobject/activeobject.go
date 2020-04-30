@@ -21,15 +21,15 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/gamedata"
 	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/enum/achievetype_stats"
+	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/aotype"
 	"github.com/kasworld/goguelike/enum/factiontype"
-	"github.com/kasworld/goguelike/enum/fieldobjacttype_stats"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike/enum/potiontype"
-	"github.com/kasworld/goguelike/enum/potiontype_stats"
+	"github.com/kasworld/goguelike/enum/potiontype_vector"
 	"github.com/kasworld/goguelike/enum/scrolltype"
-	"github.com/kasworld/goguelike/enum/scrolltype_stats"
-	"github.com/kasworld/goguelike/enum/towerachieve_stats"
+	"github.com/kasworld/goguelike/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike/game/activeobject/serverai2"
@@ -71,12 +71,12 @@ type ActiveObject struct {
 	ai          *serverai2.ServerAI     // for server side ai
 	isAIInUse   bool
 
-	towerAchieveStat *towerachieve_stats.TowerAchieveStat      `prettystring:"simple"`
-	achieveStat      achievetype_stats.AchieveTypeStat         `prettystring:"simple"`
-	potionStat       potiontype_stats.PotionTypeStat           `prettystring:"simple"`
-	scrollStat       scrolltype_stats.ScrollTypeStat           `prettystring:"simple"`
-	foActStat        fieldobjacttype_stats.FieldObjActTypeStat `prettystring:"simple"`
-	aoActionStat     c2t_idcmd_stats.CommandIDStat             `prettystring:"simple"`
+	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
+	achieveStat      achievetype_vector.AchieveTypeVector         `prettystring:"simple"`
+	potionStat       potiontype_vector.PotionTypeVector           `prettystring:"simple"`
+	scrollStat       scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
+	foActStat        fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
+	aoActionStat     c2t_idcmd_stats.CommandIDStat                `prettystring:"simple"`
 
 	uuid2VisitArea     *visitarea.ID2VisitArea `prettystring:"simple"`
 	currrentFloor      gamei.FloorI
@@ -108,7 +108,7 @@ type ActiveObject struct {
 func newActiveObj(
 	homefloor gamei.FloorI,
 	l *g2log.LogBase,
-	towerAchieveStat *towerachieve_stats.TowerAchieveStat,
+	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
 
 	ao := &ActiveObject{
@@ -132,7 +132,7 @@ func newActiveObj(
 
 func NewUserActiveObj(homefloor gamei.FloorI, nickname string,
 	l *g2log.LogBase,
-	towerAchieveStat *towerachieve_stats.TowerAchieveStat,
+	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 	conn gamei.ServeClientConnI) *ActiveObject {
 
 	ao := newActiveObj(homefloor, l, towerAchieveStat)
@@ -150,7 +150,7 @@ func NewUserActiveObj(homefloor gamei.FloorI, nickname string,
 
 func NewSystemActiveObj(homefloor gamei.FloorI,
 	l *g2log.LogBase,
-	towerAchieveStat *towerachieve_stats.TowerAchieveStat,
+	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
 	ao := newActiveObj(homefloor, l, towerAchieveStat)
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]

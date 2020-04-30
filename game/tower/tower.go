@@ -24,7 +24,7 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/gamedata"
 	"github.com/kasworld/goguelike/config/towerconfig"
-	"github.com/kasworld/goguelike/enum/towerachieve_stats"
+	"github.com/kasworld/goguelike/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike/game/activeobject"
 	"github.com/kasworld/goguelike/game/aoexpsort"
 	"github.com/kasworld/goguelike/game/aoid2activeobject"
@@ -99,7 +99,7 @@ type Tower struct {
 	// manage session (playing and played)
 	sessionManager *sessionmanager.SessionManager
 
-	towerAchieveStat       *towerachieve_stats.TowerAchieveStat `prettystring:"simple"`
+	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat               *actpersec.ActPerSec                 `prettystring:"simple"`
 	recvStat               *actpersec.ActPerSec                 `prettystring:"simple"`
 	protocolStat           *c2t_statserveapi.StatServeAPI       `prettystring:"simple"`
@@ -138,7 +138,7 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 		notiStat:            c2t_statnoti.New(),
 		errorStat:           c2t_statapierror.New(),
 		towerCmdActStat:     actpersec.New(),
-		towerAchieveStat:    new(towerachieve_stats.TowerAchieveStat),
+		towerAchieveStat:    new(towerachieve_vector.TowerAchieveVector),
 	}
 	tw.sessionID2Conn = sessionid2clientconn.New("",
 		tw.sconfig.ConcurrentConnections, tw.log)
