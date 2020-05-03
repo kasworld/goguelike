@@ -111,7 +111,7 @@ func InitPage() {
 	gInitData = NewInitData()
 	uiTextObj = NewUITextObj()
 	gClientTile = clienttile.New()
-	gameOptions = _gameopt // prevent compiler initialization loop
+	gameOptions = _gameopt // prevent compiler initialize loop
 	gVP2d = viewport2d.New("viewport2DCanvas", gClientTile)
 
 	app := &WasmClient{
@@ -212,6 +212,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 	gameOptions.Register(app)
 	adminCommandButtons.Register(app)
 
+	// option from url arg
 loopOpt:
 	for _, v := range gameOptions.ButtonList {
 		optV := GetQuery().Get(v.IDBase)

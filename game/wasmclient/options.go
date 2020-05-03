@@ -19,7 +19,7 @@ import (
 
 var gameOptions *htmlbutton.HTMLButtonGroup
 
-// prevent compiler initialization loop
+// prevent compiler initialize loop error
 var _gameopt = htmlbutton.NewButtonGroup("Options",
 	[]*htmlbutton.HTMLButton{
 		{"q", "LeftInfo", []string{"LeftInfoOff", "LeftInfoOn"},
