@@ -168,10 +168,6 @@ func (tw *Tower) bytesAPIFn_ReqHeartbeat(
 func (tw *Tower) bytesAPIFn_ReqChat(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -180,12 +176,10 @@ func (tw *Tower) bytesAPIFn_ReqChat(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -207,16 +201,10 @@ func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
-	}
-
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -232,22 +220,16 @@ func (tw *Tower) bytesAPIFn_ReqRebirth(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
-	}
-
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	spacket := &c2t_obj.RspRebirth_data{}
 
-	err := ao.TryRebirth()
+	err = ao.TryRebirth()
 	if err != nil {
 		rhd.ErrorCode = c2t_error.ActionProhibited
 		tw.log.Error("%v", err)
@@ -260,16 +242,10 @@ func (tw *Tower) bytesAPIFn_ReqMeditate(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
-	}
-
 	spacket := &c2t_obj.RspMeditate_data{}
 
 	ao.SetReq2Handle(&aoactreqrsp.Act{
@@ -283,17 +259,11 @@ func (tw *Tower) bytesAPIFn_ReqMeditate(
 func (tw *Tower) bytesAPIFn_ReqKillSelf(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	spacket := &c2t_obj.RspKillSelf_data{}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.KillSelf,
 	})
@@ -306,10 +276,6 @@ func (tw *Tower) bytesAPIFn_ReqKillSelf(
 func (tw *Tower) bytesAPIFn_ReqMove(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -319,12 +285,10 @@ func (tw *Tower) bytesAPIFn_ReqMove(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	spacket := &c2t_obj.RspMove_data{}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.Move,
 		Dir: robj.Dir,
@@ -338,10 +302,6 @@ func (tw *Tower) bytesAPIFn_ReqMove(
 func (tw *Tower) bytesAPIFn_ReqAttack(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -350,12 +310,10 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspAttack_data{}
 
 	ao.SetReq2Handle(&aoactreqrsp.Act{
@@ -371,10 +329,6 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 func (tw *Tower) bytesAPIFn_ReqPickup(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -383,12 +337,10 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspPickup_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Pickup,
@@ -403,10 +355,6 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 func (tw *Tower) bytesAPIFn_ReqDrop(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -415,12 +363,10 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspDrop_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Drop,
@@ -435,10 +381,6 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 func (tw *Tower) bytesAPIFn_ReqEquip(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -447,12 +389,10 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspEquip_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Equip,
@@ -467,10 +407,6 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 func (tw *Tower) bytesAPIFn_ReqUnEquip(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -479,12 +415,10 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspUnEquip_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.UnEquip,
@@ -499,10 +433,6 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -511,12 +441,10 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspDrinkPotion_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.DrinkPotion,
@@ -531,10 +459,6 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 func (tw *Tower) bytesAPIFn_ReqReadScroll(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -543,12 +467,10 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspReadScroll_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.ReadScroll,
@@ -563,10 +485,6 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 func (tw *Tower) bytesAPIFn_ReqRecycle(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -575,12 +493,10 @@ func (tw *Tower) bytesAPIFn_ReqRecycle(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspRecycle_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Recycle,
@@ -595,15 +511,10 @@ func (tw *Tower) bytesAPIFn_ReqRecycle(
 func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	spacket := &c2t_obj.RspEnterPortal_data{}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.EnterPortal,
@@ -617,10 +528,6 @@ func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -629,12 +536,10 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	spacket := &c2t_obj.RspMoveFloor_data{}
 
 	tw.GetReqCh() <- &cmd2tower.FloorMove{
@@ -649,15 +554,10 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 func (tw *Tower) bytesAPIFn_ReqActTeleport(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	spacket := &c2t_obj.RspActTeleport_data{}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.ActTeleport,
@@ -672,11 +572,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
-
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -685,12 +580,10 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminTowerCmd{
 		ActiveObj:  ao,
@@ -707,10 +600,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -719,12 +608,10 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -732,7 +619,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 
 	f := ao.GetCurrentFloor()
 	if f == nil {
-		return rhd, nil, fmt.Errorf("user not in floor %v", c2sc)
+		return rhd, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	f.GetReqCh() <- &cmd2floor.APIAdminCmd2Floor{
@@ -750,10 +637,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -762,12 +645,10 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	return c2t_packet.Header{
 		ErrorCode: ao.DoAdminCmd(robj.Cmd, robj.Arg),
 	}, &c2t_obj.RspAdminActiveObjCmd_data{}, nil
@@ -777,11 +658,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
-
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -790,12 +666,10 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminFloorMove{
 		ActiveObj:  ao,
@@ -812,10 +686,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -828,15 +698,13 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	f := ao.GetCurrentFloor()
 	if f == nil {
-		return rhd, nil, fmt.Errorf("user not in floor %v", c2sc)
+		return rhd, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	f.GetReqCh() <- &cmd2floor.APIAdminTeleport2Floor{
@@ -854,10 +722,6 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
 	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
@@ -866,17 +730,15 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
 	}
-
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	if err := ao.DoAIOnOff(robj.On); err != nil {
-		tw.log.Error("fail to AIOn %v %v", c2sc)
+		tw.log.Error("fail to AIOn %v %v", me)
 	}
 	return rhd, &c2t_obj.RspAIPlay_data{}, nil
 }
