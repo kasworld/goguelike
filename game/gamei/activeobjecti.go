@@ -29,6 +29,7 @@ import (
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 )
 
 type ActiveObjectI interface {
@@ -45,7 +46,7 @@ type ActiveObjectI interface {
 	GetSPRate() float64
 
 	Suspend()
-	Resume(conn ServeClientConnI)
+	Resume(conn *c2t_serveconnbyte.ServeConnByte)
 
 	IsAlive() bool
 
@@ -80,7 +81,7 @@ type ActiveObjectI interface {
 	GetTurnData() aoturndata.ActiveObjTurnData
 	GetBuffManager() *activebuff.BuffManager
 
-	GetClientConn() ServeClientConnI
+	GetClientConn() *c2t_serveconnbyte.ServeConnByte
 	GetActiveObjType() aotype.ActiveObjType
 
 	IsAIUse() bool

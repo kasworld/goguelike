@@ -43,6 +43,7 @@ import (
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/uuidstr"
 )
 
@@ -66,9 +67,9 @@ type ActiveObject struct {
 	nickName    string
 	homefloor   gamei.FloorI
 	aoType      aotype.ActiveObjType
-	bornFaction factiontype.FactionType `prettystring:"simple"`
-	clientConn  gamei.ServeClientConnI  // for clientConn conn
-	ai          *serverai2.ServerAI     // for server side ai
+	bornFaction factiontype.FactionType          `prettystring:"simple"`
+	clientConn  *c2t_serveconnbyte.ServeConnByte // for clientConn conn
+	ai          *serverai2.ServerAI              // for server side ai
 	isAIInUse   bool
 
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
@@ -133,7 +134,7 @@ func newActiveObj(
 func NewUserActiveObj(homefloor gamei.FloorI, nickname string,
 	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
-	conn gamei.ServeClientConnI) *ActiveObject {
+	conn *c2t_serveconnbyte.ServeConnByte) *ActiveObject {
 
 	ao := newActiveObj(homefloor, l, towerAchieveStat)
 	ao.nickName = nickname
@@ -204,7 +205,7 @@ func (ao *ActiveObject) Suspend() {
 	ao.clientConn = nil
 }
 
-func (ao *ActiveObject) Resume(conn gamei.ServeClientConnI) {
+func (ao *ActiveObject) Resume(conn *c2t_serveconnbyte.ServeConnByte) {
 	ao.clientConn = conn
 }
 

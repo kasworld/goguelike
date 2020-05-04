@@ -26,6 +26,7 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 )
 
 func (ao *ActiveObject) GetUUID() string {
@@ -62,7 +63,7 @@ func (ao *ActiveObject) GetAndClearNeedTANoti() bool {
 }
 
 // clients conn interface
-func (ao *ActiveObject) GetClientConn() gamei.ServeClientConnI {
+func (ao *ActiveObject) GetClientConn() *c2t_serveconnbyte.ServeConnByte {
 	return ao.clientConn
 }
 

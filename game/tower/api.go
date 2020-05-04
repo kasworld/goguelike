@@ -22,7 +22,9 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/cmd2floor"
 	"github.com/kasworld/goguelike/game/cmd2tower"
+	"github.com/kasworld/goguelike/game/conndata"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
@@ -67,7 +69,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		return rhd, nil, err
 	}
 
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	connData.Session = tw.sessionManager.UpdateOrNew(
 		robj.SessionG2ID,
@@ -130,9 +132,15 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	if err != nil {
 		return rhd, nil, err
 	} else {
+		acinfo := &c2t_obj.AccountInfo{
+			SessionG2ID:   g2id.NewFromString(connData.Session.GetUUID()),
+			ActiveObjG2ID: g2id.NewFromString(connData.ActiveObj.GetUUID()),
+			NickName:      connData.Session.NickName,
+			CmdList:       *c2sc.GetAuthorCmdList(),
+		}
 		return rhd, &c2t_obj.RspLogin_data{
 			ServiceInfo: tw.serviceInfo,
-			AccountInfo: c2sc.ToPacket_AccountInfo(),
+			AccountInfo: acinfo,
 		}, nil
 	}
 }
@@ -175,7 +183,7 @@ func (tw *Tower) bytesAPIFn_ReqChat(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -202,7 +210,7 @@ func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
 	if !ok {
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -223,7 +231,7 @@ func (tw *Tower) bytesAPIFn_ReqRebirth(
 	if !ok {
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -247,7 +255,7 @@ func (tw *Tower) bytesAPIFn_ReqMeditate(
 	if !ok {
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspMeditate_data{}
 
@@ -267,7 +275,7 @@ func (tw *Tower) bytesAPIFn_ReqKillSelf(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 	spacket := &c2t_obj.RspKillSelf_data{}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.KillSelf,
@@ -294,7 +302,7 @@ func (tw *Tower) bytesAPIFn_ReqMove(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	spacket := &c2t_obj.RspMove_data{}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.Move,
@@ -321,7 +329,7 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspAttack_data{}
 
@@ -350,7 +358,7 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspPickup_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -378,7 +386,7 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspDrop_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -406,7 +414,7 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspEquip_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -434,7 +442,7 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspUnEquip_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -462,7 +470,7 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspDrinkPotion_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -490,7 +498,7 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspReadScroll_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -518,7 +526,7 @@ func (tw *Tower) bytesAPIFn_ReqRecycle(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspRecycle_data{}
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
@@ -539,7 +547,7 @@ func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 	spacket := &c2t_obj.RspEnterPortal_data{}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.EnterPortal,
 	})
@@ -564,7 +572,7 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	spacket := &c2t_obj.RspMoveFloor_data{}
 
@@ -585,7 +593,7 @@ func (tw *Tower) bytesAPIFn_ReqActTeleport(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 	spacket := &c2t_obj.RspActTeleport_data{}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.ActTeleport,
 	})
@@ -612,7 +620,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminTowerCmd{
@@ -642,7 +650,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -681,7 +689,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	return c2t_packet.Header{
 		ErrorCode: connData.ActiveObj.DoAdminCmd(robj.Cmd, robj.Arg),
@@ -705,7 +713,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminFloorMove{
@@ -739,7 +747,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	f := connData.ActiveObj.GetCurrentFloor()
 	if f == nil {
@@ -773,7 +781,7 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-	connData := c2sc.GetConnData().(*c2t_serveconnbyte.ConnData)
+	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,

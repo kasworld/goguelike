@@ -18,8 +18,9 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/game/conndata"
 	"github.com/kasworld/goguelike/lib/g2log"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/rangestat"
 	"github.com/kasworld/weblib"
 )
@@ -38,7 +39,7 @@ type SessionID2ClientConnection struct {
 	log   *g2log.LogBase `prettystring:"hide"`
 
 	name                 string
-	sessionID2Connection map[string]gamei.ServeClientConnI
+	sessionID2Connection map[string]*c2t_serveconnbyte.ServeConnByte
 	rstat                *rangestat.RangeStat
 }
 
@@ -49,7 +50,7 @@ func New(name string, size int, l *g2log.LogBase) *SessionID2ClientConnection {
 	rtn := &SessionID2ClientConnection{
 		log:                  l,
 		name:                 name,
-		sessionID2Connection: make(map[string]gamei.ServeClientConnI),
+		sessionID2Connection: make(map[string]*c2t_serveconnbyte.ServeConnByte),
 		rstat:                rangestat.New("", 0, size),
 	}
 	return rtn
@@ -67,10 +68,10 @@ func (cman *SessionID2ClientConnection) Count() int {
 	return len(cman.sessionID2Connection)
 }
 
-func (cman *SessionID2ClientConnection) GetAllConnectionList() []gamei.ServeClientConnI {
+func (cman *SessionID2ClientConnection) GetAllConnectionList() []*c2t_serveconnbyte.ServeConnByte {
 	cman.mutex.RLock()
 	defer cman.mutex.RUnlock()
-	rtn := make([]gamei.ServeClientConnI, len(cman.sessionID2Connection))
+	rtn := make([]*c2t_serveconnbyte.ServeConnByte, len(cman.sessionID2Connection))
 	i := 0
 	for _, v := range cman.sessionID2Connection {
 		rtn[i] = v
@@ -85,7 +86,7 @@ func (cman *SessionID2ClientConnection) GetRangeStat() *rangestat.RangeStat {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func (cman *SessionID2ClientConnection) GetBySessionID(key string) gamei.ServeClientConnI {
+func (cman *SessionID2ClientConnection) GetBySessionID(key string) *c2t_serveconnbyte.ServeConnByte {
 
 	cman.mutex.Lock()
 	defer cman.mutex.Unlock()
@@ -96,13 +97,14 @@ func (cman *SessionID2ClientConnection) GetBySessionID(key string) gamei.ServeCl
 	return nil
 }
 
-func (cman *SessionID2ClientConnection) AddOrSwap(c2sc gamei.ServeClientConnI) (
-	gamei.ServeClientConnI, error) {
+func (cman *SessionID2ClientConnection) AddOrSwap(c2sc *c2t_serveconnbyte.ServeConnByte) (
+	*c2t_serveconnbyte.ServeConnByte, error) {
 
 	cman.mutex.Lock()
 	defer cman.mutex.Unlock()
 
-	key := c2sc.GetSession().GetUUID()
+	connData := c2sc.GetConnData().(*conndata.ConnData)
+	key := connData.Session.GetUUID()
 
 	oldc2cc, exist := cman.sessionID2Connection[key]
 	if oldc2cc == c2sc {
@@ -118,7 +120,7 @@ func (cman *SessionID2ClientConnection) AddOrSwap(c2sc gamei.ServeClientConnI) (
 	return oldc2cc, nil
 }
 
-func (cman *SessionID2ClientConnection) DelBySessionID(key string) (gamei.ServeClientConnI, error) {
+func (cman *SessionID2ClientConnection) DelBySessionID(key string) (*c2t_serveconnbyte.ServeConnByte, error) {
 
 	cman.mutex.Lock()
 	defer cman.mutex.Unlock()
