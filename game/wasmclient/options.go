@@ -22,21 +22,21 @@ var gameOptions *htmlbutton.HTMLButtonGroup
 // prevent compiler initialize loop error
 var _gameopt = htmlbutton.NewButtonGroup("Options",
 	[]*htmlbutton.HTMLButton{
-		{"q", "LeftInfo", []string{"LeftInfoOff", "LeftInfoOn"},
-			"show/hide left info", btnFocus2Canvas, 1},
-		{"w", "CenterInfo", []string{"HelpOff", "Highscore", "ClientInfo", "Help", "FactionInfo",
+		htmlbutton.New("q", "LeftInfo", []string{"LeftInfoOff", "LeftInfoOn"},
+			"show/hide left info", btnFocus2Canvas, 1),
+		htmlbutton.New("w", "CenterInfo", []string{"HelpOff", "Highscore", "ClientInfo", "Help", "FactionInfo",
 			"CarryObjectInfo", "PotionInfo", "ScrollInfo", "MoneyColor",
 			"TileInfo", "ConditionInfo", "FieldObjInfo"},
-			"rotate help info", cmdRotateCenterInfo, 0},
-		{"e", "RightInfo", []string{
+			"rotate help info", cmdRotateCenterInfo, 0),
+		htmlbutton.New("e", "RightInfo", []string{
 			"RightInfoOff", "Message", "DebugInfo", "InvenList", "FieldObjList", "FloorList"},
-			"Rotate right info", cmdRotateRightInfo, 1},
-		{"r", "Viewport", []string{"PlayVP", "FloorVP"},
-			"play view / floor view", cmdToggleVPFloorPlay, 0},
-		{"t", "Zoom", []string{"Zoom0", "Zoom1", "Zoom2"},
-			"Zoom viewport", cmdToggleZoom, 0},
-		{"y", "Sound", []string{"SoundOn", "SoundOff"},
-			"Sound on/off", cmdToggleSound, 1},
+			"Rotate right info", cmdRotateRightInfo, 1),
+		htmlbutton.New("r", "Viewport", []string{"PlayVP", "FloorVP"},
+			"play view / floor view", cmdToggleVPFloorPlay, 0),
+		htmlbutton.New("t", "Zoom", []string{"Zoom0", "Zoom1", "Zoom2"},
+			"Zoom viewport", cmdToggleZoom, 0),
+		htmlbutton.New("y", "Sound", []string{"SoundOn", "SoundOff"},
+			"Sound on/off", cmdToggleSound, 1),
 	})
 
 func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {

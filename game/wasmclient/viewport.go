@@ -44,16 +44,16 @@ func (app *WasmClient) ResizeCanvas() {
 		ftsize := fmt.Sprintf("%vpx", gVP2d.RefSize/4)
 		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
 		for _, v := range commandButtons.ButtonList {
-			js.Global().Get("document").Call("getElementById", v.JSID()).Get("style").Set("font-size", ftsize)
+			v.JSButton().Get("style").Set("font-size", ftsize)
 		}
 		for _, v := range autoActs.ButtonList {
-			js.Global().Get("document").Call("getElementById", v.JSID()).Get("style").Set("font-size", ftsize)
+			v.JSButton().Get("style").Set("font-size", ftsize)
 		}
 		for _, v := range gameOptions.ButtonList {
-			js.Global().Get("document").Call("getElementById", v.JSID()).Get("style").Set("font-size", ftsize)
+			v.JSButton().Get("style").Set("font-size", ftsize)
 		}
 		for _, v := range adminCommandButtons.ButtonList {
-			js.Global().Get("document").Call("getElementById", v.JSID()).Get("style").Set("font-size", ftsize)
+			v.JSButton().Get("style").Set("font-size", ftsize)
 		}
 		js.Global().Get("document").Call("getElementById", "chattext").Get("style").Set("font-size", ftsize)
 		js.Global().Get("document").Call("getElementById", "chatbutton").Get("style").Set("font-size", ftsize)

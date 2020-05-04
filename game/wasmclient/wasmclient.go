@@ -207,10 +207,10 @@ func (app *WasmClient) enterTower(towerindex int) {
 	JSObjShow(jsdoc.Call("getElementById", "cmdrow"))
 	Focus2Canvas()
 
-	commandButtons.Register(app)
-	autoActs.Register(app)
-	gameOptions.Register(app)
-	adminCommandButtons.Register(app)
+	commandButtons.RegisterJSFn(app)
+	autoActs.RegisterJSFn(app)
+	gameOptions.RegisterJSFn(app)
+	adminCommandButtons.RegisterJSFn(app)
 
 	// option from url arg
 loopOpt:

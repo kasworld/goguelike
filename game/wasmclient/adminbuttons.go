@@ -29,13 +29,13 @@ var adminCmds = []c2t_idcmd.CommandID{
 }
 var adminCommandButtons = htmlbutton.NewButtonGroup(" ",
 	[]*htmlbutton.HTMLButton{
-		{"1", "AdminTeleport", []string{"Teleport"}, "teleport random", adminCmdTeleport, 0},
-		{"2", "IncExp", []string{"IncExp"}, "inc exp", adminCmdIncExp, 0},
-		{"3", "FloorBefore", []string{"FloorBefore"}, "before floor", adminCmdFloorBefore, 0},
-		{"4", "FloorNext", []string{"FloorNext"}, "next floor", adminCmdFloorNext, 0},
-		{"5", "Potion", []string{"Potion"}, "apply potion", adminCmdPotion, 0},
-		{"7", "Scroll", []string{"Scroll"}, "apply scroll", adminCmdScroll, 0},
-		{"8", "Condition", []string{"Condition"}, "set contidion", adminCmdCondition, 0},
+		htmlbutton.New("1", "AdminTeleport", []string{"Teleport"}, "teleport random", adminCmdTeleport, 0),
+		htmlbutton.New("2", "IncExp", []string{"IncExp"}, "inc exp", adminCmdIncExp, 0),
+		htmlbutton.New("3", "FloorBefore", []string{"FloorBefore"}, "before floor", adminCmdFloorBefore, 0),
+		htmlbutton.New("4", "FloorNext", []string{"FloorNext"}, "next floor", adminCmdFloorNext, 0),
+		htmlbutton.New("5", "Potion", []string{"Potion"}, "apply potion", adminCmdPotion, 0),
+		htmlbutton.New("7", "Scroll", []string{"Scroll"}, "apply scroll", adminCmdScroll, 0),
+		htmlbutton.New("8", "Condition", []string{"Condition"}, "set contidion", adminCmdCondition, 0),
 	})
 
 func adminCmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {

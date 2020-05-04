@@ -43,7 +43,7 @@ func (app *WasmClient) makePathToMouseClick(mouseX, mouseY int) {
 
 		autoPlayButton := autoActs.GetByIDBase("AutoPlay")
 		if autoPlayButton.State == 0 {
-			autoPlayButton.MakeJSFn(app)(js.Null(), nil)
+			autoPlayButton.JSFn(js.Null(), nil)
 		}
 		playerX, playerY := app.GetPlayerXY()
 
@@ -99,7 +99,7 @@ func (app *WasmClient) actByKeyPressMap(kcode string) bool {
 			app.Path2dst = nil
 			autoPlayButton := autoActs.GetByIDBase("AutoPlay")
 			if autoPlayButton.State == 0 {
-				autoPlayButton.MakeJSFn(app)(js.Null(), nil)
+				autoPlayButton.JSFn(js.Null(), nil)
 			}
 			if oldDir != app.KeyDir {
 				app.sendMovePacketByInput(app.KeyDir)
@@ -131,19 +131,19 @@ func (app *WasmClient) processKeyUpEvent(kcode string) bool {
 	app.KeyDir = way9type.RemoteDxDy2Way9(dx, dy)
 
 	if btn := adminCommandButtons.GetByKeyCode(kcode); btn != nil {
-		btn.MakeJSFn(app)(js.Null(), nil)
+		btn.JSFn(js.Null(), nil)
 		return true
 	}
 	if btn := commandButtons.GetByKeyCode(kcode); btn != nil {
-		btn.MakeJSFn(app)(js.Null(), nil)
+		btn.JSFn(js.Null(), nil)
 		return true
 	}
 	if btn := gameOptions.GetByKeyCode(kcode); btn != nil {
-		btn.MakeJSFn(app)(js.Null(), nil)
+		btn.JSFn(js.Null(), nil)
 		return true
 	}
 	if btn := autoActs.GetByKeyCode(kcode); btn != nil {
-		btn.MakeJSFn(app)(js.Null(), nil)
+		btn.JSFn(js.Null(), nil)
 		return true
 	}
 	return false
@@ -157,7 +157,7 @@ func (app *WasmClient) actByMouseRightDown() {
 	case 0: // play viewpot mode
 		autoPlayButton := autoActs.GetByIDBase("AutoPlay")
 		if autoPlayButton.State == 0 {
-			autoPlayButton.MakeJSFn(app)(js.Null(), nil)
+			autoPlayButton.JSFn(js.Null(), nil)
 		}
 	case 1: // floor viewport mode
 	}

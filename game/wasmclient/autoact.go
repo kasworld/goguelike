@@ -29,17 +29,15 @@ import (
 var autoActs = htmlbutton.NewButtonGroup("AutoActs",
 	[]*htmlbutton.HTMLButton{
 		// not client ai
-		{"z", "AutoPlay", []string{"AutoPlay", "NoAutoPlay"}, "ServerAI on/off", cmdToggleServerAI, 0},
-
-		{"x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"}, "auto rebirth on/off", btnFocus2Canvas, 0},
-
+		htmlbutton.New("z", "AutoPlay", []string{"AutoPlay", "NoAutoPlay"}, "ServerAI on/off", cmdToggleServerAI, 0),
+		htmlbutton.New("x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"}, "auto rebirth on/off", btnFocus2Canvas, 0),
 		// client ai
-		{"c", "AutoBattle", []string{"AutoBattle", "NoBattle"}, "Auto Battle on/off", btnFocus2Canvas, 0},
-		{"v", "AutoPickup", []string{"AutoPickup", "NoAutoPickup"}, "Auto Pickup on/off", btnFocus2Canvas, 0},
-		{"b", "AutoEquip", []string{"AutoEquip", "NoAutoEquip"}, "Auto Equip/Unequip on/off", btnFocus2Canvas, 0},
-		{"n", "AutoUsePotionScroll", []string{"AutoUsePotionScroll", "NoAutoUsePotionScroll"}, "Auto Use Potion and Scroll on/off", btnFocus2Canvas, 0},
-		{"m", "AutoRecyclePotionScroll", []string{"AutoRecyclePotionScroll", "NoAutoRecyclePotionScroll"}, "Auto Recycle Potion and Scroll on/off", btnFocus2Canvas, 0},
-		{",", "AutoRecycleEquip", []string{"AutoRecycleEquip", "NoAutoRecycleEquip"}, "Auto Recycle CarryObj on/off", btnFocus2Canvas, 0},
+		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoBattle"}, "Auto Battle on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("v", "AutoPickup", []string{"AutoPickup", "NoAutoPickup"}, "Auto Pickup on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("b", "AutoEquip", []string{"AutoEquip", "NoAutoEquip"}, "Auto Equip/Unequip on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("n", "AutoUsePotionScroll", []string{"AutoUsePotionScroll", "NoAutoUsePotionScroll"}, "Auto Use Potion and Scroll on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("m", "AutoRecyclePotionScroll", []string{"AutoRecyclePotionScroll", "NoAutoRecyclePotionScroll"}, "Auto Recycle Potion and Scroll on/off", btnFocus2Canvas, 0),
+		htmlbutton.New(",", "AutoRecycleEquip", []string{"AutoRecycleEquip", "NoAutoRecycleEquip"}, "Auto Recycle CarryObj on/off", btnFocus2Canvas, 0),
 	})
 
 var tryAutoActFn = []func(app *WasmClient, v *htmlbutton.HTMLButton) bool{

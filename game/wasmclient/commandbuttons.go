@@ -21,11 +21,11 @@ import (
 
 var commandButtons = htmlbutton.NewButtonGroup("Commands",
 	[]*htmlbutton.HTMLButton{
-		{"a", "KillSelf", []string{"KillSelf"}, "Kill self", cmdKillSelf, 0},
-		{"s", "ShowAchieve", []string{"ShowAchieve"}, "Show Achievement", cmdShowAchieve, 0},
-		{"d", "EnterPortal", []string{"EnterPortal"}, "Enter portal", cmdEnterPortal, 0},
-		{"f", "Teleport", []string{"Teleport"}, "Teleport random in floor", cmdTeleport, 0},
-		{"g", "Rebirth", []string{"Rebirth"}, "Rebirth", cmdRebirth, 0},
+		htmlbutton.New("a", "KillSelf", []string{"KillSelf"}, "Kill self", cmdKillSelf, 0),
+		htmlbutton.New("s", "ShowAchieve", []string{"ShowAchieve"}, "Show Achievement", cmdShowAchieve, 0),
+		htmlbutton.New("d", "EnterPortal", []string{"EnterPortal"}, "Enter portal", cmdEnterPortal, 0),
+		htmlbutton.New("f", "Teleport", []string{"Teleport"}, "Teleport random in floor", cmdTeleport, 0),
+		htmlbutton.New("g", "Rebirth", []string{"Rebirth"}, "Rebirth", cmdRebirth, 0),
 	})
 
 func cmdKillSelf(obj interface{}, v *htmlbutton.HTMLButton) {
