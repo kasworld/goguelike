@@ -48,7 +48,7 @@ func (tw *Tower) web_ConnectionList(w http.ResponseWriter, r *http.Request) {
 	if err := weblib.SetFresh(w, r); err != nil {
 		tw.log.Error("%v", err)
 	}
-	tw.sessionID2Conn.ToWeb(w, r)
+	tw.connManager.ToWeb(w, r)
 }
 
 func (tw *Tower) web_KickConnection(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +58,13 @@ func (tw *Tower) web_KickConnection(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid id", 404)
 		return
 	}
-	c2sc := tw.sessionID2Conn.GetBySessionID(id)
+	ss := tw.sessionManager.GetBySessionID(id)
+	if ss == nil {
+		tw.log.Warn("session not found")
+		http.Error(w, "session not found", 404)
+		return
+	}
+	c2sc := tw.connManager.Get(ss.ConnUUID)
 	if c2sc == nil {
 		tw.log.Warn("connection not found %v", id)
 		http.Error(w, "connection not found", 404)
@@ -208,7 +214,7 @@ func (tw *Tower) web_ActiveObjSuspendedList(w http.ResponseWriter, r *http.Reque
 
 func (tw *Tower) web_Broadcast(w http.ResponseWriter, r *http.Request) {
 	msg := weblib.GetStringByName("Msg", "", w, r)
-	connlist := tw.sessionID2Conn.GetAllConnectionList()
+	connlist := tw.connManager.GetList()
 	for _, aoconn := range connlist {
 		aoconn.SendNotiPacket(
 			c2t_idnoti.Broadcast,

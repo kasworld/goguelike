@@ -31,12 +31,12 @@ import (
 	"github.com/kasworld/goguelike/game/aoid2floor"
 	"github.com/kasworld/goguelike/game/floormanager"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/game/tower/sessionid2clientconn"
 	"github.com/kasworld/goguelike/game/tower/sessionmanager"
 	"github.com/kasworld/goguelike/game/towerscript"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/lib/loadlines"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_authorize"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_connbytemanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
@@ -94,17 +94,18 @@ type Tower struct {
 	// for server
 	// limit client connection
 	clientConnLimitStat *rangestat.RangeStat `prettystring:"simple"`
-	// manage logined connection
-	sessionID2Conn *sessionid2clientconn.SessionID2ClientConnection
+
 	// manage session (playing and played)
 	sessionManager *sessionmanager.SessionManager
+	// manage connection
+	connManager *c2t_connbytemanager.Manager
 
 	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
-	sendStat               *actpersec.ActPerSec                 `prettystring:"simple"`
-	recvStat               *actpersec.ActPerSec                 `prettystring:"simple"`
-	protocolStat           *c2t_statserveapi.StatServeAPI       `prettystring:"simple"`
-	notiStat               *c2t_statnoti.StatNotification       `prettystring:"simple"`
-	errorStat              *c2t_statapierror.StatAPIError       `prettystring:"simple"`
+	sendStat               *actpersec.ActPerSec                    `prettystring:"simple"`
+	recvStat               *actpersec.ActPerSec                    `prettystring:"simple"`
+	protocolStat           *c2t_statserveapi.StatServeAPI          `prettystring:"simple"`
+	notiStat               *c2t_statnoti.StatNotification          `prettystring:"simple"`
+	errorStat              *c2t_statapierror.StatAPIError          `prettystring:"simple"`
 	listenClientPaused     bool
 	demuxReq2BytesAPIFnMap [c2t_idcmd.CommandID_Count]func(
 		me interface{}, hd c2t_packet.Header, rbody []byte) (
@@ -140,8 +141,8 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 		towerCmdActStat:     actpersec.New(),
 		towerAchieveStat:    new(towerachieve_vector.TowerAchieveVector),
 	}
-	tw.sessionID2Conn = sessionid2clientconn.New("",
-		tw.sconfig.ConcurrentConnections, tw.log)
+	tw.connManager = c2t_connbytemanager.New()
+
 	tw.sessionManager = sessionmanager.New("",
 		tw.sconfig.ConcurrentConnections*10, tw.log)
 
@@ -242,7 +243,6 @@ func (tw *Tower) ServiceCleanup() {
 		f.Cleanup()
 	}
 	tw.floorMan.Cleanup()
-	tw.sessionID2Conn.Cleanup()
 	tw.sessionManager.Cleanup()
 }
 
@@ -322,7 +322,6 @@ loop:
 			tw.sendStat.UpdateLap()
 			tw.recvStat.UpdateLap()
 			tw.clientConnLimitStat.UpdateLap()
-			tw.sessionID2Conn.UpdateLap()
 			if len(tw.recvRequestCh) > cap(tw.recvRequestCh)/2 {
 				tw.log.Fatal("Tower reqch overloaded %v/%v",
 					len(tw.recvRequestCh), cap(tw.recvRequestCh))
@@ -348,7 +347,7 @@ loop:
 					go tw.Ground_Register()
 				} else {
 					go tw.Ground_Heartbeat([]string{
-						fmt.Sprintf("Connection: %v", tw.sessionID2Conn.Count()),
+						fmt.Sprintf("Connection: %v", tw.connManager.Len()),
 						fmt.Sprintf("Pause: %v", tw.listenClientPaused),
 						fmt.Sprintf("Session: %v", tw.sessionManager.Count()),
 					})

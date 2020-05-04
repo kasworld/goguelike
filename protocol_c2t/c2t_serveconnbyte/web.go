@@ -9,14 +9,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package conndata
+package c2t_serveconnbyte
 
-import (
-	"github.com/kasworld/goguelike/game/session"
+import "github.com/kasworld/goguelike/game/conndata"
+
+const (
+	HTML_tableheader = `<tr>
+<th>UUID</th>
+<th>Remote Address</th>
+<th>Session</th>
+<th>Author</th>
+<th>Command</th>
+</tr>`
+	HTML_row = `<tr>
+	<td>{{$v.WebConnData.UUID}}</td>
+	<td>{{$v.WebConnData.RemoteAddr}}</td>
+<td>{{$v.WebConnData.Session}}</td>
+<td>{{$v.GetAuthorCmdList}}</td>
+<td><a href="/KickConnection?id={{$v.WebConnData.Session.SessionUUID}}" target="_blank">[Kick]</a></td>
+</tr>
+`
 )
 
-type ConnData struct {
-	UUID       string
-	RemoteAddr string
-	Session    *session.Session
+func (scb *ServeConnByte) WebConnData() *conndata.ConnData {
+	return scb.connData.(*conndata.ConnData)
 }

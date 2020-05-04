@@ -22,8 +22,8 @@ import (
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike/game/aoid2activeobject"
-	"github.com/kasworld/goguelike/game/tower/sessionid2clientconn"
 	"github.com/kasworld/goguelike/game/tower/sessionmanager"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_connbytemanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_statapierror"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_statnoti"
@@ -111,8 +111,8 @@ func (tw *Tower) GetTowerAchieveStat() *towerachieve_vector.TowerAchieveVector {
 	return tw.towerAchieveStat
 }
 
-func (tw *Tower) GetSessionID2ClinetConn() *sessionid2clientconn.SessionID2ClientConnection {
-	return tw.sessionID2Conn
+func (tw *Tower) GetConnManager() *c2t_connbytemanager.Manager {
+	return tw.connManager
 }
 
 func (tw *Tower) GetSessionManager() *sessionmanager.SessionManager {
@@ -215,7 +215,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
     <br/>
     <a href="/ActiveObjSuspendedList?page=0" target="_blank">{{.GetID2ActiveObjSuspend}}</a>
     <br/>
-    <a href="/ConnectionList?page=0" target="_blank">{{.GetSessionID2ClinetConn}}</a>
+    <a href="/ConnectionList?page=0" target="_blank">{{.GetConnManager}}</a>
     <br/>
     <a href="/SessionList?page=0" target="_blank">{{.GetSessionManager}}</a>
     <br/>

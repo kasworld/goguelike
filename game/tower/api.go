@@ -71,38 +71,35 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 
 	connData := c2sc.GetConnData().(*conndata.ConnData)
 
-	connData.Session = tw.sessionManager.UpdateOrNew(
+	ss := tw.sessionManager.UpdateOrNew(
 		robj.SessionG2ID,
 		connData.RemoteAddr,
 		robj.NickName)
 
-	if oldc2sc := tw.sessionID2Conn.GetBySessionID(connData.Session.SessionUUID); oldc2sc != nil {
+	if oldc2sc := tw.connManager.Get(ss.ConnUUID); oldc2sc != nil {
 		oldc2sc.Disconnect()
 		// wait
 		trycount := 10
-		for connData.Session.Online && trycount > 0 {
+		for tw.connManager.Get(ss.ConnUUID) != nil && trycount > 0 {
 			runtime.Gosched()
 			time.Sleep(time.Millisecond * 100)
 			trycount--
 		}
 	}
-	if connData.Session.Online {
-		tw.log.Fatal("old connection online %v", connData.Session)
+	if tw.connManager.Get(ss.ConnUUID) != nil {
+		tw.log.Fatal("old connection online %v", ss)
 		return rhd, nil, err
 	}
+	ss.ConnUUID = connData.UUID
+	connData.Session = ss
 
-	if _, err := tw.sessionID2Conn.AddOrSwap(c2sc); err != nil {
-		return rhd, nil, err
-	}
-	connData.Session.Online = true
-	oldao, exist := tw.id2aoSuspend.GetByUUID(connData.Session.ActiveObjUUID)
+	oldAO, exist := tw.id2aoSuspend.GetByUUID(connData.Session.ActiveObjUUID)
 	if exist {
 		// connect to exist ao
-		connData.ActiveObj = oldao
-		oldao.Resume(c2sc)
+		oldAO.Resume(c2sc)
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjResumeTower{
-			ActiveObj: connData.ActiveObj,
+			ActiveObj: oldAO,
 			RspCh:     rspCh,
 		}
 		err = <-rspCh
@@ -114,16 +111,16 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		} else {
 			homeFloor = tw.GetFloorManager().GetStartFloor()
 		}
-		connData.ActiveObj = activeobject.NewUserActiveObj(
+		newAO := activeobject.NewUserActiveObj(
 			homeFloor,
 			connData.Session.NickName,
 			tw.log,
 			tw.towerAchieveStat,
 			c2sc)
-		connData.Session.ActiveObjUUID = connData.ActiveObj.GetUUID()
+		connData.Session.ActiveObjUUID = newAO.GetUUID()
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjEnterTower{
-			ActiveObj: connData.ActiveObj,
+			ActiveObj: newAO,
 			RspCh:     rspCh,
 		}
 		err = <-rspCh
@@ -134,7 +131,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	} else {
 		acinfo := &c2t_obj.AccountInfo{
 			SessionG2ID:   g2id.NewFromString(connData.Session.GetUUID()),
-			ActiveObjG2ID: g2id.NewFromString(connData.ActiveObj.GetUUID()),
+			ActiveObjG2ID: g2id.NewFromString(connData.Session.ActiveObjUUID),
 			NickName:      connData.Session.NickName,
 			CmdList:       *c2sc.GetAuthorCmdList(),
 		}
@@ -184,6 +181,10 @@ func (tw *Tower) bytesAPIFn_ReqChat(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -191,13 +192,13 @@ func (tw *Tower) bytesAPIFn_ReqChat(
 	robj.Chat = strings.TrimSpace(robj.Chat)
 	if !version.IsRelease() && len(robj.Chat) > 1 && robj.Chat[0] == '/' {
 		return c2t_packet.Header{
-			ErrorCode: AdminCmd(connData.ActiveObj, robj.Chat[1:]),
+			ErrorCode: AdminCmd(ao, robj.Chat[1:]),
 		}, &c2t_obj.RspChat_data{}, nil
 	} else {
 		if len(robj.Chat) > gameconst.MaxChatLen {
 			robj.Chat = robj.Chat[:gameconst.MaxChatLen]
 		}
-		connData.ActiveObj.SetChat(robj.Chat)
+		ao.SetChat(robj.Chat)
 		return rhd, &c2t_obj.RspChat_data{}, nil
 	}
 }
@@ -211,13 +212,17 @@ func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	spacket := &c2t_obj.RspAchieveInfo_data{}
 
-	for i, v := range connData.ActiveObj.GetAchieveStat() {
+	for i, v := range ao.GetAchieveStat() {
 		spacket.Achieve[i] = int64(v)
 	}
 	return rhd, spacket, nil
@@ -232,13 +237,17 @@ func (tw *Tower) bytesAPIFn_ReqRebirth(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	spacket := &c2t_obj.RspRebirth_data{}
 
-	err := connData.ActiveObj.TryRebirth()
+	err := ao.TryRebirth()
 	if err != nil {
 		rhd.ErrorCode = c2t_error.ActionProhibited
 		tw.log.Error("%v", err)
@@ -256,10 +265,14 @@ func (tw *Tower) bytesAPIFn_ReqMeditate(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspMeditate_data{}
 
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.Meditate,
 	})
 	return c2t_packet.Header{
@@ -276,8 +289,12 @@ func (tw *Tower) bytesAPIFn_ReqKillSelf(
 	}
 	spacket := &c2t_obj.RspKillSelf_data{}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.KillSelf,
 	})
 
@@ -303,8 +320,12 @@ func (tw *Tower) bytesAPIFn_ReqMove(
 	}
 	spacket := &c2t_obj.RspMove_data{}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.Move,
 		Dir: robj.Dir,
 	})
@@ -330,10 +351,14 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspAttack_data{}
 
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.Attack,
 		Dir: robj.Dir,
 	})
@@ -359,9 +384,13 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspPickup_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Pickup,
 		G2ID: robj.G2ID,
 	})
@@ -387,9 +416,13 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspDrop_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Drop,
 		G2ID: robj.G2ID,
 	})
@@ -415,9 +448,13 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspEquip_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Equip,
 		G2ID: robj.G2ID,
 	})
@@ -443,9 +480,13 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspUnEquip_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.UnEquip,
 		G2ID: robj.G2ID,
 	})
@@ -471,9 +512,13 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspDrinkPotion_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.DrinkPotion,
 		G2ID: robj.G2ID,
 	})
@@ -499,9 +544,13 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspReadScroll_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.ReadScroll,
 		G2ID: robj.G2ID,
 	})
@@ -527,9 +576,13 @@ func (tw *Tower) bytesAPIFn_ReqRecycle(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspRecycle_data{}
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Recycle,
 		G2ID: robj.G2ID,
 	})
@@ -548,7 +601,11 @@ func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 	}
 	spacket := &c2t_obj.RspEnterPortal_data{}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.EnterPortal,
 	})
 
@@ -573,11 +630,15 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	spacket := &c2t_obj.RspMoveFloor_data{}
 
 	tw.GetReqCh() <- &cmd2tower.FloorMove{
-		ActiveObj: connData.ActiveObj,
+		ActiveObj: ao,
 		FloorUUID: robj.G2ID.String(),
 	}
 	return c2t_packet.Header{
@@ -594,7 +655,11 @@ func (tw *Tower) bytesAPIFn_ReqActTeleport(
 	}
 	spacket := &c2t_obj.RspActTeleport_data{}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
-	connData.ActiveObj.SetReq2Handle(&aoactreqrsp.Act{
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
+	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.ActTeleport,
 	})
 
@@ -621,10 +686,14 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminTowerCmd{
-		ActiveObj:  connData.ActiveObj,
+		ActiveObj:  ao,
 		RecvPacket: robj,
 		RspCh:      rspCh,
 	}
@@ -651,19 +720,23 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	spacket := &c2t_obj.RspAdminFloorCmd_data{}
 
-	f := connData.ActiveObj.GetCurrentFloor()
+	f := ao.GetCurrentFloor()
 	if f == nil {
 		return rhd, nil, fmt.Errorf("user not in floor %v", c2sc)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	f.GetReqCh() <- &cmd2floor.APIAdminCmd2Floor{
-		ActiveObj: connData.ActiveObj,
+		ActiveObj: ao,
 		ReqPk:     robj,
 		RspCh:     rspCh,
 	}
@@ -690,9 +763,13 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	return c2t_packet.Header{
-		ErrorCode: connData.ActiveObj.DoAdminCmd(robj.Cmd, robj.Arg),
+		ErrorCode: ao.DoAdminCmd(robj.Cmd, robj.Arg),
 	}, &c2t_obj.RspAdminActiveObjCmd_data{}, nil
 }
 
@@ -714,10 +791,14 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminFloorMove{
-		ActiveObj:  connData.ActiveObj,
+		ActiveObj:  ao,
 		RecvPacket: robj,
 		RspCh:      rspCh,
 	}
@@ -748,14 +829,18 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 		ErrorCode: c2t_error.None,
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
-	f := connData.ActiveObj.GetCurrentFloor()
+	f := ao.GetCurrentFloor()
 	if f == nil {
 		return rhd, nil, fmt.Errorf("user not in floor %v", c2sc)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	f.GetReqCh() <- &cmd2floor.APIAdminTeleport2Floor{
-		ActiveObj: connData.ActiveObj,
+		ActiveObj: ao,
 		ReqPk:     robj,
 		RspCh:     rspCh,
 	}
@@ -782,11 +867,15 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 	connData := c2sc.GetConnData().(*conndata.ConnData)
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
-	if err := connData.ActiveObj.DoAIOnOff(robj.On); err != nil {
+	if err := ao.DoAIOnOff(robj.On); err != nil {
 		tw.log.Error("fail to AIOn %v %v", c2sc)
 	}
 	return rhd, &c2t_obj.RspAIPlay_data{}, nil

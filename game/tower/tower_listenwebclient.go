@@ -32,6 +32,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
+	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/weblib"
 )
 
@@ -121,6 +122,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	}()
 
 	connData := &conndata.ConnData{
+		UUID:       uuidstr.New(),
 		RemoteAddr: r.RemoteAddr,
 	}
 	c2sc := c2t_serveconnbyte.NewWithStats(
@@ -133,6 +135,9 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 		tw.errorStat,
 		tw.demuxReq2BytesAPIFnMap,
 	)
+	// add to conn manager
+	tw.connManager.Add(connData.UUID, c2sc)
+
 	c2sc.StartServeWS(ctx, wsConn,
 		gameconst.ServerPacketReadTimeOutSec*time.Second,
 		gameconst.ServerPacketWriteTimeoutSec*time.Second,
@@ -144,7 +149,10 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	// end play
 
 	// connData changed in user play
-	ao := connData.ActiveObj
+	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
+	if !exist {
+		panic(fmt.Sprintf("ao not found %v", connData))
+	}
 	if ao != nil && ao.GetActiveObjType() == aotype.User {
 		go tw.Ground_HighScore(ao)
 		ao.Suspend()
@@ -157,16 +165,12 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	}
 	wsConn.Close()
 
-	if ss := connData.Session; ss != nil {
-		if _, err := tw.sessionID2Conn.DelBySessionID(ss.GetUUID()); err != nil {
-			tw.log.Fatal("Fail to DelConnection %v", err)
-		}
-		ss.Online = false
-	}
 	if !tw.clientConnLimitStat.Dec() {
 		tw.log.Fatal("Under limit connection delete, continue %v",
 			tw.clientConnLimitStat)
 	}
+	// del from conn manager
+	tw.connManager.Del(connData.UUID)
 }
 
 func (tw *Tower) json_TowerList(w http.ResponseWriter, r *http.Request) {
