@@ -57,14 +57,6 @@ func (app *WasmClient) ResizeCanvas() {
 		}
 		js.Global().Get("document").Call("getElementById", "chattext").Get("style").Set("font-size", ftsize)
 		js.Global().Get("document").Call("getElementById", "chatbutton").Get("style").Set("font-size", ftsize)
-
-		js.Global().Get("document").Call("getElementById", "leftinfo").Set("style",
-			"color: white; position: fixed; top: 0; left: 0; overflow: hidden;")
-		js.Global().Get("document").Call("getElementById", "rightinfo").Set("style",
-			"color: white; position: fixed; top: 0; right: 0; overflow: hidden; text-align: right;")
-		js.Global().Get("document").Call("getElementById", "centerinfo").Set("style",
-			"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
-
 	}
 }
 

@@ -205,6 +205,14 @@ func (app *WasmClient) enterTower(towerindex int) {
 	JSObjHide(jsdoc.Call("getElementById", "titleform"))
 	uiTextObj.centerinfo.Set("innerHTML", "")
 	JSObjShow(jsdoc.Call("getElementById", "cmdrow"))
+
+	jsdoc.Call("getElementById", "leftinfo").Set("style",
+		"color: white; position: fixed; top: 0; left: 0; overflow: hidden;")
+	jsdoc.Call("getElementById", "rightinfo").Set("style",
+		"color: white; position: fixed; top: 0; right: 0; overflow: hidden; text-align: right;")
+	jsdoc.Call("getElementById", "centerinfo").Set("style",
+		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
+
 	Focus2Canvas()
 
 	commandButtons.RegisterJSFn(app)
