@@ -15,6 +15,7 @@ package htmlbutton
 import (
 	"bytes"
 	"fmt"
+	"net/url"
 	"syscall/js"
 )
 
@@ -148,4 +149,34 @@ func (hbl HTMLButtonGroup) MakeButtonToolTipTop(buf *bytes.Buffer) {
 		)
 	}
 	buf.WriteString("<br/>")
+}
+
+// SetFromURLArg set button state from url name=value
+func (hbl *HTMLButtonGroup) SetFromURLArg() error {
+	var err error
+	qr, err := GetQuery()
+	if err != nil {
+		return err
+	}
+loop:
+	for _, v := range hbl.ButtonList {
+		optV := qr.Get(v.IDBase)
+		if optV == "" {
+			continue
+		}
+		for j, w := range v.ButtonText {
+			if optV == w {
+				v.State = j
+				continue loop
+			}
+		}
+		err = fmt.Errorf("invalid option %v %v", v.IDBase, optV)
+	}
+	return err
+}
+
+func GetQuery() (url.Values, error) {
+	loc := js.Global().Get("window").Get("location").Get("href")
+	u, err := url.Parse(loc.String())
+	return u.Query(), err
 }

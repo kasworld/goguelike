@@ -114,10 +114,10 @@ func ClearSession(towerindex int) {
 	})
 }
 
-func SetSession(towerindex int, id string, nick string) {
+func SetSession(towerindex int, sessionkey string, nick string) {
 	wasmcookie.Set(&http.Cookie{
 		Name:    sessionKeyName(towerindex),
-		Value:   id,
+		Value:   sessionkey,
 		Path:    "/",
 		Expires: time.Now().AddDate(1, 0, 0),
 	})
