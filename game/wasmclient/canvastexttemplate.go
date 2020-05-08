@@ -15,7 +15,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/kasworld/goguelike/game/wasmclient/canvastext"
+	"github.com/kasworld/goguelike/lib/canvastext"
 )
 
 var tcsRebirth = canvastext.TextTemplate{
