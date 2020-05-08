@@ -11,7 +11,7 @@
 
 package c2t_serveconnbyte
 
-import "github.com/kasworld/goguelike/game/conndata"
+import "github.com/kasworld/goguelike/lib/conndata"
 
 const (
 	HTML_tableheader = `<tr>

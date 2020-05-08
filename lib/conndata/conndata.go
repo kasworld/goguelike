@@ -12,7 +12,7 @@
 package conndata
 
 import (
-	"github.com/kasworld/goguelike/game/session"
+	"github.com/kasworld/goguelike/lib/session"
 )
 
 type ConnData struct {

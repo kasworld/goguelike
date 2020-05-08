@@ -14,8 +14,8 @@ package tower
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/game/conndata"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/conndata"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 )
 

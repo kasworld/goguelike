@@ -21,9 +21,8 @@ import (
 
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/lib/g2id"
-
-	"github.com/kasworld/goguelike/game/session"
 	"github.com/kasworld/goguelike/lib/g2log"
+	"github.com/kasworld/goguelike/lib/session"
 	"github.com/kasworld/rangestat"
 	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/weblib"

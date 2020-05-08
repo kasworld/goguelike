@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike/game/aoid2activeobject"
-	"github.com/kasworld/goguelike/game/tower/sessionmanager"
+	"github.com/kasworld/goguelike/lib/sessionmanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connbytemanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_statapierror"
