@@ -18,6 +18,7 @@ import (
 	"sync"
 
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -50,7 +51,7 @@ func (app *WasmClient) NetInit(ctx context.Context) error {
 		}
 	}()
 	authkey := GetQuery().Get("authkey")
-	nick := GetTextValueFromInputText("nickname")
+	nick := jsobj.GetTextValueFromInputText("nickname")
 	ck := wasmcookie.GetMap()
 	sessionkey := g2id.G2ID(ck[sessionKeyName(gInitData.TowerIndex)])
 	wg.Wait()

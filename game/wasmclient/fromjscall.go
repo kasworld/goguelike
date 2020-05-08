@@ -17,6 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
@@ -93,7 +94,7 @@ func (app *WasmClient) jsMove2Floor(this js.Value, args []js.Value) interface{} 
 }
 
 func getChatMsg() string {
-	msg := GetTextValueFromInputText("chattext")
+	msg := jsobj.GetTextValueFromInputText("chattext")
 	msg = strings.TrimSpace(msg)
 	if len(msg) > gameconst.MaxChatLen {
 		msg = msg[:gameconst.MaxChatLen]

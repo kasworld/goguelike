@@ -27,6 +27,7 @@ import (
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/wasmclient/clientfloor"
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -453,7 +454,7 @@ func (app *WasmClient) DisplayTextInfo() {
 	}
 
 	envColor := app.GetEnvBias().ToHTMLColorString()
-	JSObjSetBGColor(js.Global().Get("document").Call("getElementById", "body"), envColor)
+	jsobj.SetBGColor(js.Global().Get("document").Call("getElementById", "body"), envColor)
 
 	if gameOptions.GetByIDBase("LeftInfo").State == 1 {
 		uiTextObj.leftinfo.Set("innerHTML",

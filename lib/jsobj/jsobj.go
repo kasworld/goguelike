@@ -9,29 +9,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package wasmclient
+package jsobj
 
-import (
-	"syscall/js"
+import "syscall/js"
 
-	"github.com/kasworld/goguelike/lib/jsobj"
-)
-
-type UITextObj struct {
-	leftinfo   js.Value
-	rightinfo  js.Value
-	centerinfo js.Value
+func Show(jsobj js.Value) {
+	jsobj.Get("style").Set("display", "initial")
 }
 
-func NewUITextObj() *UITextObj {
-	uio := &UITextObj{}
+func Hide(jsobj js.Value) {
+	jsobj.Get("style").Set("display", "none")
+}
 
-	uio.leftinfo = js.Global().Get("document").Call("getElementById", "leftinfo")
-	uio.rightinfo = js.Global().Get("document").Call("getElementById", "rightinfo")
-	jsobj.SetColor(uio.rightinfo, "white")
+func SetColor(jsobj js.Value, color string) {
+	jsobj.Get("style").Set("color", color)
+}
 
-	uio.centerinfo = js.Global().Get("document").Call("getElementById", "centerinfo")
-	jsobj.SetColor(uio.centerinfo, "white")
+func SetBGColor(jsobj js.Value, color string) {
+	jsobj.Get("style").Set("backgroundColor", color)
+}
 
-	return uio
+func GetTextValueFromInputText(jsobjid string) string {
+	jsobj := js.Global().Get("document").Call("getElementById", jsobjid).Get("value")
+	return jsobj.String()
 }

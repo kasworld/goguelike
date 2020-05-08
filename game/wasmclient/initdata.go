@@ -14,10 +14,8 @@ package wasmclient
 import (
 	"bytes"
 	"fmt"
-	"net/http"
 	"net/url"
 	"syscall/js"
-	"time"
 
 	"github.com/kasworld/goguelike/config/leveldata"
 
@@ -30,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
-	"github.com/kasworld/gowasmlib/wasmcookie"
 	"github.com/kasworld/gowasmlib/wrapspan"
 )
 
@@ -99,34 +96,6 @@ func SoundByActResult(ar *aoactreqrsp.ActReqRsp) {
 	if ar != nil && ar.IsSuccess() {
 		soundmap.PlayByAct(ar.Done.Act)
 	}
-}
-
-func sessionKeyName(towerindex int) string {
-	return fmt.Sprintf("sessionkey%d", towerindex)
-}
-
-func ClearSession(towerindex int) {
-	wasmcookie.Set(&http.Cookie{
-		Name:    sessionKeyName(towerindex),
-		Value:   "",
-		Path:    "/",
-		Expires: time.Now().AddDate(1, 0, 0),
-	})
-}
-
-func SetSession(towerindex int, sessionkey string, nick string) {
-	wasmcookie.Set(&http.Cookie{
-		Name:    sessionKeyName(towerindex),
-		Value:   sessionkey,
-		Path:    "/",
-		Expires: time.Now().AddDate(1, 0, 0),
-	})
-	wasmcookie.Set(&http.Cookie{
-		Name:    "nickname",
-		Value:   nick,
-		Path:    "/",
-		Expires: time.Now().AddDate(1, 0, 0),
-	})
 }
 
 func refreshTowerListHTML() []towerlist4client.TowerInfo2Enter {

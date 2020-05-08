@@ -14,12 +14,10 @@ package wasmclient
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"syscall/js"
 	"time"
 
 	"github.com/kasworld/actjitter"
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -30,6 +28,7 @@ import (
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
+	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -38,7 +37,6 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_version"
 	"github.com/kasworld/gowasmlib/jslog"
 	"github.com/kasworld/gowasmlib/textncount"
-	"github.com/kasworld/gowasmlib/wasmcookie"
 	"github.com/kasworld/gowasmlib/wrapspan"
 	"github.com/kasworld/intervalduration"
 )
@@ -137,14 +135,7 @@ func InitPage() {
 	}))
 	app.registerJSButton()
 
-	ck := wasmcookie.GetMap()
-	var nickname string
-	if oldnick, exist := ck["nickname"]; exist {
-		nickname = oldnick
-	} else {
-		nickname = fmt.Sprintf("unnamed_%x", g2rand.New().Uint32())
-	}
-	js.Global().Get("document").Call("getElementById", "nickname").Set("value", nickname)
+	InitNickname()
 
 	uiTextObj.centerinfo.Set("innerHTML",
 		makeClientInfoHTML()+
@@ -202,9 +193,9 @@ func (app *WasmClient) enterTower(towerindex int) {
 	gInitData.TowerIndex = towerindex
 
 	jsdoc := js.Global().Get("document")
-	JSObjHide(jsdoc.Call("getElementById", "titleform"))
+	jsobj.Hide(jsdoc.Call("getElementById", "titleform"))
 	uiTextObj.centerinfo.Set("innerHTML", "")
-	JSObjShow(jsdoc.Call("getElementById", "cmdrow"))
+	jsobj.Show(jsdoc.Call("getElementById", "cmdrow"))
 
 	jsdoc.Call("getElementById", "leftinfo").Set("style",
 		"color: white; position: fixed; top: 0; left: 0; overflow: hidden;")
