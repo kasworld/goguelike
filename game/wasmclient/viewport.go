@@ -13,15 +13,13 @@ package wasmclient
 
 import (
 	"fmt"
-
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/game/wasmclient/htmlbutton"
+	"github.com/kasworld/goguelike/lib/htmlbutton"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/gowasmlib/jslog"
 	"github.com/kasworld/gowasmlib/wrapspan"
 )

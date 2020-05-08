@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/wasmclient/htmlbutton"
+	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"

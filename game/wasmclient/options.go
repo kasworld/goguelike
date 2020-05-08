@@ -12,8 +12,8 @@
 package wasmclient
 
 import (
-	"github.com/kasworld/goguelike/game/wasmclient/htmlbutton"
 	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
+	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/gowasmlib/jslog"
 )
 
