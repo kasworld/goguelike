@@ -41,17 +41,16 @@ var _gameopt = htmlbutton.NewButtonGroup("Options",
 			"Sound on/off", cmdToggleSound, 1),
 	})
 
-func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
-	gVP2d.Zoom(v.State) // set zoomstate , needrecalc
-	app, ok := obj.(*WasmClient)
-	if !ok {
-		jslog.Errorf("obj not app %v", obj)
-		return
+func (app *WasmClient) updateLeftInfo() {
+	v := gameOptions.GetByIDBase("LeftInfo")
+	infoobj := js.Global().Get("document").Call("getElementById", "leftinfo")
+	switch v.State {
+	case 0: // Hide
+		infoobj.Set("innerHTML", "")
+	case 1: // leftinfo
+		infoobj.Set("innerHTML",
+			app.makeBaseInfoHTML()+app.makeBuffListHTML())
 	}
-	app.ResizeCanvas()
-	app.systemMessage.Appendf("Zoom%v", v.State)
-	gVP2d.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
-	Focus2Canvas()
 }
 
 func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -60,11 +59,12 @@ func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
-	app.updateCenterInfo(v)
+	app.updateCenterInfo()
 	Focus2Canvas()
 }
 
-func (app *WasmClient) updateCenterInfo(v *htmlbutton.HTMLButton) {
+func (app *WasmClient) updateCenterInfo() {
+	v := gameOptions.GetByIDBase("CenterInfo")
 	infoobj := js.Global().Get("document").Call("getElementById", "centerinfo")
 	switch v.State {
 	case 0: // Hide
@@ -102,11 +102,12 @@ func cmdRotateRightInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
-	app.updateRightInfo(v)
+	app.updateRightInfo()
 	Focus2Canvas()
 }
 
-func (app *WasmClient) updateRightInfo(v *htmlbutton.HTMLButton) {
+func (app *WasmClient) updateRightInfo() {
+	v := gameOptions.GetByIDBase("RightInfo")
 	infoobj := js.Global().Get("document").Call("getElementById", "rightinfo")
 	switch v.State {
 	case 0: // Hide
@@ -136,6 +137,19 @@ func cmdToggleVPFloorPlay(obj interface{}, v *htmlbutton.HTMLButton) {
 	case 1: // floor viewport mode
 		app.floorVPPosX, app.floorVPPosY = app.GetPlayerXY()
 	}
+	Focus2Canvas()
+}
+
+func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
+	gVP2d.Zoom(v.State) // set zoomstate , needrecalc
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	app.ResizeCanvas()
+	app.systemMessage.Appendf("Zoom%v", v.State)
+	gVP2d.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
 	Focus2Canvas()
 }
 

@@ -456,15 +456,7 @@ func (app *WasmClient) DisplayTextInfo() {
 	envColor := app.GetEnvBias().ToHTMLColorString()
 	jsobj.SetBGColor(js.Global().Get("document").Call("getElementById", "body"), envColor)
 
-	infoobj := js.Global().Get("document").Call("getElementById", "leftinfo")
-	if gameOptions.GetByIDBase("LeftInfo").State == 1 {
-		infoobj.Set("innerHTML",
-			app.makeBaseInfoHTML()+app.makeBuffListHTML())
-
-	} else {
-		infoobj.Set("innerHTML", "")
-	}
-
-	app.updateRightInfo(gameOptions.GetByIDBase("RightInfo"))
-	app.updateCenterInfo(gameOptions.GetByIDBase("CenterInfo"))
+	app.updateLeftInfo()
+	app.updateRightInfo()
+	app.updateCenterInfo()
 }
