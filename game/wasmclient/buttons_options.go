@@ -12,6 +12,8 @@
 package wasmclient
 
 import (
+	"syscall/js"
+
 	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -63,33 +65,34 @@ func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 }
 
 func (app *WasmClient) updateCenterInfo(v *htmlbutton.HTMLButton) {
+	infoobj := js.Global().Get("document").Call("getElementById", "centerinfo")
 	switch v.State {
 	case 0: // Hide
-		uiTextObj.centerinfo.Set("innerHTML", "")
+		infoobj.Set("innerHTML", "")
 	case 1: // highscore
 		go func() {
-			uiTextObj.centerinfo.Set("innerHTML", loadHighScoreHTML())
+			infoobj.Set("innerHTML", loadHighScoreHTML())
 		}()
 	case 2: // clientinfo
-		uiTextObj.centerinfo.Set("innerHTML", makeClientInfoHTML())
+		infoobj.Set("innerHTML", makeClientInfoHTML())
 	case 3: // helpinfo
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpInfoHTML())
+		infoobj.Set("innerHTML", makeHelpInfoHTML())
 	case 4: // faction
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpFactionHTML())
+		infoobj.Set("innerHTML", makeHelpFactionHTML())
 	case 5: // carryobj
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpCarryObjectHTML())
+		infoobj.Set("innerHTML", makeHelpCarryObjectHTML())
 	case 6: // potion
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpPotionHTML())
+		infoobj.Set("innerHTML", makeHelpPotionHTML())
 	case 7: // scroll
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpScrollHTML())
+		infoobj.Set("innerHTML", makeHelpScrollHTML())
 	case 8: // Money color
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpMoneyColorHTML())
+		infoobj.Set("innerHTML", makeHelpMoneyColorHTML())
 	case 9: // tile
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpTileHTML())
+		infoobj.Set("innerHTML", makeHelpTileHTML())
 	case 10: // condition
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpConditionHTML())
+		infoobj.Set("innerHTML", makeHelpConditionHTML())
 	case 11: // fieldobj
-		uiTextObj.centerinfo.Set("innerHTML", makeHelpFieldObjHTML())
+		infoobj.Set("innerHTML", makeHelpFieldObjHTML())
 	}
 }
 
@@ -104,20 +107,21 @@ func cmdRotateRightInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 }
 
 func (app *WasmClient) updateRightInfo(v *htmlbutton.HTMLButton) {
+	infoobj := js.Global().Get("document").Call("getElementById", "rightinfo")
 	switch v.State {
 	case 0: // Hide
-		uiTextObj.rightinfo.Set("innerHTML", "")
+		infoobj.Set("innerHTML", "")
 	case 1: // Message
 		app.systemMessage = app.systemMessage.GetLastN(DisplayLineLimit)
-		uiTextObj.rightinfo.Set("innerHTML", app.systemMessage.ToHtmlStringRev())
+		infoobj.Set("innerHTML", app.systemMessage.ToHtmlStringRev())
 	case 2: // DebugInfo
-		uiTextObj.rightinfo.Set("innerHTML", app.makeDebugInfoHTML())
+		infoobj.Set("innerHTML", app.makeDebugInfoHTML())
 	case 3: // InvenList
-		uiTextObj.rightinfo.Set("innerHTML", app.makeInvenInfoHTML())
+		infoobj.Set("innerHTML", app.makeInvenInfoHTML())
 	case 4: // FieldObjList
-		uiTextObj.rightinfo.Set("innerHTML", app.makeFieldObjListHTML())
+		infoobj.Set("innerHTML", app.makeFieldObjListHTML())
 	case 5: // FloorList
-		uiTextObj.rightinfo.Set("innerHTML", app.makeFloorListHTML())
+		infoobj.Set("innerHTML", app.makeFloorListHTML())
 	}
 }
 

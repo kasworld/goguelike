@@ -45,7 +45,6 @@ var msgCopyright = `Copyright 2014,2015,2016,2017,2018,2019,2020 SeukWon Kang
 		<a href="https://kasw.blogspot.com/" target="_blank">Goguelike</a>`
 var gVP2d *viewport2d.Viewport2d
 var gInitData *InitData
-var uiTextObj *UITextObj
 var gClientTile *clienttile.ClientTile
 
 type WasmClient struct {
@@ -107,7 +106,6 @@ func InitPage() {
 	js.Global().Get("document").Call("getElementById", "loadmsg").Get("style").Set("display", "none")
 
 	gInitData = NewInitData()
-	uiTextObj = NewUITextObj()
 	gClientTile = clienttile.New()
 	gameOptions = _gameopt // prevent compiler initialize loop
 	gVP2d = viewport2d.New("viewport2DCanvas", gClientTile)
@@ -137,7 +135,7 @@ func InitPage() {
 
 	InitNickname()
 
-	uiTextObj.centerinfo.Set("innerHTML",
+	js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML",
 		makeClientInfoHTML()+
 			makeHelpFactionHTML()+
 			makeHelpInfoHTML()+
@@ -160,7 +158,7 @@ func InitPage() {
 			makeHelpTileHTML() +
 			makeHelpConditionHTML() +
 			makeHelpFieldObjHTML()
-		uiTextObj.centerinfo.Set("innerHTML", str)
+		js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML", str)
 	}()
 
 	app.registerKeyboardMouseEvent()
@@ -194,7 +192,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 
 	jsdoc := js.Global().Get("document")
 	jsobj.Hide(jsdoc.Call("getElementById", "titleform"))
-	uiTextObj.centerinfo.Set("innerHTML", "")
+	js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML", "")
 	jsobj.Show(jsdoc.Call("getElementById", "cmdrow"))
 
 	jsdoc.Call("getElementById", "leftinfo").Set("style",

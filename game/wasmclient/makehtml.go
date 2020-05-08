@@ -167,7 +167,6 @@ func makeClientInfoHTML() string {
 	fmt.Fprintf(&buf, "Build %v<br/>", version.GetBuildDate())
 	fmt.Fprintf(&buf, "%v<br/>", msgCopyright)
 	return buf.String()
-	// uiTextObj.serviceinfo.Set("innerHTML", buf.String())
 }
 
 func makeHelpFactionHTML() string {
