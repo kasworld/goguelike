@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kasworld/goguelike/config/authdata"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/activeobject"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
@@ -65,7 +66,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		ErrorCode: c2t_error.None,
 	}
 
-	if err := c2sc.GetAuthorCmdList().UpdateByAuthKey(robj.AuthKey); err != nil {
+	if err := authdata.UpdateByAuthKey(c2sc.GetAuthorCmdList(), robj.AuthKey); err != nil {
 		return rhd, nil, err
 	}
 

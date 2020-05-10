@@ -9,36 +9,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package c2t_authorize
+package authdata
 
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/config/authdata"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_authorize"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
 
 func AddAdminKey(key string) error {
 	var err error
-	if _, exist := authdata.Authkey2Admin[key]; exist {
+	if _, exist := Authkey2Admin[key]; exist {
 		err = fmt.Errorf("key %v exist, overwright", key)
 	}
-	authdata.Authkey2Admin[key] = [2][]string{
+	Authkey2Admin[key] = [2][]string{
 		[]string{"Login", "Admin"}, []string{"DelAfterLogin"},
 	}
 	return err
 }
 
-var allAuthorizationSet = map[string]*AuthorizedCmds{
-	"PreLogin": NewByCmdIDList([]c2t_idcmd.CommandID{
+var allAuthorizationSet = map[string]*c2t_authorize.AuthorizedCmds{
+	"PreLogin": c2t_authorize.NewByCmdIDList([]c2t_idcmd.CommandID{
 		c2t_idcmd.Login,
 	}),
 
-	"DelAfterLogin": NewByCmdIDList([]c2t_idcmd.CommandID{
+	"DelAfterLogin": c2t_authorize.NewByCmdIDList([]c2t_idcmd.CommandID{
 		c2t_idcmd.Login,
 	}),
 
-	"Login": NewByCmdIDList([]c2t_idcmd.CommandID{
+	"Login": c2t_authorize.NewByCmdIDList([]c2t_idcmd.CommandID{
 		c2t_idcmd.Heartbeat,
 		c2t_idcmd.Chat,
 		c2t_idcmd.AchieveInfo,
@@ -60,7 +60,7 @@ var allAuthorizationSet = map[string]*AuthorizedCmds{
 
 		c2t_idcmd.AIPlay,
 	}),
-	"Admin": NewByCmdIDList([]c2t_idcmd.CommandID{
+	"Admin": c2t_authorize.NewByCmdIDList([]c2t_idcmd.CommandID{
 		c2t_idcmd.AdminTowerCmd,
 		c2t_idcmd.AdminFloorCmd,
 		c2t_idcmd.AdminActiveObjCmd,
@@ -69,12 +69,12 @@ var allAuthorizationSet = map[string]*AuthorizedCmds{
 	}),
 }
 
-func NewPreLoginAuthorCmdIDList() *AuthorizedCmds {
+func NewPreLoginAuthorCmdIDList() *c2t_authorize.AuthorizedCmds {
 	return allAuthorizationSet["PreLogin"].Duplicate()
 }
 
-func (acicl *AuthorizedCmds) UpdateByAuthKey(key string) error {
-	ag, exist := authdata.Authkey2Admin[key]
+func UpdateByAuthKey(acicl *c2t_authorize.AuthorizedCmds, key string) error {
+	ag, exist := Authkey2Admin[key]
 	if !exist {
 		ag = [2][]string{[]string{"Login"}, []string{"DelAfterLogin"}}
 	}

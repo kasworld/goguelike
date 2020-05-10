@@ -21,6 +21,7 @@ import (
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
+	"github.com/kasworld/goguelike/config/authdata"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/gamedata"
 	"github.com/kasworld/goguelike/config/towerconfig"
@@ -35,7 +36,6 @@ import (
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/lib/loadlines"
 	"github.com/kasworld/goguelike/lib/sessionmanager"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_authorize"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connbytemanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -154,7 +154,7 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 		ProtocolVersion: c2t_version.ProtocolVersion,
 		DataVersion:     gameconst.DataVersion,
 	}
-	c2t_authorize.AddAdminKey(config.AdminAuthKey)
+	authdata.AddAdminKey(config.AdminAuthKey)
 	return tw
 }
 
