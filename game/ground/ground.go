@@ -179,8 +179,8 @@ func (grd *Ground) ServiceInit() error {
 	grd.initAdminWeb()
 	grd.initServiceWeb()
 
-	fmt.Printf("WebClient : http://%v:%v\n", grd.sconfig.GroundHost, grd.sconfig.GroundServiceWebPort)
 	fmt.Printf("WebAdmin  : http://%v:%v\n", grd.sconfig.GroundHost, grd.sconfig.GroundAdminWebPort)
+	fmt.Printf("WebClient : http://%v:%v\n", grd.sconfig.GroundHost, grd.sconfig.GroundServiceWebPort)
 
 	return nil
 }

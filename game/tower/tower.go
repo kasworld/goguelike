@@ -226,8 +226,8 @@ func (tw *Tower) ServiceInit() error {
 	tw.log.TraceService("%v", tw.towerInfo.StringForm())
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	if tw.sconfig.StandAlone {
-		fmt.Printf("WebClient : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
 		fmt.Printf("WebAdmin  : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.AdminPort)
+		fmt.Printf("WebClient : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
 	}
 
 	return nil
