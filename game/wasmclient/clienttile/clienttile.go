@@ -19,8 +19,8 @@ import (
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/game/wasmclient/imagecanvas"
 	"github.com/kasworld/goguelike/game/wasmclient/webtilegroup"
+	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/gowasmlib/jslog"
 )
 

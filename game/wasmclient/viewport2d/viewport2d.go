@@ -17,8 +17,8 @@ import (
 
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
-	"github.com/kasworld/goguelike/game/wasmclient/imagecanvas"
 	"github.com/kasworld/goguelike/lib/canvastext"
+	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/gowasmlib/jslog"
 )
 
