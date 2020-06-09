@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package wasmclient
+package clientcookie
 
 import (
 	"fmt"
@@ -21,13 +21,13 @@ import (
 	"github.com/kasworld/gowasmlib/wasmcookie"
 )
 
-func sessionKeyName(towerindex int) string {
+func SessionKeyName(towerindex int) string {
 	return fmt.Sprintf("sessionkey%d", towerindex)
 }
 
 func ClearSession(towerindex int) {
 	wasmcookie.Set(&http.Cookie{
-		Name:    sessionKeyName(towerindex),
+		Name:    SessionKeyName(towerindex),
 		Value:   "",
 		Path:    "/",
 		Expires: time.Now().AddDate(1, 0, 0),
@@ -36,7 +36,7 @@ func ClearSession(towerindex int) {
 
 func SetSession(towerindex int, sessionkey string, nick string) {
 	wasmcookie.Set(&http.Cookie{
-		Name:    sessionKeyName(towerindex),
+		Name:    SessionKeyName(towerindex),
 		Value:   sessionkey,
 		Path:    "/",
 		Expires: time.Now().AddDate(1, 0, 0),

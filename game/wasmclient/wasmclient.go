@@ -22,9 +22,10 @@ import (
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
+	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
 	"github.com/kasworld/goguelike/game/soundmap"
+	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
@@ -128,12 +129,12 @@ func InitPage() {
 		return nil
 	}))
 	js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		go ClearSession(args[0].Int())
+		go clientcookie.ClearSession(args[0].Int())
 		return nil
 	}))
 	app.registerJSButton()
 
-	InitNickname()
+	clientcookie.InitNickname()
 
 	js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML",
 		makeClientInfoHTML()+
@@ -242,7 +243,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 
 	gVP2d.ViewportPos2Index = gInitData.ViewportXYLenList.MakePos2Index()
 
-	SetSession(towerindex, string(gInitData.AccountInfo.SessionG2ID), gInitData.AccountInfo.NickName)
+	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionG2ID), gInitData.AccountInfo.NickName)
 
 	if gInitData.CanUseCmd(c2t_idcmd.AIPlay) {
 		app.reqAIPlay(true)
