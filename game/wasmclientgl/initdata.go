@@ -24,7 +24,7 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/aoscore"
 	"github.com/kasworld/goguelike/game/towerlist4client"
-	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
+	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"

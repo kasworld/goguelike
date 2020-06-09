@@ -14,7 +14,7 @@ package wasmclient
 import (
 	"syscall/js"
 
-	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
+	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/gowasmlib/jslog"
 )

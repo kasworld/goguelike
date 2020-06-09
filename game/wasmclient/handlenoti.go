@@ -24,7 +24,7 @@ import (
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
+	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"

@@ -24,7 +24,7 @@ import (
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
-	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
+	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
