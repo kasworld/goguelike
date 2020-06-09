@@ -24,6 +24,7 @@ import (
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/game/clientfloor"
+	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
@@ -42,10 +43,8 @@ import (
 	"github.com/kasworld/intervalduration"
 )
 
-var msgCopyright = `Copyright 2014,2015,2016,2017,2018,2019,2020 SeukWon Kang 
-		<a href="https://kasw.blogspot.com/" target="_blank">Goguelike</a>`
 var gVP2d *viewport2d.Viewport2d
-var gInitData *InitData
+var gInitData *clientinitdata.InitData
 var gClientTile *clienttile.ClientTile
 
 type WasmClient struct {
@@ -106,7 +105,7 @@ func InitPage() {
 	// hide loading message
 	js.Global().Get("document").Call("getElementById", "loadmsg").Get("style").Set("display", "none")
 
-	gInitData = NewInitData()
+	gInitData = clientinitdata.New()
 	gClientTile = clienttile.New()
 	gameOptions = _gameopt // prevent compiler initialize loop
 	gVP2d = viewport2d.New("viewport2DCanvas", gClientTile)
@@ -137,28 +136,28 @@ func InitPage() {
 	clientcookie.InitNickname()
 
 	js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML",
-		makeClientInfoHTML()+
-			makeHelpFactionHTML()+
-			makeHelpInfoHTML()+
-			makeHelpCarryObjectHTML()+
-			makeHelpPotionHTML()+
-			makeHelpScrollHTML()+
-			makeHelpMoneyColorHTML()+
-			makeHelpTileHTML()+
-			makeHelpConditionHTML()+
-			makeHelpFieldObjHTML())
+		clientinitdata.MakeClientInfoHTML()+
+			clientinitdata.MakeHelpFactionHTML()+
+			MakeHelpInfoHTML()+
+			clientinitdata.MakeHelpCarryObjectHTML()+
+			clientinitdata.MakeHelpPotionHTML()+
+			clientinitdata.MakeHelpScrollHTML()+
+			clientinitdata.MakeHelpMoneyColorHTML()+
+			clientinitdata.MakeHelpTileHTML()+
+			clientinitdata.MakeHelpConditionHTML()+
+			clientinitdata.MakeHelpFieldObjHTML())
 	go func() {
-		str := loadHighScoreHTML() +
-			makeClientInfoHTML() +
-			makeHelpFactionHTML() +
-			makeHelpInfoHTML() +
-			makeHelpCarryObjectHTML() +
-			makeHelpPotionHTML() +
-			makeHelpScrollHTML() +
-			makeHelpMoneyColorHTML() +
-			makeHelpTileHTML() +
-			makeHelpConditionHTML() +
-			makeHelpFieldObjHTML()
+		str := clientinitdata.LoadHighScoreHTML() +
+			clientinitdata.MakeClientInfoHTML() +
+			clientinitdata.MakeHelpFactionHTML() +
+			MakeHelpInfoHTML() +
+			clientinitdata.MakeHelpCarryObjectHTML() +
+			clientinitdata.MakeHelpPotionHTML() +
+			clientinitdata.MakeHelpScrollHTML() +
+			clientinitdata.MakeHelpMoneyColorHTML() +
+			clientinitdata.MakeHelpTileHTML() +
+			clientinitdata.MakeHelpConditionHTML() +
+			clientinitdata.MakeHelpFieldObjHTML()
 		js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML", str)
 	}()
 

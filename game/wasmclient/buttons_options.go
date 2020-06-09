@@ -14,6 +14,7 @@ package wasmclient
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -71,28 +72,28 @@ func (app *WasmClient) updateCenterInfo() {
 		infoobj.Set("innerHTML", "")
 	case 1: // highscore
 		go func() {
-			infoobj.Set("innerHTML", loadHighScoreHTML())
+			infoobj.Set("innerHTML", clientinitdata.LoadHighScoreHTML())
 		}()
 	case 2: // clientinfo
-		infoobj.Set("innerHTML", makeClientInfoHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeClientInfoHTML())
 	case 3: // helpinfo
-		infoobj.Set("innerHTML", makeHelpInfoHTML())
+		infoobj.Set("innerHTML", MakeHelpInfoHTML())
 	case 4: // faction
-		infoobj.Set("innerHTML", makeHelpFactionHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpFactionHTML())
 	case 5: // carryobj
-		infoobj.Set("innerHTML", makeHelpCarryObjectHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpCarryObjectHTML())
 	case 6: // potion
-		infoobj.Set("innerHTML", makeHelpPotionHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpPotionHTML())
 	case 7: // scroll
-		infoobj.Set("innerHTML", makeHelpScrollHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpScrollHTML())
 	case 8: // Money color
-		infoobj.Set("innerHTML", makeHelpMoneyColorHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpMoneyColorHTML())
 	case 9: // tile
-		infoobj.Set("innerHTML", makeHelpTileHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpTileHTML())
 	case 10: // condition
-		infoobj.Set("innerHTML", makeHelpConditionHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpConditionHTML())
 	case 11: // fieldobj
-		infoobj.Set("innerHTML", makeHelpFieldObjHTML())
+		infoobj.Set("innerHTML", clientinitdata.MakeHelpFieldObjHTML())
 	}
 }
 

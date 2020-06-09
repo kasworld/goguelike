@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package wasmclientgl
+package clientinitdata
 
 import (
 	"bytes"
@@ -17,14 +17,11 @@ import (
 	"net/url"
 	"syscall/js"
 
-	"github.com/kasworld/goguelike/config/leveldata"
-
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/config/viewportdata"
-	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/aoscore"
 	"github.com/kasworld/goguelike/game/towerlist4client"
-	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -42,11 +39,11 @@ type InitData struct {
 	ViewportXYLenList findnear.XYLenList
 }
 
-func NewInitData() *InitData {
+func New() *InitData {
 	rtn := &InitData{
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
-	rtn.TowerList = refreshTowerListHTML()
+	rtn.TowerList = RefreshTowerListHTML("towerlist")
 	return rtn
 }
 func (idata *InitData) String() string {
@@ -76,12 +73,12 @@ func (idata *InitData) GetConnectToTowerURL() string {
 func (idata *InitData) MakeServiceInfoHTML() string {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "Goguelike<br/>")
-	fmt.Fprintf(&buf, "Protocol %v<br/>", gInitData.ServiceInfo.ProtocolVersion)
-	fmt.Fprintf(&buf, "Data %v<br/>", gInitData.ServiceInfo.DataVersion)
-	fmt.Fprintf(&buf, "Version %v<br/>", gInitData.ServiceInfo.Version)
-	fmt.Fprintf(&buf, "SessionID %v<br/>", gInitData.AccountInfo.SessionG2ID)
-	fmt.Fprintf(&buf, "ActiveObjID %v<br/>", gInitData.AccountInfo.ActiveObjG2ID)
-	fmt.Fprintf(&buf, "%v<br/>", msgCopyright)
+	fmt.Fprintf(&buf, "Protocol %v<br/>", idata.ServiceInfo.ProtocolVersion)
+	fmt.Fprintf(&buf, "Data %v<br/>", idata.ServiceInfo.DataVersion)
+	fmt.Fprintf(&buf, "Version %v<br/>", idata.ServiceInfo.Version)
+	fmt.Fprintf(&buf, "SessionID %v<br/>", idata.AccountInfo.SessionG2ID)
+	fmt.Fprintf(&buf, "ActiveObjID %v<br/>", idata.AccountInfo.ActiveObjG2ID)
+	fmt.Fprintf(&buf, "%v<br/>", MsgCopyright)
 	return buf.String()
 }
 
@@ -92,14 +89,8 @@ func (idata *InitData) CanUseCmd(cmd c2t_idcmd.CommandID) bool {
 	return idata.AccountInfo.CmdList[cmd]
 }
 
-func SoundByActResult(ar *aoactreqrsp.ActReqRsp) {
-	if ar != nil && ar.IsSuccess() {
-		soundmap.PlayByAct(ar.Done.Act)
-	}
-}
-
-func refreshTowerListHTML() []towerlist4client.TowerInfo2Enter {
-	jsobj := js.Global().Get("document").Call("getElementById", "towerlist")
+func RefreshTowerListHTML(objid string) []towerlist4client.TowerInfo2Enter {
+	jsobj := js.Global().Get("document").Call("getElementById", objid)
 	tlurl := ReplacePathFromHref("towerlist.json")
 	tl, err := towerlist4client.LoadFromURL(tlurl)
 	if err != nil {
@@ -131,7 +122,7 @@ func refreshTowerListHTML() []towerlist4client.TowerInfo2Enter {
 	return tl
 }
 
-func loadHighScoreHTML() string {
+func LoadHighScoreHTML() string {
 	tlurl := ReplacePathFromHref("highscore.json")
 	aol, err := aoscore.LoadFromURL(tlurl)
 	if err != nil {
@@ -178,13 +169,4 @@ func ReplacePathFromHref(s string) string {
 	}
 	u.Path = s
 	return u.String()
-}
-
-func GetQuery() url.Values {
-	loc := js.Global().Get("window").Get("location").Get("href")
-	u, err := url.Parse(loc.String())
-	if err != nil {
-		jslog.Errorf("%v", err)
-	}
-	return u.Query()
 }

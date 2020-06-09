@@ -15,7 +15,9 @@ package wasmclientgl
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"sync"
+	"syscall/js"
 
 	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/lib/g2id"
@@ -31,6 +33,15 @@ import (
 	"github.com/kasworld/gowasmlib/wasmcookie"
 	"github.com/kasworld/gowasmlib/wrapspan"
 )
+
+func GetQuery() url.Values {
+	loc := js.Global().Get("window").Get("location").Get("href")
+	u, err := url.Parse(loc.String())
+	if err != nil {
+		jslog.Errorf("%v", err)
+	}
+	return u.Query()
+}
 
 func (app *WasmClient) NetInit(ctx context.Context) error {
 	app.wsConn = c2t_connwasm.New(

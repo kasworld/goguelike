@@ -23,6 +23,7 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
+	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -503,6 +504,12 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	return nil
+}
+
+func SoundByActResult(ar *aoactreqrsp.ActReqRsp) {
+	if ar != nil && ar.IsSuccess() {
+		soundmap.PlayByAct(ar.Done.Act)
+	}
 }
 
 func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
