@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/wasmclient/clientfloor"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
 	"github.com/kasworld/goguelike/game/wasmclient/soundmap"
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"

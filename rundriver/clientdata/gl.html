@@ -17,7 +17,7 @@
 
     function initPage() {
       const go = new Go();
-      WebAssembly.instantiateStreaming(fetch("wasmclient.wasm"), go.importObject).then((result) => {
+      WebAssembly.instantiateStreaming(fetch("wasmclientgl.wasm"), go.importObject).then((result) => {
           go.run(result.instance);
       }).catch((err) => {
 			console.error(err);

@@ -21,7 +21,7 @@ import (
 
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/wasmclient/clientfloor"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/wasmclient/webtilegroup"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"

@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/viewportdata"
-	"github.com/kasworld/goguelike/game/wasmclient/clientfloor"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwsgorilla"
