@@ -228,6 +228,7 @@ func (tw *Tower) ServiceInit() error {
 	if tw.sconfig.StandAlone {
 		fmt.Printf("WebAdmin  : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.AdminPort)
 		fmt.Printf("WebClient : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
+		fmt.Printf("WebClientGL : %v:%v/gl.html\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
 	}
 
 	return nil
