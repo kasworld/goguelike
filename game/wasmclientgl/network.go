@@ -17,8 +17,12 @@ import (
 	"fmt"
 	"net/url"
 	"sync"
+	"sync/atomic"
 	"syscall/js"
+	"time"
 
+	"github.com/kasworld/goguelike/enum/achievetype"
+	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
@@ -150,4 +154,75 @@ func (app *WasmClient) CheckAPI(hd c2t_packet.Header) error {
 		return nil
 	}
 	return hd.ErrorCode
+}
+
+func (app *WasmClient) reqAIPlay(onoff bool) error {
+	return app.ReqWithRspFnWithAuth(
+		c2t_idcmd.AIPlay,
+		&c2t_obj.ReqAIPlay_data{onoff},
+		func(hd c2t_packet.Header, rsp interface{}) error {
+			return nil
+		},
+	)
+}
+
+func (app *WasmClient) reqAchieveInfo() error {
+	return app.ReqWithRspFnWithAuth(
+		c2t_idcmd.AchieveInfo,
+		&c2t_obj.ReqAchieveInfo_data{},
+		func(hd c2t_packet.Header, rsp interface{}) error {
+			rpk := rsp.(*c2t_obj.RspAchieveInfo_data)
+			app.systemMessage.Append(wrapspan.ColorText("Gold",
+				"== Achievement == "))
+			for i, v := range rpk.Achieve {
+				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
+					"%v : %v ", achievetype.AchieveType(i).String(), v))
+			}
+			return nil
+		},
+	)
+}
+
+func (app *WasmClient) reqHeartbeat() error {
+	return app.ReqWithRspFnWithAuth(
+		c2t_idcmd.Heartbeat,
+		&c2t_obj.ReqHeartbeat_data{
+			Time: time.Now(),
+		},
+		func(hd c2t_packet.Header, rsp interface{}) error {
+			rpk := rsp.(*c2t_obj.RspHeartbeat_data)
+			pingDur := time.Now().Sub(rpk.Time)
+			app.PingDur = (app.PingDur + pingDur) / 2
+			return nil
+		},
+	)
+}
+
+func (app *WasmClient) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
+	if cmd.NeedTurn() != 0 { // is act?
+		atomic.AddInt32(&app.actPacketPerTurn, 1)
+	}
+	app.ReqWithRspFnWithAuth(
+		cmd, arg,
+		func(hd c2t_packet.Header, rsp interface{}) error {
+			return nil
+		},
+	)
+}
+
+func (app *WasmClient) sendMovePacketByInput(tryDir way9type.Way9Type) bool {
+	cf := app.currentFloor()
+	playerX, playerY := app.GetPlayerXY()
+	moveDir := cf.FindMovableDir(playerX, playerY, tryDir)
+	if moveDir != way9type.Center {
+		atomic.AddInt32(&app.movePacketPerTurn, 1)
+		go app.sendPacket(c2t_idcmd.Move,
+			&c2t_obj.ReqMove_data{Dir: moveDir},
+		)
+		return true
+	} else if tryDir != way9type.Center {
+		app.systemMessage.Appendf(
+			"Cannot move to %v", tryDir.String())
+	}
+	return false
 }
