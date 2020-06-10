@@ -27,7 +27,6 @@ import (
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -146,14 +145,6 @@ func (app *WasmClient) ReqWithRspFnWithAuth(cmd c2t_idcmd.CommandID, body interf
 		return fmt.Errorf("Cmd not allowed %v", cmd)
 	}
 	return app.ReqWithRspFn(cmd, body, fn)
-}
-
-// implement C2SConnectI
-func (app *WasmClient) CheckAPI(hd c2t_packet.Header) error {
-	if hd.ErrorCode == c2t_error.None {
-		return nil
-	}
-	return hd.ErrorCode
 }
 
 func (app *WasmClient) reqAIPlay(onoff bool) error {

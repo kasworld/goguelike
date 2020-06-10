@@ -15,9 +15,7 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 )
 
 func (cai *ClientAI) GetRunResult() error {
@@ -55,13 +53,6 @@ func (cai *ClientAI) GetPlayerXY() (int, int) {
 		return ao.X, ao.Y
 	}
 	return 0, 0
-}
-
-func (cai *ClientAI) CheckAPI(hd c2t_packet.Header) error {
-	if hd.ErrorCode == c2t_error.None {
-		return nil
-	}
-	return hd.ErrorCode
 }
 
 func (cai *ClientAI) CanUseCmd(cmd c2t_idcmd.CommandID) bool {
