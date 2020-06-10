@@ -17,7 +17,10 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype"
+	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/lib/g2id"
 
 	"github.com/kasworld/goguelike/config/gameconst"
@@ -504,6 +507,80 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	return nil
+}
+
+// from noti obj list
+func (app *WasmClient) actByControlMode() {
+	if app.olNotiData == nil || app.olNotiData.ActiveObj.HP <= 0 {
+		return
+	}
+
+	switch gameOptions.GetByIDBase("Viewport").State {
+	case 0: // play viewpot mode
+		if app.moveByUserInput() {
+			return
+		}
+	case 1: // floor viewport mode
+	}
+
+	if fo := app.onFieldObj; fo == nil ||
+		(fo != nil && fieldobjacttype.ClientData[fo.ActType].ActOn) {
+		for i, v := range autoActs.ButtonList {
+			if v.State == 0 {
+				if tryAutoActFn[i](app, v) {
+					return
+				}
+			}
+		}
+	}
+}
+func (app *WasmClient) moveByUserInput() bool {
+	cf := app.currentFloor()
+	playerX, playerY := app.GetPlayerXY()
+	if !cf.IsValidPos(playerX, playerY) {
+		jslog.Errorf("ao out of floor %v %v", app.olNotiData.ActiveObj, cf)
+		return false
+	}
+	w, h := cf.Tiles.GetXYLen()
+	switch app.ClientColtrolMode {
+	default:
+		jslog.Errorf("invalid ClientColtrolMode %v", app.ClientColtrolMode)
+	case clientcontroltype.Keyboard:
+		if app.sendMovePacketByInput(app.KeyDir) {
+			return true
+		}
+	case clientcontroltype.FollowMouse:
+		if app.sendMovePacketByInput(app.MouseDir) {
+			return true
+		}
+	case clientcontroltype.MoveToDest:
+		playerPos := [2]int{playerX, playerY}
+		if app.Path2dst == nil || len(app.Path2dst) == 0 {
+			app.ClientColtrolMode = clientcontroltype.Keyboard
+			return false
+		}
+		for i := len(app.Path2dst) - 1; i >= 0; i-- {
+			nextPos := app.Path2dst[i]
+			isContact, dir := way9type.CalcContactDirWrapped(playerPos, nextPos, w, h)
+			if isContact {
+				if dir == way9type.Center {
+					// arrived
+					app.Path2dst = nil
+					app.ClientColtrolMode = clientcontroltype.Keyboard
+					return false
+				} else {
+					go app.sendPacket(c2t_idcmd.Move,
+						&c2t_obj.ReqMove_data{Dir: dir},
+					)
+					return true
+				}
+			}
+		}
+		// fail to path2dest
+		app.Path2dst = nil
+		app.ClientColtrolMode = clientcontroltype.Keyboard
+	}
+	return false
 }
 
 func SoundByActResult(ar *aoactreqrsp.ActReqRsp) {
