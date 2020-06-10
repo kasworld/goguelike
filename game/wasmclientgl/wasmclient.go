@@ -26,7 +26,7 @@ import (
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
-	"github.com/kasworld/goguelike/game/wasmclient/clienttile"
+	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"

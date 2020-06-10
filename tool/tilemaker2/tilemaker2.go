@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
-	"github.com/kasworld/goguelike/game/wasmclient/webtilegroup"
+	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/tool/tilemaker2/drawtile"
 	"github.com/kasworld/goguelike/tool/tilemaker2/runetile"
 	"github.com/kasworld/goguelike/tool/tilemaker2/tile4merge"

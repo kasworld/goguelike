@@ -23,7 +23,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/kasworld/goguelike/game/wasmclient/webtilegroup"
+	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
 type Tile4Merge struct {

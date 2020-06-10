@@ -23,7 +23,7 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/game/wasmclient/webtilegroup"
+	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 	"github.com/kasworld/wrapper"
