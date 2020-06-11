@@ -61,7 +61,7 @@ func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 	app.updateCenterInfo()
-	Focus2Canvas()
+	app.Focus2Canvas()
 }
 
 func (app *WasmClient) updateCenterInfo() {
@@ -104,7 +104,7 @@ func cmdRotateRightInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 	app.updateRightInfo()
-	Focus2Canvas()
+	app.Focus2Canvas()
 }
 
 func (app *WasmClient) updateRightInfo() {
@@ -138,20 +138,20 @@ func cmdToggleVPFloorPlay(obj interface{}, v *htmlbutton.HTMLButton) {
 	case 1: // floor viewport mode
 		app.floorVPPosX, app.floorVPPosY = app.GetPlayerXY()
 	}
-	Focus2Canvas()
+	app.Focus2Canvas()
 }
 
 func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
-	gVP2d.Zoom(v.State) // set zoomstate , needrecalc
 	app, ok := obj.(*WasmClient)
 	if !ok {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
+	app.vp.Zoom(v.State) // set zoomstate , needrecalc
 	app.ResizeCanvas()
 	app.systemMessage.Appendf("Zoom%v", v.State)
-	gVP2d.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
-	Focus2Canvas()
+	// app.vp.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
+	app.Focus2Canvas()
 }
 
 func cmdToggleSound(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -163,11 +163,11 @@ func cmdToggleSound(obj interface{}, v *htmlbutton.HTMLButton) {
 	if v.State == 0 {
 		soundmap.SoundOn = true
 		app.systemMessage.Append("SoundOn")
-		gVP2d.NotiMessage.AppendTf(tcsInfo, "SoundOn")
+		// app.vp.NotiMessage.AppendTf(tcsInfo, "SoundOn")
 	} else {
 		soundmap.SoundOn = false
 		app.systemMessage.Append("SoundOff")
-		gVP2d.NotiMessage.AppendTf(tcsInfo, "SoundOff")
+		// app.vp.NotiMessage.AppendTf(tcsInfo, "SoundOff")
 	}
-	Focus2Canvas()
+	app.Focus2Canvas()
 }

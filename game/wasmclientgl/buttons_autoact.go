@@ -66,13 +66,13 @@ func cmdToggleServerAI(obj interface{}, v *htmlbutton.HTMLButton) {
 	case 0: // Auto
 		go app.reqAIPlay(true)
 		app.systemMessage.Append("AutoPlayOn")
-		gVP2d.NotiMessage.AppendTf(tcsInfo, "AutoPlayOn")
+		// app.vp.NotiMessage.AppendTf(tcsInfo, "AutoPlayOn")
 	case 1: // NoAuto
 		go app.reqAIPlay(false)
 		app.systemMessage.Append("AutoPlayOff")
-		gVP2d.NotiMessage.AppendTf(tcsInfo, "AutoPlayOff")
+		// app.vp.NotiMessage.AppendTf(tcsInfo, "AutoPlayOff")
 	}
-	Focus2Canvas()
+	app.Focus2Canvas()
 }
 
 func tryAutoRebirth(app *WasmClient, v *htmlbutton.HTMLButton) bool {

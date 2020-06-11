@@ -14,6 +14,7 @@ package wasmclientgl
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"syscall/js"
 	"time"
 
@@ -26,9 +27,9 @@ import (
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
-	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
 	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
@@ -43,7 +44,6 @@ import (
 	"github.com/kasworld/intervalduration"
 )
 
-var gVP2d *viewport2d.Viewport2d
 var gInitData *clientinitdata.InitData
 var gClientTile *clienttile.ClientTile
 
@@ -98,6 +98,8 @@ type WasmClient struct {
 	// for floor view mode
 	floorVPPosX int
 	floorVPPosY int
+
+	vp *Viewport
 }
 
 // call after pageload
@@ -108,7 +110,6 @@ func InitPage() {
 	gInitData = clientinitdata.New()
 	gClientTile = clienttile.New()
 	gameOptions = _gameopt // prevent compiler initialize loop
-	gVP2d = viewport2d.New("viewport2DCanvas", gClientTile)
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
@@ -122,6 +123,7 @@ func InitPage() {
 		pid2recv: c2t_pid2rspfn.New(),
 		DoClose:  func() { jslog.Errorf("Too early DoClose call") },
 	}
+	app.vp = NewViewport()
 
 	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		go app.enterTower(args[0].Int())
@@ -202,7 +204,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 	jsdoc.Call("getElementById", "centerinfo").Set("style",
 		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
 
-	Focus2Canvas()
+	app.Focus2Canvas()
 
 	commandButtons.RegisterJSFn(app)
 	autoActs.RegisterJSFn(app)
@@ -228,8 +230,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 	defer app.Cleanup()
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Welcome to Goguelike, %v!", gInitData.GetNickName()))
-	gVP2d.NotiMessage.AppendTf(tcsInfo,
-		"Welcome to Goguelike, %v!", gInitData.GetNickName())
+	// app.vp.NotiMessage.AppendTf(tcsInfo, "Welcome to Goguelike, %v!", gInitData.GetNickName())
 
 	if gameconst.DataVersion != gInitData.ServiceInfo.DataVersion {
 		jslog.Errorf("DataVersion mismatch client %v server %v",
@@ -240,7 +241,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 			c2t_version.ProtocolVersion, gInitData.ServiceInfo.ProtocolVersion)
 	}
 
-	gVP2d.ViewportPos2Index = gInitData.ViewportXYLenList.MakePos2Index()
+	// app.vp.ViewportPos2Index = gInitData.ViewportXYLenList.MakePos2Index()
 
 	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionG2ID), gInitData.AccountInfo.NickName)
 
@@ -273,4 +274,56 @@ loop:
 			go app.reqHeartbeat()
 		}
 	}
+}
+
+func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
+	defer func() {
+		js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
+	}()
+	act := app.DispInterDur.BeginAct()
+	defer act.End()
+
+	app.vp.Draw()
+
+	return nil
+}
+
+func (app *WasmClient) ResizeCanvas() {
+	if gInitData.AccountInfo == nil {
+		app.vp.ResizeCanvas(true)
+	} else {
+		app.vp.ResizeCanvas(false)
+		win := js.Global().Get("window")
+		winH := win.Get("innerHeight").Int()
+		ftsize := fmt.Sprintf("%vpx", winH/100)
+		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
+		for _, v := range commandButtons.ButtonList {
+			v.JSButton().Get("style").Set("font-size", ftsize)
+		}
+		for _, v := range autoActs.ButtonList {
+			v.JSButton().Get("style").Set("font-size", ftsize)
+		}
+		for _, v := range gameOptions.ButtonList {
+			v.JSButton().Get("style").Set("font-size", ftsize)
+		}
+		for _, v := range adminCommandButtons.ButtonList {
+			v.JSButton().Get("style").Set("font-size", ftsize)
+		}
+		js.Global().Get("document").Call("getElementById", "chattext").Get("style").Set("font-size", ftsize)
+		js.Global().Get("document").Call("getElementById", "chatbutton").Get("style").Set("font-size", ftsize)
+	}
+}
+
+// for htmlbutton click fn
+func btnFocus2Canvas(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	app.Focus2Canvas()
+}
+
+func (app *WasmClient) Focus2Canvas() {
+	app.vp.Focus()
 }

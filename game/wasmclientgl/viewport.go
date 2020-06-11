@@ -1,4 +1,4 @@
-// Copyright 2014,2015,2016,2017,2018,2019,2020 SeukWon Kang (kasworld@gmail.com)
+// Copyright 2015,2016,2017,2018,2019,2020 SeukWon Kang (kasworld@gmail.com)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,124 +12,116 @@
 package wasmclientgl
 
 import (
-	"fmt"
+	"math/rand"
 	"syscall/js"
+	"time"
 
-	"github.com/kasworld/goguelike/enum/clientcontroltype"
-	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/htmlbutton"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/gowasmlib/jslog"
-	"github.com/kasworld/gowasmlib/wrapspan"
+	"github.com/kasworld/goguelike/enum/factiontype"
+	"github.com/kasworld/goguelike/lib/g2id"
 )
 
-// for htmlbutton click fn
-func btnFocus2Canvas(obj interface{}, v *htmlbutton.HTMLButton) {
-	Focus2Canvas()
+type LightNHelper struct {
+	Light  js.Value
+	Helper js.Value
 }
 
-func Focus2Canvas() {
-	gVP2d.Focus()
+type Viewport struct {
+	rnd        *rand.Rand
+	ViewWidth  int
+	ViewHeight int
+	RefSize    int
+
+	CanvasGL js.Value
+	threejs  js.Value
+	scene    js.Value
+	camera   js.Value
+	renderer js.Value
+
+	// title
+	fontLoader              js.Value
+	font_helvetiker_regular js.Value
+	jsoTitle                js.Value
+	lightTitle              js.Value
+
+	// background
+	textureLoader js.Value
+	background    js.Value
+
+	jsSceneObjs map[g2id.G2ID]js.Value
+
+	// cache
+	aoGeometryCache    map[factiontype.FactionType]js.Value
+	colorMaterialCache map[uint32]js.Value
 }
 
-func (app *WasmClient) ResizeCanvas() {
-
-	if gInitData.AccountInfo == nil {
-		gVP2d.DrawTitle()
-	} else {
-		gVP2d.Resize()
-		ftsize := fmt.Sprintf("%vpx", gVP2d.RefSize/4)
-		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
-		for _, v := range commandButtons.ButtonList {
-			v.JSButton().Get("style").Set("font-size", ftsize)
-		}
-		for _, v := range autoActs.ButtonList {
-			v.JSButton().Get("style").Set("font-size", ftsize)
-		}
-		for _, v := range gameOptions.ButtonList {
-			v.JSButton().Get("style").Set("font-size", ftsize)
-		}
-		for _, v := range adminCommandButtons.ButtonList {
-			v.JSButton().Get("style").Set("font-size", ftsize)
-		}
-		js.Global().Get("document").Call("getElementById", "chattext").Get("style").Set("font-size", ftsize)
-		js.Global().Get("document").Call("getElementById", "chatbutton").Get("style").Set("font-size", ftsize)
+func NewViewport() *Viewport {
+	vp := &Viewport{
+		rnd:                rand.New(rand.NewSource(time.Now().UnixNano())),
+		jsSceneObjs:        make(map[g2id.G2ID]js.Value),
+		aoGeometryCache:    make(map[factiontype.FactionType]js.Value),
+		colorMaterialCache: make(map[uint32]js.Value),
 	}
+
+	vp.threejs = js.Global().Get("THREE")
+	vp.renderer = vp.ThreeJsNew("WebGLRenderer")
+	vp.CanvasGL = vp.renderer.Get("domElement")
+	js.Global().Get("document").Call("getElementById", "canvasglholder").Call("appendChild", vp.CanvasGL)
+	vp.CanvasGL.Set("tabindex", "1")
+
+	vp.scene = vp.ThreeJsNew("Scene")
+
+	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 75, 1, 1, 1000)
+
+	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
+	vp.fontLoader = vp.ThreeJsNew("FontLoader")
+	vp.initGrid()
+	vp.initBackground()
+	vp.initTitle()
+	return vp
 }
 
-func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
-	if app.waitObjList {
-		// app.systemMessage.Append(
-		// 	wrapspan.ColorText("OrangeRed", "waiting object list"))
-		app.needRefreshSet = true
-		return nil
-	}
-	defer func() {
-		js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
-	}()
-
-	cf := app.currentFloor()
-	if cf == nil {
-		jslog.Warn("no currentfloor")
-		return nil
-	}
-	if cf.FloorInfo == nil {
-		jslog.Warn("no floorinfo")
-		return nil
-	}
-	if app.taNotiData == nil {
-		jslog.Warn("no app.taNotiData")
-		return nil
-	}
-	if cf.FloorInfo.G2ID != app.taNotiData.FloorG2ID {
-		app.systemMessage.Append(wrapspan.ColorText("OrangeRed", "changeing floor..."))
-		return nil
-	}
-	actMoveDir := app.getMoveDirByControlMode()
-	frameProgress := app.ClientJitter.GetInFrameProgress2()
-	envBias := app.GetEnvBias()
-	act := app.DispInterDur.BeginAct()
-	if gameOptions.GetByIDBase("Viewport").State == 0 { // play viewport mode
-		scrollDir := app.getScrollDir()
-		if err := gVP2d.DrawPlayVP(
-			frameProgress, envBias, app.TowerBias(), cf.GetBias(),
-			gInitData.AccountInfo.ActiveObjG2ID, cf,
-			scrollDir, actMoveDir,
-			app.taNotiData,
-			app.olNotiData, app.lastOLNotiData,
-			app.Path2dst,
-		); err != nil {
-			jslog.Errorf("%v", err)
-		}
-	} else {
-		if err := gVP2d.DrawFloorVP(
-			envBias,
-			cf, app.floorVPPosX, app.floorVPPosY, actMoveDir); err != nil {
-			jslog.Errorf("%v", err)
-		}
-	}
-	act.End()
-	return nil
+func (vp *Viewport) Hide() {
+	vp.CanvasGL.Get("style").Set("display", "none")
+}
+func (vp *Viewport) Show() {
+	vp.CanvasGL.Get("style").Set("display", "initial")
 }
 
-func (app *WasmClient) getMoveDirByControlMode() way9type.Way9Type {
-	dir := way9type.Center
-	if app.ClientColtrolMode == clientcontroltype.FollowMouse {
-		dir = app.MouseDir
+func (vp *Viewport) ResizeCanvas(title bool) {
+	win := js.Global().Get("window")
+	winW := win.Get("innerWidth").Int()
+	winH := win.Get("innerHeight").Int()
+	if title {
+		winH /= 3
 	}
-	if app.ClientColtrolMode == clientcontroltype.Keyboard {
-		dir = app.KeyDir
-	}
-	return dir
+	vp.CanvasGL.Call("setAttribute", "width", winW)
+	vp.CanvasGL.Call("setAttribute", "height", winH)
+	vp.ViewWidth = winW
+	vp.ViewHeight = winH
+
+	vp.camera.Set("aspect", float64(winW)/float64(winH))
+	vp.camera.Call("updateProjectionMatrix")
+
+	vp.CanvasGL.Call("setAttribute", "width", vp.ViewWidth)
+	vp.CanvasGL.Call("setAttribute", "height", vp.ViewHeight)
+	vp.renderer.Call("setSize", vp.ViewWidth, vp.ViewHeight)
 }
 
-func (app *WasmClient) getScrollDir() way9type.Way9Type {
-	scrollDir := way9type.Center
-	if pao, exist := app.AOG2ID2AOClient[gInitData.AccountInfo.ActiveObjG2ID]; exist {
-		if pao.Act == c2t_idcmd.Move && pao.Result == c2t_error.None {
-			scrollDir = pao.Dir
-		}
-	}
-	return scrollDir
+func (vp *Viewport) Focus() {
+	vp.CanvasGL.Call("focus")
+}
+
+func (vp *Viewport) Zoom(state int) {
+}
+
+func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []js.Value) interface{}) {
+	vp.CanvasGL.Call("addEventListener", evt, js.FuncOf(fn))
+}
+
+func (vp *Viewport) Draw() {
+	vp.renderer.Call("render", vp.scene, vp.camera)
+}
+
+func (vp *Viewport) ThreeJsNew(name string, args ...interface{}) js.Value {
+	return vp.threejs.Get(name).New(args...)
 }
