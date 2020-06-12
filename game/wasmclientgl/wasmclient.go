@@ -124,6 +124,7 @@ func InitPage() {
 		DoClose:  func() { jslog.Errorf("Too early DoClose call") },
 	}
 	app.vp = NewViewport()
+	js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
 
 	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		go app.enterTower(args[0].Int())
@@ -261,8 +262,6 @@ func (app *WasmClient) enterTower(towerindex int) {
 
 	timerPingTk := time.NewTicker(time.Second)
 	defer timerPingTk.Stop()
-
-	js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
 
 loop:
 	for {

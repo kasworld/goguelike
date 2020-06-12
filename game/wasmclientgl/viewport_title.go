@@ -53,7 +53,7 @@ func (vp *Viewport) initTitle() {
 
 func (vp *Viewport) fontLoaded(this js.Value, args []js.Value) interface{} {
 	vp.font_helvetiker_regular = args[0]
-	str := "gowasm3dgame"
+	str := "goguelike"
 
 	ftGeo := vp.ThreeJsNew("TextGeometry", str, map[string]interface{}{
 		"font":           vp.font_helvetiker_regular,
