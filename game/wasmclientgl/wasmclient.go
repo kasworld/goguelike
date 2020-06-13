@@ -205,6 +205,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 	jsdoc.Call("getElementById", "centerinfo").Set("style",
 		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
 
+	app.vp.hideTitle()
 	app.Focus2Canvas()
 
 	commandButtons.RegisterJSFn(app)

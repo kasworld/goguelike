@@ -15,37 +15,32 @@ import (
 	"syscall/js"
 )
 
-func (vp *Viewport) setTitleCamera() {
-	// set title camera pos
-	SetPosition(vp.camera,
-		StageSize/2,
-		StageSize/2,
-		StageSize,
-	)
-	vp.camera.Call("lookAt",
-		vp.ThreeJsNew("Vector3",
-			StageSize/2,
-			StageSize/2,
-			0,
-		),
-	)
-	vp.camera.Call("updateProjectionMatrix")
-}
-
 func (vp *Viewport) hideTitle() {
 	vp.scene.Call("remove", vp.jsoTitle)
-	vp.scene.Call("remove", vp.lightTitle)
+	// vp.scene.Call("remove", vp.light)
 }
 
 func (vp *Viewport) initTitle() {
-	vp.lightTitle = vp.ThreeJsNew("PointLight", 0xffffff, 1)
-	SetPosition(vp.lightTitle,
+	// init light
+	vp.light = vp.ThreeJsNew("PointLight", 0xffffff, 1)
+	SetPosition(vp.light,
 		StageSize,
 		StageSize,
 		StageSize,
 	)
-	vp.scene.Call("add", vp.lightTitle)
-	vp.setTitleCamera()
+	vp.scene.Call("add", vp.light)
+
+	// set title camera pos
+	SetPosition(vp.camera,
+		StageSize/2, StageSize/2, StageSize,
+	)
+	vp.camera.Call("lookAt",
+		vp.ThreeJsNew("Vector3",
+			StageSize/2, StageSize/2, 0,
+		),
+	)
+	vp.camera.Call("updateProjectionMatrix")
+
 	vp.fontLoader.Call("load", "/fonts/helvetiker_regular.typeface.json",
 		js.FuncOf(vp.fontLoaded),
 	)

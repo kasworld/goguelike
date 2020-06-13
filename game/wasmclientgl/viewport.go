@@ -20,34 +20,29 @@ import (
 	"github.com/kasworld/goguelike/lib/g2id"
 )
 
-type LightNHelper struct {
-	Light  js.Value
-	Helper js.Value
-}
-
 type Viewport struct {
 	rnd        *rand.Rand
 	ViewWidth  int
 	ViewHeight int
 	RefSize    int
 
-	CanvasGL js.Value
-	threejs  js.Value
-	scene    js.Value
-	camera   js.Value
-	renderer js.Value
+	CanvasGL      js.Value
+	threejs       js.Value
+	camera        js.Value
+	light         js.Value
+	renderer      js.Value
+	fontLoader    js.Value
+	textureLoader js.Value
+
+	scene       js.Value
+	jsSceneObjs map[g2id.G2ID]js.Value
 
 	// title
-	fontLoader              js.Value
 	font_helvetiker_regular js.Value
 	jsoTitle                js.Value
-	lightTitle              js.Value
 
 	// background
-	textureLoader js.Value
-	background    js.Value
-
-	jsSceneObjs map[g2id.G2ID]js.Value
+	background js.Value
 
 	// cache
 	aoGeometryCache    map[factiontype.FactionType]js.Value
@@ -69,9 +64,7 @@ func NewViewport() *Viewport {
 	vp.CanvasGL.Set("tabindex", "1")
 
 	vp.scene = vp.ThreeJsNew("Scene")
-
-	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 75, 1, 1, 1000)
-
+	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 75, 1, 1, StageSize*2)
 	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
 	vp.initGrid()

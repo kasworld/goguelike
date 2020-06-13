@@ -11,9 +11,66 @@
 
 package wasmclientgl
 
-const StageSize = 1024
+import (
+	"math"
+	"syscall/js"
+)
+
+const StageSize = 1024.0
+
+func (vp *Viewport) makeGridHelper(
+	co uint32,
+	x, y, z float64,
+	lookat js.Value,
+) js.Value {
+	helper := vp.ThreeJsNew("GridHelper",
+		StageSize, 10, co, 0x404040)
+	helper.Get("position").Set("x", x)
+	helper.Get("position").Set("y", y)
+	helper.Get("position").Set("z", z)
+	helper.Get("geometry").Call("rotateX", math.Pi/2)
+	helper.Call("lookAt", lookat)
+	return helper
+}
 
 func (vp *Viewport) initGrid() {
+	min := 0.0
+	max := StageSize
+	mid := StageSize / 2
+	center := vp.ThreeJsNew("Vector3",
+		mid, mid, mid,
+	)
+
+	// y min
+	vp.scene.Call("add", vp.makeGridHelper(
+		0x0000ff, mid, min, mid, center,
+	))
+
+	// y max
+	vp.scene.Call("add", vp.makeGridHelper(
+		0xffff00, mid, max, mid, center,
+	))
+
+	// x min
+	vp.scene.Call("add", vp.makeGridHelper(
+		0xff0000, min, mid, mid, center,
+	))
+
+	// x max
+	vp.scene.Call("add", vp.makeGridHelper(
+		0x00ffff, max, mid, mid, center,
+	))
+
+	// z min
+	vp.scene.Call("add", vp.makeGridHelper(
+		0x00ff00, mid, mid, min, center,
+	))
+
+	// z max
+	vp.scene.Call("add", vp.makeGridHelper(
+		0xff00ff, mid, mid, max, center,
+	))
+
 	box3 := vp.ThreeJsNew("Box3",
 		vp.ThreeJsNew("Vector3", 0, 0, 0),
 		vp.ThreeJsNew("Vector3", StageSize, StageSize, StageSize),
@@ -23,11 +80,11 @@ func (vp *Viewport) initGrid() {
 }
 
 func (vp *Viewport) initBackground() {
-	bgMap := vp.textureLoader.Call("load", "/resource/background.png")
+	bgMap := vp.textureLoader.Call("load", "/tiles/Grass.png")
 	bgMap.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
 	bgMap.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
-	bgMap.Get("repeat").Set("x", 25)
-	bgMap.Get("repeat").Set("y", 25)
+	bgMap.Get("repeat").Set("x", 5)
+	bgMap.Get("repeat").Set("y", 5)
 	// var groundTexture = loader.load( 'textures/terrain/grasslight-big.jpg' );
 	// groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
 	// groundTexture.repeat.set( 25, 25 );
@@ -45,17 +102,13 @@ func (vp *Viewport) initBackground() {
 		},
 	)
 	bgGeo := vp.ThreeJsNew("PlaneBufferGeometry",
-		StageSize*25, StageSize*25)
+		StageSize*5, StageSize*5)
 	vp.background = vp.ThreeJsNew("Mesh", bgGeo, bgMaterial)
 	// jslog.Info(vp.background)
-	// vp.background = vp.ThreeJsNew("Sprite", bgMaterial)
-	// vp.background.Get("scale").Set("x", StageSize)
-	// vp.background.Get("scale").Set("y", StageSize)
-	// vp.background.Get("scale").Set("z", 1)
 	SetPosition(vp.background,
 		StageSize/2,
 		StageSize/2,
-		0,
+		-10,
 	)
 	vp.scene.Call("add", vp.background)
 }
