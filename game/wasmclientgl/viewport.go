@@ -16,7 +16,11 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/factiontype"
+	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
+	"github.com/kasworld/goguelike/enum/potiontype"
+	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/lib/g2id"
 )
 
@@ -41,12 +45,19 @@ type Viewport struct {
 	font_helvetiker_regular js.Value
 	jsoTitle                js.Value
 
-	// background
-	background js.Value
+	// terrain
+	floorMeshCache map[g2id.G2ID]js.Value
 
 	// cache
-	aoGeometryCache    map[factiontype.FactionType]js.Value
 	colorMaterialCache map[uint32]js.Value
+
+	aoGeometryCache map[factiontype.FactionType]js.Value
+	foGeometryCache map[fieldobjdisplaytype.FieldObjDisplayType]js.Value
+
+	eqGeometryCache     map[equipslottype.EquipSlotType]js.Value
+	potionGeometryCache map[potiontype.PotionType]js.Value
+	scrollGeometryCache map[scrolltype.ScrollType]js.Value
+	moneyGeometry       js.Value
 }
 
 func NewViewport() *Viewport {
@@ -68,7 +79,6 @@ func NewViewport() *Viewport {
 	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
 	vp.initGrid()
-	vp.initBackground()
 	vp.initTitle()
 	return vp
 }
