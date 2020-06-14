@@ -15,7 +15,6 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/factiontype"
-	"github.com/kasworld/goguelike/lib/g2id"
 )
 
 func (vp *Viewport) getColorMaterial(co uint32) js.Value {
@@ -41,41 +40,3 @@ func (vp *Viewport) getAOGeometry(gotype factiontype.FactionType) js.Value {
 	}
 	return geo
 }
-
-func (vp *Viewport) getFieldMesh(
-	floorG2ID g2id.G2ID, w, h int) js.Value {
-	mesh, exist := vp.fieldMeshCache[floorG2ID]
-	if !exist {
-		flTex := vp.textureLoader.Call("load", "/tiles/Grass.png")
-		flTex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
-		flTex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
-		flTex.Get("repeat").Set("x", 5)
-		flTex.Get("repeat").Set("y", 5)
-		bgMaterial := vp.ThreeJsNew("MeshBasicMaterial",
-			map[string]interface{}{
-				"map": flTex,
-			},
-		)
-		bgGeo := vp.ThreeJsNew("PlaneBufferGeometry",
-			StageSize*5, StageSize*5)
-		mesh = vp.ThreeJsNew("Mesh", bgGeo, bgMaterial)
-		vp.fieldMeshCache[floorG2ID] = mesh
-		// jslog.Info(vp.fieldMeshCache[floorG2ID])
-		SetPosition(mesh,
-			StageSize/2, StageSize/2, -10,
-		)
-	}
-	return mesh
-}
-
-// var groundTexture = loader.load( 'textures/terrain/grasslight-big.jpg' );
-// groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-// groundTexture.repeat.set( 25, 25 );
-// groundTexture.anisotropy = 16;
-// groundTexture.encoding = THREE.sRGBEncoding;
-// var groundMaterial = new THREE.MeshLambertMaterial( { map: groundTexture } );
-// var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 20000, 20000 ), groundMaterial );
-// mesh.position.y = - 250;
-// mesh.rotation.x = - Math.PI / 2;
-// mesh.receiveShadow = true;
-// scene.add( mesh );
