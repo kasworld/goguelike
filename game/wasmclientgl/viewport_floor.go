@@ -29,7 +29,8 @@ import (
 // mesh.receiveShadow = true;
 // scene.add( mesh );
 
-func (vp *Viewport) getFloorMesh(floorG2ID g2id.G2ID) js.Value {
+func (vp *Viewport) getFloorMesh(
+	floorG2ID g2id.G2ID, w, h int) js.Value {
 	mesh, exist := vp.floorMeshCache[floorG2ID]
 	if !exist {
 		flTex := vp.textureLoader.Call("load", "/tiles/Grass.png")

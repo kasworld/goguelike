@@ -293,9 +293,7 @@ func (app *WasmClient) ResizeCanvas() {
 		app.vp.ResizeCanvas(true)
 	} else {
 		app.vp.ResizeCanvas(false)
-		win := js.Global().Get("window")
-		winH := win.Get("innerHeight").Int()
-		ftsize := fmt.Sprintf("%vpx", winH/100)
+		ftsize := fmt.Sprintf("%vpx", app.vp.ViewHeight/100)
 		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
 		for _, v := range commandButtons.ButtonList {
 			v.JSButton().Get("style").Set("font-size", ftsize)

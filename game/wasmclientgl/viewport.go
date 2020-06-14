@@ -28,7 +28,6 @@ type Viewport struct {
 	rnd        *rand.Rand
 	ViewWidth  int
 	ViewHeight int
-	RefSize    int
 
 	CanvasGL      js.Value
 	threejs       js.Value
@@ -105,9 +104,9 @@ func (vp *Viewport) ResizeCanvas(title bool) {
 	vp.camera.Set("aspect", float64(winW)/float64(winH))
 	vp.camera.Call("updateProjectionMatrix")
 
-	vp.CanvasGL.Call("setAttribute", "width", vp.ViewWidth)
-	vp.CanvasGL.Call("setAttribute", "height", vp.ViewHeight)
-	vp.renderer.Call("setSize", vp.ViewWidth, vp.ViewHeight)
+	vp.CanvasGL.Call("setAttribute", "width", winW)
+	vp.CanvasGL.Call("setAttribute", "height", winH)
+	vp.renderer.Call("setSize", winW, winH)
 }
 
 func (vp *Viewport) Focus() {
