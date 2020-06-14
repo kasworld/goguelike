@@ -45,7 +45,7 @@ type Viewport struct {
 	jsoTitle                js.Value
 
 	// terrain
-	floorMeshCache map[g2id.G2ID]js.Value
+	fieldMeshCache map[g2id.G2ID]js.Value
 
 	// cache
 	colorMaterialCache map[uint32]js.Value
@@ -77,7 +77,7 @@ func NewViewport() *Viewport {
 	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 75, 1, 1, StageSize*2)
 	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
-	vp.initGrid()
+	vp.initHelpers()
 	vp.initTitle()
 	return vp
 }

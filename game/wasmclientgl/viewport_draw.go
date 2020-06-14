@@ -25,9 +25,9 @@ func (vp *Viewport) add2Scene(o *c2t_obj.ActiveObjClient) js.Value {
 		// jso.Get("rotation").Set("z", o.RotVt[2])
 		return jso
 	}
-	geometry := vp.getObjGeometry(o.Faction)
-	material := vp.getColorMaterial(uint32(o.Faction.Color24()))
-	jso := vp.ThreeJsNew("Mesh", geometry, material)
+	geo := vp.getAOGeometry(o.Faction)
+	mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
+	jso := vp.ThreeJsNew("Mesh", geo, mat)
 	SetPosition(jso, o.X, o.Y, 0)
 	// jso.Get("rotation").Set("x", o.RotVt[0])
 	// jso.Get("rotation").Set("y", o.RotVt[1])

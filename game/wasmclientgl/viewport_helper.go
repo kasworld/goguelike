@@ -33,7 +33,7 @@ func (vp *Viewport) makeGridHelper(
 	return helper
 }
 
-func (vp *Viewport) initGrid() {
+func (vp *Viewport) initHelpers() {
 	min := 0.0
 	max := StageSize
 	mid := StageSize / 2
