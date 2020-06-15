@@ -37,8 +37,6 @@ import (
 	"github.com/kasworld/ifop"
 )
 
-const DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
-
 func (app *WasmClient) makeBaseInfoHTML() string {
 	if gInitData.TowerInfo == nil {
 		return "Wait to enter tower"

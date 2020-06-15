@@ -14,9 +14,20 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
+
+var wrapInfo = [tile.Tile_Count]struct {
+	Xcount int
+	Ycount int
+	WrapX  func(int) int
+	WrapY  func(int) int
+}{}
 
 type ClientField struct {
 	W   int
@@ -28,6 +39,95 @@ type ClientField struct {
 	Mat  js.Value
 	Geo  js.Value
 	Mesh js.Value
+}
+
+func (vp *Viewport) drawFloorTiles(
+	drawCtx js.Value,
+	cf *clientfloor.ClientFloor,
+	vpData *c2t_obj.NotiVPTiles_data,
+	ViewportXYLenList findnear.XYLenList,
+) {
+	for i, v := range ViewportXYLenList {
+		fx := cf.XWrapSafe(v.X + vpData.VPX)
+		fy := cf.YWrapSafe(v.Y + vpData.VPY)
+		tl := vpData.VPTiles[i]
+		dstX := fx * CellSize
+		dstY := fy * CellSize
+		diffbase := fx*5 + fy*3
+		for i := 0; i < tile.Tile_Count; i++ {
+			shX := 0.0
+			shY := 0.0
+			tlt := tile.Tile(i)
+			if tl.TestByTile(tlt) {
+				if vp.TileImgCnvList[i] != nil {
+					// texture tile
+					tlic := vp.TileImgCnvList[i]
+					wrap := wrapInfo[i]
+					tx := fx % wrap.Xcount
+					ty := fy % wrap.Ycount
+					srcx := wrap.WrapX(tx*CellSize + int(shX))
+					srcy := wrap.WrapY(ty*CellSize + int(shY))
+					drawCtx.Call("drawImage", tlic.Cnv,
+						srcx, srcy, CellSize, CellSize,
+						dstX, dstY, CellSize, CellSize)
+
+				} else if tlt == tile.Wall {
+					// wall tile process
+					tlList := vp.clientTile.FloorTiles[i]
+					tilediff := vp.calcWallTileDiff(cf, fx, fy)
+					ti := tlList[tilediff%len(tlList)]
+					drawCtx.Call("drawImage", vp.clientTile.TilePNG.Cnv,
+						ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+						dstX, dstY, CellSize, CellSize)
+				} else if tlt == tile.Window {
+					// window tile process
+					tlList := vp.clientTile.FloorTiles[i]
+					tlindex := 0
+					if vp.checkWallAt(cf, fx, fy-1) && vp.checkWallAt(cf, fx, fy+1) { // n-s window
+						tlindex = 1
+					}
+					ti := tlList[tlindex]
+					drawCtx.Call("drawImage", vp.clientTile.TilePNG.Cnv,
+						ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+						dstX, dstY, CellSize, CellSize)
+				} else {
+					// bitmap tile
+					tlList := vp.clientTile.FloorTiles[i]
+					tilediff := diffbase + int(shX)
+					ti := tlList[tilediff%len(tlList)]
+					drawCtx.Call("drawImage", vp.clientTile.TilePNG.Cnv,
+						ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+						dstX, dstY, CellSize, CellSize)
+				}
+			}
+		}
+	}
+}
+
+func (vp *Viewport) calcWallTileDiff(cf *clientfloor.ClientFloor, flx, fly int) int {
+	rtn := 0
+	if vp.checkWallAt(cf, flx, fly-1) {
+		rtn |= 1
+	}
+	if vp.checkWallAt(cf, flx+1, fly) {
+		rtn |= 1 << 1
+	}
+	if vp.checkWallAt(cf, flx, fly+1) {
+		rtn |= 1 << 2
+	}
+	if vp.checkWallAt(cf, flx-1, fly) {
+		rtn |= 1 << 3
+	}
+	return rtn
+}
+
+func (vp *Viewport) checkWallAt(cf *clientfloor.ClientFloor, flx, fly int) bool {
+	flx = cf.XWrapSafe(flx)
+	fly = cf.YWrapSafe(fly)
+	tl := cf.Tiles[flx][fly]
+	return tl.TestByTile(tile.Wall) ||
+		tl.TestByTile(tile.Door) ||
+		tl.TestByTile(tile.Window)
 }
 
 func (vp *Viewport) getFieldMesh(

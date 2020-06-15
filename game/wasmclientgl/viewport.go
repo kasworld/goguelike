@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"math/rand"
 	"syscall/js"
 	"time"
@@ -21,13 +22,23 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
+	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/lib/imagecanvas"
+	"github.com/kasworld/wrapper"
 )
 
 type Viewport struct {
-	rnd        *rand.Rand
+	rnd *rand.Rand
+
 	ViewWidth  int
 	ViewHeight int
+
+	// for tile draw
+	clientTile       *clienttile.ClientTile
+	TileImgCnvList   [tile.Tile_Count]*imagecanvas.ImageCanvas
+	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
 	CanvasGL      js.Value
 	threejs       js.Value
@@ -78,6 +89,24 @@ func NewViewport() *Viewport {
 	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 75, 1, 1, StageSize*2)
 	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
+
+	// for tile draw
+	for i, v := range tile.TileScrollAttrib {
+		if v.Texture {
+			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
+			vp.TileImgCnvList[i] = imagecanvas.NewByID(idstr)
+		}
+	}
+	vp.DarkerTileImgCnv = imagecanvas.NewByID("DarkerPng")
+	for i, v := range tile.TileScrollAttrib {
+		if v.Texture {
+			wrapInfo[i].Xcount = vp.TileImgCnvList[i].W / CellSize
+			wrapInfo[i].Ycount = vp.TileImgCnvList[i].H / CellSize
+			wrapInfo[i].WrapX = wrapper.New(vp.TileImgCnvList[i].W - CellSize).WrapSafe
+			wrapInfo[i].WrapY = wrapper.New(vp.TileImgCnvList[i].H - CellSize).WrapSafe
+		}
+	}
+
 	vp.initHelpers()
 	vp.initTitle()
 	vp.initField()

@@ -16,8 +16,8 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/canvastext"
+	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/gowasmlib/jslog"
 )
