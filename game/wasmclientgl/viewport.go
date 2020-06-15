@@ -23,7 +23,6 @@ import (
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/wrapper"
@@ -36,7 +35,6 @@ type Viewport struct {
 	ViewHeight int
 
 	// for tile draw
-	clientTile       *clienttile.ClientTile
 	TileImgCnvList   [tile.Tile_Count]*imagecanvas.ImageCanvas
 	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
@@ -109,7 +107,6 @@ func NewViewport() *Viewport {
 
 	vp.initHelpers()
 	vp.initTitle()
-	vp.initField()
 	return vp
 }
 

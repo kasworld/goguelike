@@ -17,18 +17,17 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
-	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/g2id"
-
-	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
+	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/soundmap"
+	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -108,6 +107,10 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
+
+		clFd := app.vp.NewClientField(robj.FI)
+		app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
+		app.vp.ChangeToClientField(clFd)
 		// app.vp.NotiMessage.AppendTf(tcsInfo, "Found floor %v", cf.FloorInfo.Name)
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
@@ -613,6 +616,10 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 			"Discover floor complete %v", cf.FloorInfo.Name))
 		// app.vp.NotiMessage.AppendTf(tcsInfo, "Discover floor complete %v", cf.FloorInfo.Name)
 	}
+	app.vp.UpdateClientField(
+		cf,
+		app.taNotiData, gInitData.ViewportXYLenList,
+	)
 	return nil
 }
 
@@ -632,6 +639,11 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
+
+		clFd := app.vp.NewClientField(robj.FI)
+		app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
+		// app.vp.ChangeToClientField(clFd)
+
 		// app.vp.NotiMessage.AppendTf(tcsInfo, "Found floor %v", cf.FloorInfo.Name)
 	}
 
