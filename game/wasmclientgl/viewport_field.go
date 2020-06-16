@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"syscall/js"
 
 	"github.com/kasworld/findnear"
@@ -132,17 +133,6 @@ func (vp *Viewport) checkWallAt(cf *clientfloor.ClientFloor, flx, fly int) bool 
 		tl.TestByTile(tile.Window)
 }
 
-// floor g2id , canvas width, height
-// func (vp *Viewport) getFieldMesh(
-// 	floorG2ID g2id.G2ID, w, h int) *ClientField {
-// 	clFd, exist := vp.floorG2ID2ClientField[floorG2ID]
-// 	if !exist {
-// 		vp.floorG2ID2ClientField[floorG2ID] = clFd
-// 		// jslog.Info(vp.floorG2ID2ClientField[floorG2ID])
-// 	}
-// 	return clFd
-// }
-
 func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	w := fi.W * CellSize
 	h := fi.H * CellSize
@@ -174,7 +164,18 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	clFd.Geo = vp.ThreeJsNew("PlaneBufferGeometry",
 		StageSize*5, StageSize*5)
 	clFd.Mesh = vp.ThreeJsNew("Mesh", clFd.Geo, clFd.Mat)
+
 	SetPosition(clFd.Mesh, StageSize/2, StageSize/2, -10)
+
+	clFd.Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", CellSize))
+	clFd.Ctx.Set("fillStyle", "gray")
+	clFd.Ctx.Call("fillText", fi.Name, 100, 100)
+	// clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
+
+	// clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+	// 	0, 0, CellSize*16, CellSize*16,
+	// 	0, 0, CellSize*16, CellSize*16)
+
 	return clFd
 }
 
