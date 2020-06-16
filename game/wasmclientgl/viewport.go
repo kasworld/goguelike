@@ -84,7 +84,7 @@ func NewViewport() *Viewport {
 	vp.CanvasGL.Set("tabindex", "1")
 
 	vp.scene = vp.ThreeJsNew("Scene")
-	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 75, 1, 1, StageSize*2)
+	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 60, 1, 1, StageSize*2)
 	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
 

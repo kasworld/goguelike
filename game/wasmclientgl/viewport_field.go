@@ -137,6 +137,8 @@ func (vp *Viewport) checkWallAt(cf *clientfloor.ClientFloor, flx, fly int) bool 
 func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	w := fi.W * CellSize
 	h := fi.H * CellSize
+	xRepeat := 3
+	yRepeat := 3
 	clFd := &ClientField{
 		W: w,
 		H: h,
@@ -155,15 +157,15 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	clFd.Tex = vp.ThreeJsNew("CanvasTexture", clFd.Cnv)
 	clFd.Tex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
 	clFd.Tex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
-	clFd.Tex.Get("repeat").Set("x", 5)
-	clFd.Tex.Get("repeat").Set("y", 5)
+	clFd.Tex.Get("repeat").Set("x", xRepeat)
+	clFd.Tex.Get("repeat").Set("y", yRepeat)
 	clFd.Mat = vp.ThreeJsNew("MeshBasicMaterial",
 		map[string]interface{}{
 			"map": clFd.Tex,
 		},
 	)
 	clFd.Geo = vp.ThreeJsNew("PlaneBufferGeometry",
-		StageSize*5, StageSize*5)
+		StageSize*xRepeat, StageSize*yRepeat)
 	clFd.Mesh = vp.ThreeJsNew("Mesh", clFd.Geo, clFd.Mat)
 
 	SetPosition(clFd.Mesh, StageSize/2, StageSize/2, -10)
