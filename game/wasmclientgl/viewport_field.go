@@ -105,6 +105,7 @@ func (vp *Viewport) UpdateClientField(
 			}
 		}
 	}
+	clFd.Tex.Set("needsUpdate", true)
 }
 
 func (vp *Viewport) calcWallTileDiff(cf *clientfloor.ClientFloor, flx, fly int) int {
