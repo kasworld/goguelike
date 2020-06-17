@@ -29,7 +29,7 @@ type CellVPCarryObjS struct {
 
 type Viewport2d struct {
 	clientTile       *clienttile.ClientTile
-	TileImgCnvList   [tile.Tile_Count]*imagecanvas.ImageCanvas
+	textureTileList   [tile.Tile_Count]*imagecanvas.ImageCanvas
 	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
 	Canvas    js.Value
@@ -80,7 +80,7 @@ func New(cnvid string, ct *clienttile.ClientTile) *Viewport2d {
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
-			vp.TileImgCnvList[i] = imagecanvas.NewByID(idstr)
+			vp.textureTileList[i] = imagecanvas.NewByID(idstr)
 		}
 	}
 	vp.DarkerTileImgCnv = imagecanvas.NewByID("DarkerPng")

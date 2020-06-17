@@ -121,9 +121,9 @@ func (vp *Viewport) drawTileAt(
 		shY := 0.0
 		tlt := tile.Tile(i)
 		if tl.TestByTile(tlt) {
-			if vp.TileImgCnvList[i] != nil {
+			if vp.textureTileList[i] != nil {
 				// texture tile
-				tlic := vp.TileImgCnvList[i]
+				tlic := vp.textureTileList[i]
 				srcx, srcy := vp.textureTileWrapInfoList[i].CalcSrc(fx, fy, shX, shY)
 				// wrap := textureTileWrapInfo[i]
 				// tx := fx % wrap.Xcount

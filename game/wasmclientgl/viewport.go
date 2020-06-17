@@ -35,7 +35,7 @@ type Viewport struct {
 	ViewHeight int
 
 	// for tile draw
-	TileImgCnvList          [tile.Tile_Count]*imagecanvas.ImageCanvas
+	textureTileList         [tile.Tile_Count]*imagecanvas.ImageCanvas
 	textureTileWrapInfoList [tile.Tile_Count]textureTileWrapInfo
 
 	DarkerTileImgCnv *imagecanvas.ImageCanvas
@@ -94,12 +94,12 @@ func NewViewport() *Viewport {
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
-			vp.TileImgCnvList[i] = imagecanvas.NewByID(idstr)
+			vp.textureTileList[i] = imagecanvas.NewByID(idstr)
 			vp.textureTileWrapInfoList[i] = textureTileWrapInfo{
-				Xcount: vp.TileImgCnvList[i].W / CellSize,
-				Ycount: vp.TileImgCnvList[i].H / CellSize,
-				WrapX:  wrapper.New(vp.TileImgCnvList[i].W - CellSize).WrapSafe,
-				WrapY:  wrapper.New(vp.TileImgCnvList[i].H - CellSize).WrapSafe,
+				Xcount: vp.textureTileList[i].W / CellSize,
+				Ycount: vp.textureTileList[i].H / CellSize,
+				WrapX:  wrapper.New(vp.textureTileList[i].W - CellSize).WrapSafe,
+				WrapY:  wrapper.New(vp.textureTileList[i].H - CellSize).WrapSafe,
 			}
 		}
 	}
