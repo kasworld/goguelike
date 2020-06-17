@@ -15,5 +15,7 @@ import "github.com/kasworld/goguelike/config/gameconst"
 
 const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
-	CellSize         = 32
+
+	CellSize   = 32
+	HelperSize = 1024.0
 )

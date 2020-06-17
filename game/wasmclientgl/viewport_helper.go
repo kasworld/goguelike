@@ -16,15 +16,13 @@ import (
 	"syscall/js"
 )
 
-const StageSize = 1024.0
-
 func (vp *Viewport) makeGridHelper(
 	co uint32,
 	x, y, z float64,
 	lookat js.Value,
 ) js.Value {
 	helper := vp.ThreeJsNew("GridHelper",
-		StageSize, 10, co, 0x404040)
+		HelperSize, 10, co, 0x404040)
 	helper.Get("position").Set("x", x)
 	helper.Get("position").Set("y", y)
 	helper.Get("position").Set("z", z)
@@ -35,8 +33,8 @@ func (vp *Viewport) makeGridHelper(
 
 func (vp *Viewport) initHelpers() {
 	min := 0.0
-	max := StageSize
-	mid := StageSize / 2
+	max := HelperSize
+	mid := HelperSize / 2
 	center := vp.ThreeJsNew("Vector3",
 		mid, mid, mid,
 	)
@@ -73,8 +71,12 @@ func (vp *Viewport) initHelpers() {
 
 	box3 := vp.ThreeJsNew("Box3",
 		vp.ThreeJsNew("Vector3", 0, 0, 0),
-		vp.ThreeJsNew("Vector3", StageSize, StageSize, StageSize),
+		vp.ThreeJsNew("Vector3", HelperSize, HelperSize, HelperSize),
 	)
 	helper := vp.ThreeJsNew("Box3Helper", box3, 0xffffff)
 	vp.scene.Call("add", helper)
+
+	// axisHelper := vp.ThreeJsNew("AxesHelper")
+	// vp.scene.Call("add", axisHelper)
+
 }

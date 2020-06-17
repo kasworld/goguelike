@@ -74,10 +74,10 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 		},
 	)
 	clFd.Geo = vp.ThreeJsNew("PlaneBufferGeometry",
-		StageSize*xRepeat, StageSize*yRepeat)
+		w*xRepeat, h*yRepeat)
 	clFd.Mesh = vp.ThreeJsNew("Mesh", clFd.Geo, clFd.Mat)
 
-	SetPosition(clFd.Mesh, StageSize/2, StageSize/2, -10)
+	SetPosition(clFd.Mesh, w/2, h/2, -10)
 
 	clFd.Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", CellSize))
 	clFd.Ctx.Set("fillStyle", "gray")
@@ -103,11 +103,7 @@ func (vp *Viewport) ReplaceFloorTiles(cf *clientfloor.ClientFloor) {
 }
 
 func (vp *Viewport) drawTileAt(
-	cf *clientfloor.ClientFloor,
-	fx, fy int,
-	tl tile_flag.TileFlag,
-	drawCtx js.Value,
-) {
+	cf *clientfloor.ClientFloor, fx, fy int, tl tile_flag.TileFlag, drawCtx js.Value) {
 	dstX := fx * CellSize
 	dstY := fy * CellSize
 	diffbase := fx*5 + fy*3
@@ -175,6 +171,22 @@ func (vp *Viewport) UpdateClientField(
 		tl := vpData.VPTiles[i]
 		vp.drawTileAt(cf, fx, fy, tl, drawCtx)
 	}
+
+	// move camera, light
+	cameraX := vpData.VPX * CellSize
+	cameraY := -vpData.VPY * CellSize
+	SetPosition(vp.light,
+		cameraX, cameraY, CellSize*2,
+	)
+	SetPosition(vp.camera,
+		cameraX, cameraY, HelperSize,
+	)
+	vp.camera.Call("lookAt",
+		vp.ThreeJsNew("Vector3",
+			cameraX, cameraY, 0,
+		),
+	)
+
 	clFd.Tex.Set("needsUpdate", true)
 }
 
@@ -228,7 +240,7 @@ func (vp *Viewport) ChangeToClientField(cf *clientfloor.ClientFloor) {
 // 	clFd := vp.getFieldMesh(
 // 		g2id.New(), 256, 256,
 // 	)
-// 	SetPosition(clFd.Mesh, StageSize/2, StageSize/2, -10)
+// 	SetPosition(clFd.Mesh, HelperSize/2, HelperSize/2, -10)
 // 	// clFd.Ctx.Call("clearRect", 0, 0, w, h)
 // 	clFd.Ctx.Set("fillStyle", "gray")
 // 	clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
