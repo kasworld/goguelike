@@ -34,7 +34,7 @@ func main() {
 
 func makeRogueTower(towerName string, floorCount int) {
 	whList := []int{
-		24, 32, 48, 64, 80, 128,
+		32, 64, 128,
 	}
 	rnd := g2rand.New()
 	allRoomTile := []string{
