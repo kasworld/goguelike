@@ -110,10 +110,10 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 
 		clFd := app.vp.NewClientField(robj.FI)
 		app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
-		app.vp.ChangeToClientField(clFd)
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
 	cf.EnterFloor()
+	app.vp.ChangeToClientField(cf)
 	return nil
 }
 func objRecvNotiFn_LeaveFloor(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {

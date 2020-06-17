@@ -182,7 +182,8 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	return clFd
 }
 
-func (vp *Viewport) ChangeToClientField(clFd *ClientField) {
+func (vp *Viewport) ChangeToClientField(cf *clientfloor.ClientFloor) {
+	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	for _, v := range vp.floorG2ID2ClientField {
 		vp.scene.Call("remove", v.Mesh)
 	}
