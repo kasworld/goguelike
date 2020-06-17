@@ -196,6 +196,7 @@ func cmdResourceFromPNG(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	}
 	if err := tr.resourceTileArea.FromImage(filepath.Join(tr.dataDir, name)); err != nil {
 		tr.log.Fatal("%v %v", tr, err)
+		return err
 	}
 	return nil
 }
