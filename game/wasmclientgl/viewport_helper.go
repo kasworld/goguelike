@@ -22,7 +22,7 @@ func (vp *Viewport) makeGridHelper(
 	lookat js.Value,
 ) js.Value {
 	helper := vp.ThreeJsNew("GridHelper",
-		HelperSize, 10, co, 0x404040)
+		HelperSize, 16, co, 0x404040)
 	helper.Get("position").Set("x", x)
 	helper.Get("position").Set("y", y)
 	helper.Get("position").Set("z", z)

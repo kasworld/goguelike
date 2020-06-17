@@ -77,7 +77,7 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 		w*xRepeat, h*yRepeat)
 	clFd.Mesh = vp.ThreeJsNew("Mesh", clFd.Geo, clFd.Mat)
 
-	SetPosition(clFd.Mesh, w/2, h/2, -10)
+	SetPosition(clFd.Mesh, w/2, -h/2, -10)
 
 	clFd.Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", CellSize))
 	clFd.Ctx.Set("fillStyle", "gray")
