@@ -35,7 +35,9 @@ type Viewport struct {
 	ViewHeight int
 
 	// for tile draw
-	TileImgCnvList   [tile.Tile_Count]*imagecanvas.ImageCanvas
+	TileImgCnvList          [tile.Tile_Count]*imagecanvas.ImageCanvas
+	textureTileWrapInfoList [tile.Tile_Count]textureTileWrapInfo
+
 	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
 	CanvasGL      js.Value
@@ -93,17 +95,15 @@ func NewViewport() *Viewport {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
 			vp.TileImgCnvList[i] = imagecanvas.NewByID(idstr)
+			vp.textureTileWrapInfoList[i] = textureTileWrapInfo{
+				Xcount: vp.TileImgCnvList[i].W / CellSize,
+				Ycount: vp.TileImgCnvList[i].H / CellSize,
+				WrapX:  wrapper.New(vp.TileImgCnvList[i].W - CellSize).WrapSafe,
+				WrapY:  wrapper.New(vp.TileImgCnvList[i].H - CellSize).WrapSafe,
+			}
 		}
 	}
 	vp.DarkerTileImgCnv = imagecanvas.NewByID("DarkerPng")
-	for i, v := range tile.TileScrollAttrib {
-		if v.Texture {
-			wrapInfo[i].Xcount = vp.TileImgCnvList[i].W / CellSize
-			wrapInfo[i].Ycount = vp.TileImgCnvList[i].H / CellSize
-			wrapInfo[i].WrapX = wrapper.New(vp.TileImgCnvList[i].W - CellSize).WrapSafe
-			wrapInfo[i].WrapY = wrapper.New(vp.TileImgCnvList[i].H - CellSize).WrapSafe
-		}
-	}
 
 	vp.initHelpers()
 	vp.initTitle()

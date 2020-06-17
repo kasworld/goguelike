@@ -87,7 +87,7 @@ func New(cnvid string, ct *clienttile.ClientTile) *Viewport2d {
 	return vp
 }
 
-var wrapInfo = [tile.Tile_Count]struct {
+var textureTileWrapInfo = [tile.Tile_Count]struct {
 	Xcount int
 	Ycount int
 	WrapX  func(int) int

@@ -96,10 +96,10 @@ func (vp *Viewport2d) calcViewCellValue() {
 	}
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
-			wrapInfo[i].Xcount = vp.TileImgCnvList[i].W / vp.CellSize
-			wrapInfo[i].Ycount = vp.TileImgCnvList[i].H / vp.CellSize
-			wrapInfo[i].WrapX = wrapper.New(vp.TileImgCnvList[i].W - vp.CellSize).WrapSafe
-			wrapInfo[i].WrapY = wrapper.New(vp.TileImgCnvList[i].H - vp.CellSize).WrapSafe
+			textureTileWrapInfo[i].Xcount = vp.TileImgCnvList[i].W / vp.CellSize
+			textureTileWrapInfo[i].Ycount = vp.TileImgCnvList[i].H / vp.CellSize
+			textureTileWrapInfo[i].WrapX = wrapper.New(vp.TileImgCnvList[i].W - vp.CellSize).WrapSafe
+			textureTileWrapInfo[i].WrapY = wrapper.New(vp.TileImgCnvList[i].H - vp.CellSize).WrapSafe
 		}
 	}
 }
@@ -318,7 +318,7 @@ func (vp *Viewport2d) drawFloorTiles(
 				if vp.TileImgCnvList[i] != nil {
 					// texture tile
 					tlic := vp.TileImgCnvList[i]
-					wrap := wrapInfo[i]
+					wrap := textureTileWrapInfo[i]
 					tx := fx % wrap.Xcount
 					ty := fy % wrap.Ycount
 					srcx := wrap.WrapX(tx*vp.CellSize + int(shX))

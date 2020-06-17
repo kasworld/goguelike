@@ -24,12 +24,20 @@ import (
 )
 
 // for tile texture wrap
-var wrapInfo = [tile.Tile_Count]struct {
+type textureTileWrapInfo struct {
 	Xcount int
 	Ycount int
 	WrapX  func(int) int
 	WrapY  func(int) int
-}{}
+}
+
+func (ttwi textureTileWrapInfo) CalcSrc(fx, fy int, shiftx, shifty float64) (int, int) {
+	tx := fx % ttwi.Xcount
+	ty := fy % ttwi.Ycount
+	srcx := ttwi.WrapX(tx*CellSize + int(shiftx))
+	srcy := ttwi.WrapY(ty*CellSize + int(shifty))
+	return srcx, srcy
+}
 
 type ClientField struct {
 	W   int // canvas width
@@ -116,11 +124,12 @@ func (vp *Viewport) drawTileAt(
 			if vp.TileImgCnvList[i] != nil {
 				// texture tile
 				tlic := vp.TileImgCnvList[i]
-				wrap := wrapInfo[i]
-				tx := fx % wrap.Xcount
-				ty := fy % wrap.Ycount
-				srcx := wrap.WrapX(tx*CellSize + int(shX))
-				srcy := wrap.WrapY(ty*CellSize + int(shY))
+				srcx, srcy := vp.textureTileWrapInfoList[i].CalcSrc(fx, fy, shX, shY)
+				// wrap := textureTileWrapInfo[i]
+				// tx := fx % wrap.Xcount
+				// ty := fy % wrap.Ycount
+				// srcx := wrap.WrapX(tx*CellSize + int(shX))
+				// srcy := wrap.WrapY(ty*CellSize + int(shY))
 				drawCtx.Call("drawImage", tlic.Cnv,
 					srcx, srcy, CellSize, CellSize,
 					dstX, dstY, CellSize, CellSize)
