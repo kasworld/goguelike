@@ -32,51 +32,51 @@ func (vp *Viewport) makeGridHelper(
 }
 
 func (vp *Viewport) initHelpers() {
-	min := 0.0
-	max := HelperSize
-	mid := HelperSize / 2
-	center := vp.ThreeJsNew("Vector3",
-		mid, mid, mid,
-	)
+	// min := 0.0
+	// max := HelperSize
+	// mid := HelperSize / 2
+	// center := vp.ThreeJsNew("Vector3",
+	// 	mid, mid, mid,
+	// )
 
-	// y min
-	vp.scene.Call("add", vp.makeGridHelper(
-		0x0000ff, mid, min, mid, center,
-	))
+	// // y min
+	// vp.scene.Call("add", vp.makeGridHelper(
+	// 	0x0000ff, mid, min, mid, center,
+	// ))
 
-	// y max
-	vp.scene.Call("add", vp.makeGridHelper(
-		0xffff00, mid, max, mid, center,
-	))
+	// // y max
+	// vp.scene.Call("add", vp.makeGridHelper(
+	// 	0xffff00, mid, max, mid, center,
+	// ))
 
-	// x min
-	vp.scene.Call("add", vp.makeGridHelper(
-		0xff0000, min, mid, mid, center,
-	))
+	// // x min
+	// vp.scene.Call("add", vp.makeGridHelper(
+	// 	0xff0000, min, mid, mid, center,
+	// ))
 
-	// x max
-	vp.scene.Call("add", vp.makeGridHelper(
-		0x00ffff, max, mid, mid, center,
-	))
+	// // x max
+	// vp.scene.Call("add", vp.makeGridHelper(
+	// 	0x00ffff, max, mid, mid, center,
+	// ))
 
-	// z min
-	vp.scene.Call("add", vp.makeGridHelper(
-		0x00ff00, mid, mid, min, center,
-	))
+	// // z min
+	// vp.scene.Call("add", vp.makeGridHelper(
+	// 	0x00ff00, mid, mid, min, center,
+	// ))
 
-	// z max
-	vp.scene.Call("add", vp.makeGridHelper(
-		0xff00ff, mid, mid, max, center,
-	))
+	// // z max
+	// vp.scene.Call("add", vp.makeGridHelper(
+	// 	0xff00ff, mid, mid, max, center,
+	// ))
 
-	box3 := vp.ThreeJsNew("Box3",
-		vp.ThreeJsNew("Vector3", 0, 0, 0),
-		vp.ThreeJsNew("Vector3", HelperSize, HelperSize, HelperSize),
-	)
-	helper := vp.ThreeJsNew("Box3Helper", box3, 0xffffff)
-	vp.scene.Call("add", helper)
+	// box3 := vp.ThreeJsNew("Box3",
+	// 	vp.ThreeJsNew("Vector3", 0, 0, 0),
+	// 	vp.ThreeJsNew("Vector3", HelperSize, HelperSize, HelperSize),
+	// )
+	// helper := vp.ThreeJsNew("Box3Helper", box3, 0xffffff)
+	// vp.scene.Call("add", helper)
 
-	// axisHelper := vp.ThreeJsNew("AxesHelper")
-	// vp.scene.Call("add", axisHelper)
+	axisHelper := vp.ThreeJsNew("AxesHelper", HelperSize)
+	vp.scene.Call("add", axisHelper)
 
 }
