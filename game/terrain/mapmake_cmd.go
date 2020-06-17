@@ -28,8 +28,7 @@ func cmdNewTerrain(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&name, &w, &h, &aocount, &pocount, &actTurnBoost); err != nil {
 		return err
 	}
-	tr.execNewTerrain(name, w, h, aocount, pocount, actTurnBoost)
-	return nil
+	return tr.execNewTerrain(name, w, h, aocount, pocount, actTurnBoost)
 }
 
 func cmdAddRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
