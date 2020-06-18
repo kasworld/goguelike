@@ -66,10 +66,10 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 		cameraFov = 60
 	} else if fi.W*fi.H <= 128*128 {
 		dstCellSize = 16
-		cameraFov = 45
+		cameraFov = 40
 	} else {
 		dstCellSize = 8
-		cameraFov = 30
+		cameraFov = 20
 	}
 	w := fi.W * dstCellSize
 	h := fi.H * dstCellSize
