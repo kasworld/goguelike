@@ -86,20 +86,22 @@ func NewViewport() *Viewport {
 	vp.CanvasGL.Set("tabindex", "1")
 
 	vp.scene = vp.ThreeJsNew("Scene")
-	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 45, 1, 1, HelperSize*2)
+	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
 	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
 
 	// for tile draw
+	srcCellSize := 64
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
 			vp.textureTileList[i] = imagecanvas.NewByID(idstr)
 			vp.textureTileWrapInfoList[i] = textureTileWrapInfo{
-				Xcount: vp.textureTileList[i].W / CellSize,
-				Ycount: vp.textureTileList[i].H / CellSize,
-				WrapX:  wrapper.New(vp.textureTileList[i].W - CellSize).WrapSafe,
-				WrapY:  wrapper.New(vp.textureTileList[i].H - CellSize).WrapSafe,
+				CellSize: srcCellSize,
+				Xcount:   vp.textureTileList[i].W / srcCellSize,
+				Ycount:   vp.textureTileList[i].H / srcCellSize,
+				WrapX:    wrapper.New(vp.textureTileList[i].W - srcCellSize).WrapSafe,
+				WrapY:    wrapper.New(vp.textureTileList[i].H - srcCellSize).WrapSafe,
 			}
 		}
 	}

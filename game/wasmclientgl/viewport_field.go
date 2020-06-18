@@ -25,21 +25,25 @@ import (
 
 // for tile texture wrap
 type textureTileWrapInfo struct {
-	Xcount int
-	Ycount int
-	WrapX  func(int) int
-	WrapY  func(int) int
+	CellSize int
+	Xcount   int
+	Ycount   int
+	WrapX    func(int) int
+	WrapY    func(int) int
 }
 
-func (ttwi textureTileWrapInfo) CalcSrc(fx, fy int, shiftx, shifty float64) (int, int) {
+func (ttwi textureTileWrapInfo) CalcSrc(fx, fy int, shiftx, shifty float64) (int, int, int) {
 	tx := fx % ttwi.Xcount
 	ty := fy % ttwi.Ycount
-	srcx := ttwi.WrapX(tx*CellSize + int(shiftx))
-	srcy := ttwi.WrapY(ty*CellSize + int(shifty))
-	return srcx, srcy
+	srcx := ttwi.WrapX(tx*ttwi.CellSize + int(shiftx))
+	srcy := ttwi.WrapY(ty*ttwi.CellSize + int(shifty))
+	return srcx, srcy, ttwi.CellSize
 }
 
 type ClientField struct {
+	CellSize  int
+	CameraFov float64
+
 	W   int // canvas width
 	H   int // canvas height
 	Cnv js.Value
@@ -52,13 +56,16 @@ type ClientField struct {
 }
 
 func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
-	w := fi.W * CellSize
-	h := fi.H * CellSize
+	dstCellSize := 32
+	w := fi.W * dstCellSize
+	h := fi.H * dstCellSize
 	xRepeat := 3
 	yRepeat := 3
 	clFd := &ClientField{
-		W: w,
-		H: h,
+		W:         w,
+		H:         h,
+		CellSize:  dstCellSize,
+		CameraFov: 60,
 	}
 	clFd.Cnv = js.Global().Get("document").Call("createElement",
 		"CANVAS")
@@ -87,14 +94,10 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 
 	SetPosition(clFd.Mesh, w/2, -h/2, -10)
 
-	clFd.Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", CellSize))
+	clFd.Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", dstCellSize))
 	clFd.Ctx.Set("fillStyle", "gray")
 	clFd.Ctx.Call("fillText", fi.Name, 100, 100)
 	// clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
-
-	// clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-	// 	0, 0, CellSize*16, CellSize*16,
-	// 	0, 0, CellSize*16, CellSize*16)
 
 	return clFd
 }
@@ -102,18 +105,17 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 func (vp *Viewport) ReplaceFloorTiles(cf *clientfloor.ClientFloor) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	// jslog.Infof("UpdateClientField %v %v", cf, clFd)
-	drawCtx := clFd.Ctx
 	for fx, xv := range cf.Tiles {
 		for fy, yv := range xv {
-			vp.drawTileAt(cf, fx, fy, yv, drawCtx)
+			vp.drawTileAt(clFd, cf, fx, fy, yv)
 		}
 	}
 }
 
 func (vp *Viewport) drawTileAt(
-	cf *clientfloor.ClientFloor, fx, fy int, tl tile_flag.TileFlag, drawCtx js.Value) {
-	dstX := fx * CellSize
-	dstY := fy * CellSize
+	clFd *ClientField, cf *clientfloor.ClientFloor, fx, fy int, tl tile_flag.TileFlag) {
+	dstX := fx * clFd.CellSize
+	dstY := fy * clFd.CellSize
 	diffbase := fx*5 + fy*3
 
 	for i := 0; i < tile.Tile_Count; i++ {
@@ -124,24 +126,19 @@ func (vp *Viewport) drawTileAt(
 			if vp.textureTileList[i] != nil {
 				// texture tile
 				tlic := vp.textureTileList[i]
-				srcx, srcy := vp.textureTileWrapInfoList[i].CalcSrc(fx, fy, shX, shY)
-				// wrap := textureTileWrapInfo[i]
-				// tx := fx % wrap.Xcount
-				// ty := fy % wrap.Ycount
-				// srcx := wrap.WrapX(tx*CellSize + int(shX))
-				// srcy := wrap.WrapY(ty*CellSize + int(shY))
-				drawCtx.Call("drawImage", tlic.Cnv,
-					srcx, srcy, CellSize, CellSize,
-					dstX, dstY, CellSize, CellSize)
+				srcx, srcy, srcCellSize := vp.textureTileWrapInfoList[i].CalcSrc(fx, fy, shX, shY)
+				clFd.Ctx.Call("drawImage", tlic.Cnv,
+					srcx, srcy, srcCellSize, srcCellSize,
+					dstX, dstY, clFd.CellSize, clFd.CellSize)
 
 			} else if tlt == tile.Wall {
 				// wall tile process
 				tlList := gClientTile.FloorTiles[i]
 				tilediff := vp.calcWallTileDiff(cf, fx, fy)
 				ti := tlList[tilediff%len(tlList)]
-				drawCtx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, CellSize, CellSize)
+					dstX, dstY, clFd.CellSize, clFd.CellSize)
 			} else if tlt == tile.Window {
 				// window tile process
 				tlList := gClientTile.FloorTiles[i]
@@ -150,17 +147,17 @@ func (vp *Viewport) drawTileAt(
 					tlindex = 1
 				}
 				ti := tlList[tlindex]
-				drawCtx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, CellSize, CellSize)
+					dstX, dstY, clFd.CellSize, clFd.CellSize)
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
 				tilediff := diffbase + int(shX)
 				ti := tlList[tilediff%len(tlList)]
-				drawCtx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, CellSize, CellSize)
+					dstX, dstY, clFd.CellSize, clFd.CellSize)
 			}
 		}
 	}
@@ -173,19 +170,18 @@ func (vp *Viewport) UpdateClientField(
 ) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	// jslog.Infof("UpdateClientField %v %v", cf, clFd)
-	drawCtx := clFd.Ctx
 	for i, v := range ViewportXYLenList {
 		fx := cf.XWrapSafe(v.X + vpData.VPX)
 		fy := cf.YWrapSafe(v.Y + vpData.VPY)
 		tl := vpData.VPTiles[i]
-		vp.drawTileAt(cf, fx, fy, tl, drawCtx)
+		vp.drawTileAt(clFd, cf, fx, fy, tl)
 	}
 
 	// move camera, light
-	cameraX := vpData.VPX * CellSize
-	cameraY := -vpData.VPY * CellSize
+	cameraX := vpData.VPX * clFd.CellSize
+	cameraY := -vpData.VPY * clFd.CellSize
 	SetPosition(vp.light,
-		cameraX, cameraY, CellSize*2,
+		cameraX, cameraY, clFd.CellSize*2,
 	)
 	SetPosition(vp.camera,
 		cameraX, cameraY, HelperSize,
@@ -231,6 +227,8 @@ func (vp *Viewport) ChangeToClientField(cf *clientfloor.ClientFloor) {
 		vp.scene.Call("remove", v.Mesh)
 	}
 	vp.scene.Call("add", clFd.Mesh)
+	vp.camera.Set("fov", clFd.CameraFov)
+	vp.camera.Call("updateProjectionMatrix")
 }
 
 // var groundTexture = loader.load( 'textures/terrain/grasslight-big.jpg' );
