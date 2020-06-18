@@ -58,15 +58,15 @@ type ClientField struct {
 func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	dstCellSize := 32
 	cameraFov := 60.0
-	if fi.W*fi.H <= 32*32 {
+	if fi.W*fi.H <= 64*64 {
 		dstCellSize = 64
-		cameraFov = 75
-	} else if fi.W*fi.H <= 64*64 {
-		dstCellSize = 32
-		cameraFov = 60
+		cameraFov = 90
 	} else if fi.W*fi.H <= 128*128 {
+		dstCellSize = 32
+		cameraFov = 50
+	} else if fi.W*fi.H <= 256*256 {
 		dstCellSize = 16
-		cameraFov = 40
+		cameraFov = 30
 	} else {
 		dstCellSize = 8
 		cameraFov = 20
