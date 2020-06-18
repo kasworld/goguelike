@@ -57,6 +57,20 @@ type ClientField struct {
 
 func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	dstCellSize := 32
+	cameraFov := 60.0
+	if fi.W*fi.H <= 32*32 {
+		dstCellSize = 64
+		cameraFov = 75
+	} else if fi.W*fi.H <= 64*64 {
+		dstCellSize = 32
+		cameraFov = 60
+	} else if fi.W*fi.H <= 128*128 {
+		dstCellSize = 16
+		cameraFov = 45
+	} else {
+		dstCellSize = 8
+		cameraFov = 30
+	}
 	w := fi.W * dstCellSize
 	h := fi.H * dstCellSize
 	xRepeat := 3
@@ -65,7 +79,7 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 		W:         w,
 		H:         h,
 		CellSize:  dstCellSize,
-		CameraFov: 60,
+		CameraFov: cameraFov,
 	}
 	clFd.Cnv = js.Global().Get("document").Call("createElement",
 		"CANVAS")
