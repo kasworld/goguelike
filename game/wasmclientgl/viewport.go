@@ -17,11 +17,6 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/kasworld/goguelike/enum/equipslottype"
-	"github.com/kasworld/goguelike/enum/factiontype"
-	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
-	"github.com/kasworld/goguelike/enum/potiontype"
-	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
@@ -60,14 +55,7 @@ type Viewport struct {
 
 	// cache
 	colorMaterialCache map[uint32]js.Value
-
-	aoGeometryCache map[factiontype.FactionType]js.Value
-	foGeometryCache map[fieldobjdisplaytype.FieldObjDisplayType]js.Value
-
-	eqGeometryCache     map[equipslottype.EquipSlotType]js.Value
-	potionGeometryCache map[potiontype.PotionType]js.Value
-	scrollGeometryCache map[scrolltype.ScrollType]js.Value
-	moneyGeometry       js.Value
+	textGeometryCache  map[textGeoKey]js.Value
 }
 
 func NewViewport() *Viewport {
@@ -75,8 +63,8 @@ func NewViewport() *Viewport {
 		rnd:                   rand.New(rand.NewSource(time.Now().UnixNano())),
 		jsSceneObjs:           make(map[g2id.G2ID]js.Value),
 		floorG2ID2ClientField: make(map[g2id.G2ID]*ClientField),
-		aoGeometryCache:       make(map[factiontype.FactionType]js.Value),
 		colorMaterialCache:    make(map[uint32]js.Value),
+		textGeometryCache:     make(map[textGeoKey]js.Value),
 	}
 
 	vp.threejs = js.Global().Get("THREE")

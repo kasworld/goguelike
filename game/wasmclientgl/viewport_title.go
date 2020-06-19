@@ -54,20 +54,8 @@ func (vp *Viewport) fontLoaded(this js.Value, args []js.Value) interface{} {
 	vp.font_helvetiker_regular = args[0]
 	str := "Goguelike"
 
-	ftGeo := vp.ThreeJsNew("TextGeometry", str, map[string]interface{}{
-		"font":           vp.font_helvetiker_regular,
-		"size":           80,
-		"height":         5,
-		"curveSegments":  12,
-		"bevelEnabled":   true,
-		"bevelThickness": 10,
-		"bevelSize":      8,
-		"bevelOffset":    0,
-		"bevelSegments":  5,
-	})
-	ftGeo.Call("computeBoundingBox")
-	geoMax := ftGeo.Get("boundingBox").Get("max").Get("x").Float()
-	geoMin := ftGeo.Get("boundingBox").Get("min").Get("x").Float()
+	ftGeo := vp.getTextGeometry(str, 80)
+	geoMin, geoMax := vp.calcGeoMinMax(ftGeo)
 
 	co := vp.rnd.Uint32() & 0x00ffffff
 	ftMat := vp.getColorMaterial(co)

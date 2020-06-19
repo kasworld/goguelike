@@ -13,8 +13,6 @@ package wasmclientgl
 
 import (
 	"syscall/js"
-
-	"github.com/kasworld/goguelike/enum/factiontype"
 )
 
 func (vp *Viewport) getColorMaterial(co uint32) js.Value {
@@ -31,12 +29,34 @@ func (vp *Viewport) getColorMaterial(co uint32) js.Value {
 	return mat
 }
 
-func (vp *Viewport) getAOGeometry(gotype factiontype.FactionType) js.Value {
-	geo, exist := vp.aoGeometryCache[gotype]
+type textGeoKey struct {
+	Str  string
+	Size int
+}
+
+func (vp *Viewport) getTextGeometry(str string, size int) js.Value {
+	geo, exist := vp.textGeometryCache[textGeoKey{str, size}]
 	if !exist {
-		radius := 32
-		geo = vp.ThreeJsNew("BoxGeometry", radius*2, radius*2, radius*2)
-		vp.aoGeometryCache[gotype] = geo
+		geo = vp.ThreeJsNew("TextGeometry", str,
+			map[string]interface{}{
+				"font":           vp.font_helvetiker_regular,
+				"size":           size,
+				"height":         5,
+				"curveSegments":  12,
+				"bevelEnabled":   true,
+				"bevelThickness": 10,
+				"bevelSize":      8,
+				"bevelOffset":    0,
+				"bevelSegments":  5,
+			})
+		vp.textGeometryCache[textGeoKey{str, size}] = geo
 	}
 	return geo
+}
+
+func (vp *Viewport) calcGeoMinMax(geo js.Value) (float64, float64) {
+	geo.Call("computeBoundingBox")
+	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
+	geoMin := geo.Get("boundingBox").Get("min").Get("x").Float()
+	return geoMin, geoMax
 }
