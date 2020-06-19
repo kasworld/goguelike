@@ -28,8 +28,8 @@ import (
 	"github.com/kasworld/goguelike/game/cmd2tower"
 	"github.com/kasworld/goguelike/game/towerlist4client"
 	"github.com/kasworld/goguelike/lib/conndata"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/uuidstr"
@@ -141,7 +141,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	c2sc.StartServeWS(ctx, wsConn,
 		gameconst.ServerPacketReadTimeOutSec*time.Second,
 		gameconst.ServerPacketWriteTimeoutSec*time.Second,
-		c2t_msgp.MarshalBodyFn,
+		c2t_gob.MarshalBodyFn,
 	)
 
 	// connected user play

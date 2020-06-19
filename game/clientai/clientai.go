@@ -25,8 +25,8 @@ import (
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwsgorilla"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_pid2rspfn"
@@ -79,7 +79,7 @@ func New(config ClientAIConfig, l *g2log.LogBase) *ClientAI {
 	cai.towerConn = c2t_connwsgorilla.New(
 		gameconst.ClientReadTimeoutSec*time.Second,
 		gameconst.ClientWriteTimeoutSec*time.Second,
-		c2t_msgp.MarshalBodyFn,
+		c2t_gob.MarshalBodyFn,
 		cai.handleRecvPacket,
 		cai.handleSentPacket,
 	)

@@ -18,9 +18,9 @@ import (
 
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/game/clientfloor"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 )
@@ -49,7 +49,7 @@ func bytesRecvNotiFn_Invalid(me interface{}, hd c2t_packet.Header, rbody []byte)
 }
 
 func bytesRecvNotiFn_EnterTower(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -66,7 +66,7 @@ func bytesRecvNotiFn_EnterTower(me interface{}, hd c2t_packet.Header, rbody []by
 	return nil
 }
 func bytesRecvNotiFn_LeaveTower(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -84,7 +84,7 @@ func bytesRecvNotiFn_LeaveTower(me interface{}, hd c2t_packet.Header, rbody []by
 }
 
 func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -108,7 +108,7 @@ func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []by
 	return nil
 }
 func bytesRecvNotiFn_LeaveFloor(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -163,7 +163,7 @@ func bytesRecvNotiFn_Broadcast(me interface{}, hd c2t_packet.Header, rbody []byt
 }
 
 func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -236,7 +236,7 @@ func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []by
 }
 
 func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -278,7 +278,7 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 }
 
 func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -306,7 +306,7 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 }
 
 func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -330,7 +330,7 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 }
 
 func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -351,7 +351,7 @@ func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []b
 }
 
 func bytesRecvNotiFn_ActivateTrap(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}

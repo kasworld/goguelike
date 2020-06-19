@@ -27,8 +27,8 @@ import (
 	"github.com/kasworld/goguelike/lib/conndata"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
@@ -53,7 +53,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
 	}
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -147,7 +147,7 @@ func (tw *Tower) bytesAPIFn_ReqHeartbeat(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -169,7 +169,7 @@ func (tw *Tower) bytesAPIFn_ReqHeartbeat(
 func (tw *Tower) bytesAPIFn_ReqChat(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -277,7 +277,7 @@ func (tw *Tower) bytesAPIFn_ReqKillSelf(
 func (tw *Tower) bytesAPIFn_ReqMove(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -303,7 +303,7 @@ func (tw *Tower) bytesAPIFn_ReqMove(
 func (tw *Tower) bytesAPIFn_ReqAttack(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -330,7 +330,7 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 func (tw *Tower) bytesAPIFn_ReqPickup(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -356,7 +356,7 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 func (tw *Tower) bytesAPIFn_ReqDrop(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -382,7 +382,7 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 func (tw *Tower) bytesAPIFn_ReqEquip(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -408,7 +408,7 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 func (tw *Tower) bytesAPIFn_ReqUnEquip(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -434,7 +434,7 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -460,7 +460,7 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 func (tw *Tower) bytesAPIFn_ReqReadScroll(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -486,7 +486,7 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 func (tw *Tower) bytesAPIFn_ReqRecycle(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -529,7 +529,7 @@ func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -573,7 +573,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -601,7 +601,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -638,7 +638,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -659,7 +659,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -687,7 +687,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}
@@ -723,7 +723,7 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
 
-	r, err := c2t_msgp.UnmarshalPacket(hd, rbody)
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
 	}

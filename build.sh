@@ -75,35 +75,37 @@ cd enum
 goimports -w .
 cd ..
 
-GenMSGP "enum/way9type" way9type_gen
-GenMSGP "enum/carryingobjecttype" carryingobjecttype_gen
-GenMSGP "enum/fieldobjacttype" fieldobjacttype_gen
-GenMSGP "enum/fieldobjdisplaytype" fieldobjdisplaytype_gen
-GenMSGP "enum/potiontype" potiontype_gen
-GenMSGP "enum/scrolltype" scrolltype_gen
-GenMSGP "enum/equipslottype" equipslottype_gen
-GenMSGP "enum/turnresulttype" turnresulttype_gen
-GenMSGP "enum/factiontype" factiontype_gen
-GenMSGP "enum/aiplan" aiplan_gen
-GenMSGP "enum/tile_flag" tile_flag_gen
-GenMSGP "enum/condition_flag" condition_flag_gen
+# change to use gob
+
+# GenMSGP "enum/way9type" way9type_gen
+# GenMSGP "enum/carryingobjecttype" carryingobjecttype_gen
+# GenMSGP "enum/fieldobjacttype" fieldobjacttype_gen
+# GenMSGP "enum/fieldobjdisplaytype" fieldobjdisplaytype_gen
+# GenMSGP "enum/potiontype" potiontype_gen
+# GenMSGP "enum/scrolltype" scrolltype_gen
+# GenMSGP "enum/equipslottype" equipslottype_gen
+# GenMSGP "enum/turnresulttype" turnresulttype_gen
+# GenMSGP "enum/factiontype" factiontype_gen
+# GenMSGP "enum/aiplan" aiplan_gen
+# GenMSGP "enum/tile_flag" tile_flag_gen
+# GenMSGP "enum/condition_flag" condition_flag_gen
 
 ################################################################################
-GenMSGP "vendor/github.com/kasworld/htmlcolors" color24
+# GenMSGP "vendor/github.com/kasworld/htmlcolors" color24
 
-GenMSGP "protocol_c2t/c2t_error" error_gen
-GenMSGP "protocol_c2t/c2t_idcmd" command_gen
-GenMSGP "protocol_c2t/c2t_idnoti" noti_gen
-GenMSGP "protocol_c2t/c2t_obj" protocol_objects
-GenMSGP "protocol_c2t/c2t_obj" protocol_noti
-GenMSGP "protocol_c2t/c2t_obj" protocol_admin
-GenMSGP "protocol_c2t/c2t_obj" protocol_aoact
-GenMSGP "protocol_c2t/c2t_obj" protocol_cmd
-GenMSGP "config/viewportdata" viewportdata
-GenMSGP "lib/g2id" g2id
-GenMSGP "game/aoactreqrsp" aoactreqrsp
-GenMSGP "game/bias" bias
-GenMSGP "game/tilearea" tilearea
+# GenMSGP "protocol_c2t/c2t_error" error_gen
+# GenMSGP "protocol_c2t/c2t_idcmd" command_gen
+# GenMSGP "protocol_c2t/c2t_idnoti" noti_gen
+# GenMSGP "protocol_c2t/c2t_obj" protocol_objects
+# GenMSGP "protocol_c2t/c2t_obj" protocol_noti
+# GenMSGP "protocol_c2t/c2t_obj" protocol_admin
+# GenMSGP "protocol_c2t/c2t_obj" protocol_aoact
+# GenMSGP "protocol_c2t/c2t_obj" protocol_cmd
+# GenMSGP "config/viewportdata" viewportdata
+# GenMSGP "lib/g2id" g2id
+# GenMSGP "game/aoactreqrsp" aoactreqrsp
+# GenMSGP "game/bias" bias
+# GenMSGP "game/tilearea" tilearea
 
 GameDataFiles="
 config/gameconst/gameconst.go \

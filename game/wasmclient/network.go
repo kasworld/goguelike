@@ -27,8 +27,8 @@ import (
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_pid2rspfn"
@@ -49,7 +49,7 @@ func GetQuery() url.Values {
 func (app *WasmClient) NetInit(ctx context.Context) error {
 	app.wsConn = c2t_connwasm.New(
 		gInitData.GetConnectToTowerURL(),
-		c2t_msgp.MarshalBodyFn,
+		c2t_gob.MarshalBodyFn,
 		app.handleRecvPacket,
 		app.handleSentPacket)
 
@@ -100,7 +100,7 @@ func (app *WasmClient) handleSentPacket(header c2t_packet.Header) error {
 }
 
 func (app *WasmClient) handleRecvPacket(header c2t_packet.Header, body []byte) error {
-	robj, err := c2t_msgp.UnmarshalPacket(header, body)
+	robj, err := c2t_gob.UnmarshalPacket(header, body)
 	if err != nil {
 		return err
 	}

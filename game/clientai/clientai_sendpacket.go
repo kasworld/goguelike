@@ -17,8 +17,8 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/lib/g2id"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_msgp"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_version"
@@ -34,7 +34,7 @@ func (cai *ClientAI) reqLogin(sessionG2ID g2id.G2ID, nickname string, authkey st
 			AuthKey:     authkey,
 		},
 		func(hd c2t_packet.Header, rsp interface{}) error {
-			robj, err := c2t_msgp.UnmarshalPacket(hd, rsp.([]byte))
+			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
 				cai.log.Fatal("%v %v %v %v", cai, hd, rsp, err)
 				return err
@@ -78,7 +78,7 @@ func (cai *ClientAI) reqAchieveInfo() error {
 		c2t_idcmd.AchieveInfo,
 		&c2t_obj.ReqAchieveInfo_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
-			robj, err := c2t_msgp.UnmarshalPacket(hd, rsp.([]byte))
+			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
 				cai.log.Fatal("%v %v %v %v", cai, hd, rsp, err)
 				return err
@@ -101,7 +101,7 @@ func (cai *ClientAI) reqHeartbeat() error {
 			Time: time.Now(),
 		},
 		func(hd c2t_packet.Header, rsp interface{}) error {
-			robj, err := c2t_msgp.UnmarshalPacket(hd, rsp.([]byte))
+			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
 				cai.log.Fatal("%v %v %v %v", cai, hd, rsp, err)
 				return err
