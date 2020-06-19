@@ -41,8 +41,6 @@ func (ttwi textureTileWrapInfo) CalcSrc(fx, fy int, shiftx, shifty float64) (int
 }
 
 type ClientField struct {
-	CellSize int
-
 	// W   int // canvas width
 	// H   int // canvas height
 	// Cnv js.Value
@@ -54,9 +52,8 @@ type ClientField struct {
 }
 
 func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
-	dstCellSize := 32
-	w := fi.W * dstCellSize
-	h := fi.H * dstCellSize
+	w := fi.W * DstCellSize
+	h := fi.H * DstCellSize
 	xRepeat := 3
 	yRepeat := 3
 	Cnv := js.Global().Get("document").Call("createElement",
@@ -86,14 +83,13 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 
 	SetPosition(Mesh, w/2, -h/2, -10)
 
-	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", dstCellSize))
+	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
 	Ctx.Set("fillStyle", "gray")
 	Ctx.Call("fillText", fi.Name, 100, 100)
 
 	clFd := &ClientField{
 		// W:         w,
 		// H:         h,
-		CellSize: dstCellSize,
 
 		// Cnv:  Cnv,
 		Ctx: Ctx,
@@ -117,8 +113,8 @@ func (vp *Viewport) ReplaceFloorTiles(cf *clientfloor.ClientFloor) {
 
 func (vp *Viewport) drawTileAt(
 	clFd *ClientField, cf *clientfloor.ClientFloor, fx, fy int, tl tile_flag.TileFlag) {
-	dstX := fx * clFd.CellSize
-	dstY := fy * clFd.CellSize
+	dstX := fx * DstCellSize
+	dstY := fy * DstCellSize
 	diffbase := fx*5 + fy*3
 
 	for i := 0; i < tile.Tile_Count; i++ {
@@ -132,7 +128,7 @@ func (vp *Viewport) drawTileAt(
 				srcx, srcy, srcCellSize := vp.textureTileWrapInfoList[i].CalcSrc(fx, fy, shX, shY)
 				clFd.Ctx.Call("drawImage", tlic.Cnv,
 					srcx, srcy, srcCellSize, srcCellSize,
-					dstX, dstY, clFd.CellSize, clFd.CellSize)
+					dstX, dstY, DstCellSize, DstCellSize)
 
 			} else if tlt == tile.Wall {
 				// wall tile process
@@ -141,7 +137,7 @@ func (vp *Viewport) drawTileAt(
 				ti := tlList[tilediff%len(tlList)]
 				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, clFd.CellSize, clFd.CellSize)
+					dstX, dstY, DstCellSize, DstCellSize)
 			} else if tlt == tile.Window {
 				// window tile process
 				tlList := gClientTile.FloorTiles[i]
@@ -152,7 +148,7 @@ func (vp *Viewport) drawTileAt(
 				ti := tlList[tlindex]
 				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, clFd.CellSize, clFd.CellSize)
+					dstX, dstY, DstCellSize, DstCellSize)
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
@@ -160,7 +156,7 @@ func (vp *Viewport) drawTileAt(
 				ti := tlList[tilediff%len(tlList)]
 				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, clFd.CellSize, clFd.CellSize)
+					dstX, dstY, DstCellSize, DstCellSize)
 			}
 		}
 	}
@@ -181,10 +177,10 @@ func (vp *Viewport) UpdateClientField(
 	}
 
 	// move camera, light
-	cameraX := vpData.VPX * clFd.CellSize
-	cameraY := -vpData.VPY * clFd.CellSize
+	cameraX := vpData.VPX * DstCellSize
+	cameraY := -vpData.VPY * DstCellSize
 	SetPosition(vp.light,
-		cameraX, cameraY, clFd.CellSize*2,
+		cameraX, cameraY, DstCellSize*2,
 	)
 	SetPosition(vp.camera,
 		cameraX, cameraY, HelperSize,

@@ -19,29 +19,29 @@ import (
 
 func (vp *Viewport) processNotiObjectList(
 	olNoti *c2t_obj.NotiObjectList_data) {
-	clFd := vp.floorG2ID2ClientField[olNoti.FloorG2ID]
-	shY := int(-float64(clFd.CellSize) * 0.8)
+	// clFd := vp.floorG2ID2ClientField[olNoti.FloorG2ID]
+	// shY := int(-float64(DstCellSize) * 0.8)
 	addUUID := make(map[g2id.G2ID]bool)
 	for _, o := range olNoti.ActiveObjList {
 		if jso, exist := vp.jsSceneObjs[o.G2ID]; exist {
 			SetPosition(
 				jso,
-				o.X*clFd.CellSize,
-				-o.Y*clFd.CellSize+shY,
+				o.X*DstCellSize,
+				-o.Y*DstCellSize+TextYShift,
 				0)
 		} else {
 			geo := vp.getTextGeometry(
 				o.Faction.String()[:2],
-				clFd.CellSize/2,
+				DstCellSize/2,
 			)
 			jslog.Infof("geo make %v %v",
-				o.Faction.String()[:2], clFd.CellSize)
+				o.Faction.String()[:2], DstCellSize)
 			mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
 			jso := vp.ThreeJsNew("Mesh", geo, mat)
 			SetPosition(
 				jso,
-				o.X*clFd.CellSize,
-				-o.Y*clFd.CellSize+shY,
+				o.X*DstCellSize,
+				-o.Y*DstCellSize+TextYShift,
 				0)
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.G2ID] = jso
