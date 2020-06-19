@@ -73,10 +73,6 @@ type WasmClient struct {
 	KeyDir   way9type.Way9Type
 	MouseDir way9type.Way9Type
 
-	// for turn
-	waitObjList    bool
-	needRefreshSet bool
-
 	taNotiData     *c2t_obj.NotiVPTiles_data
 	olNotiData     *c2t_obj.NotiObjectList_data
 	lastOLNotiData *c2t_obj.NotiObjectList_data

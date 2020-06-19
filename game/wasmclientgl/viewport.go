@@ -114,16 +114,15 @@ func (vp *Viewport) ResizeCanvas(title bool) {
 	if title {
 		winH /= 3
 	}
-	vp.CanvasGL.Call("setAttribute", "width", winW)
-	vp.CanvasGL.Call("setAttribute", "height", winH)
 	vp.ViewWidth = winW
 	vp.ViewHeight = winH
+
+	vp.CanvasGL.Call("setAttribute", "width", winW)
+	vp.CanvasGL.Call("setAttribute", "height", winH)
 
 	vp.camera.Set("aspect", float64(winW)/float64(winH))
 	vp.camera.Call("updateProjectionMatrix")
 
-	vp.CanvasGL.Call("setAttribute", "width", winW)
-	vp.CanvasGL.Call("setAttribute", "height", winH)
 	vp.renderer.Call("setSize", winW, winH)
 }
 

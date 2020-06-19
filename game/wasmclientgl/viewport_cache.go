@@ -44,8 +44,8 @@ func (vp *Viewport) getTextGeometry(str string, size int) js.Value {
 				"height":         5,
 				"curveSegments":  12,
 				"bevelEnabled":   true,
-				"bevelThickness": 10,
-				"bevelSize":      8,
+				"bevelThickness": 4,
+				"bevelSize":      2,
 				"bevelOffset":    0,
 				"bevelSegments":  5,
 			})

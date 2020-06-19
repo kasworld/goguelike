@@ -12,48 +12,43 @@
 package wasmclientgl
 
 import (
+	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-// func (vp *Viewport) add2Scene(o *c2t_obj.ActiveObjClient) js.Value {
-// 	if jso, exist := vp.jsSceneObjs[o.G2ID]; exist {
-// 		SetPosition(jso, o.X, o.Y, 0)
-// 		// jso.Get("rotation").Set("x", o.RotVt[0])
-// 		// jso.Get("rotation").Set("y", o.RotVt[1])
-// 		// jso.Get("rotation").Set("z", o.RotVt[2])
-// 		return jso
-// 	}
-// 	geo := vp.getAOGeometry(o.Faction)
-// 	mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
-// 	jso := vp.ThreeJsNew("Mesh", geo, mat)
-// 	SetPosition(jso, o.X, o.Y, 0)
-// 	// jso.Get("rotation").Set("x", o.RotVt[0])
-// 	// jso.Get("rotation").Set("y", o.RotVt[1])
-// 	// jso.Get("rotation").Set("z", o.RotVt[2])
-// 	vp.scene.Call("add", jso)
-// 	vp.jsSceneObjs[o.G2ID] = jso
-// 	return jso
-// }
-
-func (vp *Viewport) processRecvStageInfo(
-	stageInfo *c2t_obj.NotiObjectList_data) {
-
-	// bgPos := stageInfo.BackgroundPos
-	// vp.background.Get("position").Set("x", bgPos[0])
-	// vp.background.Get("position").Set("y", bgPos[1])
-
-	// addUUID := make(map[string]bool)
-	// for _, o := range stageInfo.ObjList {
-	// 	vp.add2Scene(o)
-	// 	addUUID[o.G2ID] = true
-	// }
-	// for id, jso := range vp.jsSceneObjs {
-	// 	if !addUUID[id] {
-	// 		vp.scene.Call("remove", jso)
-	// 		delete(vp.jsSceneObjs, id)
-	// 		if lt, exist := vp.lightCache[id]; exist {
-	// 			vp.scene.Call("remove", lt.Helper)
-	// 		}
-	// 	}
-	// }
+func (vp *Viewport) processNotiObjectList(
+	olNoti *c2t_obj.NotiObjectList_data) {
+	clFd := vp.floorG2ID2ClientField[olNoti.FloorG2ID]
+	shY := int(-float64(clFd.CellSize) * 0.8)
+	addUUID := make(map[g2id.G2ID]bool)
+	for _, o := range olNoti.ActiveObjList {
+		if jso, exist := vp.jsSceneObjs[o.G2ID]; exist {
+			SetPosition(
+				jso,
+				o.X*clFd.CellSize,
+				-o.Y*clFd.CellSize+shY,
+				0)
+		} else {
+			geo := vp.getTextGeometry(
+				o.Faction.String()[:2],
+				clFd.CellSize/2,
+			)
+			mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
+			jso := vp.ThreeJsNew("Mesh", geo, mat)
+			SetPosition(
+				jso,
+				o.X*clFd.CellSize,
+				-o.Y*clFd.CellSize+shY,
+				0)
+			vp.scene.Call("add", jso)
+			vp.jsSceneObjs[o.G2ID] = jso
+		}
+		addUUID[o.G2ID] = true
+	}
+	for id, jso := range vp.jsSceneObjs {
+		if !addUUID[id] {
+			vp.scene.Call("remove", jso)
+			delete(vp.jsSceneObjs, id)
+		}
+	}
 }

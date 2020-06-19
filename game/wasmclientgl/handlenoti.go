@@ -14,7 +14,6 @@ package wasmclientgl
 import (
 	"fmt"
 	"sync/atomic"
-	"syscall/js"
 	"time"
 
 	"github.com/kasworld/goguelike/config/gameconst"
@@ -236,13 +235,6 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
 	}
 
-	defer func() {
-		app.waitObjList = false
-		if app.needRefreshSet {
-			app.needRefreshSet = false
-			js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
-		}
-	}()
 	app.ServerClientTimeDiff = robj.Time.Sub(time.Now())
 	app.olNotiHeader = header
 	if app.olNotiData == nil {
@@ -453,6 +445,9 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	for _, v := range newOLNotiData.FieldObjList {
 		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
 	}
+
+	app.vp.processNotiObjectList(newOLNotiData)
+
 	playerX, playerY := app.GetPlayerXY()
 	if cf.IsValidPos(playerX, playerY) {
 		app.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
@@ -562,10 +557,6 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	app, ok := recvobj.(*WasmClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
-	}
-
-	if !app.waitObjList {
-		app.waitObjList = true
 	}
 
 	app.taNotiHeader = header
