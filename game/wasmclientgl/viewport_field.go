@@ -76,44 +76,51 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	h := fi.H * dstCellSize
 	xRepeat := 3
 	yRepeat := 3
+	Cnv := js.Global().Get("document").Call("createElement",
+		"CANVAS")
+	Ctx := Cnv.Call("getContext", "2d")
+	if !Ctx.Truthy() {
+		jslog.Errorf("fail to get context %v", fi)
+		return nil
+	}
+	Ctx.Set("imageSmoothingEnabled", false)
+	Cnv.Set("width", w)
+	Cnv.Set("height", h)
+
+	Tex := vp.ThreeJsNew("CanvasTexture", Cnv)
+	Tex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
+	Tex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
+	Tex.Get("repeat").Set("x", xRepeat)
+	Tex.Get("repeat").Set("y", yRepeat)
+	Mat := vp.ThreeJsNew("MeshBasicMaterial",
+		map[string]interface{}{
+			"map": Tex,
+		},
+	)
+	Geo := vp.ThreeJsNew("PlaneBufferGeometry",
+		w*xRepeat, h*yRepeat)
+	Mesh := vp.ThreeJsNew("Mesh", Geo, Mat)
+
+	SetPosition(Mesh, w/2, -h/2, -10)
+
+	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", dstCellSize))
+	Ctx.Set("fillStyle", "gray")
+	Ctx.Call("fillText", fi.Name, 100, 100)
+	// clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
+
 	clFd := &ClientField{
 		W:         w,
 		H:         h,
 		CellSize:  dstCellSize,
 		CameraFov: cameraFov,
+
+		Cnv:  Cnv,
+		Ctx:  Ctx,
+		Tex:  Tex,
+		Mat:  Mat,
+		Geo:  Geo,
+		Mesh: Mesh,
 	}
-	clFd.Cnv = js.Global().Get("document").Call("createElement",
-		"CANVAS")
-	clFd.Ctx = clFd.Cnv.Call("getContext", "2d")
-	if !clFd.Ctx.Truthy() {
-		jslog.Errorf("fail to get context %v", fi)
-		return nil
-	}
-	clFd.Ctx.Set("imageSmoothingEnabled", false)
-	clFd.Cnv.Set("width", w)
-	clFd.Cnv.Set("height", h)
-
-	clFd.Tex = vp.ThreeJsNew("CanvasTexture", clFd.Cnv)
-	clFd.Tex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
-	clFd.Tex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
-	clFd.Tex.Get("repeat").Set("x", xRepeat)
-	clFd.Tex.Get("repeat").Set("y", yRepeat)
-	clFd.Mat = vp.ThreeJsNew("MeshBasicMaterial",
-		map[string]interface{}{
-			"map": clFd.Tex,
-		},
-	)
-	clFd.Geo = vp.ThreeJsNew("PlaneBufferGeometry",
-		w*xRepeat, h*yRepeat)
-	clFd.Mesh = vp.ThreeJsNew("Mesh", clFd.Geo, clFd.Mat)
-
-	SetPosition(clFd.Mesh, w/2, -h/2, -10)
-
-	clFd.Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", dstCellSize))
-	clFd.Ctx.Set("fillStyle", "gray")
-	clFd.Ctx.Call("fillText", fi.Name, 100, 100)
-	// clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
-
 	return clFd
 }
 
