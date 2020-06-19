@@ -14,6 +14,7 @@ package wasmclientgl
 import (
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/gowasmlib/jslog"
 )
 
 func (vp *Viewport) processNotiObjectList(
@@ -33,6 +34,8 @@ func (vp *Viewport) processNotiObjectList(
 				o.Faction.String()[:2],
 				clFd.CellSize/2,
 			)
+			jslog.Infof("geo make %v %v",
+				o.Faction.String()[:2], clFd.CellSize)
 			mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
 			jso := vp.ThreeJsNew("Mesh", geo, mat)
 			SetPosition(
