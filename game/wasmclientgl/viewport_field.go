@@ -44,14 +44,13 @@ type ClientField struct {
 	CellSize  int
 	CameraFov float64
 
-	W   int // canvas width
-	H   int // canvas height
-	Cnv js.Value
+	// W   int // canvas width
+	// H   int // canvas height
+	// Cnv js.Value
 	Ctx js.Value
-
-	Tex  js.Value
-	Mat  js.Value
-	Geo  js.Value
+	Tex js.Value
+	// Mat  js.Value
+	// Geo  js.Value
 	Mesh js.Value
 }
 
@@ -109,16 +108,16 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	// clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
 
 	clFd := &ClientField{
-		W:         w,
-		H:         h,
+		// W:         w,
+		// H:         h,
 		CellSize:  dstCellSize,
 		CameraFov: cameraFov,
 
-		Cnv:  Cnv,
-		Ctx:  Ctx,
-		Tex:  Tex,
-		Mat:  Mat,
-		Geo:  Geo,
+		// Cnv:  Cnv,
+		Ctx: Ctx,
+		Tex: Tex,
+		// Mat:  Mat,
+		// Geo:  Geo,
 		Mesh: Mesh,
 	}
 	return clFd
