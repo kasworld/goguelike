@@ -37,10 +37,11 @@ func (vp *Viewport) processNotiObjectList(
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.G2ID] = jso
 		}
+		miny, maxy := vp.calcGeoMinMaxY(jso.Get("geometry"))
 		SetPosition(
 			jso,
-			o.X*DstCellSize,
-			-o.Y*DstCellSize+TextYShift,
+			float64(o.X)*DstCellSize,
+			-float64(o.Y)*DstCellSize-(maxy-miny)/2-DstCellSize/2,
 			0)
 		addUUID[o.G2ID] = true
 	}
@@ -58,10 +59,11 @@ func (vp *Viewport) processNotiObjectList(
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.G2ID] = jso
 		}
+		miny, maxy := vp.calcGeoMinMaxY(jso.Get("geometry"))
 		SetPosition(
 			jso,
 			float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
-			-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y,
+			-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y-(maxy-miny)/2,
 			0)
 		addUUID[o.G2ID] = true
 	}

@@ -74,9 +74,16 @@ func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 	return geo
 }
 
-func (vp *Viewport) calcGeoMinMax(geo js.Value) (float64, float64) {
+func (vp *Viewport) calcGeoMinMaxX(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
 	geoMin := geo.Get("boundingBox").Get("min").Get("x").Float()
+	return geoMin, geoMax
+}
+
+func (vp *Viewport) calcGeoMinMaxY(geo js.Value) (float64, float64) {
+	geo.Call("computeBoundingBox")
+	geoMax := geo.Get("boundingBox").Get("max").Get("y").Float()
+	geoMin := geo.Get("boundingBox").Get("min").Get("y").Float()
 	return geoMin, geoMax
 }

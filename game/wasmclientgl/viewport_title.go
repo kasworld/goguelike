@@ -55,7 +55,7 @@ func (vp *Viewport) fontLoaded(this js.Value, args []js.Value) interface{} {
 	str := "Goguelike"
 
 	ftGeo := vp.getTextGeometry(str, 80)
-	geoMin, geoMax := vp.calcGeoMinMax(ftGeo)
+	geoMin, geoMax := vp.calcGeoMinMaxX(ftGeo)
 
 	co := vp.rnd.Uint32() & 0x00ffffff
 	ftMat := vp.getColorMaterial(co)

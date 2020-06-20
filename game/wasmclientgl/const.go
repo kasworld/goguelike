@@ -17,6 +17,6 @@ const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
 
 	DstCellSize = 32
-	TextYShift  = -24
-	HelperSize  = 1024.0
+	// TextYShift  = 24
+	HelperSize = 1024.0
 )
