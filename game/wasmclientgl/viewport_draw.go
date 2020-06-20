@@ -26,54 +26,43 @@ func (vp *Viewport) processNotiObjectList(
 	addUUID := make(map[g2id.G2ID]bool)
 
 	for _, o := range olNoti.ActiveObjList {
-		if jso, exist := vp.jsSceneObjs[o.G2ID]; exist {
-			SetPosition(
-				jso,
-				o.X*DstCellSize,
-				-o.Y*DstCellSize+TextYShift,
-				0)
-		} else {
+		jso, exist := vp.jsSceneObjs[o.G2ID]
+		if !exist {
 			geo := vp.getTextGeometry(
 				o.Faction.String()[:2],
 				DstCellSize/2.0,
 			)
 			mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
-			jso := vp.ThreeJsNew("Mesh", geo, mat)
-			SetPosition(
-				jso,
-				o.X*DstCellSize,
-				-o.Y*DstCellSize+TextYShift,
-				0)
+			jso = vp.ThreeJsNew("Mesh", geo, mat)
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.G2ID] = jso
 		}
+		SetPosition(
+			jso,
+			o.X*DstCellSize,
+			-o.Y*DstCellSize+TextYShift,
+			0)
 		addUUID[o.G2ID] = true
 	}
 
 	for _, o := range olNoti.CarryObjList {
-		if jso, exist := vp.jsSceneObjs[o.G2ID]; exist {
-			_, _, posinfo := carryObjClientOnFloor2DrawInfo(o)
-			SetPosition(
-				jso,
-				float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
-				-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y,
-				0)
-		} else {
-			str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
+		jso, exist := vp.jsSceneObjs[o.G2ID]
+		str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
+		if !exist {
 			geo := vp.getTextGeometry(
 				str,
 				DstCellSize/2*posinfo.W,
 			)
 			mat := vp.getColorMaterial(co)
-			jso := vp.ThreeJsNew("Mesh", geo, mat)
-			SetPosition(
-				jso,
-				float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
-				-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y,
-				0)
+			jso = vp.ThreeJsNew("Mesh", geo, mat)
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.G2ID] = jso
 		}
+		SetPosition(
+			jso,
+			float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
+			-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y,
+			0)
 		addUUID[o.G2ID] = true
 	}
 
