@@ -31,10 +31,10 @@ func (vp *Viewport) getColorMaterial(co uint32) js.Value {
 
 type textGeoKey struct {
 	Str  string
-	Size int
+	Size float64
 }
 
-func (vp *Viewport) getTextGeometry(str string, size int) js.Value {
+func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 	geo, exist := vp.textGeometryCache[textGeoKey{str, size}]
 	if !exist {
 		geo = vp.ThreeJsNew("TextGeometry", str,
