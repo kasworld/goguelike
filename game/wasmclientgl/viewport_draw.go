@@ -127,25 +127,24 @@ type coShift struct {
 	X float64
 	Y float64
 	W float64
-	H float64
 }
 
 var eqposShift = [equipslottype.EquipSlotType_Count]coShift{
-	equipslottype.Helmet: {0.0, 0.0, 0.25, 0.25},
-	equipslottype.Amulet: {0.75, 0.0, 0.25, 0.25},
+	equipslottype.Helmet: {0.0, 0.0, 0.33},
+	equipslottype.Amulet: {0.75, 0.0, 0.33},
 
-	equipslottype.Weapon: {0.0, 0.25, 0.25, 0.25},
-	equipslottype.Shield: {0.75, 0.25, 0.25, 0.25},
+	equipslottype.Weapon: {0.0, 0.25, 0.33},
+	equipslottype.Shield: {0.75, 0.25, 0.33},
 
-	equipslottype.Ring:     {0.0, 0.50, 0.25, 0.25},
-	equipslottype.Gauntlet: {0.75, 0.50, 0.25, 0.25},
+	equipslottype.Ring:     {0.0, 0.50, 0.33},
+	equipslottype.Gauntlet: {0.75, 0.50, 0.33},
 
-	equipslottype.Armor:    {0.0, 0.75, 0.25, 0.25},
-	equipslottype.Footwear: {0.75, 0.75, 0.25, 0.25},
+	equipslottype.Armor:    {0.0, 0.75, 0.33},
+	equipslottype.Footwear: {0.75, 0.75, 0.33},
 }
 
 var coShiftOther = [carryingobjecttype.CarryingObjectType_Count]coShift{
-	carryingobjecttype.Money:  {0.33, 0.0, 0.33, 0.33},
-	carryingobjecttype.Potion: {0.33, 0.33, 0.33, 0.33},
-	carryingobjecttype.Scroll: {0.33, 0.66, 0.33, 0.33},
+	carryingobjecttype.Money:  {0.33, 0.0, 0.33},
+	carryingobjecttype.Potion: {0.33, 0.33, 0.33},
+	carryingobjecttype.Scroll: {0.33, 0.66, 0.33},
 }

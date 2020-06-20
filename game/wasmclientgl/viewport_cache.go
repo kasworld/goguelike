@@ -36,18 +36,38 @@ type textGeoKey struct {
 
 func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 	geo, exist := vp.textGeometryCache[textGeoKey{str, size}]
+	curveSegments := size / 3
+	if curveSegments < 1 {
+		curveSegments = 1
+	}
+	bevelEnabled := true
+	if size < 16 {
+		bevelEnabled = false
+	}
+	bevelThickness := size / 8
+	if bevelThickness < 1 {
+		bevelThickness = 1
+	}
+	bevelSize := size / 16
+	if bevelSize < 1 {
+		bevelSize = 1
+	}
+	bevelSegments := size / 8
+	if bevelSegments < 1 {
+		bevelSegments = 1
+	}
 	if !exist {
 		geo = vp.ThreeJsNew("TextGeometry", str,
 			map[string]interface{}{
 				"font":           vp.font_helvetiker_regular,
 				"size":           size,
 				"height":         5,
-				"curveSegments":  size / 3,
-				"bevelEnabled":   true,
-				"bevelThickness": size / 8,
-				"bevelSize":      size / 16,
+				"curveSegments":  curveSegments,
+				"bevelEnabled":   bevelEnabled,
+				"bevelThickness": bevelThickness,
+				"bevelSize":      bevelSize,
 				"bevelOffset":    0,
-				"bevelSegments":  size / 8,
+				"bevelSegments":  bevelSegments,
 			})
 		vp.textGeometryCache[textGeoKey{str, size}] = geo
 	}

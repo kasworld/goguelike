@@ -227,7 +227,7 @@ func (vp *Viewport) ChangeToClientField(cf *clientfloor.ClientFloor) {
 	}
 	vp.scene.Call("add", clFd.Mesh)
 	// vp.camera.Set("fov", clFd.CameraFov)
-	vp.camera.Call("updateProjectionMatrix")
+	// vp.camera.Call("updateProjectionMatrix")
 }
 
 // var groundTexture = loader.load( 'textures/terrain/grasslight-big.jpg' );

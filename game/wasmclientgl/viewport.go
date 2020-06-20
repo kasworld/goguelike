@@ -17,6 +17,8 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/gowasmlib/jslog"
+
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
@@ -131,6 +133,12 @@ func (vp *Viewport) Focus() {
 }
 
 func (vp *Viewport) Zoom(state int) {
+	fov := [3]float64{
+		30, 50, 70,
+	}
+	vp.camera.Set("fov", fov[state])
+	vp.camera.Call("updateProjectionMatrix")
+	jslog.Infof("fov %v", fov[state])
 }
 
 func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []js.Value) interface{}) {
