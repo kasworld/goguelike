@@ -42,12 +42,12 @@ func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 				"font":           vp.font_helvetiker_regular,
 				"size":           size,
 				"height":         5,
-				"curveSegments":  12,
+				"curveSegments":  size / 3,
 				"bevelEnabled":   true,
-				"bevelThickness": 4,
-				"bevelSize":      2,
+				"bevelThickness": size / 8,
+				"bevelSize":      size / 16,
 				"bevelOffset":    0,
-				"bevelSegments":  5,
+				"bevelSegments":  size / 8,
 			})
 		vp.textGeometryCache[textGeoKey{str, size}] = geo
 	}
