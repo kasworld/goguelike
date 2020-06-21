@@ -17,14 +17,15 @@ import (
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/gowasmlib/jslog"
 )
 
 func (vp *Viewport) processNotiObjectList(
 	olNoti *c2t_obj.NotiObjectList_data) {
-	// clFd := vp.floorG2ID2ClientField[olNoti.FloorG2ID]
 	// shY := int(-float64(DstCellSize) * 0.8)
 	addUUID := make(map[g2id.G2ID]bool)
 
+	// make activeobj
 	for _, o := range olNoti.ActiveObjList {
 		jso, exist := vp.jsSceneObjs[o.G2ID]
 		if !exist {
@@ -46,6 +47,7 @@ func (vp *Viewport) processNotiObjectList(
 		addUUID[o.G2ID] = true
 	}
 
+	// make carryobj
 	for _, o := range olNoti.CarryObjList {
 		jso, exist := vp.jsSceneObjs[o.G2ID]
 		str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
@@ -73,6 +75,28 @@ func (vp *Viewport) processNotiObjectList(
 			vp.scene.Call("remove", jso)
 			delete(vp.jsSceneObjs, id)
 		}
+	}
+
+	// draw fieldobj
+	clFd := vp.floorG2ID2ClientField[olNoti.FloorG2ID]
+	for _, o := range olNoti.FieldObjList {
+		tlList := gClientTile.FieldObjTiles[o.DisplayType]
+		if len(tlList) == 0 {
+			jslog.Errorf("len=0 %v", o.DisplayType)
+			continue
+		}
+		fx := o.X
+		fy := o.Y
+		dstX := fx * DstCellSize
+		dstY := fy * DstCellSize
+
+		diffbase := fx*5 + fy*3
+		tilediff := diffbase
+		ti := tlList[tilediff%len(tlList)]
+		clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+			dstX, dstY, DstCellSize, DstCellSize)
+
 	}
 }
 
