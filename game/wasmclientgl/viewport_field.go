@@ -164,34 +164,19 @@ func (vp *Viewport) drawTileAt(
 
 func (vp *Viewport) UpdateClientField(
 	cf *clientfloor.ClientFloor,
-	vpData *c2t_obj.NotiVPTiles_data,
+	taNoti *c2t_obj.NotiVPTiles_data,
 	ViewportXYLenList findnear.XYLenList,
 ) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	// jslog.Infof("UpdateClientField %v %v", cf, clFd)
 	for i, v := range ViewportXYLenList {
-		fx := cf.XWrapSafe(v.X + vpData.VPX)
-		fy := cf.YWrapSafe(v.Y + vpData.VPY)
-		tl := vpData.VPTiles[i]
+		fx := cf.XWrapSafe(v.X + taNoti.VPX)
+		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
+		tl := taNoti.VPTiles[i]
 		vp.drawTileAt(clFd, cf, fx, fy, tl)
 	}
-
-	// move camera, light
-	cameraX := vpData.VPX * DstCellSize
-	cameraY := -vpData.VPY * DstCellSize
-	SetPosition(vp.light,
-		cameraX, cameraY, DstCellSize*2,
-	)
-	SetPosition(vp.camera,
-		cameraX, cameraY, HelperSize,
-	)
-	vp.camera.Call("lookAt",
-		vp.ThreeJsNew("Vector3",
-			cameraX, cameraY, 0,
-		),
-	)
-
 	clFd.Tex.Set("needsUpdate", true)
+
 }
 
 func (vp *Viewport) calcWallTileDiff(cf *clientfloor.ClientFloor, flx, fly int) int {

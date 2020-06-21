@@ -33,6 +33,7 @@ import (
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
@@ -279,7 +280,19 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 	act := app.DispInterDur.BeginAct()
 	defer act.End()
 
-	app.vp.Draw()
+	if gInitData.AccountInfo == nil { // if title
+		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
+		return nil
+	}
+
+	if app.taNotiData == nil {
+		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
+		return nil
+	}
+
+	frameProgress := app.ClientJitter.GetInFrameProgress2()
+	scrollDir := app.getScrollDir()
+	app.vp.Draw(frameProgress, scrollDir, app.taNotiData)
 
 	return nil
 }
@@ -320,4 +333,14 @@ func btnFocus2Canvas(obj interface{}, v *htmlbutton.HTMLButton) {
 
 func (app *WasmClient) Focus2Canvas() {
 	app.vp.Focus()
+}
+
+func (app *WasmClient) getScrollDir() way9type.Way9Type {
+	scrollDir := way9type.Center
+	if pao, exist := app.AOG2ID2AOClient[gInitData.AccountInfo.ActiveObjG2ID]; exist {
+		if pao.Act == c2t_idcmd.Move && pao.Result == c2t_error.None {
+			scrollDir = pao.Dir
+		}
+	}
+	return scrollDir
 }

@@ -20,8 +20,10 @@ import (
 	"github.com/kasworld/gowasmlib/jslog"
 
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/wrapper"
 )
 
@@ -145,10 +147,47 @@ func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []j
 	vp.CanvasGL.Call("addEventListener", evt, js.FuncOf(fn))
 }
 
-func (vp *Viewport) Draw() {
+func (vp *Viewport) Draw(
+	frameProgress float64,
+	scrollDir way9type.Way9Type,
+	taNoti *c2t_obj.NotiVPTiles_data,
+) {
+
+	sx, sy := vp.calcShiftDxDy(frameProgress)
+	scrollDx := -scrollDir.Dx() * sx
+	scrollDy := scrollDir.Dy() * sy
+
+	// move camera, light
+	cameraX := taNoti.VPX*DstCellSize + scrollDx
+	cameraY := -taNoti.VPY*DstCellSize + scrollDy
+	SetPosition(vp.light,
+		cameraX, cameraY, DstCellSize*2,
+	)
+	SetPosition(vp.camera,
+		cameraX, cameraY, HelperSize,
+	)
+	vp.camera.Call("lookAt",
+		vp.ThreeJsNew("Vector3",
+			cameraX, cameraY, 0,
+		),
+	)
+
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
 func (vp *Viewport) ThreeJsNew(name string, args ...interface{}) js.Value {
 	return vp.threejs.Get(name).New(args...)
+}
+
+func (vp *Viewport) calcShiftDxDy(frameProgress float64) (int, int) {
+	rate := 1 - frameProgress
+	// if rate < 0 {
+	// 	rate = 0
+	// }
+	// if rate > 1 {
+	// 	rate = 1
+	// }
+	dx := int(float64(DstCellSize) * rate)
+	dy := int(float64(DstCellSize) * rate)
+	return dx, dy
 }
