@@ -21,7 +21,6 @@ func (vp *Viewport) getColorMaterial(co uint32) js.Value {
 		mat = vp.ThreeJsNew("MeshPhongMaterial",
 			map[string]interface{}{
 				"color": co,
-				// "flatShading": true,
 			},
 		)
 		vp.colorMaterialCache[co] = mat

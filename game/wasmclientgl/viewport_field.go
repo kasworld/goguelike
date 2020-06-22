@@ -88,14 +88,8 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	Ctx.Call("fillText", fi.Name, 100, 100)
 
 	clFd := &ClientField{
-		// W:         w,
-		// H:         h,
-
-		// Cnv:  Cnv,
-		Ctx: Ctx,
-		Tex: Tex,
-		// Mat:  Mat,
-		// Geo:  Geo,
+		Ctx:  Ctx,
+		Tex:  Tex,
 		Mesh: Mesh,
 	}
 	return clFd
@@ -103,7 +97,6 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 
 func (vp *Viewport) ReplaceFloorTiles(cf *clientfloor.ClientFloor) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
-	// jslog.Infof("UpdateClientField %v %v", cf, clFd)
 	for fx, xv := range cf.Tiles {
 		for fy, yv := range xv {
 			vp.drawTileAt(clFd, cf, fx, fy, yv)
@@ -168,7 +161,6 @@ func (vp *Viewport) UpdateClientField(
 	ViewportXYLenList findnear.XYLenList,
 ) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
-	// jslog.Infof("UpdateClientField %v %v", cf, clFd)
 	for i, v := range ViewportXYLenList {
 		fx := cf.XWrapSafe(v.X + taNoti.VPX)
 		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
@@ -211,30 +203,4 @@ func (vp *Viewport) ChangeToClientField(cf *clientfloor.ClientFloor) {
 		vp.scene.Call("remove", v.Mesh)
 	}
 	vp.scene.Call("add", clFd.Mesh)
-	// vp.camera.Set("fov", clFd.CameraFov)
-	// vp.camera.Call("updateProjectionMatrix")
 }
-
-// var groundTexture = loader.load( 'textures/terrain/grasslight-big.jpg' );
-// groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-// groundTexture.repeat.set( 25, 25 );
-// groundTexture.anisotropy = 16;
-// groundTexture.encoding = THREE.sRGBEncoding;
-// var groundMaterial = new THREE.MeshLambertMaterial( { map: groundTexture } );
-// var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 20000, 20000 ), groundMaterial );
-// mesh.position.y = - 250;
-// mesh.rotation.x = - Math.PI / 2;
-// mesh.receiveShadow = true;
-// scene.add( mesh );
-
-// func (vp *Viewport) initField() {
-// 	clFd := vp.getFieldMesh(
-// 		g2id.New(), 256, 256,
-// 	)
-// 	SetPosition(clFd.Mesh, HelperSize/2, HelperSize/2, -10)
-// 	// clFd.Ctx.Call("clearRect", 0, 0, w, h)
-// 	clFd.Ctx.Set("fillStyle", "gray")
-// 	clFd.Ctx.Call("fillRect", 0, 0, 10, 100)
-
-// 	vp.scene.Call("add", clFd.Mesh)
-// }

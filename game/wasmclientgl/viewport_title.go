@@ -17,11 +17,6 @@ import (
 
 func (vp *Viewport) hideTitle() {
 	vp.scene.Call("remove", vp.jsoTitle)
-	// SetPosition(vp.camera,
-	// 	HelperSize/2, HelperSize/2, HelperSize,
-	// )
-	// vp.camera.Call("updateProjectionMatrix")
-	// vp.scene.Call("remove", vp.light)
 }
 
 func (vp *Viewport) initTitle() {
