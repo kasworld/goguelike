@@ -289,6 +289,10 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
 		return nil
 	}
+	// if app.olNotiData == nil {
+	// 	app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
+	// 	return nil
+	// }
 
 	frameProgress := app.ClientJitter.GetInFrameProgress2()
 	scrollDir := app.getScrollDir()

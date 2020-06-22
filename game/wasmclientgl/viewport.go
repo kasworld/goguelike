@@ -17,8 +17,6 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/kasworld/gowasmlib/jslog"
-
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/lib/g2id"
@@ -29,6 +27,8 @@ import (
 
 type Viewport struct {
 	rnd *rand.Rand
+
+	zoom int
 
 	ViewWidth  int
 	ViewHeight int
@@ -135,12 +135,7 @@ func (vp *Viewport) Focus() {
 }
 
 func (vp *Viewport) Zoom(state int) {
-	fov := [3]float64{
-		30, 50, 70,
-	}
-	vp.camera.Set("fov", fov[state])
-	vp.camera.Call("updateProjectionMatrix")
-	jslog.Infof("fov %v", fov[state])
+	vp.zoom = state
 }
 
 func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []js.Value) interface{}) {
@@ -163,8 +158,9 @@ func (vp *Viewport) Draw(
 	SetPosition(vp.light,
 		cameraX, cameraY, DstCellSize*2,
 	)
+	cameraZ := HelperSize / (vp.zoom + 1)
 	SetPosition(vp.camera,
-		cameraX, cameraY, HelperSize,
+		cameraX, cameraY, cameraZ,
 	)
 	vp.camera.Call("lookAt",
 		vp.ThreeJsNew("Vector3",
