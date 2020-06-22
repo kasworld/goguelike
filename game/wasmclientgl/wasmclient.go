@@ -74,6 +74,10 @@ type WasmClient struct {
 	KeyDir   way9type.Way9Type
 	MouseDir way9type.Way9Type
 
+	// for turn
+	waitObjList    bool
+	needRefreshSet bool
+
 	taNotiData     *c2t_obj.NotiVPTiles_data
 	olNotiData     *c2t_obj.NotiObjectList_data
 	lastOLNotiData *c2t_obj.NotiObjectList_data
@@ -274,6 +278,13 @@ loop:
 }
 
 func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
+	if app.waitObjList {
+		// app.systemMessage.Append(
+		// 	wrapspan.ColorText("OrangeRed", "waiting object list"))
+		app.needRefreshSet = true
+		return nil
+	}
+
 	defer func() {
 		js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
 	}()
