@@ -18,7 +18,6 @@ import (
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -95,7 +94,7 @@ func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
 	return clFd
 }
 
-func (vp *Viewport) ReplaceFloorTiles(cf *clientfloor.ClientFloor) {
+func (vp *Viewport) ReplaceFloorTiles(cf *ClientFloorGL) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	for fx, xv := range cf.Tiles {
 		for fy, yv := range xv {
@@ -105,7 +104,7 @@ func (vp *Viewport) ReplaceFloorTiles(cf *clientfloor.ClientFloor) {
 }
 
 func (vp *Viewport) drawTileAt(
-	clFd *ClientField, cf *clientfloor.ClientFloor, fx, fy int, tl tile_flag.TileFlag) {
+	clFd *ClientField, cf *ClientFloorGL, fx, fy int, tl tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
 	dstY := fy * DstCellSize
 	diffbase := fx*5 + fy*3
@@ -156,7 +155,7 @@ func (vp *Viewport) drawTileAt(
 }
 
 func (vp *Viewport) UpdateClientField(
-	cf *clientfloor.ClientFloor,
+	cf *ClientFloorGL,
 	taNoti *c2t_obj.NotiVPTiles_data,
 	ViewportXYLenList findnear.XYLenList,
 ) {
@@ -171,7 +170,7 @@ func (vp *Viewport) UpdateClientField(
 
 }
 
-func (vp *Viewport) calcWallTileDiff(cf *clientfloor.ClientFloor, flx, fly int) int {
+func (vp *Viewport) calcWallTileDiff(cf *ClientFloorGL, flx, fly int) int {
 	rtn := 0
 	if vp.checkWallAt(cf, flx, fly-1) {
 		rtn |= 1
@@ -188,7 +187,7 @@ func (vp *Viewport) calcWallTileDiff(cf *clientfloor.ClientFloor, flx, fly int) 
 	return rtn
 }
 
-func (vp *Viewport) checkWallAt(cf *clientfloor.ClientFloor, flx, fly int) bool {
+func (vp *Viewport) checkWallAt(cf *ClientFloorGL, flx, fly int) bool {
 	flx = cf.XWrapSafe(flx)
 	fly = cf.YWrapSafe(fly)
 	tl := cf.Tiles[flx][fly]
@@ -197,7 +196,7 @@ func (vp *Viewport) checkWallAt(cf *clientfloor.ClientFloor, flx, fly int) bool 
 		tl.TestByTile(tile.Window)
 }
 
-func (vp *Viewport) ChangeToClientField(cf *clientfloor.ClientFloor) {
+func (vp *Viewport) ChangeToClientField(cf *ClientFloorGL) {
 	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	for _, v := range vp.floorG2ID2ClientField {
 		vp.scene.Call("remove", v.Mesh)

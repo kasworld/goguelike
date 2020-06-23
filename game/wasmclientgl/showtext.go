@@ -27,7 +27,6 @@ import (
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -380,7 +379,7 @@ func (app *WasmClient) makeFloorListHTML() string {
 		fmt.Fprintf(&buf, "Floor Found %v<br/>",
 			len(app.G2ID2ClientFloor))
 	}
-	cfList := make(clientfloor.ClientFloorList, 0)
+	cfList := make(ClientFloorGLList, 0)
 	for _, v := range app.G2ID2ClientFloor {
 		cfList = append(cfList, v)
 	}

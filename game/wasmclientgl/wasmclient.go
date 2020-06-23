@@ -24,7 +24,6 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientcookie"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/clienttile"
@@ -58,7 +57,7 @@ type WasmClient struct {
 
 	AOG2ID2AOClient       map[g2id.G2ID]*c2t_obj.ActiveObjClient
 	CaObjG2ID2CaObjClient map[g2id.G2ID]interface{}
-	G2ID2ClientFloor      map[g2id.G2ID]*clientfloor.ClientFloor
+	G2ID2ClientFloor      map[g2id.G2ID]*ClientFloorGL
 	FloorInfo             *c2t_obj.FloorInfo
 	remainTurn2Rebirth    int
 
@@ -114,7 +113,7 @@ func InitPage() {
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
-		G2ID2ClientFloor: make(map[g2id.G2ID]*clientfloor.ClientFloor),
+		G2ID2ClientFloor: make(map[g2id.G2ID]*ClientFloorGL),
 
 		systemMessage:      make(textncount.TextNCountList, 0),
 		KeyboardPressedMap: jskeypressmap.New(),

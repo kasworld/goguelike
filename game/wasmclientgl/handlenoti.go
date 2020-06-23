@@ -25,7 +25,6 @@ import (
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -103,7 +102,7 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.G2ID2ClientFloor[robj.FI.G2ID]
 	if !exist {
 		// new floor
-		cf = clientfloor.New(robj.FI)
+		cf = NewClientFloorGL(robj.FI)
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
@@ -619,7 +618,7 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.G2ID2ClientFloor[robj.FI.G2ID]
 	if !exist {
 		// new floor
-		cf = clientfloor.New(robj.FI)
+		cf = NewClientFloorGL(robj.FI)
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))

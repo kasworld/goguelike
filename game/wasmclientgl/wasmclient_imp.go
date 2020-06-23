@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -53,7 +52,7 @@ func (app *WasmClient) TowerBias() bias.Bias {
 	return bias.MakeBiasByProgress(ft, dur.Seconds(), gameconst.TowerBaseBiasLen)
 }
 
-func (app *WasmClient) currentFloor() *clientfloor.ClientFloor {
+func (app *WasmClient) currentFloor() *ClientFloorGL {
 	if fi := app.FloorInfo; fi == nil {
 		return nil
 	} else {
