@@ -55,7 +55,7 @@ type Viewport struct {
 	jsoTitle                js.Value
 
 	// terrain
-	floorG2ID2ClientField map[g2id.G2ID]*ClientField
+	// floorG2ID2ClientField map[g2id.G2ID]*ClientField
 
 	// cache
 	colorMaterialCache map[uint32]js.Value
@@ -64,11 +64,11 @@ type Viewport struct {
 
 func NewViewport() *Viewport {
 	vp := &Viewport{
-		rnd:                   rand.New(rand.NewSource(time.Now().UnixNano())),
-		jsSceneObjs:           make(map[g2id.G2ID]js.Value),
-		floorG2ID2ClientField: make(map[g2id.G2ID]*ClientField),
-		colorMaterialCache:    make(map[uint32]js.Value),
-		textGeometryCache:     make(map[textGeoKey]js.Value),
+		rnd:         rand.New(rand.NewSource(time.Now().UnixNano())),
+		jsSceneObjs: make(map[g2id.G2ID]js.Value),
+		// floorG2ID2ClientField: make(map[g2id.G2ID]*ClientField),
+		colorMaterialCache: make(map[uint32]js.Value),
+		textGeometryCache:  make(map[textGeoKey]js.Value),
 	}
 
 	vp.threejs = js.Global().Get("THREE")

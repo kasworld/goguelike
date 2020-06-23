@@ -14,6 +14,7 @@ package wasmclientgl
 import (
 	"fmt"
 	"math/rand"
+	"syscall/js"
 	"time"
 
 	"github.com/kasworld/findnear"
@@ -24,6 +25,7 @@ import (
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/gowasmlib/jslog"
 	"github.com/kasworld/wrapper"
 )
 
@@ -40,20 +42,69 @@ type ClientFloorGL struct {
 	visitTime      time.Time                            `prettystring:"simple"`
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
+
+	// from ClientField
+	// W   int // canvas width
+	// H   int // canvas height
+	// Cnv js.Value
+	Ctx js.Value
+	Tex js.Value
+	// Mat  js.Value
+	// Geo  js.Value
+	Mesh js.Value
 }
 
-func NewClientFloorGL(FloorInfo *c2t_obj.FloorInfo) *ClientFloorGL {
+func (app *WasmClient) NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf := ClientFloorGL{
-		Tiles:     tilearea.New(FloorInfo.W, FloorInfo.H),
-		Visited:   visitarea.NewVisitArea(FloorInfo),
-		FloorInfo: FloorInfo,
-		XWrapper:  wrapper.New(FloorInfo.W),
-		YWrapper:  wrapper.New(FloorInfo.H),
+		Tiles:     tilearea.New(fi.W, fi.H),
+		Visited:   visitarea.NewVisitArea(fi),
+		FloorInfo: fi,
+		XWrapper:  wrapper.New(fi.W),
+		YWrapper:  wrapper.New(fi.H),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	cf.FieldObjPosMan = uuidposman.New(FloorInfo.W, FloorInfo.H)
+	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
+
+	// clientfield
+	w := fi.W * DstCellSize
+	h := fi.H * DstCellSize
+	xRepeat := 3
+	yRepeat := 3
+	Cnv := js.Global().Get("document").Call("createElement",
+		"CANVAS")
+	Ctx := Cnv.Call("getContext", "2d")
+	if !Ctx.Truthy() {
+		jslog.Errorf("fail to get context %v", fi)
+		return nil
+	}
+	Ctx.Set("imageSmoothingEnabled", false)
+	Cnv.Set("width", w)
+	Cnv.Set("height", h)
+
+	Tex := app.vp.ThreeJsNew("CanvasTexture", Cnv)
+	Tex.Set("wrapS", app.vp.threejs.Get("RepeatWrapping"))
+	Tex.Set("wrapT", app.vp.threejs.Get("RepeatWrapping"))
+	Tex.Get("repeat").Set("x", xRepeat)
+	Tex.Get("repeat").Set("y", yRepeat)
+	Mat := app.vp.ThreeJsNew("MeshBasicMaterial",
+		map[string]interface{}{
+			"map": Tex,
+		},
+	)
+	Geo := app.vp.ThreeJsNew("PlaneBufferGeometry",
+		w*xRepeat, h*yRepeat)
+	Mesh := app.vp.ThreeJsNew("Mesh", Geo, Mat)
+
+	SetPosition(Mesh, w/2, -h/2, -10)
+
+	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
+	Ctx.Set("fillStyle", "gray")
+	Ctx.Call("fillText", fi.Name, 100, 100)
+	cf.Ctx = Ctx
+	cf.Tex = Tex
+	cf.Mesh = Mesh
 
 	return &cf
 }

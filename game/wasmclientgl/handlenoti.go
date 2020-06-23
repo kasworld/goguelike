@@ -67,7 +67,6 @@ func objRecvNotiFn_EnterTower(recvobj interface{}, header c2t_packet.Header, obj
 	gInitData.TowerInfo = robj.TowerInfo
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Enter tower %v", robj.TowerInfo.Name))
-	// app.vp.NotiMessage.AppendTf(tcsInfo, "Enter tower %v", robj.TowerInfo.Name)
 	return nil
 }
 func objRecvNotiFn_LeaveTower(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
@@ -83,7 +82,6 @@ func objRecvNotiFn_LeaveTower(recvobj interface{}, header c2t_packet.Header, obj
 	soundmap.Play("enterfloorsound")
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Leave tower %v", robj.TowerInfo.Name))
-	// app.vp.NotiMessage.AppendTf(tcsInfo, "Leave tower %v", robj.TowerInfo.Name)
 	return nil
 }
 
@@ -102,17 +100,17 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.G2ID2ClientFloor[robj.FI.G2ID]
 	if !exist {
 		// new floor
-		cf = NewClientFloorGL(robj.FI)
+		cf = app.NewClientFloorGL(robj.FI)
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
 
-		clFd := app.vp.NewClientField(robj.FI)
-		app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
+		// clFd := app.vp.NewClientField(robj.FI)
+		// app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
 	cf.EnterFloor()
-	app.vp.ChangeToClientField(cf)
+	app.ChangeToClientField(cf)
 	return nil
 }
 func objRecvNotiFn_LeaveFloor(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
@@ -454,7 +452,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
 	}
 
-	app.vp.processNotiObjectList(newOLNotiData)
+	app.vp.processNotiObjectList(cf, newOLNotiData)
 
 	playerX, playerY := app.GetPlayerXY()
 	if cf.IsValidPos(playerX, playerY) {
@@ -618,13 +616,13 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.G2ID2ClientFloor[robj.FI.G2ID]
 	if !exist {
 		// new floor
-		cf = NewClientFloorGL(robj.FI)
+		cf = app.NewClientFloorGL(robj.FI)
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
 
-		clFd := app.vp.NewClientField(robj.FI)
-		app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
+		// clFd := app.vp.NewClientField(robj.FI)
+		// app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
 	}
 
 	oldComplete := cf.Visited.IsComplete()

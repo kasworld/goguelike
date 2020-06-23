@@ -358,3 +358,10 @@ func (app *WasmClient) getScrollDir() way9type.Way9Type {
 	}
 	return scrollDir
 }
+
+func (app *WasmClient) ChangeToClientField(cf *ClientFloorGL) {
+	for _, v := range app.G2ID2ClientFloor {
+		app.vp.scene.Call("remove", v.Mesh)
+	}
+	app.vp.scene.Call("add", cf.Mesh)
+}

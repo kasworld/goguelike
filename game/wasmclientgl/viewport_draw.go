@@ -21,6 +21,7 @@ import (
 )
 
 func (vp *Viewport) processNotiObjectList(
+	cf *ClientFloorGL,
 	olNoti *c2t_obj.NotiObjectList_data) {
 	// shY := int(-float64(DstCellSize) * 0.8)
 	addUUID := make(map[g2id.G2ID]bool)
@@ -78,7 +79,6 @@ func (vp *Viewport) processNotiObjectList(
 	}
 
 	// draw fieldobj
-	clFd := vp.floorG2ID2ClientField[olNoti.FloorG2ID]
 	for _, o := range olNoti.FieldObjList {
 		tlList := gClientTile.FieldObjTiles[o.DisplayType]
 		if len(tlList) == 0 {
@@ -93,7 +93,7 @@ func (vp *Viewport) processNotiObjectList(
 		diffbase := fx*5 + fy*3
 		tilediff := diffbase
 		ti := tlList[tilediff%len(tlList)]
-		clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+		cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 			dstX, dstY, DstCellSize, DstCellSize)
 

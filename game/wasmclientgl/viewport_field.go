@@ -12,14 +12,10 @@
 package wasmclientgl
 
 import (
-	"fmt"
-	"syscall/js"
-
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/gowasmlib/jslog"
 )
 
 // for tile texture wrap
@@ -39,72 +35,71 @@ func (ttwi textureTileWrapInfo) CalcSrc(fx, fy int, shiftx, shifty float64) (int
 	return srcx, srcy, ttwi.CellSize
 }
 
-type ClientField struct {
-	// W   int // canvas width
-	// H   int // canvas height
-	// Cnv js.Value
-	Ctx js.Value
-	Tex js.Value
-	// Mat  js.Value
-	// Geo  js.Value
-	Mesh js.Value
-}
+// type ClientField struct {
+// 	// W   int // canvas width
+// 	// H   int // canvas height
+// 	// Cnv js.Value
+// 	Ctx js.Value
+// 	Tex js.Value
+// 	// Mat  js.Value
+// 	// Geo  js.Value
+// 	Mesh js.Value
+// }
 
-func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
-	w := fi.W * DstCellSize
-	h := fi.H * DstCellSize
-	xRepeat := 3
-	yRepeat := 3
-	Cnv := js.Global().Get("document").Call("createElement",
-		"CANVAS")
-	Ctx := Cnv.Call("getContext", "2d")
-	if !Ctx.Truthy() {
-		jslog.Errorf("fail to get context %v", fi)
-		return nil
-	}
-	Ctx.Set("imageSmoothingEnabled", false)
-	Cnv.Set("width", w)
-	Cnv.Set("height", h)
+// func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
+// 	w := fi.W * DstCellSize
+// 	h := fi.H * DstCellSize
+// 	xRepeat := 3
+// 	yRepeat := 3
+// 	Cnv := js.Global().Get("document").Call("createElement",
+// 		"CANVAS")
+// 	Ctx := Cnv.Call("getContext", "2d")
+// 	if !Ctx.Truthy() {
+// 		jslog.Errorf("fail to get context %v", fi)
+// 		return nil
+// 	}
+// 	Ctx.Set("imageSmoothingEnabled", false)
+// 	Cnv.Set("width", w)
+// 	Cnv.Set("height", h)
 
-	Tex := vp.ThreeJsNew("CanvasTexture", Cnv)
-	Tex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
-	Tex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
-	Tex.Get("repeat").Set("x", xRepeat)
-	Tex.Get("repeat").Set("y", yRepeat)
-	Mat := vp.ThreeJsNew("MeshBasicMaterial",
-		map[string]interface{}{
-			"map": Tex,
-		},
-	)
-	Geo := vp.ThreeJsNew("PlaneBufferGeometry",
-		w*xRepeat, h*yRepeat)
-	Mesh := vp.ThreeJsNew("Mesh", Geo, Mat)
+// 	Tex := vp.ThreeJsNew("CanvasTexture", Cnv)
+// 	Tex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
+// 	Tex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
+// 	Tex.Get("repeat").Set("x", xRepeat)
+// 	Tex.Get("repeat").Set("y", yRepeat)
+// 	Mat := vp.ThreeJsNew("MeshBasicMaterial",
+// 		map[string]interface{}{
+// 			"map": Tex,
+// 		},
+// 	)
+// 	Geo := vp.ThreeJsNew("PlaneBufferGeometry",
+// 		w*xRepeat, h*yRepeat)
+// 	Mesh := vp.ThreeJsNew("Mesh", Geo, Mat)
 
-	SetPosition(Mesh, w/2, -h/2, -10)
+// 	SetPosition(Mesh, w/2, -h/2, -10)
 
-	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
-	Ctx.Set("fillStyle", "gray")
-	Ctx.Call("fillText", fi.Name, 100, 100)
+// 	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
+// 	Ctx.Set("fillStyle", "gray")
+// 	Ctx.Call("fillText", fi.Name, 100, 100)
 
-	clFd := &ClientField{
-		Ctx:  Ctx,
-		Tex:  Tex,
-		Mesh: Mesh,
-	}
-	return clFd
-}
+// 	clFd := &ClientField{
+// 		Ctx:  Ctx,
+// 		Tex:  Tex,
+// 		Mesh: Mesh,
+// 	}
+// 	return clFd
+// }
 
 func (vp *Viewport) ReplaceFloorTiles(cf *ClientFloorGL) {
-	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	for fx, xv := range cf.Tiles {
 		for fy, yv := range xv {
-			vp.drawTileAt(clFd, cf, fx, fy, yv)
+			vp.drawTileAt(cf, fx, fy, yv)
 		}
 	}
 }
 
 func (vp *Viewport) drawTileAt(
-	clFd *ClientField, cf *ClientFloorGL, fx, fy int, tl tile_flag.TileFlag) {
+	cf *ClientFloorGL, fx, fy int, tl tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
 	dstY := fy * DstCellSize
 	diffbase := fx*5 + fy*3
@@ -118,7 +113,7 @@ func (vp *Viewport) drawTileAt(
 				// texture tile
 				tlic := vp.textureTileList[i]
 				srcx, srcy, srcCellSize := vp.textureTileWrapInfoList[i].CalcSrc(fx, fy, shX, shY)
-				clFd.Ctx.Call("drawImage", tlic.Cnv,
+				cf.Ctx.Call("drawImage", tlic.Cnv,
 					srcx, srcy, srcCellSize, srcCellSize,
 					dstX, dstY, DstCellSize, DstCellSize)
 
@@ -127,7 +122,7 @@ func (vp *Viewport) drawTileAt(
 				tlList := gClientTile.FloorTiles[i]
 				tilediff := vp.calcWallTileDiff(cf, fx, fy)
 				ti := tlList[tilediff%len(tlList)]
-				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)
 			} else if tlt == tile.Window {
@@ -138,7 +133,7 @@ func (vp *Viewport) drawTileAt(
 					tlindex = 1
 				}
 				ti := tlList[tlindex]
-				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)
 			} else {
@@ -146,7 +141,7 @@ func (vp *Viewport) drawTileAt(
 				tlList := gClientTile.FloorTiles[i]
 				tilediff := diffbase + int(shX)
 				ti := tlList[tilediff%len(tlList)]
-				clFd.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)
 			}
@@ -159,14 +154,13 @@ func (vp *Viewport) UpdateClientField(
 	taNoti *c2t_obj.NotiVPTiles_data,
 	ViewportXYLenList findnear.XYLenList,
 ) {
-	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
 	for i, v := range ViewportXYLenList {
 		fx := cf.XWrapSafe(v.X + taNoti.VPX)
 		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
 		tl := taNoti.VPTiles[i]
-		vp.drawTileAt(clFd, cf, fx, fy, tl)
+		vp.drawTileAt(cf, fx, fy, tl)
 	}
-	clFd.Tex.Set("needsUpdate", true)
+	cf.Tex.Set("needsUpdate", true)
 
 }
 
@@ -194,12 +188,4 @@ func (vp *Viewport) checkWallAt(cf *ClientFloorGL, flx, fly int) bool {
 	return tl.TestByTile(tile.Wall) ||
 		tl.TestByTile(tile.Door) ||
 		tl.TestByTile(tile.Window)
-}
-
-func (vp *Viewport) ChangeToClientField(cf *ClientFloorGL) {
-	clFd := vp.floorG2ID2ClientField[cf.FloorInfo.G2ID]
-	for _, v := range vp.floorG2ID2ClientField {
-		vp.scene.Call("remove", v.Mesh)
-	}
-	vp.scene.Call("add", clFd.Mesh)
 }
