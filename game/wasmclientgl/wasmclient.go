@@ -232,7 +232,6 @@ func (app *WasmClient) enterTower(towerindex int) {
 	defer app.Cleanup()
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Welcome to Goguelike, %v!", gInitData.GetNickName()))
-	// app.vp.NotiMessage.AppendTf(tcsInfo, "Welcome to Goguelike, %v!", gInitData.GetNickName())
 
 	if gameconst.DataVersion != gInitData.ServiceInfo.DataVersion {
 		jslog.Errorf("DataVersion mismatch client %v server %v",

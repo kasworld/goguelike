@@ -54,9 +54,6 @@ type Viewport struct {
 	font_helvetiker_regular js.Value
 	jsoTitle                js.Value
 
-	// terrain
-	// floorG2ID2ClientField map[g2id.G2ID]*ClientField
-
 	// cache
 	colorMaterialCache map[uint32]js.Value
 	textGeometryCache  map[textGeoKey]js.Value
@@ -64,9 +61,8 @@ type Viewport struct {
 
 func NewViewport() *Viewport {
 	vp := &Viewport{
-		rnd:         rand.New(rand.NewSource(time.Now().UnixNano())),
-		jsSceneObjs: make(map[g2id.G2ID]js.Value),
-		// floorG2ID2ClientField: make(map[g2id.G2ID]*ClientField),
+		rnd:                rand.New(rand.NewSource(time.Now().UnixNano())),
+		jsSceneObjs:        make(map[g2id.G2ID]js.Value),
 		colorMaterialCache: make(map[uint32]js.Value),
 		textGeometryCache:  make(map[textGeoKey]js.Value),
 	}

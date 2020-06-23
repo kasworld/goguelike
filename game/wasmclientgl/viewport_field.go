@@ -35,61 +35,6 @@ func (ttwi textureTileWrapInfo) CalcSrc(fx, fy int, shiftx, shifty float64) (int
 	return srcx, srcy, ttwi.CellSize
 }
 
-// type ClientField struct {
-// 	// W   int // canvas width
-// 	// H   int // canvas height
-// 	// Cnv js.Value
-// 	Ctx js.Value
-// 	Tex js.Value
-// 	// Mat  js.Value
-// 	// Geo  js.Value
-// 	Mesh js.Value
-// }
-
-// func (vp *Viewport) NewClientField(fi *c2t_obj.FloorInfo) *ClientField {
-// 	w := fi.W * DstCellSize
-// 	h := fi.H * DstCellSize
-// 	xRepeat := 3
-// 	yRepeat := 3
-// 	Cnv := js.Global().Get("document").Call("createElement",
-// 		"CANVAS")
-// 	Ctx := Cnv.Call("getContext", "2d")
-// 	if !Ctx.Truthy() {
-// 		jslog.Errorf("fail to get context %v", fi)
-// 		return nil
-// 	}
-// 	Ctx.Set("imageSmoothingEnabled", false)
-// 	Cnv.Set("width", w)
-// 	Cnv.Set("height", h)
-
-// 	Tex := vp.ThreeJsNew("CanvasTexture", Cnv)
-// 	Tex.Set("wrapS", vp.threejs.Get("RepeatWrapping"))
-// 	Tex.Set("wrapT", vp.threejs.Get("RepeatWrapping"))
-// 	Tex.Get("repeat").Set("x", xRepeat)
-// 	Tex.Get("repeat").Set("y", yRepeat)
-// 	Mat := vp.ThreeJsNew("MeshBasicMaterial",
-// 		map[string]interface{}{
-// 			"map": Tex,
-// 		},
-// 	)
-// 	Geo := vp.ThreeJsNew("PlaneBufferGeometry",
-// 		w*xRepeat, h*yRepeat)
-// 	Mesh := vp.ThreeJsNew("Mesh", Geo, Mat)
-
-// 	SetPosition(Mesh, w/2, -h/2, -10)
-
-// 	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
-// 	Ctx.Set("fillStyle", "gray")
-// 	Ctx.Call("fillText", fi.Name, 100, 100)
-
-// 	clFd := &ClientField{
-// 		Ctx:  Ctx,
-// 		Tex:  Tex,
-// 		Mesh: Mesh,
-// 	}
-// 	return clFd
-// }
-
 func (vp *Viewport) ReplaceFloorTiles(cf *ClientFloorGL) {
 	for fx, xv := range cf.Tiles {
 		for fy, yv := range xv {

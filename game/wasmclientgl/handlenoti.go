@@ -104,9 +104,6 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
-
-		// clFd := app.vp.NewClientField(robj.FI)
-		// app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
 	cf.EnterFloor()
@@ -620,9 +617,6 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
-
-		// clFd := app.vp.NewClientField(robj.FI)
-		// app.vp.floorG2ID2ClientField[robj.FI.G2ID] = clFd
 	}
 
 	oldComplete := cf.Visited.IsComplete()
