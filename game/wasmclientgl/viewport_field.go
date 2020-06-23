@@ -43,6 +43,21 @@ func (vp *Viewport) ReplaceFloorTiles(cf *ClientFloorGL) {
 	}
 }
 
+func (vp *Viewport) UpdateClientField(
+	cf *ClientFloorGL,
+	taNoti *c2t_obj.NotiVPTiles_data,
+	ViewportXYLenList findnear.XYLenList,
+) {
+	for i, v := range ViewportXYLenList {
+		fx := cf.XWrapSafe(v.X + taNoti.VPX)
+		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
+		tl := taNoti.VPTiles[i]
+		vp.drawTileAt(cf, fx, fy, tl)
+	}
+	cf.Tex.Set("needsUpdate", true)
+
+}
+
 func (vp *Viewport) drawTileAt(
 	cf *ClientFloorGL, fx, fy int, tl tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
@@ -65,7 +80,7 @@ func (vp *Viewport) drawTileAt(
 			} else if tlt == tile.Wall {
 				// wall tile process
 				tlList := gClientTile.FloorTiles[i]
-				tilediff := vp.calcWallTileDiff(cf, fx, fy)
+				tilediff := cf.calcWallTileDiff(fx, fy)
 				ti := tlList[tilediff%len(tlList)]
 				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
@@ -74,7 +89,7 @@ func (vp *Viewport) drawTileAt(
 				// window tile process
 				tlList := gClientTile.FloorTiles[i]
 				tlindex := 0
-				if vp.checkWallAt(cf, fx, fy-1) && vp.checkWallAt(cf, fx, fy+1) { // n-s window
+				if cf.checkWallAt(fx, fy-1) && cf.checkWallAt(fx, fy+1) { // n-s window
 					tlindex = 1
 				}
 				ti := tlList[tlindex]
@@ -92,45 +107,4 @@ func (vp *Viewport) drawTileAt(
 			}
 		}
 	}
-}
-
-func (vp *Viewport) UpdateClientField(
-	cf *ClientFloorGL,
-	taNoti *c2t_obj.NotiVPTiles_data,
-	ViewportXYLenList findnear.XYLenList,
-) {
-	for i, v := range ViewportXYLenList {
-		fx := cf.XWrapSafe(v.X + taNoti.VPX)
-		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
-		tl := taNoti.VPTiles[i]
-		vp.drawTileAt(cf, fx, fy, tl)
-	}
-	cf.Tex.Set("needsUpdate", true)
-
-}
-
-func (vp *Viewport) calcWallTileDiff(cf *ClientFloorGL, flx, fly int) int {
-	rtn := 0
-	if vp.checkWallAt(cf, flx, fly-1) {
-		rtn |= 1
-	}
-	if vp.checkWallAt(cf, flx+1, fly) {
-		rtn |= 1 << 1
-	}
-	if vp.checkWallAt(cf, flx, fly+1) {
-		rtn |= 1 << 2
-	}
-	if vp.checkWallAt(cf, flx-1, fly) {
-		rtn |= 1 << 3
-	}
-	return rtn
-}
-
-func (vp *Viewport) checkWallAt(cf *ClientFloorGL, flx, fly int) bool {
-	flx = cf.XWrapSafe(flx)
-	fly = cf.YWrapSafe(fly)
-	tl := cf.Tiles[flx][fly]
-	return tl.TestByTile(tile.Wall) ||
-		tl.TestByTile(tile.Door) ||
-		tl.TestByTile(tile.Window)
 }
