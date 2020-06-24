@@ -11,7 +11,60 @@
 
 package wasmclientgl
 
-import "github.com/kasworld/goguelike/enum/tile"
+import (
+	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
+)
+
+func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
+	dstX := fx * DstCellSize
+	dstY := fy * DstCellSize
+	diffbase := fx*5 + fy*3
+
+	for i := 0; i < tile.Tile_Count; i++ {
+		shX := 0.0
+		shY := 0.0
+		tlt := tile.Tile(i)
+		if tl.TestByTile(tlt) {
+			if gTextureTileList[i] != nil {
+				// texture tile
+				tlic := gTextureTileList[i]
+				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, shX, shY)
+				cf.Ctx.Call("drawImage", tlic.Cnv,
+					srcx, srcy, srcCellSize, srcCellSize,
+					dstX, dstY, DstCellSize, DstCellSize)
+
+			} else if tlt == tile.Wall {
+				// wall tile process
+				tlList := gClientTile.FloorTiles[i]
+				tilediff := cf.calcWallTileDiff(fx, fy)
+				ti := tlList[tilediff%len(tlList)]
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+					dstX, dstY, DstCellSize, DstCellSize)
+			} else if tlt == tile.Window {
+				// window tile process
+				tlList := gClientTile.FloorTiles[i]
+				tlindex := 0
+				if cf.checkWallAt(fx, fy-1) && cf.checkWallAt(fx, fy+1) { // n-s window
+					tlindex = 1
+				}
+				ti := tlList[tlindex]
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+					dstX, dstY, DstCellSize, DstCellSize)
+			} else {
+				// bitmap tile
+				tlList := gClientTile.FloorTiles[i]
+				tilediff := diffbase + int(shX)
+				ti := tlList[tilediff%len(tlList)]
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+					dstX, dstY, DstCellSize, DstCellSize)
+			}
+		}
+	}
+}
 
 func (cf *ClientFloorGL) calcWallTileDiff(flx, fly int) int {
 	rtn := 0
