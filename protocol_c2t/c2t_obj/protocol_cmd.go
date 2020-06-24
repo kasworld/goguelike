@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/lib/g2id"
 )
 
 type ReqInvalid_data struct {
@@ -26,7 +25,7 @@ type RspInvalid_data struct {
 }
 
 type ReqLogin_data struct {
-	SessionG2ID g2id.G2ID
+	SessionUUID string
 	NickName    string
 	AuthKey     string
 }

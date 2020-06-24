@@ -76,8 +76,8 @@ func (idata *InitData) MakeServiceInfoHTML() string {
 	fmt.Fprintf(&buf, "Protocol %v<br/>", idata.ServiceInfo.ProtocolVersion)
 	fmt.Fprintf(&buf, "Data %v<br/>", idata.ServiceInfo.DataVersion)
 	fmt.Fprintf(&buf, "Version %v<br/>", idata.ServiceInfo.Version)
-	fmt.Fprintf(&buf, "SessionID %v<br/>", idata.AccountInfo.SessionG2ID)
-	fmt.Fprintf(&buf, "ActiveObjID %v<br/>", idata.AccountInfo.ActiveObjG2ID)
+	fmt.Fprintf(&buf, "SessionID %v<br/>", idata.AccountInfo.SessionUUID)
+	fmt.Fprintf(&buf, "ActiveObjID %v<br/>", idata.AccountInfo.ActiveObjUUID)
 	fmt.Fprintf(&buf, "%v<br/>", MsgCopyright)
 	return buf.String()
 }

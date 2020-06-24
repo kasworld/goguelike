@@ -15,7 +15,6 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
@@ -23,7 +22,7 @@ import (
 type Act struct {
 	Act  c2t_idcmd.CommandID
 	Dir  way9type.Way9Type
-	G2ID g2id.G2ID
+	UUID string
 }
 
 type ActReqRsp struct {

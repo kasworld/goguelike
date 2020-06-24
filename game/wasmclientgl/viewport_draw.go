@@ -15,7 +15,6 @@ import (
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -24,11 +23,11 @@ func (vp *Viewport) processNotiObjectList(
 	cf *ClientFloorGL,
 	olNoti *c2t_obj.NotiObjectList_data) {
 	// shY := int(-float64(DstCellSize) * 0.8)
-	addUUID := make(map[g2id.G2ID]bool)
+	addUUID := make(map[string]bool)
 
 	// make activeobj
 	for _, o := range olNoti.ActiveObjList {
-		jso, exist := vp.jsSceneObjs[o.G2ID]
+		jso, exist := vp.jsSceneObjs[o.UUID]
 		if !exist {
 			geo := vp.getTextGeometry(
 				o.Faction.String()[:2],
@@ -37,7 +36,7 @@ func (vp *Viewport) processNotiObjectList(
 			mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
 			jso = vp.ThreeJsNew("Mesh", geo, mat)
 			vp.scene.Call("add", jso)
-			vp.jsSceneObjs[o.G2ID] = jso
+			vp.jsSceneObjs[o.UUID] = jso
 		}
 		miny, maxy := vp.calcGeoMinMaxY(jso.Get("geometry"))
 		SetPosition(
@@ -45,12 +44,12 @@ func (vp *Viewport) processNotiObjectList(
 			float64(o.X)*DstCellSize,
 			-float64(o.Y)*DstCellSize-(maxy-miny)/2-DstCellSize/2,
 			0)
-		addUUID[o.G2ID] = true
+		addUUID[o.UUID] = true
 	}
 
 	// make carryobj
 	for _, o := range olNoti.CarryObjList {
-		jso, exist := vp.jsSceneObjs[o.G2ID]
+		jso, exist := vp.jsSceneObjs[o.UUID]
 		str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
 		if !exist {
 			geo := vp.getTextGeometry(
@@ -60,7 +59,7 @@ func (vp *Viewport) processNotiObjectList(
 			mat := vp.getColorMaterial(co)
 			jso = vp.ThreeJsNew("Mesh", geo, mat)
 			vp.scene.Call("add", jso)
-			vp.jsSceneObjs[o.G2ID] = jso
+			vp.jsSceneObjs[o.UUID] = jso
 		}
 		miny, maxy := vp.calcGeoMinMaxY(jso.Get("geometry"))
 		SetPosition(
@@ -68,7 +67,7 @@ func (vp *Viewport) processNotiObjectList(
 			float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
 			-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y-(maxy-miny)/2,
 			0)
-		addUUID[o.G2ID] = true
+		addUUID[o.UUID] = true
 	}
 
 	for id, jso := range vp.jsSceneObjs {

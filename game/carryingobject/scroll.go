@@ -18,7 +18,6 @@ import (
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/uuidstr"
 )
@@ -57,7 +56,7 @@ func NewScrollByMakeRate(n int) gamei.ScrollI {
 
 func (po *Scroll) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
 	poc := &c2t_obj.CarryObjClientOnFloor{
-		G2ID:               g2id.NewFromString(po.uuid),
+		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		X:                  x,
 		Y:                  y,
@@ -69,7 +68,7 @@ func (po *Scroll) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClie
 
 func (po *Scroll) ToPacket_ScrollClient() *c2t_obj.ScrollClient {
 	poc := &c2t_obj.ScrollClient{
-		G2ID:       g2id.NewFromString(po.uuid),
+		UUID:       po.uuid,
 		ScrollType: po.scrollType,
 	}
 	return poc

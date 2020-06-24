@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/lib/session"
 	"github.com/kasworld/rangestat"
@@ -111,12 +110,12 @@ func (sman *SessionManager) DelBySessionID(id string) {
 }
 
 func (sman *SessionManager) UpdateOrNew(
-	sessiong2id g2id.G2ID,
+	sessionuuid string,
 	remoteaddr string,
 	nickname string,
 ) *session.Session {
 
-	sessionid := strings.TrimSpace(sessiong2id.String())
+	sessionuuid = strings.TrimSpace(sessionuuid)
 	now := time.Now()
 	pad := fmt.Sprintf("_%08x", sman.rnd.Uint32())
 	nickname = ValidatePlayername(nickname, pad)
@@ -124,8 +123,8 @@ func (sman *SessionManager) UpdateOrNew(
 	sman.mutex.Lock()
 	defer sman.mutex.Unlock()
 
-	if sessionid != "" {
-		ss, exist := sman.sessionid2session[sessionid]
+	if sessionuuid != "" {
+		ss, exist := sman.sessionid2session[sessionuuid]
 		if exist {
 			ss.LastUse = now
 			ss.RemoteAddr = remoteaddr

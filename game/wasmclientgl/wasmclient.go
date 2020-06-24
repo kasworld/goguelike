@@ -27,7 +27,6 @@ import (
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/clienttile"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
@@ -55,9 +54,9 @@ type WasmClient struct {
 	Path2dst           [][2]int
 	ClientColtrolMode  clientcontroltype.ClientControlType
 
-	AOG2ID2AOClient       map[g2id.G2ID]*c2t_obj.ActiveObjClient
-	CaObjG2ID2CaObjClient map[g2id.G2ID]interface{}
-	G2ID2ClientFloor      map[g2id.G2ID]*ClientFloorGL
+	AOUUID2AOClient       map[string]*c2t_obj.ActiveObjClient
+	CaObjUUID2CaObjClient map[string]interface{}
+	UUID2ClientFloor      map[string]*ClientFloorGL
 	FloorInfo             *c2t_obj.FloorInfo
 	remainTurn2Rebirth    int
 
@@ -113,7 +112,7 @@ func InitPage() {
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
-		G2ID2ClientFloor: make(map[g2id.G2ID]*ClientFloorGL),
+		UUID2ClientFloor: make(map[string]*ClientFloorGL),
 
 		systemMessage:      make(textncount.TextNCountList, 0),
 		KeyboardPressedMap: jskeypressmap.New(),
@@ -176,8 +175,8 @@ func InitPage() {
 		},
 	))
 
-	app.AOG2ID2AOClient = make(map[g2id.G2ID]*c2t_obj.ActiveObjClient)
-	app.CaObjG2ID2CaObjClient = make(map[g2id.G2ID]interface{})
+	app.AOUUID2AOClient = make(map[string]*c2t_obj.ActiveObjClient)
+	app.CaObjUUID2CaObjClient = make(map[string]interface{})
 }
 
 func (app *WasmClient) makeButtons() string {
@@ -244,7 +243,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 
 	// app.vp.ViewportPos2Index = gInitData.ViewportXYLenList.MakePos2Index()
 
-	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionG2ID), gInitData.AccountInfo.NickName)
+	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionUUID), gInitData.AccountInfo.NickName)
 
 	if gInitData.CanUseCmd(c2t_idcmd.AIPlay) {
 		app.reqAIPlay(true)
@@ -350,7 +349,7 @@ func (app *WasmClient) Focus2Canvas() {
 
 func (app *WasmClient) getScrollDir() way9type.Way9Type {
 	scrollDir := way9type.Center
-	if pao, exist := app.AOG2ID2AOClient[gInitData.AccountInfo.ActiveObjG2ID]; exist {
+	if pao, exist := app.AOUUID2AOClient[gInitData.AccountInfo.ActiveObjUUID]; exist {
 		if pao.Act == c2t_idcmd.Move && pao.Result == c2t_error.None {
 			scrollDir = pao.Dir
 		}
@@ -359,7 +358,7 @@ func (app *WasmClient) getScrollDir() way9type.Way9Type {
 }
 
 func (app *WasmClient) ChangeToClientField(cf *ClientFloorGL) {
-	for _, v := range app.G2ID2ClientFloor {
+	for _, v := range app.UUID2ClientFloor {
 		app.vp.scene.Call("remove", v.Mesh)
 	}
 	app.vp.scene.Call("add", cf.Mesh)

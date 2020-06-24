@@ -17,7 +17,6 @@ import (
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/game/tilearea"
-	"github.com/kasworld/goguelike/lib/g2id"
 )
 
 type NotiInvalid_data struct {
@@ -39,7 +38,7 @@ type NotiLeaveFloor_data struct {
 }
 
 type NotiAgeing_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 
 type NotiDeath_data struct {
@@ -59,7 +58,7 @@ type NotiBroadcast_data struct {
 
 type NotiObjectList_data struct {
 	Time          time.Time `prettystring:"simple"`
-	FloorG2ID     g2id.G2ID
+	FloorUUID     string
 	ActiveObj     *PlayerActiveObjInfo
 	ActiveObjList []*ActiveObjClient
 	CarryObjList  []*CarryObjClientOnFloor
@@ -67,7 +66,7 @@ type NotiObjectList_data struct {
 }
 
 type NotiVPTiles_data struct {
-	FloorG2ID g2id.G2ID
+	FloorUUID string
 	VPX       int
 	VPY       int
 	VPTiles   *viewportdata.ViewportTileArea2
@@ -80,12 +79,12 @@ type NotiFloorTiles_data struct {
 }
 
 type NotiFoundFieldObj_data struct {
-	FloorG2ID g2id.G2ID
+	FloorUUID string
 	FieldObj  *FieldObjClient
 }
 
 type NotiForgetFloor_data struct {
-	FloorG2ID g2id.G2ID
+	FloorUUID string
 }
 
 type NotiActivateTrap_data struct {

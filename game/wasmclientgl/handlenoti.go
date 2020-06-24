@@ -26,7 +26,6 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/soundmap"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -97,11 +96,11 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 
 	soundmap.Play("enterfloorsound")
 	app.FloorInfo = robj.FI
-	cf, exist := app.G2ID2ClientFloor[robj.FI.G2ID]
+	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
 		// new floor
 		cf = app.NewClientFloorGL(robj.FI)
-		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
+		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
 	}
@@ -180,7 +179,7 @@ func objRecvNotiFn_ReadyToRebirth(recvobj interface{}, header c2t_packet.Header,
 		commandButtons.GetByIDBase("Rebirth").Enable()
 	}
 	// clear carryobj cache
-	app.CaObjG2ID2CaObjClient = make(map[g2id.G2ID]interface{})
+	app.CaObjUUID2CaObjClient = make(map[string]interface{})
 	app.remainTurn2Rebirth = 0
 	return nil
 }
@@ -252,9 +251,9 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	app.ClientJitter.Act()
 	app.ServerJitter.ActByValue(robj.Time)
 
-	c2t_obj.EquipClientByG2ID(robj.ActiveObj.EquipBag).Sort()
-	c2t_obj.PotionClientByG2ID(robj.ActiveObj.PotionBag).Sort()
-	c2t_obj.ScrollClientByG2ID(robj.ActiveObj.ScrollBag).Sort()
+	c2t_obj.EquipClientByUUID(robj.ActiveObj.EquipBag).Sort()
+	c2t_obj.PotionClientByUUID(robj.ActiveObj.PotionBag).Sort()
+	c2t_obj.ScrollClientByUUID(robj.ActiveObj.ScrollBag).Sort()
 
 	oldLevel := 0
 	exp := 0
@@ -305,24 +304,24 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	for _, v := range newOLNotiData.ActiveObj.EquipBag {
-		app.CaObjG2ID2CaObjClient[v.G2ID] = v
+		app.CaObjUUID2CaObjClient[v.UUID] = v
 	}
 	for _, v := range newOLNotiData.ActiveObj.EquippedPo {
-		app.CaObjG2ID2CaObjClient[v.G2ID] = v
+		app.CaObjUUID2CaObjClient[v.UUID] = v
 	}
 	for _, v := range newOLNotiData.ActiveObj.PotionBag {
-		app.CaObjG2ID2CaObjClient[v.G2ID] = v
+		app.CaObjUUID2CaObjClient[v.UUID] = v
 	}
 	for _, v := range newOLNotiData.ActiveObj.ScrollBag {
-		app.CaObjG2ID2CaObjClient[v.G2ID] = v
+		app.CaObjUUID2CaObjClient[v.UUID] = v
 	}
 
 	for _, v := range newOLNotiData.ActiveObjList {
-		app.AOG2ID2AOClient[v.G2ID] = v
+		app.AOUUID2AOClient[v.UUID] = v
 	}
 	for _, v := range newOLNotiData.CarryObjList {
-		if _, exist := app.CaObjG2ID2CaObjClient[v.G2ID]; !exist {
-			app.CaObjG2ID2CaObjClient[v.G2ID] = v
+		if _, exist := app.CaObjUUID2CaObjClient[v.UUID]; !exist {
+			app.CaObjUUID2CaObjClient[v.UUID] = v
 		}
 	}
 
@@ -336,7 +335,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 			jslog.Error("unknown acttype %v", v)
 
 		case turnresulttype.DropCarryObj:
-			o, exist := app.CaObjG2ID2CaObjClient[v.DstG2ID]
+			o, exist := app.CaObjUUID2CaObjClient[v.DstUUID]
 			if exist {
 				app.systemMessage.Appendf("Drop %v", obj2ColorStr(o))
 			} else {
@@ -347,7 +346,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 			app.systemMessage.Appendf("Drop %v", makeMoneyColor(int(v.Arg)))
 
 		case turnresulttype.DropMoneyInsteadOfCarryObj:
-			o, exist := app.CaObjG2ID2CaObjClient[v.DstG2ID]
+			o, exist := app.CaObjUUID2CaObjClient[v.DstUUID]
 			if exist {
 				app.systemMessage.Appendf("Drop %v for %v",
 					makeMoneyColor(int(v.Arg)), obj2ColorStr(o),
@@ -357,7 +356,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 			}
 
 		case turnresulttype.AttackTo:
-			dstao, exist := app.AOG2ID2AOClient[v.DstG2ID]
+			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
 			if exist {
 				aostr = obj2ColorStr(dstao)
@@ -366,7 +365,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 				wrapspan.ColorTextf("Lime", "Damage  %4.1f to", v.Arg),
 				aostr)
 		case turnresulttype.Kill:
-			dstao, exist := app.AOG2ID2AOClient[v.DstG2ID]
+			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
 			// nickname := ""
 			if exist {
@@ -375,7 +374,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 			}
 			app.systemMessage.Appendf("Kill %v", aostr)
 		case turnresulttype.AttackedFrom:
-			dstao, exist := app.AOG2ID2AOClient[v.DstG2ID]
+			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
 			if exist {
 				aostr = obj2ColorStr(dstao)
@@ -384,7 +383,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 				wrapspan.ColorTextf("Red", "Damage %4.1f from", v.Arg),
 				aostr)
 		case turnresulttype.KilledBy:
-			dstao, exist := app.AOG2ID2AOClient[v.DstG2ID]
+			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
 			// nickname := ""
 			if exist {
@@ -433,16 +432,16 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		jslog.Error("app.FloorInfo not set")
 		return nil
 	}
-	if app.FloorInfo.G2ID != newOLNotiData.FloorG2ID {
+	if app.FloorInfo.UUID != newOLNotiData.FloorUUID {
 		jslog.Errorf("not current floor objlist data %v %v",
-			app.currentFloor().FloorInfo.G2ID, newOLNotiData.FloorG2ID,
+			app.currentFloor().FloorInfo.UUID, newOLNotiData.FloorUUID,
 		)
 		return nil
 	}
 
-	cf, exist := app.G2ID2ClientFloor[newOLNotiData.FloorG2ID]
+	cf, exist := app.UUID2ClientFloor[newOLNotiData.FloorUUID]
 	if !exist {
-		jslog.Warnf("floor not added %v", newOLNotiData.FloorG2ID)
+		jslog.Warnf("floor not added %v", newOLNotiData.FloorUUID)
 		return nil
 	}
 	for _, v := range newOLNotiData.FieldObjList {
@@ -573,15 +572,15 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 		jslog.Warn("OrangeRed", "app.FloorInfo not set")
 		return nil
 	}
-	if app.FloorInfo.G2ID != app.taNotiData.FloorG2ID {
+	if app.FloorInfo.UUID != app.taNotiData.FloorUUID {
 		jslog.Warnf("not current floor vptile data %v %v",
-			app.currentFloor().FloorInfo.G2ID, app.taNotiData.FloorG2ID,
+			app.currentFloor().FloorInfo.UUID, app.taNotiData.FloorUUID,
 		)
 		return nil
 	}
-	cf, exist := app.G2ID2ClientFloor[app.taNotiData.FloorG2ID]
+	cf, exist := app.UUID2ClientFloor[app.taNotiData.FloorUUID]
 	if !exist {
-		jslog.Warnf("floor not added %v", app.taNotiData.FloorG2ID)
+		jslog.Warnf("floor not added %v", app.taNotiData.FloorUUID)
 		return nil
 	}
 
@@ -606,11 +605,11 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
 	}
-	cf, exist := app.G2ID2ClientFloor[robj.FI.G2ID]
+	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
 		// new floor
 		cf = app.NewClientFloorGL(robj.FI)
-		app.G2ID2ClientFloor[robj.FI.G2ID] = cf
+		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
 	}
@@ -636,7 +635,7 @@ func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, 
 	_ = app
 	_ = robj
 
-	fromFloor, exist := app.G2ID2ClientFloor[robj.FloorG2ID]
+	fromFloor, exist := app.UUID2ClientFloor[robj.FloorUUID]
 	if !exist {
 		jslog.Warnf("FoundFieldObj unknonw floor %v", robj)
 	}
@@ -661,7 +660,7 @@ func objRecvNotiFn_ForgetFloor(recvobj interface{}, header c2t_packet.Header, ob
 	_ = app
 	_ = robj
 
-	forgetFloor, exist := app.G2ID2ClientFloor[robj.FloorG2ID]
+	forgetFloor, exist := app.UUID2ClientFloor[robj.FloorUUID]
 	if !exist {
 		jslog.Warnf("ForgetFloor unknonw floor %v", robj)
 	} else {

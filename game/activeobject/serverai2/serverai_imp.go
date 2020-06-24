@@ -22,7 +22,6 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/intervalduration"
 )
@@ -181,12 +180,12 @@ func (sai *ServerAI) posAddDir(x, y int, dir way9type.Way9Type) (int, int) {
 func (sai *ServerAI) sendActNotiPacket2Floor(
 	Act c2t_idcmd.CommandID,
 	Dir way9type.Way9Type,
-	G2ID g2id.G2ID,
+	UUID string,
 ) {
 	pk := &aoactreqrsp.Act{
 		Act:  Act,
 		Dir:  Dir,
-		G2ID: G2ID,
+		UUID: UUID,
 	}
 	sai.ao.SetReq2Handle(pk)
 }

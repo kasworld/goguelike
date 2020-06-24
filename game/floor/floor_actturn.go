@@ -30,7 +30,6 @@ import (
 	"github.com/kasworld/goguelike/game/cmd2tower"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
@@ -107,7 +106,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			if p.DisplayType == fieldobjdisplaytype.None {
 				if err := aoconn.SendNotiPacket(c2t_idnoti.FoundFieldObj,
 					&c2t_obj.NotiFoundFieldObj_data{
-						FloorG2ID: g2id.NewFromString(f.uuid),
+						FloorUUID: f.uuid,
 						FieldObj:  p.ToPacket_FieldObjClient(aox, aoy),
 					},
 				); err != nil {
@@ -268,15 +267,15 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case c2t_idcmd.Pickup:
 			if ao.GetTurnData().Condition.TestByCondition(condition.Float) {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ActionProhibited)
 				continue
 			}
-			obj, err := f.poPosMan.GetByXYAndUUID(arr.Req.G2ID.String(), aox, aoy)
+			obj, err := f.poPosMan.GetByXYAndUUID(arr.Req.UUID, aox, aoy)
 			if err != nil {
 				f.log.Debug("Pickup obj not found %v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
@@ -284,92 +283,92 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			if !ok {
 				f.log.Fatal("obj not carryingobject %v", po)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			if err := f.poPosMan.Del(po); err != nil {
 				f.log.Fatal("remove po fail %v %v %v", f, po, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			if err := ao.DoPickup(po); err != nil {
 				f.log.Error("%v %v %v", f, po, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Pickup, G2ID: arr.Req.G2ID},
+				aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 				c2t_error.None)
 
 		case c2t_idcmd.Drop:
-			po := ao.GetInven().GetByUUID(arr.Req.G2ID.String())
+			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if err := f.aoDropCarryObj(ao, aox, aoy, po); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Drop, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Drop, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Drop, G2ID: arr.Req.G2ID},
+				aoactreqrsp.Act{Act: c2t_idcmd.Drop, UUID: arr.Req.UUID},
 				c2t_error.None)
 
 		case c2t_idcmd.Equip:
-			if err := ao.DoEquip(arr.Req.G2ID.String()); err != nil {
+			if err := ao.DoEquip(arr.Req.UUID); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Equip, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Equip, UUID: arr.Req.UUID},
 					c2t_error.ActionProhibited)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Equip, G2ID: arr.Req.G2ID},
+				aoactreqrsp.Act{Act: c2t_idcmd.Equip, UUID: arr.Req.UUID},
 				c2t_error.None)
 
 		case c2t_idcmd.UnEquip:
-			if err := ao.DoUnEquip(arr.Req.G2ID.String()); err != nil {
+			if err := ao.DoUnEquip(arr.Req.UUID); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, G2ID: arr.Req.G2ID},
+				aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, UUID: arr.Req.UUID},
 				c2t_error.None)
 
 		case c2t_idcmd.DrinkPotion:
-			po := ao.GetInven().GetByUUID(arr.Req.G2ID.String())
+			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if po == nil {
-				f.log.Error("po not in inventory %v %v", ao, arr.Req.G2ID.String())
+				f.log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
-			if err := ao.DoUseCarryObj(arr.Req.G2ID.String()); err != nil {
+			if err := ao.DoUseCarryObj(arr.Req.UUID); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			ao.SetNeedTANoti()
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, G2ID: arr.Req.G2ID},
+				aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
 				c2t_error.None)
 
 		case c2t_idcmd.ReadScroll:
-			po := ao.GetInven().GetByUUID(arr.Req.G2ID.String())
+			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if po == nil {
-				f.log.Error("po not in inventory %v %v", ao, arr.Req.G2ID.String())
+				f.log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
@@ -377,35 +376,35 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				err := f.aoTeleportInFloorRandom(ao)
 				if err != nil {
 					arr.SetDone(
-						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, G2ID: arr.Req.G2ID},
+						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 						c2t_error.ActionCanceled)
 					f.log.Fatal("fail to teleport %v %v %v", f, ao, err)
 					continue
 				}
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 					c2t_error.None)
-				ao.GetInven().RemoveByUUID(arr.Req.G2ID.String())
+				ao.GetInven().RemoveByUUID(arr.Req.UUID)
 				ao.GetAchieveStat().Inc(achievetype.UseCarryObj)
 				ao.GetScrollStat().Inc(scrolltype.Teleport)
 			} else {
-				if err := ao.DoUseCarryObj(arr.Req.G2ID.String()); err != nil {
+				if err := ao.DoUseCarryObj(arr.Req.UUID); err != nil {
 					f.log.Error("%v %v %v", f, ao, err)
 					arr.SetDone(
-						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, G2ID: arr.Req.G2ID},
+						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 						c2t_error.ObjectNotFound)
 					continue
 				}
 				ao.SetNeedTANoti()
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 					c2t_error.None)
 			}
 
 		case c2t_idcmd.Recycle:
 			if ao.GetTurnData().Condition.TestByCondition(condition.Float) {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
 					c2t_error.ActionProhibited)
 				continue
 			}
@@ -413,19 +412,19 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			if !ok {
 				f.log.Error("not at Recycler FieldObj %v %v", f, ao)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
 					c2t_error.ActionProhibited)
 				continue
 			}
-			if err := ao.DoRecycleCarryObj(arr.Req.G2ID.String()); err != nil {
+			if err := ao.DoRecycleCarryObj(arr.Req.UUID); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, G2ID: arr.Req.G2ID},
+					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Recycle, G2ID: arr.Req.G2ID},
+				aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
 				c2t_error.None)
 
 		case c2t_idcmd.EnterPortal:

@@ -22,7 +22,6 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwsgorilla"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
@@ -45,7 +44,7 @@ type ClientAI struct {
 	TowerInfo         *c2t_obj.TowerInfo
 	ViewportXYLenList findnear.XYLenList
 	FloorInfo         *c2t_obj.FloorInfo
-	G2ID2ClientFloor  map[g2id.G2ID]*clientfloor.ClientFloor
+	UUID2ClientFloor  map[string]*clientfloor.ClientFloor
 
 	wg       *sync.WaitGroup
 	pid2recv *c2t_pid2rspfn.PID2RspFn
@@ -69,7 +68,7 @@ func New(config ClientAIConfig, l *g2log.LogBase) *ClientAI {
 		log:               l,
 		ServerJitter:      actjitter.New("Server"),
 		wg:                new(sync.WaitGroup),
-		G2ID2ClientFloor:  make(map[g2id.G2ID]*clientfloor.ClientFloor),
+		UUID2ClientFloor:  make(map[string]*clientfloor.ClientFloor),
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
@@ -92,11 +91,11 @@ func (cai *ClientAI) Cleanup() {
 		tc.Cleanup()
 	}
 	cai.ServerJitter = nil
-	for i, v := range cai.G2ID2ClientFloor {
-		delete(cai.G2ID2ClientFloor, i)
+	for i, v := range cai.UUID2ClientFloor {
+		delete(cai.UUID2ClientFloor, i)
 		v.Cleanup()
 	}
-	cai.G2ID2ClientFloor = nil
+	cai.UUID2ClientFloor = nil
 }
 
 func (cai *ClientAI) Run(mainctx context.Context) {
@@ -124,7 +123,7 @@ func (cai *ClientAI) Run(mainctx context.Context) {
 	}()
 
 	if err := cai.reqLogin(
-		cai.config.SessionG2ID,
+		cai.config.SessionUUID,
 		cai.config.Nickname,
 		cai.config.Auth,
 	); err != nil {

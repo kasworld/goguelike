@@ -88,7 +88,7 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		return false
 	}
 	cf := app.currentFloor()
-	if app.olNotiData.FloorG2ID != cf.FloorInfo.G2ID {
+	if app.olNotiData.FloorUUID != cf.FloorInfo.UUID {
 		return false
 	}
 	playerX, playerY := app.GetPlayerXY()
@@ -103,7 +103,7 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		if !ao.Alive {
 			continue
 		}
-		if ao.G2ID == gInitData.AccountInfo.ActiveObjG2ID {
+		if ao.UUID == gInitData.AccountInfo.ActiveObjUUID {
 			continue
 		}
 		if !cf.Tiles[ao.X][ao.Y].CanBattle() {
@@ -150,7 +150,7 @@ func tryAutoPickup(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 
 		if dir == way9type.Center {
 			go app.sendPacket(c2t_idcmd.Pickup,
-				&c2t_obj.ReqPickup_data{G2ID: po.G2ID},
+				&c2t_obj.ReqPickup_data{UUID: po.UUID},
 			)
 			return true
 		} else {
@@ -173,7 +173,7 @@ func tryAutoEquip(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	for _, po := range app.olNotiData.ActiveObj.EquippedPo {
 		if app.needUnEquipCarryObj(po.GetBias()) {
 			go app.sendPacket(c2t_idcmd.UnEquip,
-				&c2t_obj.ReqUnEquip_data{G2ID: po.G2ID},
+				&c2t_obj.ReqUnEquip_data{UUID: po.UUID},
 			)
 			return true
 		}
@@ -181,7 +181,7 @@ func tryAutoEquip(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	for _, po := range app.olNotiData.ActiveObj.EquipBag {
 		if app.isBetterCarryObj(po.EquipType, po.GetBias()) {
 			go app.sendPacket(c2t_idcmd.Equip,
-				&c2t_obj.ReqEquip_data{G2ID: po.G2ID},
+				&c2t_obj.ReqEquip_data{UUID: po.UUID},
 			)
 			return true
 		}
@@ -199,7 +199,7 @@ func tryAutoUsePotionScroll(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	for _, po := range app.olNotiData.ActiveObj.PotionBag {
 		if app.needUsePotion(po) {
 			go app.sendPacket(c2t_idcmd.DrinkPotion,
-				&c2t_obj.ReqDrinkPotion_data{G2ID: po.G2ID},
+				&c2t_obj.ReqDrinkPotion_data{UUID: po.UUID},
 			)
 			return true
 		}
@@ -208,7 +208,7 @@ func tryAutoUsePotionScroll(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	for _, po := range app.olNotiData.ActiveObj.ScrollBag {
 		if app.needUseScroll(po) {
 			go app.sendPacket(c2t_idcmd.ReadScroll,
-				&c2t_obj.ReqReadScroll_data{G2ID: po.G2ID},
+				&c2t_obj.ReqReadScroll_data{UUID: po.UUID},
 			)
 			return true
 		}
@@ -347,7 +347,7 @@ func (app *WasmClient) recycleEqbag() bool {
 	}
 	poList.Sort()
 	go app.sendPacket(c2t_idcmd.Recycle,
-		&c2t_obj.ReqRecycle_data{G2ID: poList[0].G2ID},
+		&c2t_obj.ReqRecycle_data{UUID: poList[0].UUID},
 	)
 	return true
 }
@@ -356,7 +356,7 @@ func (app *WasmClient) recycleUselessPotion() bool {
 	for _, po := range app.olNotiData.ActiveObj.PotionBag {
 		if potiontype.AIRecycleMap[po.PotionType] {
 			go app.sendPacket(c2t_idcmd.Recycle,
-				&c2t_obj.ReqRecycle_data{G2ID: po.G2ID},
+				&c2t_obj.ReqRecycle_data{UUID: po.UUID},
 			)
 			return true
 		}
@@ -368,7 +368,7 @@ func (app *WasmClient) recycleUselessScroll() bool {
 	for _, po := range app.olNotiData.ActiveObj.ScrollBag {
 		if scrolltype.AIRecycleMap[po.ScrollType] {
 			go app.sendPacket(c2t_idcmd.Recycle,
-				&c2t_obj.ReqRecycle_data{G2ID: po.G2ID},
+				&c2t_obj.ReqRecycle_data{UUID: po.UUID},
 			)
 			return true
 		}

@@ -88,7 +88,7 @@ func main() {
 			return clientai.ClientAIConfig{
 				ConnectToTower:    config.ConnectToTower,
 				Nickname:          fmt.Sprintf("%s%d", config.PlayerNameBase, i),
-				SessionG2ID:       "",
+				SessionUUID:       "",
 				DisconnectOnDeath: config.DisconnectOnDeath,
 				Auth:              "6e9456cf-ab29-99b2-f223-1459e00cfcd5",
 			}

@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/lib/g2id"
 )
 
 func (po CarryObjClientOnFloor) String() string {
@@ -77,12 +76,12 @@ func (pao PlayerActiveObjInfo) CalcDamageTake() float64 {
 	return DamageTake
 }
 
-func (pao PlayerActiveObjInfo) Exist(id g2id.G2ID) bool {
+func (pao PlayerActiveObjInfo) Exist(id string) bool {
 	for _, v := range pao.EquippedPo {
 		if v == nil {
 			continue
 		}
-		if v.G2ID == id {
+		if v.UUID == id {
 			return true
 		}
 	}
@@ -90,7 +89,7 @@ func (pao PlayerActiveObjInfo) Exist(id g2id.G2ID) bool {
 		if v == nil {
 			continue
 		}
-		if v.G2ID == id {
+		if v.UUID == id {
 			return true
 		}
 	}
@@ -98,7 +97,7 @@ func (pao PlayerActiveObjInfo) Exist(id g2id.G2ID) bool {
 		if v == nil {
 			continue
 		}
-		if v.G2ID == id {
+		if v.UUID == id {
 			return true
 		}
 	}
@@ -106,7 +105,7 @@ func (pao PlayerActiveObjInfo) Exist(id g2id.G2ID) bool {
 		if v == nil {
 			continue
 		}
-		if v.G2ID == id {
+		if v.UUID == id {
 			return true
 		}
 	}
@@ -116,7 +115,7 @@ func (pao PlayerActiveObjInfo) Exist(id g2id.G2ID) bool {
 func (ifa TurnResultClient) String() string {
 	return fmt.Sprintf("%v DstObj:%v Arg:%3.1f",
 		ifa.ResultType.String(),
-		ifa.DstG2ID,
+		ifa.DstUUID,
 		ifa.Arg,
 	)
 }
@@ -137,22 +136,22 @@ func (po EquipClient) Weight() float64 {
 	return po.BiasLen * gameconst.EquipABSGram
 }
 
-type EquipClientByG2ID []*EquipClient
+type EquipClientByUUID []*EquipClient
 
-func (objList EquipClientByG2ID) Len() int { return len(objList) }
-func (objList EquipClientByG2ID) Swap(i, j int) {
+func (objList EquipClientByUUID) Len() int { return len(objList) }
+func (objList EquipClientByUUID) Swap(i, j int) {
 	objList[i], objList[j] = objList[j], objList[i]
 }
-func (objList EquipClientByG2ID) Less(i, j int) bool {
+func (objList EquipClientByUUID) Less(i, j int) bool {
 	po1 := objList[i]
 	po2 := objList[j]
 	if po1.EquipType == po2.EquipType {
-		return po1.G2ID < po2.G2ID
+		return po1.UUID < po2.UUID
 	} else {
 		return po1.EquipType < po2.EquipType
 	}
 }
-func (objList EquipClientByG2ID) Sort() {
+func (objList EquipClientByUUID) Sort() {
 	sort.Sort(objList)
 }
 
@@ -164,18 +163,18 @@ func (po PotionClient) Weight() int {
 	return gameconst.PotionGram
 }
 
-type PotionClientByG2ID []*PotionClient
+type PotionClientByUUID []*PotionClient
 
-func (objList PotionClientByG2ID) Len() int { return len(objList) }
-func (objList PotionClientByG2ID) Swap(i, j int) {
+func (objList PotionClientByUUID) Len() int { return len(objList) }
+func (objList PotionClientByUUID) Swap(i, j int) {
 	objList[i], objList[j] = objList[j], objList[i]
 }
-func (objList PotionClientByG2ID) Less(i, j int) bool {
+func (objList PotionClientByUUID) Less(i, j int) bool {
 	po1 := objList[i]
 	po2 := objList[j]
-	return po1.G2ID < po2.G2ID
+	return po1.UUID < po2.UUID
 }
-func (objList PotionClientByG2ID) Sort() {
+func (objList PotionClientByUUID) Sort() {
 	sort.Sort(objList)
 }
 
@@ -187,18 +186,18 @@ func (po ScrollClient) Weight() int {
 	return gameconst.ScrollGram
 }
 
-type ScrollClientByG2ID []*ScrollClient
+type ScrollClientByUUID []*ScrollClient
 
-func (objList ScrollClientByG2ID) Len() int { return len(objList) }
-func (objList ScrollClientByG2ID) Swap(i, j int) {
+func (objList ScrollClientByUUID) Len() int { return len(objList) }
+func (objList ScrollClientByUUID) Swap(i, j int) {
 	objList[i], objList[j] = objList[j], objList[i]
 }
-func (objList ScrollClientByG2ID) Less(i, j int) bool {
+func (objList ScrollClientByUUID) Less(i, j int) bool {
 	po1 := objList[i]
 	po2 := objList[j]
-	return po1.G2ID < po2.G2ID
+	return po1.UUID < po2.UUID
 }
-func (objList ScrollClientByG2ID) Sort() {
+func (objList ScrollClientByUUID) Sort() {
 	sort.Sort(objList)
 }
 

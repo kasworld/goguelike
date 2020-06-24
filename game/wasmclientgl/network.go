@@ -24,7 +24,6 @@ import (
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/clientcookie"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
@@ -68,14 +67,14 @@ func (app *WasmClient) NetInit(ctx context.Context) error {
 	authkey := GetQuery().Get("authkey")
 	nick := jsobj.GetTextValueFromInputText("nickname")
 	ck := wasmcookie.GetMap()
-	sessionkey := g2id.G2ID(ck[clientcookie.SessionKeyName(gInitData.TowerIndex)])
+	sessionkey := string(ck[clientcookie.SessionKeyName(gInitData.TowerIndex)])
 	wg.Wait()
 
 	wg.Add(1)
 	app.ReqWithRspFn(
 		c2t_idcmd.Login,
 		&c2t_obj.ReqLogin_data{
-			SessionG2ID: sessionkey,
+			SessionUUID: sessionkey,
 			NickName:    nick,
 			AuthKey:     authkey,
 		},

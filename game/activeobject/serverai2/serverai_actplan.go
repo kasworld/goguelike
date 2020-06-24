@@ -22,7 +22,6 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
@@ -496,7 +495,7 @@ func actPlanPickupCarryObj(sai *ServerAI) bool {
 	}
 	// dest arrived
 	sai.sendActNotiPacket2Floor(c2t_idcmd.Pickup, way9type.Center,
-		g2id.NewFromString(sai.planCarryObj.GetUUID()))
+		sai.planCarryObj.GetUUID())
 	// plan change to other
 	return false
 }
@@ -511,14 +510,14 @@ func actPlanEquip(sai *ServerAI) bool {
 	for _, po := range sai.ao.GetInven().GetEquipSlot() {
 		if po != nil && sai.needUnEquipCarryObj(po.GetBias()) {
 			sai.sendActNotiPacket2Floor(c2t_idcmd.UnEquip, way9type.Center,
-				g2id.NewFromString(po.GetUUID()))
+				po.GetUUID())
 			return false
 		}
 	}
 	for _, po := range sai.ao.GetInven().GetEquipList() {
 		if po != nil && sai.isBetterCarryObj2(po.GetEquipType(), po.GetBias()) {
 			sai.sendActNotiPacket2Floor(c2t_idcmd.Equip, way9type.Center,
-				g2id.NewFromString(po.GetUUID()))
+				po.GetUUID())
 			return false
 		}
 	}

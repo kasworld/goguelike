@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/uuidstr"
 )
@@ -73,7 +72,7 @@ func (po *EquipObj) GetBias() bias.Bias {
 
 func (po *EquipObj) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
 	poc := &c2t_obj.CarryObjClientOnFloor{
-		G2ID:               g2id.NewFromString(po.uuid),
+		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		EquipType:          po.equipType,
 		X:                  x,
@@ -86,7 +85,7 @@ func (po *EquipObj) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjCl
 
 func (po *EquipObj) ToPacket_EquipClient() *c2t_obj.EquipClient {
 	poc := &c2t_obj.EquipClient{
-		G2ID:      g2id.NewFromString(po.uuid),
+		UUID:      po.uuid,
 		Name:      po.name,
 		EquipType: po.equipType,
 

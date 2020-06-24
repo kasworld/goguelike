@@ -82,7 +82,7 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 		jslog.Warn("no app.taNotiData")
 		return nil
 	}
-	if cf.FloorInfo.G2ID != app.taNotiData.FloorG2ID {
+	if cf.FloorInfo.UUID != app.taNotiData.FloorUUID {
 		app.systemMessage.Append(wrapspan.ColorText("OrangeRed", "changeing floor..."))
 		return nil
 	}
@@ -94,7 +94,7 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 		scrollDir := app.getScrollDir()
 		if err := gVP2d.DrawPlayVP(
 			frameProgress, envBias, app.TowerBias(), cf.GetBias(),
-			gInitData.AccountInfo.ActiveObjG2ID, cf,
+			gInitData.AccountInfo.ActiveObjUUID, cf,
 			scrollDir, actMoveDir,
 			app.taNotiData,
 			app.olNotiData, app.lastOLNotiData,
@@ -126,7 +126,7 @@ func (app *WasmClient) getMoveDirByControlMode() way9type.Way9Type {
 
 func (app *WasmClient) getScrollDir() way9type.Way9Type {
 	scrollDir := way9type.Center
-	if pao, exist := app.AOG2ID2AOClient[gInitData.AccountInfo.ActiveObjG2ID]; exist {
+	if pao, exist := app.AOUUID2AOClient[gInitData.AccountInfo.ActiveObjUUID]; exist {
 		if pao.Act == c2t_idcmd.Move && pao.Result == c2t_error.None {
 			scrollDir = pao.Dir
 		}

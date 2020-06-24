@@ -16,13 +16,11 @@ import (
 	"math"
 
 	"github.com/kasworld/goguelike/config/moneycolor"
+	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/way9type"
-
-	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -31,7 +29,7 @@ import (
 
 func (vp *Viewport2d) DrawPlayVP(
 	frameProgress float64, envBias, towerBias, floorBias bias.Bias,
-	accountG2ID g2id.G2ID,
+	accountUUID string,
 	cf *clientfloor.ClientFloor,
 	scrollDir way9type.Way9Type,
 	actMoveDir way9type.Way9Type,
@@ -70,7 +68,7 @@ func (vp *Viewport2d) DrawPlayVP(
 		if !ok {
 			continue
 		}
-		if ao.G2ID == accountG2ID {
+		if ao.UUID == accountUUID {
 			vp.drawUserActiveObj(
 				frameProgress, vpx, vpy, ao,
 				olNoti.ActiveObj, lastOLNoti.ActiveObj,

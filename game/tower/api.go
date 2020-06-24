@@ -25,7 +25,6 @@ import (
 	"github.com/kasworld/goguelike/game/cmd2tower"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/lib/conndata"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -73,7 +72,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	ss := tw.sessionManager.UpdateOrNew(
-		robj.SessionG2ID,
+		robj.SessionUUID,
 		connData.RemoteAddr,
 		robj.NickName)
 
@@ -131,8 +130,8 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		return rhd, nil, err
 	} else {
 		acinfo := &c2t_obj.AccountInfo{
-			SessionG2ID:   g2id.NewFromString(connData.Session.GetUUID()),
-			ActiveObjG2ID: g2id.NewFromString(connData.Session.ActiveObjUUID),
+			SessionUUID:   connData.Session.GetUUID(),
+			ActiveObjUUID: connData.Session.ActiveObjUUID,
 			NickName:      connData.Session.NickName,
 			CmdList:       *c2sc.GetAuthorCmdList(),
 		}
@@ -345,7 +344,7 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 	spacket := &c2t_obj.RspPickup_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Pickup,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -371,7 +370,7 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 	spacket := &c2t_obj.RspDrop_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Drop,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -397,7 +396,7 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 	spacket := &c2t_obj.RspEquip_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Equip,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -423,7 +422,7 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 	spacket := &c2t_obj.RspUnEquip_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.UnEquip,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -449,7 +448,7 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 	spacket := &c2t_obj.RspDrinkPotion_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.DrinkPotion,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -475,7 +474,7 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 	spacket := &c2t_obj.RspReadScroll_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.ReadScroll,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -501,7 +500,7 @@ func (tw *Tower) bytesAPIFn_ReqRecycle(
 	spacket := &c2t_obj.RspRecycle_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Recycle,
-		G2ID: robj.G2ID,
+		UUID: robj.UUID,
 	})
 
 	return c2t_packet.Header{
@@ -545,7 +544,7 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 
 	tw.GetReqCh() <- &cmd2tower.FloorMove{
 		ActiveObj: ao,
-		FloorUUID: robj.G2ID.String(),
+		FloorUUID: robj.UUID,
 	}
 	return c2t_packet.Header{
 		ErrorCode: c2t_error.None,

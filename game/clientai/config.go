@@ -11,14 +11,10 @@
 
 package clientai
 
-import (
-	"github.com/kasworld/goguelike/lib/g2id"
-)
-
 type ClientAIConfig struct {
 	ConnectToTower    string
 	Nickname          string
-	SessionG2ID       g2id.G2ID
+	SessionUUID       string
 	DisconnectOnDeath bool
 	Auth              string
 }

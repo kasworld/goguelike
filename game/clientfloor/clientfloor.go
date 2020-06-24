@@ -108,9 +108,9 @@ func (cf *ClientFloor) UpdateFromViewportTile(
 	ViewportXYLenList findnear.XYLenList,
 ) error {
 
-	if cf.FloorInfo.G2ID != vp.FloorG2ID {
+	if cf.FloorInfo.UUID != vp.FloorUUID {
 		return fmt.Errorf("vptile data floor not match %v %v",
-			cf.FloorInfo.G2ID, vp.FloorG2ID)
+			cf.FloorInfo.UUID, vp.FloorUUID)
 
 	}
 	cf.Visited.UpdateByViewport2(vp.VPX, vp.VPY, vp.VPTiles)

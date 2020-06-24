@@ -27,7 +27,6 @@ import (
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -256,11 +255,11 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 	displayedLine := 4 // text not in loop
 
 	potionType2info := make([]struct {
-		G2ID  g2id.G2ID
+		UUID  string
 		Count int
 	}, potiontype.PotionType_Count)
 	for _, v := range pao.PotionBag {
-		potionType2info[v.PotionType].G2ID = v.G2ID
+		potionType2info[v.PotionType].UUID = v.UUID
 		potionType2info[v.PotionType].Count++
 	}
 	fmt.Fprintf(&buf, "Potion %v<br/>", len(pao.PotionBag))
@@ -277,18 +276,18 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			"%v %v(%v)", pt.String(), pt.Rune(), v.Count)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.G2ID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeDrinkPotionButton, ftSize, v.G2ID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.G2ID)
+		fmt.Fprintf(&buf, makeDrinkPotionButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
 		buf.WriteString("<br/>")
 	}
 	scrollType2info := make([]struct {
-		G2ID  g2id.G2ID
+		UUID  string
 		Count int
 	}, scrolltype.ScrollType_Count)
 	for _, v := range pao.ScrollBag {
-		scrollType2info[v.ScrollType].G2ID = v.G2ID
+		scrollType2info[v.ScrollType].UUID = v.UUID
 		scrollType2info[v.ScrollType].Count++
 	}
 
@@ -306,10 +305,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			"%v %v(%v)", st.String(), st.Rune(), v.Count)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.G2ID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeReadScrollButton, ftSize, v.G2ID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.G2ID)
+		fmt.Fprintf(&buf, makeReadScrollButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
 		buf.WriteString("<br/>")
 	}
 
@@ -324,10 +323,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			v.EquipType.Rune(), v.Faction.Rune(), v.BiasLen)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.G2ID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeUnequipButton, ftSize, v.G2ID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.G2ID)
+		fmt.Fprintf(&buf, makeUnequipButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
 		buf.WriteString("<br/>")
 	}
 
@@ -342,10 +341,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			v.EquipType.Rune(), v.Faction.Rune(), v.BiasLen)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.G2ID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeEquipButton, ftSize, v.G2ID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.G2ID)
+		fmt.Fprintf(&buf, makeEquipButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
 		buf.WriteString("<br/>")
 	}
 	return buf.String()
@@ -372,15 +371,15 @@ func (app *WasmClient) makeFieldObjListHTML() string {
 
 func (app *WasmClient) makeFloorListHTML() string {
 	var buf bytes.Buffer
-	if len(app.G2ID2ClientFloor) == gInitData.TowerInfo.TotalFloorNum {
+	if len(app.UUID2ClientFloor) == gInitData.TowerInfo.TotalFloorNum {
 		fmt.Fprintf(&buf, "Found All Floor %v<br/>",
-			len(app.G2ID2ClientFloor))
+			len(app.UUID2ClientFloor))
 	} else {
 		fmt.Fprintf(&buf, "Floor Found %v<br/>",
-			len(app.G2ID2ClientFloor))
+			len(app.UUID2ClientFloor))
 	}
 	cfList := make(ClientFloorGLList, 0)
-	for _, v := range app.G2ID2ClientFloor {
+	for _, v := range app.UUID2ClientFloor {
 		cfList = append(cfList, v)
 	}
 	cfList.Sort()
@@ -391,12 +390,12 @@ func (app *WasmClient) makeFloorListHTML() string {
 		if cf.Visited.CalcCompleteRate() >= 1.0 {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')">Teleport</button>`,
-				ftSize, cf.FloorInfo.G2ID,
+				ftSize, cf.FloorInfo.UUID,
 			)
 		} else {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')" disabled>Teleport</button>`,
-				ftSize, cf.FloorInfo.G2ID,
+				ftSize, cf.FloorInfo.UUID,
 			)
 		}
 		buf.WriteString("<br/>")
@@ -426,8 +425,8 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 		1.0/app.DispInterDur.GetInterval().GetLastDuration().Seconds())
 	fmt.Fprintf(&buf, "%v<br/>", app.DispInterDur.GetDuration())
 	fmt.Fprintf(&buf, "Display %d<br/>", app.DispInterDur.GetCount())
-	fmt.Fprintf(&buf, "Known ActiveObj %d<br/>", len(app.AOG2ID2AOClient))
-	fmt.Fprintf(&buf, "Known CarryObj %d<br/>", len(app.CaObjG2ID2CaObjClient))
+	fmt.Fprintf(&buf, "Known ActiveObj %d<br/>", len(app.AOUUID2AOClient))
+	fmt.Fprintf(&buf, "Known CarryObj %d<br/>", len(app.CaObjUUID2CaObjClient))
 	fmt.Fprintf(&buf, "Sent move packet lastTurn %d<br/>", app.movePacketPerTurn)
 	fmt.Fprintf(&buf, "Sent act packet lastTurn %d<br/>", app.actPacketPerTurn)
 	return buf.String()

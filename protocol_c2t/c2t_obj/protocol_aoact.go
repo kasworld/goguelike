@@ -13,7 +13,6 @@ package c2t_obj
 
 import (
 	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/g2id"
 )
 
 type ReqMeditate_data struct {
@@ -45,49 +44,49 @@ type RspAttack_data struct {
 }
 
 type ReqPickup_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspPickup_data struct {
 	Dummy uint8
 }
 
 type ReqDrop_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspDrop_data struct {
 	Dummy uint8
 }
 
 type ReqEquip_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspEquip_data struct {
 	Dummy uint8
 }
 
 type ReqUnEquip_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspUnEquip_data struct {
 	Dummy uint8
 }
 
 type ReqDrinkPotion_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspDrinkPotion_data struct {
 	Dummy uint8
 }
 
 type ReqReadScroll_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspReadScroll_data struct {
 	Dummy uint8
 }
 
 type ReqRecycle_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspRecycle_data struct {
 	Dummy uint8
@@ -101,7 +100,7 @@ type RspEnterPortal_data struct {
 }
 
 type ReqMoveFloor_data struct {
-	G2ID g2id.G2ID
+	UUID string
 }
 type RspMoveFloor_data struct {
 	Dummy uint8

@@ -16,7 +16,6 @@ import (
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -25,11 +24,11 @@ import (
 	"github.com/kasworld/version"
 )
 
-func (cai *ClientAI) reqLogin(sessionG2ID g2id.G2ID, nickname string, authkey string) error {
+func (cai *ClientAI) reqLogin(sessionUUID string, nickname string, authkey string) error {
 	return cai.ReqWithRspFn(
 		c2t_idcmd.Login,
 		&c2t_obj.ReqLogin_data{
-			SessionG2ID: sessionG2ID,
+			SessionUUID: sessionUUID,
 			NickName:    nickname,
 			AuthKey:     authkey,
 		},
@@ -42,7 +41,7 @@ func (cai *ClientAI) reqLogin(sessionG2ID g2id.G2ID, nickname string, authkey st
 
 			rpk := robj.(*c2t_obj.RspLogin_data)
 
-			cai.config.SessionG2ID = rpk.AccountInfo.SessionG2ID
+			cai.config.SessionUUID = rpk.AccountInfo.SessionUUID
 			cai.ServiceInfo = rpk.ServiceInfo
 			cai.AccountInfo = rpk.AccountInfo
 

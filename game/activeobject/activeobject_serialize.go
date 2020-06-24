@@ -16,7 +16,6 @@ import (
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/game/aoexpsort"
 	"github.com/kasworld/goguelike/game/aoscore"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -25,7 +24,7 @@ func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjCli
 		return ao.aoClientCache
 	}
 	aoc := &c2t_obj.ActiveObjClient{
-		G2ID:       g2id.NewFromString(ao.uuid),
+		UUID:       ao.uuid,
 		NickName:   ao.nickName,
 		Faction:    ao.currentBias.NearFaction(),
 		EquippedPo: ao.inven.ToPacket_EquipClient(),

@@ -17,7 +17,6 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/uuidstr"
 )
@@ -59,7 +58,7 @@ func (po Money) Sub(po2 gamei.MoneyI) gamei.MoneyI {
 
 func (po *Money) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
 	poc := &c2t_obj.CarryObjClientOnFloor{
-		G2ID:               g2id.NewFromString(po.uuid),
+		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		X:                  x,
 		Y:                  y,

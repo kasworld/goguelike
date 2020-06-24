@@ -160,9 +160,9 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 	ViewportXYLenList findnear.XYLenList,
 ) error {
 
-	if cf.FloorInfo.G2ID != taNoti.FloorG2ID {
+	if cf.FloorInfo.UUID != taNoti.FloorUUID {
 		return fmt.Errorf("vptile data floor not match %v %v",
-			cf.FloorInfo.G2ID, taNoti.FloorG2ID)
+			cf.FloorInfo.UUID, taNoti.FloorUUID)
 
 	}
 	cf.Visited.UpdateByViewport2(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)

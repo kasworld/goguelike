@@ -97,11 +97,11 @@ func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []by
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 	cai.FloorInfo = pkbody.FI
-	cf, exist := cai.G2ID2ClientFloor[pkbody.FI.G2ID]
+	cf, exist := cai.UUID2ClientFloor[pkbody.FI.UUID]
 	if !exist {
 		// new floor
 		cf = clientfloor.New(pkbody.FI)
-		cai.G2ID2ClientFloor[pkbody.FI.G2ID] = cf
+		cai.UUID2ClientFloor[pkbody.FI.UUID] = cf
 	}
 	cf.EnterFloor()
 
@@ -186,9 +186,9 @@ func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []by
 	// cai.SentAction = nil
 	cai.ServerJitter.ActByValue(pkbody.Time)
 
-	c2t_obj.EquipClientByG2ID(pkbody.ActiveObj.EquipBag).Sort()
-	c2t_obj.PotionClientByG2ID(pkbody.ActiveObj.PotionBag).Sort()
-	c2t_obj.ScrollClientByG2ID(pkbody.ActiveObj.ScrollBag).Sort()
+	c2t_obj.EquipClientByUUID(pkbody.ActiveObj.EquipBag).Sort()
+	c2t_obj.PotionClientByUUID(pkbody.ActiveObj.PotionBag).Sort()
+	c2t_obj.ScrollClientByUUID(pkbody.ActiveObj.ScrollBag).Sort()
 
 	if oldOLNotiData != nil {
 		cai.HPdiff = newOLNotiData.ActiveObj.HP - oldOLNotiData.ActiveObj.HP
@@ -199,7 +199,7 @@ func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []by
 	cai.playerActiveObjClient = nil
 	if ainfo := cai.AccountInfo; ainfo != nil {
 		for _, v := range pkbody.ActiveObjList {
-			if v.G2ID == cai.AccountInfo.ActiveObjG2ID {
+			if v.UUID == cai.AccountInfo.ActiveObjUUID {
 				cai.playerActiveObjClient = v
 			}
 		}
@@ -211,16 +211,16 @@ func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []by
 		cai.log.Error("cai.FloorInfo not set")
 		return nil
 	}
-	if cai.FloorInfo.G2ID != newOLNotiData.FloorG2ID {
+	if cai.FloorInfo.UUID != newOLNotiData.FloorUUID {
 		cai.log.Error("not current floor objlist data %v %v",
-			cai.currentFloor().FloorInfo.G2ID, newOLNotiData.FloorG2ID,
+			cai.currentFloor().FloorInfo.UUID, newOLNotiData.FloorUUID,
 		)
 		return nil
 	}
 
-	cf, exist := cai.G2ID2ClientFloor[newOLNotiData.FloorG2ID]
+	cf, exist := cai.UUID2ClientFloor[newOLNotiData.FloorUUID]
 	if !exist {
-		cai.log.Warn("floor not added %v", newOLNotiData.FloorG2ID)
+		cai.log.Warn("floor not added %v", newOLNotiData.FloorUUID)
 		return nil
 	}
 	for _, v := range newOLNotiData.FieldObjList {
@@ -253,15 +253,15 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 		cai.log.Warn("OrangeRed cai.FloorInfo not set")
 		return nil
 	}
-	if cai.FloorInfo.G2ID != pkbody.FloorG2ID {
+	if cai.FloorInfo.UUID != pkbody.FloorUUID {
 		cai.log.Warn("not current floor vptile data %v %v",
-			cai.currentFloor().FloorInfo.G2ID, pkbody.FloorG2ID,
+			cai.currentFloor().FloorInfo.UUID, pkbody.FloorUUID,
 		)
 		return nil
 	}
-	cf, exist := cai.G2ID2ClientFloor[pkbody.FloorG2ID]
+	cf, exist := cai.UUID2ClientFloor[pkbody.FloorUUID]
 	if !exist {
-		cai.log.Warn("floor not added %v", pkbody.FloorG2ID)
+		cai.log.Warn("floor not added %v", pkbody.FloorUUID)
 		return nil
 	}
 
@@ -290,11 +290,11 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cf, exist := cai.G2ID2ClientFloor[pkbody.FI.G2ID]
+	cf, exist := cai.UUID2ClientFloor[pkbody.FI.UUID]
 	if !exist {
 		// new floor
 		cf = clientfloor.New(pkbody.FI)
-		cai.G2ID2ClientFloor[pkbody.FI.G2ID] = cf
+		cai.UUID2ClientFloor[pkbody.FI.UUID] = cf
 	}
 
 	oldComplete := cf.Visited.IsComplete()
@@ -318,7 +318,7 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	fromFloor, exist := cai.G2ID2ClientFloor[pkbody.FloorG2ID]
+	fromFloor, exist := cai.UUID2ClientFloor[pkbody.FloorUUID]
 	if !exist {
 		cai.log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
 		return fmt.Errorf("FoundFieldObj unknonw floor %v", pkbody)
@@ -343,7 +343,7 @@ func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []b
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 
-	forgetFloor, exist := cai.G2ID2ClientFloor[pkbody.FloorG2ID]
+	forgetFloor, exist := cai.UUID2ClientFloor[pkbody.FloorUUID]
 	if exist {
 		forgetFloor.Forget()
 	}

@@ -13,7 +13,6 @@ package turnresult
 
 import (
 	"github.com/kasworld/goguelike/enum/turnresulttype"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -52,13 +51,13 @@ func (ar TurnResult) ToPacket_TurnResultClient() c2t_obj.TurnResultClient {
 	if dstao := ar.DstObj; dstao != nil {
 		return c2t_obj.TurnResultClient{
 			ResultType: ar.ResultType,
-			DstG2ID:    g2id.NewFromString(dstao.GetUUID()),
+			DstUUID:    dstao.GetUUID(),
 			Arg:        ar.Arg,
 		}
 	}
 	return c2t_obj.TurnResultClient{
 		ResultType: ar.ResultType,
-		DstG2ID:    "",
+		DstUUID:    "",
 		Arg:        ar.Arg,
 	}
 }

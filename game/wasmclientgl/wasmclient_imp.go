@@ -56,7 +56,7 @@ func (app *WasmClient) currentFloor() *ClientFloorGL {
 	if fi := app.FloorInfo; fi == nil {
 		return nil
 	} else {
-		return app.G2ID2ClientFloor[fi.G2ID]
+		return app.UUID2ClientFloor[fi.UUID]
 	}
 }
 
@@ -65,8 +65,8 @@ func (app *WasmClient) ActionResult2String(ar *aoactreqrsp.ActReqRsp) string {
 		return ""
 	}
 
-	postr := ar.Done.G2ID.String()
-	po, exist := app.CaObjG2ID2CaObjClient[ar.Done.G2ID]
+	postr := ar.Done.UUID
+	po, exist := app.CaObjUUID2CaObjClient[ar.Done.UUID]
 	if exist {
 		postr = obj2ColorStr(po)
 	}
@@ -98,7 +98,7 @@ func (app *WasmClient) GetPlayerActiveObjClient() *c2t_obj.ActiveObjClient {
 	if gInitData.AccountInfo == nil {
 		return nil
 	}
-	ao, _ := app.AOG2ID2AOClient[gInitData.AccountInfo.ActiveObjG2ID]
+	ao, _ := app.AOUUID2AOClient[gInitData.AccountInfo.ActiveObjUUID]
 	return ao
 }
 
@@ -106,7 +106,7 @@ func (app *WasmClient) GetPlayerXY() (int, int) {
 	if gInitData.AccountInfo == nil {
 		return 0, 0
 	}
-	ao, _ := app.AOG2ID2AOClient[gInitData.AccountInfo.ActiveObjG2ID]
+	ao, _ := app.AOUUID2AOClient[gInitData.AccountInfo.ActiveObjUUID]
 	if ao != nil {
 		return ao.X, ao.Y
 	}

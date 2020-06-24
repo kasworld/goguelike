@@ -28,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/game/wasmclient/viewport2d"
 	"github.com/kasworld/goguelike/lib/clienttile"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
@@ -55,9 +54,9 @@ type WasmClient struct {
 	Path2dst           [][2]int
 	ClientColtrolMode  clientcontroltype.ClientControlType
 
-	AOG2ID2AOClient       map[g2id.G2ID]*c2t_obj.ActiveObjClient
-	CaObjG2ID2CaObjClient map[g2id.G2ID]interface{}
-	G2ID2ClientFloor      map[g2id.G2ID]*clientfloor.ClientFloor
+	AOUUID2AOClient       map[string]*c2t_obj.ActiveObjClient
+	CaObjUUID2CaObjClient map[string]interface{}
+	UUID2ClientFloor      map[string]*clientfloor.ClientFloor
 	FloorInfo             *c2t_obj.FloorInfo
 	remainTurn2Rebirth    int
 
@@ -112,7 +111,7 @@ func InitPage() {
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
-		G2ID2ClientFloor: make(map[g2id.G2ID]*clientfloor.ClientFloor),
+		UUID2ClientFloor: make(map[string]*clientfloor.ClientFloor),
 
 		systemMessage:      make(textncount.TextNCountList, 0),
 		KeyboardPressedMap: jskeypressmap.New(),
@@ -173,8 +172,8 @@ func InitPage() {
 		},
 	))
 
-	app.AOG2ID2AOClient = make(map[g2id.G2ID]*c2t_obj.ActiveObjClient)
-	app.CaObjG2ID2CaObjClient = make(map[g2id.G2ID]interface{})
+	app.AOUUID2AOClient = make(map[string]*c2t_obj.ActiveObjClient)
+	app.CaObjUUID2CaObjClient = make(map[string]interface{})
 }
 
 func (app *WasmClient) makeButtons() string {
@@ -242,7 +241,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 
 	gVP2d.ViewportPos2Index = gInitData.ViewportXYLenList.MakePos2Index()
 
-	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionG2ID), gInitData.AccountInfo.NickName)
+	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionUUID), gInitData.AccountInfo.NickName)
 
 	if gInitData.CanUseCmd(c2t_idcmd.AIPlay) {
 		app.reqAIPlay(true)

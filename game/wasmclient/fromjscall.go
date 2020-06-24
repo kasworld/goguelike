@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -40,7 +39,7 @@ func (app *WasmClient) registerJSButton() {
 func (app *WasmClient) jsUnequipCarryObj(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.UnEquip,
-		&c2t_obj.ReqUnEquip_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqUnEquip_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -48,7 +47,7 @@ func (app *WasmClient) jsUnequipCarryObj(this js.Value, args []js.Value) interfa
 func (app *WasmClient) jsEquipCarryObj(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.Equip,
-		&c2t_obj.ReqEquip_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqEquip_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -56,7 +55,7 @@ func (app *WasmClient) jsEquipCarryObj(this js.Value, args []js.Value) interface
 func (app *WasmClient) jsDrinkPotion(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.DrinkPotion,
-		&c2t_obj.ReqDrinkPotion_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqDrinkPotion_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -65,7 +64,7 @@ func (app *WasmClient) jsDrinkPotion(this js.Value, args []js.Value) interface{}
 func (app *WasmClient) jsReadScroll(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.ReadScroll,
-		&c2t_obj.ReqReadScroll_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqReadScroll_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -74,7 +73,7 @@ func (app *WasmClient) jsReadScroll(this js.Value, args []js.Value) interface{} 
 func (app *WasmClient) jsRecycleCarryObj(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.Recycle,
-		&c2t_obj.ReqRecycle_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqRecycle_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -82,7 +81,7 @@ func (app *WasmClient) jsRecycleCarryObj(this js.Value, args []js.Value) interfa
 func (app *WasmClient) jsDropCarryObj(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.Drop,
-		&c2t_obj.ReqDrop_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqDrop_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -91,7 +90,7 @@ func (app *WasmClient) jsDropCarryObj(this js.Value, args []js.Value) interface{
 func (app *WasmClient) jsMove2Floor(this js.Value, args []js.Value) interface{} {
 	id := strings.TrimSpace(args[0].String())
 	go app.sendPacket(c2t_idcmd.MoveFloor,
-		&c2t_obj.ReqMoveFloor_data{G2ID: g2id.NewFromString(id)},
+		&c2t_obj.ReqMoveFloor_data{UUID: id},
 	)
 	Focus2Canvas()
 	return nil
@@ -153,7 +152,7 @@ func (app *WasmClient) makePathToMouseClick(mouseX, mouseY int) {
 			return
 		}
 		tand := app.taNotiData
-		if tand == nil || cf.FloorInfo.G2ID != tand.FloorG2ID {
+		if tand == nil || cf.FloorInfo.UUID != tand.FloorUUID {
 			jslog.Error("invalid floor x,y")
 			return
 		}

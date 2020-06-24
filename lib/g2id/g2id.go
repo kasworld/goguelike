@@ -19,22 +19,22 @@ import (
 	"github.com/kasworld/uuidstr"
 )
 
-type G2ID string
+type UUID string
 
-func New() G2ID {
+func New() UUID {
 	readFn := rand.Read
 	var rtn [16]byte
 	if _, err := readFn(rtn[:]); err != nil {
 		panic(err.Error()) // rand should never fail
 	}
-	return G2ID(rtn[:])
+	return UUID(rtn[:])
 }
 
-func (g2id G2ID) String() string {
+func (g2id UUID) String() string {
 	buf := bytes.NewBufferString(string(g2id))
 	return uuidstr.ToString(buf.Bytes())
 }
 
-func NewFromString(uuid string) G2ID {
-	return G2ID(uuidstr.Parse(uuid))
+func NewFromString(uuid string) UUID {
+	return UUID(uuidstr.Parse(uuid))
 }

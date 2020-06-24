@@ -13,21 +13,21 @@ package g2id
 
 import "testing"
 
-func TestG2ID_String(t *testing.T) {
+func TestUUID_String(t *testing.T) {
 	id := New()
 	t.Logf("%v %v", id, len(id))
 	id2 := NewFromString(id.String())
 	t.Logf("%v", id2)
 }
 
-func TestG2ID_Compare(t *testing.T) {
+func TestUUID_Compare(t *testing.T) {
 	id1 := New()
 	id2 := id1
 	t.Logf("%v == %v : %v", id1, id2, id1 == id2)
 }
 
-func TestG2ID_map(t *testing.T) {
-	idmap := make(map[G2ID]bool)
+func TestUUID_map(t *testing.T) {
+	idmap := make(map[UUID]bool)
 	id1 := New()
 	id2 := id1
 

@@ -16,7 +16,6 @@ import (
 
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
@@ -58,7 +57,7 @@ func (ao *ActiveObject) forgetFloorByUUID(fuuid string) error {
 		return ao.clientConn.SendNotiPacket(
 			c2t_idnoti.ForgetFloor,
 			&c2t_obj.NotiForgetFloor_data{
-				FloorG2ID: g2id.NewFromString(fuuid),
+				FloorUUID: fuuid,
 			},
 		)
 	}

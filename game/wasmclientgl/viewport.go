@@ -19,7 +19,6 @@ import (
 
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
@@ -43,7 +42,7 @@ type Viewport struct {
 	textureLoader js.Value
 
 	scene       js.Value
-	jsSceneObjs map[g2id.G2ID]js.Value
+	jsSceneObjs map[string]js.Value
 
 	// title
 	font_helvetiker_regular js.Value
@@ -57,7 +56,7 @@ type Viewport struct {
 func NewViewport() *Viewport {
 	vp := &Viewport{
 		rnd:                rand.New(rand.NewSource(time.Now().UnixNano())),
-		jsSceneObjs:        make(map[g2id.G2ID]js.Value),
+		jsSceneObjs:        make(map[string]js.Value),
 		colorMaterialCache: make(map[uint32]js.Value),
 		textGeometryCache:  make(map[textGeoKey]js.Value),
 	}

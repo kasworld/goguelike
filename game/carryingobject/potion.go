@@ -18,7 +18,6 @@ import (
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/uuidstr"
 )
@@ -56,7 +55,7 @@ func NewPotionByMakeRate(n int) gamei.PotionI {
 
 func (po *Potion) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
 	poc := &c2t_obj.CarryObjClientOnFloor{
-		G2ID:               g2id.NewFromString(po.uuid),
+		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		X:                  x,
 		Y:                  y,
@@ -68,7 +67,7 @@ func (po *Potion) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClie
 
 func (po *Potion) ToPacket_PotionClient() *c2t_obj.PotionClient {
 	poc := &c2t_obj.PotionClient{
-		G2ID:       g2id.NewFromString(po.uuid),
+		UUID:       po.uuid,
 		PotionType: po.potionType,
 	}
 	return poc

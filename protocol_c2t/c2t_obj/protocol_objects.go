@@ -28,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/prettystring"
@@ -45,8 +44,8 @@ func (info *ServiceInfo) StringForm() string {
 }
 
 type AccountInfo struct {
-	SessionG2ID   g2id.G2ID
-	ActiveObjG2ID g2id.G2ID
+	SessionUUID   string
+	ActiveObjUUID string
 	NickName      string
 	CmdList       [c2t_idcmd.CommandID_Count]bool
 }
@@ -67,7 +66,7 @@ func (info *TowerInfo) StringForm() string {
 
 type FloorInfo struct {
 	Name       string
-	G2ID       g2id.G2ID
+	UUID       string
 	W          int
 	H          int
 	Tiles      int
@@ -79,7 +78,7 @@ func (fi FloorInfo) GetName() string {
 	return fi.Name
 }
 func (fi FloorInfo) GetUUID() string {
-	return fi.G2ID.String()
+	return fi.UUID
 }
 func (fi FloorInfo) GetWidth() int {
 	return fi.W
@@ -92,7 +91,7 @@ func (fi FloorInfo) VisitableCount() int {
 }
 
 type CarryObjClientOnFloor struct {
-	G2ID               g2id.G2ID
+	UUID               string
 	X                  int
 	Y                  int
 	CarryingObjectType carryingobjecttype.CarryingObjectType
@@ -125,7 +124,7 @@ func (p *FieldObjClient) GetUUID() string {
 }
 
 type ActiveObjClient struct {
-	G2ID       g2id.G2ID
+	UUID       string
 	NickName   string
 	Faction    factiontype.FactionType
 	EquippedPo []*EquipClient
@@ -170,12 +169,12 @@ type PlayerActiveObjInfo struct {
 
 type TurnResultClient struct {
 	ResultType turnresulttype.TurnResultType
-	DstG2ID    g2id.G2ID
+	DstUUID    string
 	Arg        float64
 }
 
 type EquipClient struct {
-	G2ID      g2id.G2ID
+	UUID      string
 	Name      string
 	EquipType equipslottype.EquipSlotType
 	Faction   factiontype.FactionType
@@ -183,11 +182,11 @@ type EquipClient struct {
 }
 
 type PotionClient struct {
-	G2ID       g2id.G2ID
+	UUID       string
 	PotionType potiontype.PotionType
 }
 type ScrollClient struct {
-	G2ID       g2id.G2ID
+	UUID       string
 	ScrollType scrolltype.ScrollType
 }
 

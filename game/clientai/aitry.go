@@ -62,7 +62,7 @@ func tryAutoBattle(cai *ClientAI) bool {
 		if !ao.Alive {
 			continue
 		}
-		if ao.G2ID == cai.AccountInfo.ActiveObjG2ID {
+		if ao.UUID == cai.AccountInfo.ActiveObjUUID {
 			continue
 		}
 		if !cf.IsValidPos(ao.X, ao.Y) {
@@ -104,7 +104,7 @@ func tryAutoPickup(cai *ClientAI) bool {
 		}
 		if dir == way9type.Center {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.Pickup,
-				&c2t_obj.ReqPickup_data{G2ID: po.G2ID},
+				&c2t_obj.ReqPickup_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
@@ -128,7 +128,7 @@ func tryAutoEquip(cai *ClientAI) bool {
 	for _, po := range cai.OLNotiData.ActiveObj.EquippedPo {
 		if cai.needUnEquipCarryObj(po.GetBias()) {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.UnEquip,
-				&c2t_obj.ReqUnEquip_data{G2ID: po.G2ID},
+				&c2t_obj.ReqUnEquip_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
@@ -138,7 +138,7 @@ func tryAutoEquip(cai *ClientAI) bool {
 	for _, po := range cai.OLNotiData.ActiveObj.EquipBag {
 		if cai.isBetterCarryObj(po.EquipType, po.GetBias()) {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.Equip,
-				&c2t_obj.ReqEquip_data{G2ID: po.G2ID},
+				&c2t_obj.ReqEquip_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
@@ -155,7 +155,7 @@ func tryAutoUsePotion(cai *ClientAI) bool {
 	for _, po := range cai.OLNotiData.ActiveObj.PotionBag {
 		if cai.needUsePotion(po) {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.DrinkPotion,
-				&c2t_obj.ReqDrinkPotion_data{G2ID: po.G2ID},
+				&c2t_obj.ReqDrinkPotion_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
@@ -166,7 +166,7 @@ func tryAutoUsePotion(cai *ClientAI) bool {
 	for _, po := range cai.OLNotiData.ActiveObj.ScrollBag {
 		if cai.needUseScroll(po) {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.ReadScroll,
-				&c2t_obj.ReqReadScroll_data{G2ID: po.G2ID},
+				&c2t_obj.ReqReadScroll_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
@@ -301,7 +301,7 @@ func (cai *ClientAI) recycleEqbag() bool {
 	}
 	poList.Sort()
 	cai.ReqWithRspFnWithAuth(c2t_idcmd.Recycle,
-		&c2t_obj.ReqRecycle_data{G2ID: poList[0].G2ID},
+		&c2t_obj.ReqRecycle_data{UUID: poList[0].UUID},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			return nil
 		})
@@ -312,7 +312,7 @@ func (cai *ClientAI) recycleUselessPotion() bool {
 	for _, po := range cai.OLNotiData.ActiveObj.PotionBag {
 		if potiontype.AIRecycleMap[po.PotionType] {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.Recycle,
-				&c2t_obj.ReqRecycle_data{G2ID: po.G2ID},
+				&c2t_obj.ReqRecycle_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
@@ -326,7 +326,7 @@ func (cai *ClientAI) recycleUselessScroll() bool {
 	for _, po := range cai.OLNotiData.ActiveObj.ScrollBag {
 		if scrolltype.AIRecycleMap[po.ScrollType] {
 			cai.ReqWithRspFnWithAuth(c2t_idcmd.Recycle,
-				&c2t_obj.ReqRecycle_data{G2ID: po.G2ID},
+				&c2t_obj.ReqRecycle_data{UUID: po.UUID},
 				func(hd c2t_packet.Header, rsp interface{}) error {
 					return nil
 				})
