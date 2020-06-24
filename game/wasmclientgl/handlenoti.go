@@ -594,10 +594,6 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Discover floor complete %v", cf.FloorInfo.Name))
 	}
-	app.vp.UpdateClientField(
-		cf,
-		app.taNotiData, gInitData.ViewportXYLenList,
-	)
 	return nil
 }
 
@@ -621,7 +617,6 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 
 	oldComplete := cf.Visited.IsComplete()
 	cf.ReplaceFloorTiles(robj)
-	app.vp.ReplaceFloorTiles(cf)
 	if !oldComplete && cf.Visited.IsComplete() {
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Discover floor %v complete", cf.FloorInfo.Name))

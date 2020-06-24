@@ -22,7 +22,6 @@ import (
 	"github.com/kasworld/goguelike/lib/g2id"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/wrapper"
 )
 
 type Viewport struct {
@@ -32,10 +31,6 @@ type Viewport struct {
 
 	ViewWidth  int
 	ViewHeight int
-
-	// for tile draw
-	textureTileList         [tile.Tile_Count]*imagecanvas.ImageCanvas
-	textureTileWrapInfoList [tile.Tile_Count]textureTileWrapInfo
 
 	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
@@ -79,18 +74,10 @@ func NewViewport() *Viewport {
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
 
 	// for tile draw
-	srcCellSize := 64
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
-			vp.textureTileList[i] = imagecanvas.NewByID(idstr)
-			vp.textureTileWrapInfoList[i] = textureTileWrapInfo{
-				CellSize: srcCellSize,
-				Xcount:   vp.textureTileList[i].W / srcCellSize,
-				Ycount:   vp.textureTileList[i].H / srcCellSize,
-				WrapX:    wrapper.New(vp.textureTileList[i].W - srcCellSize).WrapSafe,
-				WrapY:    wrapper.New(vp.textureTileList[i].H - srcCellSize).WrapSafe,
-			}
+			gTextureTileList[i] = NewTextureTile(idstr)
 		}
 	}
 	vp.DarkerTileImgCnv = imagecanvas.NewByID("DarkerPng")

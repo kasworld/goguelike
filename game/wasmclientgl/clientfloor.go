@@ -18,6 +18,8 @@ import (
 	"time"
 
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/tilearea"
@@ -139,6 +141,7 @@ func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 		for y, yv := range xv {
 			if yv != 0 {
 				cf.Visited.CheckAndSetNolock(x, y)
+				cf.drawTileAt(x, y, yv)
 			}
 		}
 	}
@@ -155,24 +158,27 @@ func (cf *ClientFloorGL) String() string {
 }
 
 func (cf *ClientFloorGL) UpdateFromViewportTile(
-	vp *c2t_obj.NotiVPTiles_data,
+	taNoti *c2t_obj.NotiVPTiles_data,
 	ViewportXYLenList findnear.XYLenList,
 ) error {
 
-	if cf.FloorInfo.G2ID != vp.FloorG2ID {
+	if cf.FloorInfo.G2ID != taNoti.FloorG2ID {
 		return fmt.Errorf("vptile data floor not match %v %v",
-			cf.FloorInfo.G2ID, vp.FloorG2ID)
+			cf.FloorInfo.G2ID, taNoti.FloorG2ID)
 
 	}
-	cf.Visited.UpdateByViewport2(vp.VPX, vp.VPY, vp.VPTiles)
+	cf.Visited.UpdateByViewport2(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
 
 	for i, v := range ViewportXYLenList {
-		fx := cf.XWrapSafe(v.X + vp.VPX)
-		fy := cf.YWrapSafe(v.Y + vp.VPY)
-		if vp.VPTiles[i] != 0 {
-			cf.Tiles[fx][fy] = vp.VPTiles[i]
+		fx := cf.XWrapSafe(v.X + taNoti.VPX)
+		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
+		if taNoti.VPTiles[i] != 0 {
+			cf.Tiles[fx][fy] = taNoti.VPTiles[i]
+			tl := taNoti.VPTiles[i]
+			cf.drawTileAt(fx, fy, tl)
 		}
 	}
+	cf.Tex.Set("needsUpdate", true)
 	return nil
 }
 
@@ -232,4 +238,54 @@ func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {
 		return nil
 	}
 	return po
+}
+
+func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
+	dstX := fx * DstCellSize
+	dstY := fy * DstCellSize
+	diffbase := fx*5 + fy*3
+
+	for i := 0; i < tile.Tile_Count; i++ {
+		shX := 0.0
+		shY := 0.0
+		tlt := tile.Tile(i)
+		if tl.TestByTile(tlt) {
+			if gTextureTileList[i] != nil {
+				// texture tile
+				tlic := gTextureTileList[i]
+				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, shX, shY)
+				cf.Ctx.Call("drawImage", tlic.Cnv,
+					srcx, srcy, srcCellSize, srcCellSize,
+					dstX, dstY, DstCellSize, DstCellSize)
+
+			} else if tlt == tile.Wall {
+				// wall tile process
+				tlList := gClientTile.FloorTiles[i]
+				tilediff := cf.calcWallTileDiff(fx, fy)
+				ti := tlList[tilediff%len(tlList)]
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+					dstX, dstY, DstCellSize, DstCellSize)
+			} else if tlt == tile.Window {
+				// window tile process
+				tlList := gClientTile.FloorTiles[i]
+				tlindex := 0
+				if cf.checkWallAt(fx, fy-1) && cf.checkWallAt(fx, fy+1) { // n-s window
+					tlindex = 1
+				}
+				ti := tlList[tlindex]
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+					dstX, dstY, DstCellSize, DstCellSize)
+			} else {
+				// bitmap tile
+				tlList := gClientTile.FloorTiles[i]
+				tilediff := diffbase + int(shX)
+				ti := tlList[tilediff%len(tlList)]
+				cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+					dstX, dstY, DstCellSize, DstCellSize)
+			}
+		}
+	}
 }
