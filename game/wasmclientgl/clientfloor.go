@@ -97,7 +97,7 @@ func (app *WasmClient) NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		w*xRepeat, h*yRepeat)
 	Mesh := app.vp.ThreeJsNew("Mesh", Geo, Mat)
 
-	SetPosition(Mesh, w/2, -h/2, -10)
+	SetPosition(Mesh, w/2, -h/2, -DstCellSize)
 
 	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
 	Ctx.Set("fillStyle", "gray")

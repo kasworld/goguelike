@@ -27,7 +27,7 @@ func LoadTextureTileList() [tile.Tile_Count]*TextureTile {
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
-			rtn[i] = NewTextureTile(idstr)
+			rtn[i] = NewTextureTile(idstr, DstCellSize)
 		}
 	}
 	return rtn
@@ -48,7 +48,7 @@ type TextureTile struct {
 	WrapY    func(int) int
 }
 
-func NewTextureTile(srcImageID string) *TextureTile {
+func NewTextureTile(srcImageID string, srcCellSize int) *TextureTile {
 	img := js.Global().Get("document").Call("getElementById", srcImageID)
 	if !img.Truthy() {
 		jslog.Errorf("fail to get %v", srcImageID)
@@ -69,7 +69,6 @@ func NewTextureTile(srcImageID string) *TextureTile {
 	ctx.Call("clearRect", 0, 0, srcw, srch)
 	ctx.Call("drawImage", img, 0, 0)
 
-	srcCellSize := 64
 	return &TextureTile{
 		// Img: img,
 		W:   srcw,

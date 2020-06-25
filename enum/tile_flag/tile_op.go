@@ -69,32 +69,32 @@ func (t *TileFlag) OverrideBits(v tile.Tile) {
 }
 
 const ( // bit groups
-	layer_1 = SeaFlag | MagmaFlag | SoilFlag | SandFlag | StoneFlag | SwampFlag | IceFlag
-	layer_2 = TreeFlag
-	layer_3 = FogFlag | SmokeFlag
-	layer_4 = RoadFlag | RoomFlag | WallFlag | WindowFlag | DoorFlag
+	Layer_1 = SeaFlag | MagmaFlag | SoilFlag | SandFlag | StoneFlag | SwampFlag | IceFlag
+	Layer_2 = TreeFlag
+	Layer_3 = FogFlag | SmokeFlag
+	Layer_4 = RoadFlag | RoomFlag | WallFlag | WindowFlag | DoorFlag
 )
 
 var overrideList = []TileFlag{
-	tile.Swamp: layer_1,
-	tile.Soil:  layer_1,
-	tile.Sand:  layer_1,
-	tile.Stone: layer_1,
-	tile.Sea:   layer_1,
-	tile.Magma: layer_1,
-	tile.Ice:   layer_1,
-	tile.Grass: layer_1,
+	tile.Swamp: Layer_1,
+	tile.Soil:  Layer_1,
+	tile.Sand:  Layer_1,
+	tile.Stone: Layer_1,
+	tile.Sea:   Layer_1,
+	tile.Magma: Layer_1,
+	tile.Ice:   Layer_1,
+	tile.Grass: Layer_1,
 
-	tile.Tree: layer_2,
+	tile.Tree: Layer_2,
 
-	tile.Smoke: layer_3,
-	tile.Fog:   layer_3,
+	tile.Smoke: Layer_3,
+	tile.Fog:   Layer_3,
 
-	tile.Road: layer_1 | layer_2 | layer_4,
-	tile.Room: layer_1 | layer_2 | layer_4,
-	// Wall:   layer_1 | layer_2 | layer_4,
-	// Window: layer_1 | layer_2 | layer_4,
-	// Door:   layer_1 | layer_2 | layer_4,
+	tile.Road: Layer_1 | Layer_2 | Layer_4,
+	tile.Room: Layer_1 | Layer_2 | Layer_4,
+	// Wall:   Layer_1 | Layer_2 | Layer_4,
+	// Window: Layer_1 | Layer_2 | Layer_4,
+	// Door:   Layer_1 | Layer_2 | Layer_4,
 	tile.Window: WallFlag,
 	tile.Door:   WallFlag | WindowFlag,
 }
