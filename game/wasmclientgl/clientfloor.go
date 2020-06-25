@@ -29,21 +29,7 @@ import (
 	"github.com/kasworld/wrapper"
 )
 
-type ClientFloorGL struct {
-	FloorInfo *c2t_obj.FloorInfo
-	Tiles     tilearea.TileArea `prettystring:"simple"`
-
-	Visited        *visitarea.VisitArea `prettystring:"simple"`
-	XWrapper       *wrapper.Wrapper     `prettystring:"simple"`
-	YWrapper       *wrapper.Wrapper     `prettystring:"simple"`
-	XWrapSafe      func(i int) int
-	YWrapSafe      func(i int) int
-	Tiles4PathFind *tilearea4pathfind.TileArea4PathFind `prettystring:"simple"`
-	visitTime      time.Time                            `prettystring:"simple"`
-
-	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
-
-	// from ClientField
+type PlaneLayer struct {
 	// W   int // canvas width
 	// H   int // canvas height
 	// Cnv js.Value
@@ -54,20 +40,7 @@ type ClientFloorGL struct {
 	Mesh js.Value
 }
 
-func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
-	cf := ClientFloorGL{
-		Tiles:     tilearea.New(fi.W, fi.H),
-		Visited:   visitarea.NewVisitArea(fi),
-		FloorInfo: fi,
-		XWrapper:  wrapper.New(fi.W),
-		YWrapper:  wrapper.New(fi.H),
-	}
-	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
-	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
-	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
-
-	// clientfield
+func NewPlaneLayer(fi *c2t_obj.FloorInfo) *PlaneLayer {
 	w := fi.W * DstCellSize
 	h := fi.H * DstCellSize
 	xRepeat := 3
@@ -102,10 +75,44 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
 	Ctx.Set("fillStyle", "gray")
 	Ctx.Call("fillText", fi.Name, 100, 100)
-	cf.Ctx = Ctx
-	cf.Tex = Tex
-	cf.Mesh = Mesh
 
+	return &PlaneLayer{
+		Ctx:  Ctx,
+		Tex:  Tex,
+		Mesh: Mesh,
+	}
+}
+
+type ClientFloorGL struct {
+	FloorInfo *c2t_obj.FloorInfo
+	Tiles     tilearea.TileArea `prettystring:"simple"`
+
+	Visited        *visitarea.VisitArea `prettystring:"simple"`
+	XWrapper       *wrapper.Wrapper     `prettystring:"simple"`
+	YWrapper       *wrapper.Wrapper     `prettystring:"simple"`
+	XWrapSafe      func(i int) int
+	YWrapSafe      func(i int) int
+	Tiles4PathFind *tilearea4pathfind.TileArea4PathFind `prettystring:"simple"`
+	visitTime      time.Time                            `prettystring:"simple"`
+
+	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
+
+	Plane *PlaneLayer
+}
+
+func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
+	cf := ClientFloorGL{
+		Tiles:     tilearea.New(fi.W, fi.H),
+		Visited:   visitarea.NewVisitArea(fi),
+		FloorInfo: fi,
+		XWrapper:  wrapper.New(fi.W),
+		YWrapper:  wrapper.New(fi.H),
+	}
+	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
+	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
+	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
+	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
+	cf.Plane = NewPlaneLayer(fi)
 	return &cf
 }
 
@@ -176,7 +183,7 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 			cf.drawTileAt(fx, fy, tl)
 		}
 	}
-	cf.Tex.Set("needsUpdate", true)
+	cf.Plane.Tex.Set("needsUpdate", true)
 	return nil
 }
 

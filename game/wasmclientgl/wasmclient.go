@@ -359,7 +359,7 @@ func (app *WasmClient) getScrollDir() way9type.Way9Type {
 
 func (app *WasmClient) ChangeToClientField(cf *ClientFloorGL) {
 	for _, v := range app.UUID2ClientFloor {
-		app.vp.scene.Call("remove", v.Mesh)
+		app.vp.scene.Call("remove", v.Plane.Mesh)
 	}
-	app.vp.scene.Call("add", cf.Mesh)
+	app.vp.scene.Call("add", cf.Plane.Mesh)
 }

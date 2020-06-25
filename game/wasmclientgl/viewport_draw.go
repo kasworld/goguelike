@@ -92,7 +92,7 @@ func (vp *Viewport) processNotiObjectList(
 		diffbase := fx*5 + fy*3
 		tilediff := diffbase
 		ti := tlList[tilediff%len(tlList)]
-		cf.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+		cf.Plane.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 			dstX, dstY, DstCellSize, DstCellSize)
 
