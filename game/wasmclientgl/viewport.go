@@ -84,6 +84,14 @@ func (vp *Viewport) Show() {
 	vp.CanvasGL.Get("style").Set("display", "initial")
 }
 
+func (vp *Viewport) ShowFloor(cf *ClientFloorGL) {
+	vp.scene.Call("add", cf.Plane.Mesh)
+}
+
+func (vp *Viewport) HideFloor(cf *ClientFloorGL) {
+	vp.scene.Call("remove", cf.Plane.Mesh)
+}
+
 func (vp *Viewport) ResizeCanvas(title bool) {
 	win := js.Global().Get("window")
 	winW := win.Get("innerWidth").Int()
