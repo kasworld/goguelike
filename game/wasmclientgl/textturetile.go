@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
@@ -20,6 +21,17 @@ import (
 )
 
 var gTextureTileList [tile.Tile_Count]*TextureTile
+
+func LoadTextureTileList() [tile.Tile_Count]*TextureTile {
+	var rtn [tile.Tile_Count]*TextureTile
+	for i, v := range tile.TileScrollAttrib {
+		if v.Texture {
+			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
+			rtn[i] = NewTextureTile(idstr)
+		}
+	}
+	return rtn
+}
 
 type TextureTile struct {
 	// Img js.Value

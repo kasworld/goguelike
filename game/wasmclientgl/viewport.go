@@ -12,12 +12,10 @@
 package wasmclientgl
 
 import (
-	"fmt"
 	"math/rand"
 	"syscall/js"
 	"time"
 
-	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -73,12 +71,7 @@ func NewViewport() *Viewport {
 	vp.fontLoader = vp.ThreeJsNew("FontLoader")
 
 	// for tile draw
-	for i, v := range tile.TileScrollAttrib {
-		if v.Texture {
-			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
-			gTextureTileList[i] = NewTextureTile(idstr)
-		}
-	}
+	gTextureTileList = LoadTextureTileList()
 	vp.DarkerTileImgCnv = imagecanvas.NewByID("DarkerPng")
 
 	vp.initHelpers()
