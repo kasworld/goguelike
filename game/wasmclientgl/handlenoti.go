@@ -99,7 +99,7 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
 		// new floor
-		cf = app.NewClientFloorGL(robj.FI)
+		cf = NewClientFloorGL(robj.FI)
 		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
@@ -608,7 +608,7 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
 		// new floor
-		cf = app.NewClientFloorGL(robj.FI)
+		cf = NewClientFloorGL(robj.FI)
 		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))

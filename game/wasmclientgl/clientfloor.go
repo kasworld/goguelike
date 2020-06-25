@@ -54,7 +54,7 @@ type ClientFloorGL struct {
 	Mesh js.Value
 }
 
-func (app *WasmClient) NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
+func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf := ClientFloorGL{
 		Tiles:     tilearea.New(fi.W, fi.H),
 		Visited:   visitarea.NewVisitArea(fi),
