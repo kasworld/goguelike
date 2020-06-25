@@ -83,19 +83,19 @@ func (app *WasmClient) NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	Cnv.Set("width", w)
 	Cnv.Set("height", h)
 
-	Tex := app.vp.ThreeJsNew("CanvasTexture", Cnv)
-	Tex.Set("wrapS", app.vp.threejs.Get("RepeatWrapping"))
-	Tex.Set("wrapT", app.vp.threejs.Get("RepeatWrapping"))
+	Tex := ThreeJsNew("CanvasTexture", Cnv)
+	Tex.Set("wrapS", ThreeJs().Get("RepeatWrapping"))
+	Tex.Set("wrapT", ThreeJs().Get("RepeatWrapping"))
 	Tex.Get("repeat").Set("x", xRepeat)
 	Tex.Get("repeat").Set("y", yRepeat)
-	Mat := app.vp.ThreeJsNew("MeshBasicMaterial",
+	Mat := ThreeJsNew("MeshBasicMaterial",
 		map[string]interface{}{
 			"map": Tex,
 		},
 	)
-	Geo := app.vp.ThreeJsNew("PlaneBufferGeometry",
+	Geo := ThreeJsNew("PlaneBufferGeometry",
 		w*xRepeat, h*yRepeat)
-	Mesh := app.vp.ThreeJsNew("Mesh", Geo, Mat)
+	Mesh := ThreeJsNew("Mesh", Geo, Mat)
 
 	SetPosition(Mesh, w/2, -h/2, -DstCellSize)
 

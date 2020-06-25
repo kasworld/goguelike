@@ -21,7 +21,7 @@ func (vp *Viewport) hideTitle() {
 
 func (vp *Viewport) initTitle() {
 	// init light
-	vp.light = vp.ThreeJsNew("PointLight", 0xffffff, 1)
+	vp.light = ThreeJsNew("PointLight", 0xffffff, 1)
 	SetPosition(vp.light,
 		HelperSize,
 		HelperSize,
@@ -34,7 +34,7 @@ func (vp *Viewport) initTitle() {
 		HelperSize/2, HelperSize/2, HelperSize,
 	)
 	vp.camera.Call("lookAt",
-		vp.ThreeJsNew("Vector3",
+		ThreeJsNew("Vector3",
 			HelperSize/2, HelperSize/2, 0,
 		),
 	)
@@ -55,7 +55,7 @@ func (vp *Viewport) fontLoaded(this js.Value, args []js.Value) interface{} {
 	co := vp.rnd.Uint32() & 0x00ffffff
 	ftMat := vp.getColorMaterial(co)
 
-	vp.jsoTitle = vp.ThreeJsNew("Mesh", ftGeo, ftMat)
+	vp.jsoTitle = ThreeJsNew("Mesh", ftGeo, ftMat)
 	SetPosition(vp.jsoTitle,
 		HelperSize/2-(geoMax-geoMin)/2,
 		HelperSize/2,

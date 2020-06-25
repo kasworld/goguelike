@@ -21,7 +21,7 @@ func (vp *Viewport) makeGridHelper(
 	x, y, z float64,
 	lookat js.Value,
 ) js.Value {
-	helper := vp.ThreeJsNew("GridHelper",
+	helper := ThreeJsNew("GridHelper",
 		HelperSize, 16, co, 0x404040)
 	helper.Get("position").Set("x", x)
 	helper.Get("position").Set("y", y)
@@ -35,7 +35,7 @@ func (vp *Viewport) initHelpers() {
 	// min := 0.0
 	// max := HelperSize
 	// mid := HelperSize / 2
-	// center := vp.ThreeJsNew("Vector3",
+	// center := ThreeJsNew("Vector3",
 	// 	mid, mid, mid,
 	// )
 
@@ -69,14 +69,14 @@ func (vp *Viewport) initHelpers() {
 	// 	0xff00ff, mid, mid, max, center,
 	// ))
 
-	// box3 := vp.ThreeJsNew("Box3",
-	// 	vp.ThreeJsNew("Vector3", 0, 0, 0),
-	// 	vp.ThreeJsNew("Vector3", HelperSize, HelperSize, HelperSize),
+	// box3 := ThreeJsNew("Box3",
+	// 	ThreeJsNew("Vector3", 0, 0, 0),
+	// 	ThreeJsNew("Vector3", HelperSize, HelperSize, HelperSize),
 	// )
-	// helper := vp.ThreeJsNew("Box3Helper", box3, 0xffffff)
+	// helper := ThreeJsNew("Box3Helper", box3, 0xffffff)
 	// vp.scene.Call("add", helper)
 
-	axisHelper := vp.ThreeJsNew("AxesHelper", HelperSize)
+	axisHelper := ThreeJsNew("AxesHelper", HelperSize)
 	vp.scene.Call("add", axisHelper)
 
 }

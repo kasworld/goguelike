@@ -18,7 +18,7 @@ import (
 func (vp *Viewport) getColorMaterial(co uint32) js.Value {
 	mat, exist := vp.colorMaterialCache[co]
 	if !exist {
-		mat = vp.ThreeJsNew("MeshPhongMaterial",
+		mat = ThreeJsNew("MeshPhongMaterial",
 			map[string]interface{}{
 				"color": co,
 			},
@@ -56,7 +56,7 @@ func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 		bevelSegments = 1
 	}
 	if !exist {
-		geo = vp.ThreeJsNew("TextGeometry", str,
+		geo = ThreeJsNew("TextGeometry", str,
 			map[string]interface{}{
 				"font":           vp.font_helvetiker_regular,
 				"size":           size,

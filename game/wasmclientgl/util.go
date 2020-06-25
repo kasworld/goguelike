@@ -46,3 +46,11 @@ func SetPosition(jso js.Value, pos ...interface{}) {
 		po.Set("z", pos[2])
 	}
 }
+
+func ThreeJsNew(name string, args ...interface{}) js.Value {
+	return js.Global().Get("THREE").Get(name).New(args...)
+}
+
+func ThreeJs() js.Value {
+	return js.Global().Get("THREE")
+}

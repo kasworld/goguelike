@@ -34,7 +34,7 @@ func (vp *Viewport) processNotiObjectList(
 				DstCellSize/2.0,
 			)
 			mat := vp.getColorMaterial(uint32(o.Faction.Color24()))
-			jso = vp.ThreeJsNew("Mesh", geo, mat)
+			jso = ThreeJsNew("Mesh", geo, mat)
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.UUID] = jso
 		}
@@ -57,7 +57,7 @@ func (vp *Viewport) processNotiObjectList(
 				DstCellSize/2*posinfo.W,
 			)
 			mat := vp.getColorMaterial(co)
-			jso = vp.ThreeJsNew("Mesh", geo, mat)
+			jso = ThreeJsNew("Mesh", geo, mat)
 			vp.scene.Call("add", jso)
 			vp.jsSceneObjs[o.UUID] = jso
 		}

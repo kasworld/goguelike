@@ -32,7 +32,6 @@ type Viewport struct {
 	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
 	CanvasGL      js.Value
-	threejs       js.Value
 	camera        js.Value
 	light         js.Value
 	renderer      js.Value
@@ -59,16 +58,15 @@ func NewViewport() *Viewport {
 		textGeometryCache:  make(map[textGeoKey]js.Value),
 	}
 
-	vp.threejs = js.Global().Get("THREE")
-	vp.renderer = vp.ThreeJsNew("WebGLRenderer")
+	vp.renderer = ThreeJsNew("WebGLRenderer")
 	vp.CanvasGL = vp.renderer.Get("domElement")
 	js.Global().Get("document").Call("getElementById", "canvasglholder").Call("appendChild", vp.CanvasGL)
 	vp.CanvasGL.Set("tabindex", "1")
 
-	vp.scene = vp.ThreeJsNew("Scene")
-	vp.camera = vp.ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
-	vp.textureLoader = vp.ThreeJsNew("TextureLoader")
-	vp.fontLoader = vp.ThreeJsNew("FontLoader")
+	vp.scene = ThreeJsNew("Scene")
+	vp.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
+	vp.textureLoader = ThreeJsNew("TextureLoader")
+	vp.fontLoader = ThreeJsNew("FontLoader")
 
 	// for tile draw
 	gTextureTileList = LoadTextureTileList()
@@ -138,16 +136,12 @@ func (vp *Viewport) Draw(
 		cameraX, cameraY, cameraZ,
 	)
 	vp.camera.Call("lookAt",
-		vp.ThreeJsNew("Vector3",
+		ThreeJsNew("Vector3",
 			cameraX, cameraY, 0,
 		),
 	)
 
 	vp.renderer.Call("render", vp.scene, vp.camera)
-}
-
-func (vp *Viewport) ThreeJsNew(name string, args ...interface{}) js.Value {
-	return vp.threejs.Get(name).New(args...)
 }
 
 func (vp *Viewport) calcShiftDxDy(frameProgress float64) (int, int) {
