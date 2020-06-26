@@ -92,11 +92,11 @@ func (vp *Viewport) processNotiObjectList(
 		diffbase := fx*5 + fy*3
 		tilediff := diffbase
 		ti := tlList[tilediff%len(tlList)]
-		cf.Plane.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+		cf.PlaneFieldObj.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 			dstX, dstY, DstCellSize, DstCellSize)
 	}
-	cf.Plane.Tex.Set("needsUpdate", true)
+	cf.PlaneFieldObj.Tex.Set("needsUpdate", true)
 }
 
 func carryObjClientOnFloor2DrawInfo(

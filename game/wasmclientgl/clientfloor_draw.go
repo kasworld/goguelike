@@ -30,7 +30,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 				// texture tile
 				tlic := gTextureTileList[i]
 				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, shX, shY)
-				cf.Plane.Ctx.Call("drawImage", tlic.Cnv,
+				cf.PlaneTile[i].Ctx.Call("drawImage", tlic.Cnv,
 					srcx, srcy, srcCellSize, srcCellSize,
 					dstX, dstY, DstCellSize, DstCellSize)
 
@@ -39,7 +39,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 				tlList := gClientTile.FloorTiles[i]
 				tilediff := cf.calcWallTileDiff(fx, fy)
 				ti := tlList[tilediff%len(tlList)]
-				cf.Plane.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				cf.PlaneTile[i].Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)
 			} else if tlt == tile.Window {
@@ -50,7 +50,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 					tlindex = 1
 				}
 				ti := tlList[tlindex]
-				cf.Plane.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				cf.PlaneTile[i].Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)
 			} else {
@@ -58,7 +58,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 				tlList := gClientTile.FloorTiles[i]
 				tilediff := diffbase + int(shX)
 				ti := tlList[tilediff%len(tlList)]
-				cf.Plane.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+				cf.PlaneTile[i].Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)
 			}

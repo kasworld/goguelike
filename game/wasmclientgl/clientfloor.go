@@ -17,6 +17,8 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/goguelike/enum/tile"
+
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -42,7 +44,7 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	Plane         *PlaneLayer
+	PlaneTile     [tile.Tile_Count]*PlaneLayer
 	PlaneFieldObj *PlaneLayer
 }
 
@@ -58,9 +60,10 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
-	cf.Plane = NewPlaneLayer(fi, 0)
-	cf.PlaneFieldObj = NewPlaneLayer(fi, -1)
-	cf.PlaneFieldObj.drawBG("#ff0000")
+	for i := 0; i < tile.Tile_Count; i++ {
+		cf.PlaneTile[i] = NewPlaneLayer(fi, i-tile.Tile_Count)
+	}
+	cf.PlaneFieldObj = NewPlaneLayer(fi, 0)
 	return &cf
 }
 
@@ -98,7 +101,9 @@ func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
-	cf.Plane.Tex.Set("needsUpdate", true)
+	for i := 0; i < tile.Tile_Count; i++ {
+		cf.PlaneTile[i].Tex.Set("needsUpdate", true)
+	}
 	return
 }
 
@@ -132,7 +137,9 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 			cf.drawTileAt(fx, fy, tl)
 		}
 	}
-	cf.Plane.Tex.Set("needsUpdate", true)
+	for i := 0; i < tile.Tile_Count; i++ {
+		cf.PlaneTile[i].Tex.Set("needsUpdate", true)
+	}
 	return nil
 }
 
@@ -187,12 +194,16 @@ func (cf *ClientFloorGL) EnterFloor() {
 }
 
 func (cf *ClientFloorGL) Show(scene js.Value) {
-	scene.Call("add", cf.Plane.Mesh)
+	for i := 0; i < tile.Tile_Count; i++ {
+		scene.Call("add", cf.PlaneTile[i].Mesh)
+	}
 	scene.Call("add", cf.PlaneFieldObj.Mesh)
 }
 
 func (cf *ClientFloorGL) Hide(scene js.Value) {
-	scene.Call("remove", cf.Plane.Mesh)
+	for i := 0; i < tile.Tile_Count; i++ {
+		scene.Call("remove", cf.PlaneTile[i].Mesh)
+	}
 	scene.Call("remove", cf.PlaneFieldObj.Mesh)
 }
 
