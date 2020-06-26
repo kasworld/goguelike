@@ -25,59 +25,8 @@ import (
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/gowasmlib/jslog"
 	"github.com/kasworld/wrapper"
 )
-
-type PlaneLayer struct {
-	// W   int // canvas width
-	// H   int // canvas height
-	// Cnv js.Value
-	Ctx js.Value
-	Tex js.Value
-	// Mat  js.Value
-	// Geo  js.Value
-	Mesh js.Value
-}
-
-func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
-	w := fi.W * DstCellSize
-	h := fi.H * DstCellSize
-	xRepeat := 3
-	yRepeat := 3
-	Cnv := js.Global().Get("document").Call("createElement",
-		"CANVAS")
-	Ctx := Cnv.Call("getContext", "2d")
-	if !Ctx.Truthy() {
-		jslog.Errorf("fail to get context %v", fi)
-		return nil
-	}
-	Ctx.Set("imageSmoothingEnabled", false)
-	Cnv.Set("width", w)
-	Cnv.Set("height", h)
-
-	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	Tex.Set("wrapS", ThreeJs().Get("RepeatWrapping"))
-	Tex.Set("wrapT", ThreeJs().Get("RepeatWrapping"))
-	Tex.Get("repeat").Set("x", xRepeat)
-	Tex.Get("repeat").Set("y", yRepeat)
-	Mat := ThreeJsNew("MeshBasicMaterial",
-		map[string]interface{}{
-			"map": Tex,
-		},
-	)
-	Geo := ThreeJsNew("PlaneBufferGeometry",
-		w*xRepeat, h*yRepeat)
-	Mesh := ThreeJsNew("Mesh", Geo, Mat)
-
-	SetPosition(Mesh, w/2, -h/2, zpos)
-
-	return &PlaneLayer{
-		Ctx:  Ctx,
-		Tex:  Tex,
-		Mesh: Mesh,
-	}
-}
 
 type ClientFloorGL struct {
 	FloorInfo *c2t_obj.FloorInfo
@@ -93,8 +42,8 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	Plane         *PlaneLayer
-	PlaneFieldObj *PlaneLayer
+	Plane *PlaneLayer
+	// PlaneFieldObj *PlaneLayer
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
@@ -111,6 +60,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 	cf.Plane = NewPlaneLayer(fi, 0)
 	// cf.PlaneFieldObj = NewPlaneLayer(fi, -1)
+	// cf.PlaneFieldObj.drawBG("#ff0000")
 	return &cf
 }
 
@@ -148,6 +98,7 @@ func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
+	cf.Plane.Tex.Set("needsUpdate", true)
 	return
 }
 

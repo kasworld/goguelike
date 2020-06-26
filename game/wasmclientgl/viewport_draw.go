@@ -95,8 +95,8 @@ func (vp *Viewport) processNotiObjectList(
 		cf.Plane.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 			dstX, dstY, DstCellSize, DstCellSize)
-
 	}
+	cf.Plane.Tex.Set("needsUpdate", true)
 }
 
 func carryObjClientOnFloor2DrawInfo(
