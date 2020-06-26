@@ -356,10 +356,3 @@ func (app *WasmClient) getScrollDir() way9type.Way9Type {
 	}
 	return scrollDir
 }
-
-func (app *WasmClient) ChangeToClientField(cf *ClientFloorGL) {
-	for _, v := range app.UUID2ClientFloor {
-		app.vp.HideFloor(v)
-	}
-	app.vp.ShowFloor(cf)
-}

@@ -40,7 +40,7 @@ type PlaneLayer struct {
 	Mesh js.Value
 }
 
-func NewPlaneLayer(fi *c2t_obj.FloorInfo) *PlaneLayer {
+func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
 	w := fi.W * DstCellSize
 	h := fi.H * DstCellSize
 	xRepeat := 3
@@ -70,11 +70,7 @@ func NewPlaneLayer(fi *c2t_obj.FloorInfo) *PlaneLayer {
 		w*xRepeat, h*yRepeat)
 	Mesh := ThreeJsNew("Mesh", Geo, Mat)
 
-	SetPosition(Mesh, w/2, -h/2, -DstCellSize)
-
-	Ctx.Set("font", fmt.Sprintf("%dpx sans-serif", DstCellSize))
-	Ctx.Set("fillStyle", "gray")
-	Ctx.Call("fillText", fi.Name, 100, 100)
+	SetPosition(Mesh, w/2, -h/2, zpos)
 
 	return &PlaneLayer{
 		Ctx:  Ctx,
@@ -97,7 +93,8 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	Plane *PlaneLayer
+	Plane         *PlaneLayer
+	PlaneFieldObj *PlaneLayer
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
@@ -112,7 +109,8 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
-	cf.Plane = NewPlaneLayer(fi)
+	cf.Plane = NewPlaneLayer(fi, 0)
+	// cf.PlaneFieldObj = NewPlaneLayer(fi, -1)
 	return &cf
 }
 
@@ -235,6 +233,16 @@ func (cf *ClientFloorGL) GetBias() bias.Bias {
 
 func (cf *ClientFloorGL) EnterFloor() {
 	cf.visitTime = time.Now()
+}
+
+func (cf *ClientFloorGL) Show(scene js.Value) {
+	scene.Call("add", cf.Plane.Mesh)
+	// scene.Call("add", cf.PlaneFieldObj.Mesh)
+}
+
+func (cf *ClientFloorGL) Hide(scene js.Value) {
+	scene.Call("remove", cf.Plane.Mesh)
+	// scene.Call("remove", cf.PlaneFieldObj.Mesh)
 }
 
 func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {

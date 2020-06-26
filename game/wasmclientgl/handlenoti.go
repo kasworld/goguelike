@@ -95,6 +95,7 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	soundmap.Play("enterfloorsound")
+	oldcf := app.currentFloor()
 	app.FloorInfo = robj.FI
 	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
@@ -105,8 +106,11 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 			"Found floor %v", cf.FloorInfo.Name))
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
+	if oldcf != nil {
+		oldcf.Hide(app.vp.scene)
+	}
 	cf.EnterFloor()
-	app.ChangeToClientField(cf)
+	cf.Show(app.vp.scene)
 	return nil
 }
 func objRecvNotiFn_LeaveFloor(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
