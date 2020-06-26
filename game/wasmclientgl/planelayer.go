@@ -56,6 +56,7 @@ func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
 			"map": Tex,
 		},
 	)
+	Mat.Set("transparent", true)
 	Geo := ThreeJsNew("PlaneBufferGeometry",
 		w*xRepeat, h*yRepeat)
 	Mesh := ThreeJsNew("Mesh", Geo, Mat)

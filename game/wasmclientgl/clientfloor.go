@@ -42,8 +42,8 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	Plane *PlaneLayer
-	// PlaneFieldObj *PlaneLayer
+	Plane         *PlaneLayer
+	PlaneFieldObj *PlaneLayer
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
@@ -59,8 +59,8 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 	cf.Plane = NewPlaneLayer(fi, 0)
-	// cf.PlaneFieldObj = NewPlaneLayer(fi, -1)
-	// cf.PlaneFieldObj.drawBG("#ff0000")
+	cf.PlaneFieldObj = NewPlaneLayer(fi, -1)
+	cf.PlaneFieldObj.drawBG("#ff0000")
 	return &cf
 }
 
@@ -188,12 +188,12 @@ func (cf *ClientFloorGL) EnterFloor() {
 
 func (cf *ClientFloorGL) Show(scene js.Value) {
 	scene.Call("add", cf.Plane.Mesh)
-	// scene.Call("add", cf.PlaneFieldObj.Mesh)
+	scene.Call("add", cf.PlaneFieldObj.Mesh)
 }
 
 func (cf *ClientFloorGL) Hide(scene js.Value) {
 	scene.Call("remove", cf.Plane.Mesh)
-	// scene.Call("remove", cf.PlaneFieldObj.Mesh)
+	scene.Call("remove", cf.PlaneFieldObj.Mesh)
 }
 
 func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {
