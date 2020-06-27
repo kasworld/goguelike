@@ -98,7 +98,8 @@ type WasmClient struct {
 	floorVPPosX int
 	floorVPPosY int
 
-	vp *Viewport
+	vp         *Viewport
+	titlescene *TitleScene
 }
 
 // call after pageload
@@ -109,6 +110,7 @@ func InitPage() {
 	gInitData = clientinitdata.New()
 	gClientTile = clienttile.New()
 	gameOptions = _gameopt // prevent compiler initialize loop
+	gTextureTileList = LoadTextureTileList()
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
@@ -122,7 +124,17 @@ func InitPage() {
 		pid2recv: c2t_pid2rspfn.New(),
 		DoClose:  func() { jslog.Errorf("Too early DoClose call") },
 	}
+	app.titlescene = NewTitleScene()
 	app.vp = NewViewport()
+
+	gFontLoader.Call("load", "/fonts/helvetiker_regular.typeface.json",
+		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			gFont_helvetiker_regular = args[0]
+			app.titlescene.addTitle()
+			return nil
+		}),
+	)
+
 	js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
 
 	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -204,7 +216,6 @@ func (app *WasmClient) enterTower(towerindex int) {
 	jsdoc.Call("getElementById", "centerinfo").Set("style",
 		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
 
-	app.vp.hideTitle()
 	app.Focus2Canvas()
 
 	commandButtons.RegisterJSFn(app)
@@ -289,31 +300,37 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 	defer act.End()
 
 	if gInitData.AccountInfo == nil { // if title
-		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
+		app.vp.renderer.Call("render", app.titlescene.scene, app.titlescene.camera)
 		return nil
 	}
 
 	if app.taNotiData == nil {
-		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
+		app.vp.renderer.Call("render", app.titlescene.scene, app.titlescene.camera)
 		return nil
 	}
 	// if app.olNotiData == nil {
-	// 	app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
+	// 	app.vp.renderer.Call("render", app.titlescene.scene, app.titlescene.camera)
 	// 	return nil
 	// }
 
 	frameProgress := app.ClientJitter.GetInFrameProgress2()
 	scrollDir := app.getScrollDir()
-	app.vp.Draw(frameProgress, scrollDir, app.taNotiData)
 
+	cf := app.currentFloor()
+	if cf != nil {
+		cf.Draw(frameProgress, scrollDir, app.taNotiData, app.vp.zoom)
+		app.vp.renderer.Call("render", cf.scene, cf.camera)
+	}
 	return nil
 }
 
 func (app *WasmClient) ResizeCanvas() {
-	if gInitData.AccountInfo == nil {
-		app.vp.ResizeCanvas(true)
+	if gInitData.AccountInfo == nil { // title
+		app.vp.ResizeCanvas(true, nil)
 	} else {
-		app.vp.ResizeCanvas(false)
+		cf := app.currentFloor()
+		app.vp.ResizeCanvas(false, cf)
+
 		ftsize := fmt.Sprintf("%vpx", app.vp.ViewHeight/100)
 		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
 		for _, v := range commandButtons.ButtonList {

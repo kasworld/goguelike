@@ -44,22 +44,54 @@ type ClientFloorGL struct {
 
 	PlaneTile     *PlaneLayer
 	PlaneFieldObj *PlaneLayer
+
+	camera      js.Value
+	light       js.Value
+	scene       js.Value
+	jsSceneObjs map[string]js.Value
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf := ClientFloorGL{
-		Tiles:     tilearea.New(fi.W, fi.H),
-		Visited:   visitarea.NewVisitArea(fi),
-		FloorInfo: fi,
-		XWrapper:  wrapper.New(fi.W),
-		YWrapper:  wrapper.New(fi.H),
+		Tiles:       tilearea.New(fi.W, fi.H),
+		Visited:     visitarea.NewVisitArea(fi),
+		FloorInfo:   fi,
+		XWrapper:    wrapper.New(fi.W),
+		YWrapper:    wrapper.New(fi.H),
+		jsSceneObjs: make(map[string]js.Value),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
+
 	cf.PlaneTile = NewPlaneLayer(fi, -1)
 	cf.PlaneFieldObj = NewPlaneLayer(fi, 0)
+
+	cf.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
+	cf.scene = ThreeJsNew("Scene")
+	cf.light = ThreeJsNew("PointLight", 0xffffff, 1)
+	SetPosition(cf.light,
+		HelperSize,
+		HelperSize,
+		HelperSize,
+	)
+	cf.scene.Call("add", cf.light)
+
+	axisHelper := ThreeJsNew("AxesHelper", HelperSize)
+	cf.scene.Call("add", axisHelper)
+
+	// set title camera pos
+	SetPosition(cf.camera,
+		HelperSize/2, HelperSize/2, HelperSize,
+	)
+	cf.camera.Call("lookAt",
+		ThreeJsNew("Vector3",
+			HelperSize/2, HelperSize/2, 0,
+		),
+	)
+	cf.camera.Call("updateProjectionMatrix")
+
 	return &cf
 }
 
@@ -183,16 +215,6 @@ func (cf *ClientFloorGL) GetBias() bias.Bias {
 
 func (cf *ClientFloorGL) EnterFloor() {
 	cf.visitTime = time.Now()
-}
-
-func (cf *ClientFloorGL) Show(scene js.Value) {
-	scene.Call("add", cf.PlaneTile.Mesh)
-	scene.Call("add", cf.PlaneFieldObj.Mesh)
-}
-
-func (cf *ClientFloorGL) Hide(scene js.Value) {
-	scene.Call("remove", cf.PlaneTile.Mesh)
-	scene.Call("remove", cf.PlaneFieldObj.Mesh)
 }
 
 func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {

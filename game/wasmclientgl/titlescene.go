@@ -15,53 +15,52 @@ import (
 	"syscall/js"
 )
 
-func (vp *Viewport) hideTitle() {
-	vp.scene.Call("remove", vp.jsoTitle)
+type TitleScene struct {
+	camera   js.Value
+	light    js.Value
+	scene    js.Value
+	jsoTitle js.Value
 }
 
-func (vp *Viewport) initTitle() {
-	// init light
-	vp.light = ThreeJsNew("PointLight", 0xffffff, 1)
-	SetPosition(vp.light,
+func NewTitleScene() *TitleScene {
+	ts := &TitleScene{}
+	ts.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
+	ts.scene = ThreeJsNew("Scene")
+	ts.light = ThreeJsNew("PointLight", 0xffffff, 1)
+	SetPosition(ts.light,
 		HelperSize,
 		HelperSize,
 		HelperSize,
 	)
-	vp.scene.Call("add", vp.light)
+	ts.scene.Call("add", ts.light)
+
+	axisHelper := ThreeJsNew("AxesHelper", HelperSize)
+	ts.scene.Call("add", axisHelper)
 
 	// set title camera pos
-	SetPosition(vp.camera,
+	SetPosition(ts.camera,
 		HelperSize/2, HelperSize/2, HelperSize,
 	)
-	vp.camera.Call("lookAt",
+	ts.camera.Call("lookAt",
 		ThreeJsNew("Vector3",
 			HelperSize/2, HelperSize/2, 0,
 		),
 	)
-	vp.camera.Call("updateProjectionMatrix")
-
-	vp.fontLoader.Call("load", "/fonts/helvetiker_regular.typeface.json",
-		js.FuncOf(vp.fontLoaded),
-	)
+	ts.camera.Call("updateProjectionMatrix")
+	return ts
 }
 
-func (vp *Viewport) fontLoaded(this js.Value, args []js.Value) interface{} {
-	vp.font_helvetiker_regular = args[0]
+func (ts *TitleScene) addTitle() {
 	str := "Goguelike"
-
-	ftGeo := vp.getTextGeometry(str, 80)
-	geoMin, geoMax := vp.calcGeoMinMaxX(ftGeo)
-
-	co := vp.rnd.Uint32() & 0x00ffffff
-	ftMat := vp.getColorMaterial(co)
-
-	vp.jsoTitle = ThreeJsNew("Mesh", ftGeo, ftMat)
-	SetPosition(vp.jsoTitle,
+	ftGeo := getTextGeometry(str, 80)
+	geoMin, geoMax := calcGeoMinMaxX(ftGeo)
+	co := gRnd.Uint32() & 0x00ffffff
+	ftMat := getColorMaterial(co)
+	ts.jsoTitle = ThreeJsNew("Mesh", ftGeo, ftMat)
+	SetPosition(ts.jsoTitle,
 		HelperSize/2-(geoMax-geoMin)/2,
 		HelperSize/2,
 		HelperSize/2,
 	)
-	vp.scene.Call("add", vp.jsoTitle)
-
-	return nil
+	ts.scene.Call("add", ts.jsoTitle)
 }

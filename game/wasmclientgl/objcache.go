@@ -12,18 +12,26 @@
 package wasmclientgl
 
 import (
+	"math/rand"
 	"syscall/js"
+	"time"
 )
 
-func (vp *Viewport) getColorMaterial(co uint32) js.Value {
-	mat, exist := vp.colorMaterialCache[co]
+var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
+
+var gColorMaterialCache map[uint32]js.Value = make(map[uint32]js.Value)
+
+func getColorMaterial(co uint32) js.Value {
+	mat, exist := gColorMaterialCache[co]
 	if !exist {
 		mat = ThreeJsNew("MeshPhongMaterial",
 			map[string]interface{}{
 				"color": co,
 			},
 		)
-		vp.colorMaterialCache[co] = mat
+		gColorMaterialCache[co] = mat
 	}
 	return mat
 }
@@ -33,8 +41,13 @@ type textGeoKey struct {
 	Size float64
 }
 
-func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
-	geo, exist := vp.textGeometryCache[textGeoKey{str, size}]
+var gFontLoader js.Value = ThreeJsNew("FontLoader")
+var gFont_helvetiker_regular js.Value
+
+var gTextGeometryCache map[textGeoKey]js.Value = make(map[textGeoKey]js.Value)
+
+func getTextGeometry(str string, size float64) js.Value {
+	geo, exist := gTextGeometryCache[textGeoKey{str, size}]
 	curveSegments := size / 3
 	if curveSegments < 1 {
 		curveSegments = 1
@@ -58,7 +71,7 @@ func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 	if !exist {
 		geo = ThreeJsNew("TextGeometry", str,
 			map[string]interface{}{
-				"font":           vp.font_helvetiker_regular,
+				"font":           gFont_helvetiker_regular,
 				"size":           size,
 				"height":         5,
 				"curveSegments":  curveSegments,
@@ -68,19 +81,19 @@ func (vp *Viewport) getTextGeometry(str string, size float64) js.Value {
 				"bevelOffset":    0,
 				"bevelSegments":  bevelSegments,
 			})
-		vp.textGeometryCache[textGeoKey{str, size}] = geo
+		gTextGeometryCache[textGeoKey{str, size}] = geo
 	}
 	return geo
 }
 
-func (vp *Viewport) calcGeoMinMaxX(geo js.Value) (float64, float64) {
+func calcGeoMinMaxX(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
 	geoMin := geo.Get("boundingBox").Get("min").Get("x").Float()
 	return geoMin, geoMax
 }
 
-func (vp *Viewport) calcGeoMinMaxY(geo js.Value) (float64, float64) {
+func calcGeoMinMaxY(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("y").Float()
 	geoMin := geo.Get("boundingBox").Get("min").Get("y").Float()

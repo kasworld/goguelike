@@ -107,10 +107,10 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
 	if oldcf != nil {
-		oldcf.Hide(app.vp.scene)
+		oldcf.Hide()
 	}
 	cf.EnterFloor()
-	cf.Show(app.vp.scene)
+	cf.Show()
 	return nil
 }
 func objRecvNotiFn_LeaveFloor(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
@@ -452,7 +452,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
 	}
 
-	app.vp.processNotiObjectList(cf, newOLNotiData)
+	cf.processNotiObjectList(newOLNotiData)
 
 	playerX, playerY := app.GetPlayerXY()
 	if cf.IsValidPos(playerX, playerY) {
