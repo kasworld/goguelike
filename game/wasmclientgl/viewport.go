@@ -13,8 +13,6 @@ package wasmclientgl
 
 import (
 	"syscall/js"
-
-	"github.com/kasworld/goguelike/lib/imagecanvas"
 )
 
 type Viewport struct {
@@ -22,8 +20,6 @@ type Viewport struct {
 
 	ViewWidth  int
 	ViewHeight int
-
-	DarkerTileImgCnv *imagecanvas.ImageCanvas
 
 	CanvasGL js.Value
 	renderer js.Value
@@ -37,8 +33,6 @@ func NewViewport() *Viewport {
 	js.Global().Get("document").Call("getElementById", "canvasglholder").Call("appendChild", vp.CanvasGL)
 	vp.CanvasGL.Set("tabindex", "1")
 
-	// for tile draw
-	vp.DarkerTileImgCnv = imagecanvas.NewByID("DarkerPng")
 	return vp
 }
 

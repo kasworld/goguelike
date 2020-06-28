@@ -21,19 +21,19 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
+	"github.com/kasworld/goguelike/lib/imagecanvas"
 )
 
 const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
-
-	DstCellSize = 32
-	// TextYShift  = 24
-	HelperSize = 1024.0
+	DstCellSize      = 32
+	HelperSize       = 1024.0
 )
 
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
+var DarkerTileImgCnv *imagecanvas.ImageCanvas = imagecanvas.NewByID("DarkerPng")
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
