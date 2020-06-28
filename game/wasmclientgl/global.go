@@ -12,10 +12,28 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"math/rand"
 	"syscall/js"
 	"time"
+
+	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/game/clientinitdata"
+	"github.com/kasworld/goguelike/lib/clienttile"
 )
+
+const (
+	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
+
+	DstCellSize = 32
+	// TextYShift  = 24
+	HelperSize = 1024.0
+)
+
+var gInitData *clientinitdata.InitData = clientinitdata.New()
+var gClientTile *clienttile.ClientTile = clienttile.New()
+var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -98,4 +116,42 @@ func calcGeoMinMaxY(geo js.Value) (float64, float64) {
 	geoMax := geo.Get("boundingBox").Get("max").Get("y").Float()
 	geoMin := geo.Get("boundingBox").Get("min").Get("y").Float()
 	return geoMin, geoMax
+}
+
+func CalcCurrentFrame(difftick int64, fps float64) int {
+	diffsec := float64(difftick) / float64(time.Second)
+	frame := fps * diffsec
+	return int(frame)
+}
+
+func getImgWH(srcImageID string) (js.Value, float64, float64) {
+	img := js.Global().Get("document").Call("getElementById", srcImageID)
+	if !img.Truthy() {
+		fmt.Printf("fail to get %v", srcImageID)
+		return js.Null(), 0, 0
+	}
+	srcw := img.Get("naturalWidth").Float()
+	srch := img.Get("naturalHeight").Float()
+	return img, srcw, srch
+}
+
+func SetPosition(jso js.Value, pos ...interface{}) {
+	po := jso.Get("position")
+	if len(pos) >= 1 {
+		po.Set("x", pos[0])
+	}
+	if len(pos) >= 2 {
+		po.Set("y", pos[1])
+	}
+	if len(pos) >= 3 {
+		po.Set("z", pos[2])
+	}
+}
+
+func ThreeJsNew(name string, args ...interface{}) js.Value {
+	return js.Global().Get("THREE").Get(name).New(args...)
+}
+
+func ThreeJs() js.Value {
+	return js.Global().Get("THREE")
 }

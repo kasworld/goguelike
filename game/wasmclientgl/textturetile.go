@@ -20,8 +20,6 @@ import (
 	"github.com/kasworld/wrapper"
 )
 
-var gTextureTileList [tile.Tile_Count]*TextureTile
-
 func LoadTextureTileList() [tile.Tile_Count]*TextureTile {
 	var rtn [tile.Tile_Count]*TextureTile
 	for i, v := range tile.TileScrollAttrib {

@@ -26,7 +26,6 @@ import (
 	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
-	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
@@ -42,9 +41,6 @@ import (
 	"github.com/kasworld/gowasmlib/wrapspan"
 	"github.com/kasworld/intervalduration"
 )
-
-var gInitData *clientinitdata.InitData
-var gClientTile *clienttile.ClientTile
 
 type WasmClient struct {
 	// app info
@@ -107,10 +103,7 @@ func InitPage() {
 	// hide loading message
 	js.Global().Get("document").Call("getElementById", "loadmsg").Get("style").Set("display", "none")
 
-	gInitData = clientinitdata.New()
-	gClientTile = clienttile.New()
 	gameOptions = _gameopt // prevent compiler initialize loop
-	gTextureTileList = LoadTextureTileList()
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
