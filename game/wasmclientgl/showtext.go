@@ -460,7 +460,7 @@ func (app *WasmClient) DisplayTextInfo() {
 	}
 
 	envColor := app.GetEnvBias().ToHTMLColorString()
-	jsobj.SetBGColor(js.Global().Get("document").Call("getElementById", "body"), envColor)
+	jsobj.SetBGColor(GetElementById("body"), envColor)
 
 	app.updateLeftInfo()
 	app.updateRightInfo()

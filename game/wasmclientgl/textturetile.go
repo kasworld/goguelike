@@ -47,7 +47,7 @@ type TextureTile struct {
 }
 
 func NewTextureTile(srcImageID string, srcCellSize int) *TextureTile {
-	img := js.Global().Get("document").Call("getElementById", srcImageID)
+	img := GetElementById(srcImageID)
 	if !img.Truthy() {
 		jslog.Errorf("fail to get %v", srcImageID)
 		return nil

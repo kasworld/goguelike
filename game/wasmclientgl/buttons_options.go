@@ -12,8 +12,6 @@
 package wasmclientgl
 
 import (
-	"syscall/js"
-
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
@@ -44,7 +42,7 @@ var _gameopt = htmlbutton.NewButtonGroup("Options",
 
 func (app *WasmClient) updateLeftInfo() {
 	v := gameOptions.GetByIDBase("LeftInfo")
-	infoobj := js.Global().Get("document").Call("getElementById", "leftinfo")
+	infoobj := GetElementById("leftinfo")
 	switch v.State {
 	case 0: // Hide
 		infoobj.Set("innerHTML", "")
@@ -66,7 +64,7 @@ func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 
 func (app *WasmClient) updateCenterInfo() {
 	v := gameOptions.GetByIDBase("CenterInfo")
-	infoobj := js.Global().Get("document").Call("getElementById", "centerinfo")
+	infoobj := GetElementById("centerinfo")
 	switch v.State {
 	case 0: // Hide
 		infoobj.Set("innerHTML", "")
@@ -109,7 +107,7 @@ func cmdRotateRightInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 
 func (app *WasmClient) updateRightInfo() {
 	v := gameOptions.GetByIDBase("RightInfo")
-	infoobj := js.Global().Get("document").Call("getElementById", "rightinfo")
+	infoobj := GetElementById("rightinfo")
 	switch v.State {
 	case 0: // Hide
 		infoobj.Set("innerHTML", "")

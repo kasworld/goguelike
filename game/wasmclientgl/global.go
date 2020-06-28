@@ -143,3 +143,7 @@ func ThreeJsNew(name string, args ...interface{}) js.Value {
 func ThreeJs() js.Value {
 	return js.Global().Get("THREE")
 }
+
+func GetElementById(id string) js.Value {
+	return js.Global().Get("document").Call("getElementById", id)
+}

@@ -25,8 +25,7 @@ func NewViewport() *Viewport {
 
 	vp.renderer = ThreeJsNew("WebGLRenderer")
 	vp.CanvasGL = vp.renderer.Get("domElement")
-	js.Global().Get("document").Call("getElementById",
-		"canvasglholder").Call("appendChild", vp.CanvasGL)
+	GetElementById("canvasglholder").Call("appendChild", vp.CanvasGL)
 	vp.CanvasGL.Set("tabindex", "1")
 
 	return vp

@@ -101,7 +101,7 @@ type WasmClient struct {
 // call after pageload
 func InitPage() {
 	// hide loading message
-	js.Global().Get("document").Call("getElementById", "loadmsg").Get("style").Set("display", "none")
+	GetElementById("loadmsg").Get("style").Set("display", "none")
 
 	gameOptions = _gameopt // prevent compiler initialize loop
 
@@ -142,7 +142,7 @@ func InitPage() {
 
 	clientcookie.InitNickname()
 
-	js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML",
+	GetElementById("centerinfo").Set("innerHTML",
 		clientinitdata.MakeClientInfoHTML()+
 			clientinitdata.MakeHelpFactionHTML()+
 			MakeHelpInfoHTML()+
@@ -165,7 +165,7 @@ func InitPage() {
 			clientinitdata.MakeHelpTileHTML() +
 			clientinitdata.MakeHelpConditionHTML() +
 			clientinitdata.MakeHelpFieldObjHTML()
-		js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML", str)
+		GetElementById("centerinfo").Set("innerHTML", str)
 	}()
 
 	app.registerKeyboardMouseEvent()
@@ -199,7 +199,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 
 	jsdoc := js.Global().Get("document")
 	jsobj.Hide(jsdoc.Call("getElementById", "titleform"))
-	js.Global().Get("document").Call("getElementById", "centerinfo").Set("innerHTML", "")
+	GetElementById("centerinfo").Set("innerHTML", "")
 	jsobj.Show(jsdoc.Call("getElementById", "cmdrow"))
 
 	jsdoc.Call("getElementById", "leftinfo").Set("style",
@@ -331,7 +331,7 @@ func (app *WasmClient) ResizeCanvas() {
 		}
 
 		ftsize := fmt.Sprintf("%vpx", winH/100)
-		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
+		GetElementById("body").Get("style").Set("font-size", ftsize)
 		for _, v := range commandButtons.ButtonList {
 			v.JSButton().Get("style").Set("font-size", ftsize)
 		}
@@ -344,8 +344,8 @@ func (app *WasmClient) ResizeCanvas() {
 		for _, v := range adminCommandButtons.ButtonList {
 			v.JSButton().Get("style").Set("font-size", ftsize)
 		}
-		js.Global().Get("document").Call("getElementById", "chattext").Get("style").Set("font-size", ftsize)
-		js.Global().Get("document").Call("getElementById", "chatbutton").Get("style").Set("font-size", ftsize)
+		GetElementById("chattext").Get("style").Set("font-size", ftsize)
+		GetElementById("chatbutton").Get("style").Set("font-size", ftsize)
 	}
 }
 
