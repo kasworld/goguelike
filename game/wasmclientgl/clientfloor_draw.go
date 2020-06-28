@@ -98,16 +98,6 @@ func (cf *ClientFloorGL) checkWallAt(flx, fly int) bool {
 		tl.TestByTile(tile.Window)
 }
 
-func (cf *ClientFloorGL) Show() {
-	cf.scene.Call("add", cf.PlaneTile.Mesh)
-	cf.scene.Call("add", cf.PlaneFieldObj.Mesh)
-}
-
-func (cf *ClientFloorGL) Hide() {
-	cf.scene.Call("remove", cf.PlaneTile.Mesh)
-	cf.scene.Call("remove", cf.PlaneFieldObj.Mesh)
-}
-
 func (cf *ClientFloorGL) Draw(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,

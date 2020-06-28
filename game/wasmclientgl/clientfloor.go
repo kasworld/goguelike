@@ -91,6 +91,10 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		),
 	)
 	cf.camera.Call("updateProjectionMatrix")
+
+	cf.scene.Call("add", cf.PlaneTile.Mesh)
+	cf.scene.Call("add", cf.PlaneFieldObj.Mesh)
+
 	return &cf
 }
 
