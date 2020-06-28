@@ -112,9 +112,8 @@ func (cf *ClientFloorGL) Draw(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
-	zoom int,
 ) {
-
+	zoom := gameOptions.GetByIDBase("Zoom").State
 	sx, sy := calcShiftDxDy(frameProgress)
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy

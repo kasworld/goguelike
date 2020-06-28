@@ -147,8 +147,8 @@ func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
-	app.vp.Zoom(v.State) // set zoomstate , needrecalc
-	app.ResizeCanvas()
+	// app.vp.Zoom(v.State) // set zoomstate , needrecalc
+	// app.ResizeCanvas()
 	app.systemMessage.Appendf("Zoom%v", v.State)
 	// app.vp.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
 	app.Focus2Canvas()

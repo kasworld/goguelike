@@ -311,7 +311,7 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 
 	cf := app.currentFloor()
 	if cf != nil {
-		cf.Draw(frameProgress, scrollDir, app.taNotiData, app.vp.zoom)
+		cf.Draw(frameProgress, scrollDir, app.taNotiData)
 		app.vp.renderer.Call("render", cf.scene, cf.camera)
 	}
 	return nil

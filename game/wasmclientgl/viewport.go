@@ -16,8 +16,6 @@ import (
 )
 
 type Viewport struct {
-	zoom int
-
 	ViewWidth  int
 	ViewHeight int
 
@@ -65,10 +63,6 @@ func (vp *Viewport) ResizeCanvas(title bool, cf *ClientFloorGL) {
 
 func (vp *Viewport) Focus() {
 	vp.CanvasGL.Call("focus")
-}
-
-func (vp *Viewport) Zoom(state int) {
-	vp.zoom = state
 }
 
 func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []js.Value) interface{}) {
