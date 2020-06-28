@@ -50,11 +50,8 @@ func NewTitleScene() *TitleScene {
 	return ts
 }
 
-func (ts *TitleScene) Resize() {
-	win := js.Global().Get("window")
-	winW := win.Get("innerWidth").Float()
-	winH := win.Get("innerHeight").Float() / 3
-	ts.camera.Set("aspect", winW/winH)
+func (ts *TitleScene) Resize(w, h float64) {
+	ts.camera.Set("aspect", w/h)
 	ts.camera.Call("updateProjectionMatrix")
 }
 

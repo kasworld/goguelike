@@ -245,9 +245,12 @@ var makeDrinkPotionButton = `<button style="font-size: %vpx" onclick="drinkpotio
 var makeReadScrollButton = `<button style="font-size: %vpx" onclick="readscroll('%s')">ReadScroll</button> `
 
 func (app *WasmClient) makeInvenInfoHTML() string {
+
 	var buf bytes.Buffer
 	pao := app.olNotiData.ActiveObj
-	ftSize := app.vp.ViewHeight / 100
+	win := js.Global().Get("window")
+	winH := win.Get("innerHeight").Float()
+	ftSize := winH / 100
 	canRecycle := false
 	if app.onFieldObj != nil && app.onFieldObj.ActType == fieldobjacttype.RecycleCarryObj {
 		canRecycle = true
@@ -383,7 +386,10 @@ func (app *WasmClient) makeFloorListHTML() string {
 		cfList = append(cfList, v)
 	}
 	cfList.Sort()
-	ftSize := app.vp.ViewHeight / 100
+
+	win := js.Global().Get("window")
+	winH := win.Get("innerHeight").Float()
+	ftSize := winH / 100
 	for i, cf := range cfList {
 		floorStr := wrapspan.THCSTextf(cf.FloorInfo.Bias, "%v", cf.FloorInfo.Bias.NearFaction().String())
 		fmt.Fprintf(&buf, "%v %v ", floorStr, cf.Visited)

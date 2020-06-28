@@ -316,17 +316,21 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 }
 
 func (app *WasmClient) ResizeCanvas() {
+	win := js.Global().Get("window")
+	winW := win.Get("innerWidth").Float()
+	winH := win.Get("innerHeight").Float()
+
 	if gInitData.AccountInfo == nil { // title
-		app.vp.Resize(true)
-		app.titlescene.Resize()
+		app.vp.Resize(winW, winH/3)
+		app.titlescene.Resize(winW, winH/3)
 	} else {
-		app.vp.Resize(false)
+		app.vp.Resize(winW, winH)
 		cf := app.currentFloor()
 		if cf != nil {
-			cf.Resize()
+			cf.Resize(winW, winH)
 		}
 
-		ftsize := fmt.Sprintf("%vpx", app.vp.ViewHeight/100)
+		ftsize := fmt.Sprintf("%vpx", winH/100)
 		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)
 		for _, v := range commandButtons.ButtonList {
 			v.JSButton().Get("style").Set("font-size", ftsize)

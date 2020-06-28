@@ -12,8 +12,6 @@
 package wasmclientgl
 
 import (
-	"syscall/js"
-
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -138,11 +136,8 @@ func (cf *ClientFloorGL) Draw(
 
 }
 
-func (cf *ClientFloorGL) Resize() {
-	win := js.Global().Get("window")
-	winW := win.Get("innerWidth").Float()
-	winH := win.Get("innerHeight").Float()
-	cf.camera.Set("aspect", winW/winH)
+func (cf *ClientFloorGL) Resize(w, h float64) {
+	cf.camera.Set("aspect", w/h)
 	cf.camera.Call("updateProjectionMatrix")
 }
 

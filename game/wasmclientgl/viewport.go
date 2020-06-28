@@ -16,9 +16,6 @@ import (
 )
 
 type Viewport struct {
-	ViewWidth  int
-	ViewHeight int
-
 	CanvasGL js.Value
 	renderer js.Value
 }
@@ -42,19 +39,10 @@ func (vp *Viewport) Show() {
 	vp.CanvasGL.Get("style").Set("display", "initial")
 }
 
-func (vp *Viewport) Resize(title bool) {
-	win := js.Global().Get("window")
-	winW := win.Get("innerWidth").Int() - 8
-	winH := win.Get("innerHeight").Int() - 8
-	if title {
-		winH /= 3
-	}
-	vp.ViewWidth = winW
-	vp.ViewHeight = winH
-
-	vp.CanvasGL.Call("setAttribute", "width", winW)
-	vp.CanvasGL.Call("setAttribute", "height", winH)
-	vp.renderer.Call("setSize", winW, winH)
+func (vp *Viewport) Resize(w, h float64) {
+	vp.CanvasGL.Call("setAttribute", "width", w)
+	vp.CanvasGL.Call("setAttribute", "height", h)
+	vp.renderer.Call("setSize", w, h)
 }
 
 func (vp *Viewport) Focus() {
