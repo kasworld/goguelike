@@ -200,27 +200,27 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			delete(cf.jsSceneObjs, id)
 		}
 	}
+}
 
-	// draw fieldobj
-	for _, o := range olNoti.FieldObjList {
-		tlList := gClientTile.FieldObjTiles[o.DisplayType]
-		if len(tlList) == 0 {
-			jslog.Errorf("len=0 %v", o.DisplayType)
-			continue
-		}
-		fx := o.X
-		fy := o.Y
-		dstX := fx * DstCellSize
-		dstY := fy * DstCellSize
-
-		diffbase := fx*5 + fy*3
-		tilediff := diffbase
-		ti := tlList[tilediff%len(tlList)]
-		cf.PlaneFieldObj.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-			dstX, dstY, DstCellSize, DstCellSize)
+func (cf *ClientFloorGL) drawFieldObj(o *c2t_obj.FieldObjClient) {
+	tlList := gClientTile.FieldObjTiles[o.DisplayType]
+	if len(tlList) == 0 {
+		jslog.Errorf("len=0 %v", o.DisplayType)
+		return
 	}
-	cf.PlaneFieldObj.Tex.Set("needsUpdate", true)
+	fx := o.X
+	fy := o.Y
+	dstX := fx * DstCellSize
+	dstY := fy * DstCellSize
+
+	diffbase := fx*5 + fy*3
+	tilediff := diffbase
+	ti := tlList[tilediff%len(tlList)]
+	cf.PlaneFieldObj.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+		dstX, dstY, DstCellSize, DstCellSize)
+
+	// cf.PlaneFieldObj.Tex.Set("needsUpdate", true)
 }
 
 func carryObjClientOnFloor2DrawInfo(
