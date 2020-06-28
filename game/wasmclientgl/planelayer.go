@@ -73,8 +73,19 @@ func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
 	}
 }
 
-func (pl *PlaneLayer) drawBG(co string) {
+func (pl *PlaneLayer) fillColor(co string) {
+	pl.Ctx.Set("globalAlpha", 0.1)
 	pl.Ctx.Set("fillStyle", co)
 	pl.Ctx.Call("fillRect", 0, 0, pl.W, pl.H)
+	pl.Ctx.Set("globalAlpha", 1)
+	pl.Tex.Set("needsUpdate", true)
+}
+
+func (pl *PlaneLayer) clearSight(x, y int) {
+	for _, v := range gInitData.ViewportXYLenList {
+		posx := (v.X + x) * DstCellSize
+		posy := (v.Y + y) * DstCellSize
+		pl.Ctx.Call("clearRect", posx, posy, DstCellSize, DstCellSize)
+	}
 	pl.Tex.Set("needsUpdate", true)
 }

@@ -44,6 +44,7 @@ type ClientFloorGL struct {
 
 	PlaneTile     *PlaneLayer
 	PlaneFieldObj *PlaneLayer
+	PlaneSight    *PlaneLayer
 
 	camera      js.Value
 	light       js.Value
@@ -67,6 +68,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.PlaneTile = NewPlaneLayer(fi, -1)
 	cf.PlaneFieldObj = NewPlaneLayer(fi, 0)
+	cf.PlaneSight = NewPlaneLayer(fi, 1)
 
 	cf.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
 	cf.scene = ThreeJsNew("Scene")
@@ -94,6 +96,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.scene.Call("add", cf.PlaneTile.Mesh)
 	cf.scene.Call("add", cf.PlaneFieldObj.Mesh)
+	cf.scene.Call("add", cf.PlaneSight.Mesh)
 
 	return &cf
 }

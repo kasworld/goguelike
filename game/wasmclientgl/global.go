@@ -32,6 +32,7 @@ const (
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
+
 var gDarkerTileImgCnv *imagecanvas.ImageCanvas = imagecanvas.NewByID("DarkerPng")
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))

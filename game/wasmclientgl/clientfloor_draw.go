@@ -124,6 +124,8 @@ func (cf *ClientFloorGL) Draw(
 		),
 	)
 
+	cf.PlaneSight.fillColor("#00000010")
+	cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY)
 }
 
 func (cf *ClientFloorGL) Resize(w, h float64) {
