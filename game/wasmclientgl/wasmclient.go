@@ -319,10 +319,9 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 
 func (app *WasmClient) ResizeCanvas() {
 	if gInitData.AccountInfo == nil { // title
-		app.vp.ResizeCanvas(true, nil)
+		app.vp.Resize(true)
 	} else {
-		cf := app.currentFloor()
-		app.vp.ResizeCanvas(false, cf)
+		app.vp.Resize(false)
 
 		ftsize := fmt.Sprintf("%vpx", app.vp.ViewHeight/100)
 		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)

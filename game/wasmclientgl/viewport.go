@@ -41,10 +41,10 @@ func (vp *Viewport) Show() {
 	vp.CanvasGL.Get("style").Set("display", "initial")
 }
 
-func (vp *Viewport) ResizeCanvas(title bool, cf *ClientFloorGL) {
+func (vp *Viewport) Resize(title bool) {
 	win := js.Global().Get("window")
-	winW := win.Get("innerWidth").Int()
-	winH := win.Get("innerHeight").Int()
+	winW := win.Get("innerWidth").Int() - 8
+	winH := win.Get("innerHeight").Int() - 8
 	if title {
 		winH /= 3
 	}
@@ -54,11 +54,6 @@ func (vp *Viewport) ResizeCanvas(title bool, cf *ClientFloorGL) {
 	vp.CanvasGL.Call("setAttribute", "width", winW)
 	vp.CanvasGL.Call("setAttribute", "height", winH)
 	vp.renderer.Call("setSize", winW, winH)
-
-	if cf != nil {
-		cf.camera.Set("aspect", float64(winW)/float64(winH))
-		cf.camera.Call("updateProjectionMatrix")
-	}
 }
 
 func (vp *Viewport) Focus() {
