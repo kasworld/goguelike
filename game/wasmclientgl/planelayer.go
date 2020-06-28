@@ -14,6 +14,7 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -81,8 +82,11 @@ func (pl *PlaneLayer) fillColor(co string) {
 	pl.Tex.Set("needsUpdate", true)
 }
 
-func (pl *PlaneLayer) clearSight(x, y int) {
-	for _, v := range gInitData.ViewportXYLenList {
+func (pl *PlaneLayer) clearSight(x, y int, vpTiles *viewportdata.ViewportTileArea2) {
+	for i, v := range gInitData.ViewportXYLenList {
+		if vpTiles[i] == 0 {
+			continue
+		}
 		posx := (v.X + x) * DstCellSize
 		if posx >= pl.W {
 			posx -= pl.W
