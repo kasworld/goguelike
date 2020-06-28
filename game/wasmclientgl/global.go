@@ -12,7 +12,6 @@
 package wasmclientgl
 
 import (
-	"fmt"
 	"math/rand"
 	"syscall/js"
 	"time"
@@ -33,7 +32,7 @@ const (
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
-var DarkerTileImgCnv *imagecanvas.ImageCanvas = imagecanvas.NewByID("DarkerPng")
+var gDarkerTileImgCnv *imagecanvas.ImageCanvas = imagecanvas.NewByID("DarkerPng")
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -41,7 +40,7 @@ var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 
 var gColorMaterialCache map[uint32]js.Value = make(map[uint32]js.Value)
 
-func getColorMaterial(co uint32) js.Value {
+func GetColorMaterialByCache(co uint32) js.Value {
 	mat, exist := gColorMaterialCache[co]
 	if !exist {
 		mat = ThreeJsNew("MeshPhongMaterial",
@@ -64,7 +63,7 @@ var gFont_helvetiker_regular js.Value
 
 var gTextGeometryCache map[textGeoKey]js.Value = make(map[textGeoKey]js.Value)
 
-func getTextGeometry(str string, size float64) js.Value {
+func GetTextGeometryByCache(str string, size float64) js.Value {
 	geo, exist := gTextGeometryCache[textGeoKey{str, size}]
 	curveSegments := size / 3
 	if curveSegments < 1 {
@@ -104,14 +103,14 @@ func getTextGeometry(str string, size float64) js.Value {
 	return geo
 }
 
-func calcGeoMinMaxX(geo js.Value) (float64, float64) {
+func CalcGeoMinMaxX(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
 	geoMin := geo.Get("boundingBox").Get("min").Get("x").Float()
 	return geoMin, geoMax
 }
 
-func calcGeoMinMaxY(geo js.Value) (float64, float64) {
+func CalcGeoMinMaxY(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("y").Float()
 	geoMin := geo.Get("boundingBox").Get("min").Get("y").Float()
@@ -122,17 +121,6 @@ func CalcCurrentFrame(difftick int64, fps float64) int {
 	diffsec := float64(difftick) / float64(time.Second)
 	frame := fps * diffsec
 	return int(frame)
-}
-
-func getImgWH(srcImageID string) (js.Value, float64, float64) {
-	img := js.Global().Get("document").Call("getElementById", srcImageID)
-	if !img.Truthy() {
-		fmt.Printf("fail to get %v", srcImageID)
-		return js.Null(), 0, 0
-	}
-	srcw := img.Get("naturalWidth").Float()
-	srch := img.Get("naturalHeight").Float()
-	return img, srcw, srch
 }
 
 func SetPosition(jso js.Value, pos ...interface{}) {

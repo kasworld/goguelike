@@ -163,16 +163,16 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	for _, o := range olNoti.ActiveObjList {
 		jso, exist := cf.jsSceneObjs[o.UUID]
 		if !exist {
-			geo := getTextGeometry(
+			geo := GetTextGeometryByCache(
 				o.Faction.String()[:2],
 				DstCellSize/2.0,
 			)
-			mat := getColorMaterial(uint32(o.Faction.Color24()))
+			mat := GetColorMaterialByCache(uint32(o.Faction.Color24()))
 			jso = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", jso)
 			cf.jsSceneObjs[o.UUID] = jso
 		}
-		miny, maxy := calcGeoMinMaxY(jso.Get("geometry"))
+		miny, maxy := CalcGeoMinMaxY(jso.Get("geometry"))
 		SetPosition(
 			jso,
 			float64(o.X)*DstCellSize,
@@ -186,16 +186,16 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		jso, exist := cf.jsSceneObjs[o.UUID]
 		str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
 		if !exist {
-			geo := getTextGeometry(
+			geo := GetTextGeometryByCache(
 				str,
 				DstCellSize/2*posinfo.W,
 			)
-			mat := getColorMaterial(co)
+			mat := GetColorMaterialByCache(co)
 			jso = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", jso)
 			cf.jsSceneObjs[o.UUID] = jso
 		}
-		miny, maxy := calcGeoMinMaxY(jso.Get("geometry"))
+		miny, maxy := CalcGeoMinMaxY(jso.Get("geometry"))
 		SetPosition(
 			jso,
 			float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
