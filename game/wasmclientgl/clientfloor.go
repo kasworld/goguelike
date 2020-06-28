@@ -91,7 +91,6 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		),
 	)
 	cf.camera.Call("updateProjectionMatrix")
-
 	return &cf
 }
 

@@ -280,8 +280,6 @@ loop:
 
 func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 	if app.waitObjList {
-		// app.systemMessage.Append(
-		// 	wrapspan.ColorText("OrangeRed", "waiting object list"))
 		app.needRefreshSet = true
 		return nil
 	}
@@ -320,8 +318,13 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 func (app *WasmClient) ResizeCanvas() {
 	if gInitData.AccountInfo == nil { // title
 		app.vp.Resize(true)
+		app.titlescene.Resize()
 	} else {
 		app.vp.Resize(false)
+		cf := app.currentFloor()
+		if cf != nil {
+			cf.Resize()
+		}
 
 		ftsize := fmt.Sprintf("%vpx", app.vp.ViewHeight/100)
 		js.Global().Get("document").Call("getElementById", "body").Get("style").Set("font-size", ftsize)

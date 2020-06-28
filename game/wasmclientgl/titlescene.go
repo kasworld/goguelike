@@ -50,6 +50,14 @@ func NewTitleScene() *TitleScene {
 	return ts
 }
 
+func (ts *TitleScene) Resize() {
+	win := js.Global().Get("window")
+	winW := win.Get("innerWidth").Float()
+	winH := win.Get("innerHeight").Float() / 3
+	ts.camera.Set("aspect", winW/winH)
+	ts.camera.Call("updateProjectionMatrix")
+}
+
 func (ts *TitleScene) addTitle() {
 	str := "Goguelike"
 	ftGeo := getTextGeometry(str, 80)
