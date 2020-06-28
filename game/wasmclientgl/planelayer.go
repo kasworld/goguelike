@@ -84,7 +84,19 @@ func (pl *PlaneLayer) fillColor(co string) {
 func (pl *PlaneLayer) clearSight(x, y int) {
 	for _, v := range gInitData.ViewportXYLenList {
 		posx := (v.X + x) * DstCellSize
+		if posx >= pl.W {
+			posx -= pl.W
+		}
+		if posx < 0 {
+			posx += pl.W
+		}
 		posy := (v.Y + y) * DstCellSize
+		if posy >= pl.H {
+			posy -= pl.H
+		}
+		if posy < 0 {
+			posy += pl.H
+		}
 		pl.Ctx.Call("clearRect", posx, posy, DstCellSize, DstCellSize)
 	}
 	pl.Tex.Set("needsUpdate", true)
