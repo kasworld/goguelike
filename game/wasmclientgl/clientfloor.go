@@ -122,17 +122,17 @@ func (cf *ClientFloorGL) Forget() {
 }
 
 func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
-	cf.Tiles = fta.Tiles
-	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	for x, xv := range cf.Tiles {
+	for x, xv := range fta.Tiles {
 		for y, yv := range xv {
 			if yv != 0 {
 				cf.Visited.CheckAndSetNolock(x, y)
-				cf.drawTileAt(x, y, yv)
+				cf.drawTileAt(x, y, yv) // must before cf.tiles update
 			}
 		}
 	}
 	cf.PlaneTile.Tex.Set("needsUpdate", true)
+	cf.Tiles = fta.Tiles
+	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	return
 }
 
@@ -161,9 +161,9 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 		fx := cf.XWrapSafe(v.X + taNoti.VPX)
 		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
 		if taNoti.VPTiles[i] != 0 {
-			cf.Tiles[fx][fy] = taNoti.VPTiles[i]
 			tl := taNoti.VPTiles[i]
-			cf.drawTileAt(fx, fy, tl)
+			cf.drawTileAt(fx, fy, tl) // must before cf.tiles update
+			cf.Tiles[fx][fy] = taNoti.VPTiles[i]
 		}
 	}
 	cf.PlaneTile.Tex.Set("needsUpdate", true)

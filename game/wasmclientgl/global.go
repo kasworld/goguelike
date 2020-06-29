@@ -78,6 +78,38 @@ func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
 	return mat
 }
 
+var gTextureTileMaterialCache map[tile.Tile]js.Value = make(map[tile.Tile]js.Value)
+
+func GetTextureTileMaterialByCache(ti tile.Tile) js.Value {
+	mat, exist := gTextureTileMaterialCache[ti]
+	if !exist {
+		Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
+		Ctx := Cnv.Call("getContext", "2d")
+		Ctx.Set("imageSmoothingEnabled", false)
+		Cnv.Set("width", DstCellSize)
+		Cnv.Set("height", DstCellSize)
+
+		tlic := gTextureTileList[ti]
+		Ctx.Call("drawImage", tlic.Cnv,
+			0, 0, DstCellSize, DstCellSize,
+			0, 0, DstCellSize, DstCellSize)
+
+		// Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+		// 	ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+		// 	0, 0, DstCellSize, DstCellSize)
+
+		Tex := ThreeJsNew("CanvasTexture", Cnv)
+		mat = ThreeJsNew("MeshPhongMaterial",
+			map[string]interface{}{
+				"map": Tex,
+			},
+		)
+		mat.Set("transparent", true)
+		gTextureTileMaterialCache[ti] = mat
+	}
+	return mat
+}
+
 type textGeoKey struct {
 	Str  string
 	Size float64

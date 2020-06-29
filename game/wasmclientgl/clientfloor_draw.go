@@ -41,24 +41,15 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 					dstX, dstY, DstCellSize, DstCellSize)
 
 			} else if tlt == tile.Wall {
-				// wall tile process
-				tlList := gClientTile.FloorTiles[i]
-				tilediff := cf.calcWallTileDiff(fx, fy)
-				ti := tlList[tilediff%len(tlList)]
-				cf.PlaneTile.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, DstCellSize, DstCellSize)
-			} else if tlt == tile.Window {
-				// window tile process
-				tlList := gClientTile.FloorTiles[i]
-				tlindex := 0
-				if cf.checkWallAt(fx, fy-1) && cf.checkWallAt(fx, fy+1) { // n-s window
-					tlindex = 1
+				if cf.Tiles[fx][fy].TestByTile(tlt) {
+					continue // skip exist
 				}
-				ti := tlList[tlindex]
-				cf.PlaneTile.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, DstCellSize, DstCellSize)
+				cf.addWallAt(fx, fy)
+			} else if tlt == tile.Window {
+				if cf.Tiles[fx][fy].TestByTile(tlt) {
+					continue // skip exist
+				}
+				cf.addWindowAt(fx, fy)
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
@@ -202,6 +193,30 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			delete(cf.jsSceneObjs, id)
 		}
 	}
+}
+
+func (cf *ClientFloorGL) addWallAt(fx, fy int) {
+	mat := GetTextureTileMaterialByCache(tile.Stone)
+	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+	mesh := ThreeJsNew("Mesh", geo, mat)
+	cf.scene.Call("add", mesh)
+	SetPosition(
+		mesh,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
+		DstCellSize/2)
+}
+
+func (cf *ClientFloorGL) addWindowAt(fx, fy int) {
+	mat := GetTextureTileMaterialByCache(tile.Fog)
+	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+	mesh := ThreeJsNew("Mesh", geo, mat)
+	cf.scene.Call("add", mesh)
+	SetPosition(
+		mesh,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
+		DstCellSize/2)
 }
 
 func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
