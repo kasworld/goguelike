@@ -22,6 +22,7 @@ import (
 	"github.com/kasworld/gowasmlib/jslog"
 )
 
+// fx,fy wrapped, no need wrap again
 func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
 	dstY := fy * DstCellSize
@@ -44,17 +45,40 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 				if cf.Tiles[fx][fy].TestByTile(tlt) {
 					continue // skip exist
 				}
-				cf.addWallAt(fx, fy)
+				for dx := -1; dx < 2; dx++ {
+					for dy := -1; dy < 2; dy++ {
+						cf.addWallAt(
+							fx+dx*cf.XWrapper.GetWidth(),
+							fy+dy*cf.YWrapper.GetWidth(),
+						)
+					}
+				}
 			} else if tlt == tile.Window {
 				if cf.Tiles[fx][fy].TestByTile(tlt) {
 					continue // skip exist
 				}
-				cf.addWindowAt(fx, fy)
+				for dx := -1; dx < 2; dx++ {
+					for dy := -1; dy < 2; dy++ {
+						cf.addWindowAt(
+							fx+dx*cf.XWrapper.GetWidth(),
+							fy+dy*cf.YWrapper.GetWidth(),
+						)
+
+					}
+				}
 			} else if tlt == tile.Door {
 				if cf.Tiles[fx][fy].TestByTile(tlt) {
 					continue // skip exist
 				}
-				cf.addDoorAt(fx, fy)
+				for dx := -1; dx < 2; dx++ {
+					for dy := -1; dy < 2; dy++ {
+						cf.addDoorAt(
+							fx+dx*cf.XWrapper.GetWidth(),
+							fy+dy*cf.YWrapper.GetWidth(),
+						)
+					}
+				}
+
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
@@ -247,28 +271,37 @@ func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
 	if exist && o.X == oldx && o.Y == oldy {
 		return // no need to add
 	}
-	if exist {
-		cf.FieldObjPosMan.UpdateToXY(o, o.X, o.Y)
-		// clear old rect
-
-		cf.drawFieldObj(o) // draw at new pos
-		return             // move exist obj
+	if exist { // handle obj move
+		// something wrong, field obj do not move
+		jslog.Errorf("fieldobj move? %v %v %v", o, oldx, oldy)
+		return
 	}
 	// add new obj
 	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
-	cf.drawFieldObj(o)
+	for dx := -1; dx < 2; dx++ {
+		for dy := -1; dy < 2; dy++ {
+			cf.addFieldObjAt(o,
+				o.X+dx*cf.XWrapper.GetWidth(),
+				o.Y+dy*cf.YWrapper.GetWidth(),
+			)
+		}
+	}
 }
 
-func (cf *ClientFloorGL) drawFieldObj(o *c2t_obj.FieldObjClient) {
+func (cf *ClientFloorGL) addFieldObjAt(
+	o *c2t_obj.FieldObjClient,
+	fx, fy int,
+) {
 	tlList := gClientTile.FieldObjTiles[o.DisplayType]
 	if len(tlList) == 0 {
 		jslog.Errorf("len=0 %v", o.DisplayType)
 		return
 	}
-	fx := o.X
-	fy := o.Y
 	diffbase := fx*5 + fy*3
 	tilediff := diffbase
+	if tilediff < 0 {
+		tilediff = -tilediff
+	}
 	ti := tlList[tilediff%len(tlList)]
 
 	mat := GetTileMaterialByCache(ti)
@@ -277,8 +310,8 @@ func (cf *ClientFloorGL) drawFieldObj(o *c2t_obj.FieldObjClient) {
 	cf.scene.Call("add", mesh)
 	SetPosition(
 		mesh,
-		float64(o.X)*DstCellSize+DstCellSize/2,
-		-float64(o.Y)*DstCellSize-DstCellSize/2,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
 		DstCellSize/2)
 }
 
