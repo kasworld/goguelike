@@ -444,8 +444,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		return nil
 	}
 	for _, v := range newOLNotiData.FieldObjList {
-		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
-		cf.drawFieldObj(v)
+		cf.addFieldObj(v)
 	}
 	cf.PlaneFieldObj.Tex.Set("needsUpdate", true)
 
@@ -641,11 +640,10 @@ func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, 
 		jslog.Warnf("FoundFieldObj unknonw floor %v", robj)
 	}
 	if fromFloor.FieldObjPosMan.Get1stObjAt(robj.FieldObj.X, robj.FieldObj.Y) == nil {
-		fromFloor.FieldObjPosMan.AddOrUpdateToXY(robj.FieldObj, robj.FieldObj.X, robj.FieldObj.Y)
+		fromFloor.addFieldObj(robj.FieldObj)
 		notiString := "Found Hidden FieldObj"
 		app.systemMessage.Append(wrapspan.ColorText("yellow",
 			notiString))
-		fromFloor.drawFieldObj(robj.FieldObj)
 		fromFloor.PlaneFieldObj.Tex.Set("needsUpdate", true)
 	}
 	return nil

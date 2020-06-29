@@ -204,6 +204,23 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	}
 }
 
+func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
+	oldx, oldy, exist := cf.FieldObjPosMan.GetXYByUUID(o.ID)
+	if exist && o.X == oldx && o.Y == oldy {
+		return // no need to add
+	}
+	if exist {
+		cf.FieldObjPosMan.UpdateToXY(o, o.X, o.Y)
+		// clear old rect
+
+		cf.drawFieldObj(o) // draw at new pos
+		return             // move exist obj
+	}
+	// add new obj
+	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
+	cf.drawFieldObj(o)
+}
+
 func (cf *ClientFloorGL) drawFieldObj(o *c2t_obj.FieldObjClient) {
 	tlList := gClientTile.FieldObjTiles[o.DisplayType]
 	if len(tlList) == 0 {

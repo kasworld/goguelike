@@ -49,7 +49,7 @@ type ClientFloorGL struct {
 	camera      js.Value
 	light       js.Value
 	scene       js.Value
-	jsSceneObjs map[string]js.Value
+	jsSceneObjs map[string]js.Value // in sight only ao, carryobj
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
