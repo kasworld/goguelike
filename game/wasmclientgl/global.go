@@ -20,7 +20,6 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
-	"github.com/kasworld/goguelike/lib/imagecanvas"
 )
 
 const (
@@ -32,8 +31,6 @@ const (
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
-
-var gDarkerTileImgCnv *imagecanvas.ImageCanvas = imagecanvas.NewByID("DarkerPng")
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
