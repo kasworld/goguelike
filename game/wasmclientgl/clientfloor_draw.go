@@ -50,6 +50,11 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 					continue // skip exist
 				}
 				cf.addWindowAt(fx, fy)
+			} else if tlt == tile.Door {
+				if cf.Tiles[fx][fy].TestByTile(tlt) {
+					continue // skip exist
+				}
+				cf.addDoorAt(fx, fy)
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
@@ -209,6 +214,24 @@ func (cf *ClientFloorGL) addWallAt(fx, fy int) {
 
 func (cf *ClientFloorGL) addWindowAt(fx, fy int) {
 	mat := GetTextureTileMaterialByCache(tile.Fog)
+	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+	mesh := ThreeJsNew("Mesh", geo, mat)
+	cf.scene.Call("add", mesh)
+	SetPosition(
+		mesh,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
+		DstCellSize/2)
+}
+
+func (cf *ClientFloorGL) addDoorAt(fx, fy int) {
+	tlList := gClientTile.FloorTiles[tile.Door]
+	if len(tlList) == 0 {
+		jslog.Errorf("tilelist empty")
+		return
+	}
+	ti := tlList[0]
+	mat := GetTileMaterialByCache(ti)
 	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	cf.scene.Call("add", mesh)
