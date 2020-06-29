@@ -42,9 +42,9 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	PlaneTile     *PlaneLayer
-	PlaneFieldObj *PlaneLayer
-	PlaneSight    *PlaneLayer
+	PlaneTile *PlaneLayer
+	// PlaneFieldObj *PlaneLayer
+	PlaneSight *PlaneLayer
 
 	camera      js.Value
 	light       js.Value
@@ -67,7 +67,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 
 	cf.PlaneTile = NewPlaneLayer(fi, -1)
-	cf.PlaneFieldObj = NewPlaneLayer(fi, 0)
+	// cf.PlaneFieldObj = NewPlaneLayer(fi, 0)
 	cf.PlaneSight = NewPlaneLayer(fi, 1)
 
 	cf.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
@@ -95,7 +95,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.camera.Call("updateProjectionMatrix")
 
 	cf.scene.Call("add", cf.PlaneTile.Mesh)
-	cf.scene.Call("add", cf.PlaneFieldObj.Mesh)
+	// cf.scene.Call("add", cf.PlaneFieldObj.Mesh)
 	cf.scene.Call("add", cf.PlaneSight.Mesh)
 
 	return &cf
