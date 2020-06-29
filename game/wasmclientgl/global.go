@@ -104,6 +104,17 @@ func GetTextGeometryByCache(str string, size float64) js.Value {
 	return geo
 }
 
+var gBoxGeometryCache map[[3]int]js.Value = make(map[[3]int]js.Value)
+
+func GetBoxGeometryByCache(x, y, z int) js.Value {
+	geo, exist := gBoxGeometryCache[[3]int{x, y, z}]
+	if !exist {
+		geo = ThreeJsNew("BoxGeometry", x, y, z)
+		gBoxGeometryCache[[3]int{x, y, z}] = geo
+	}
+	return geo
+}
+
 func CalcGeoMinMaxX(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
