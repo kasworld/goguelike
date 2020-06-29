@@ -242,12 +242,6 @@ func (cf *ClientFloorGL) drawFieldObj(o *c2t_obj.FieldObjClient) {
 		float64(o.X)*DstCellSize+DstCellSize/2,
 		-float64(o.Y)*DstCellSize-DstCellSize/2,
 		DstCellSize/2)
-
-	// cf.PlaneFieldObj.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-	// 	ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-	// 	dstX, dstY, DstCellSize, DstCellSize)
-
-	// cf.PlaneFieldObj.Tex.Set("needsUpdate", true)
 }
 
 func carryObjClientOnFloor2DrawInfo(

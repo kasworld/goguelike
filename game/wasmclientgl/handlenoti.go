@@ -446,7 +446,6 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	for _, v := range newOLNotiData.FieldObjList {
 		cf.addFieldObj(v)
 	}
-	// cf.PlaneFieldObj.Tex.Set("needsUpdate", true)
 
 	cf.processNotiObjectList(newOLNotiData)
 
@@ -644,7 +643,6 @@ func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, 
 		notiString := "Found Hidden FieldObj"
 		app.systemMessage.Append(wrapspan.ColorText("yellow",
 			notiString))
-		// fromFloor.PlaneFieldObj.Tex.Set("needsUpdate", true)
 	}
 	return nil
 }

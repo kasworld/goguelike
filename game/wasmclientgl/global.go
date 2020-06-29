@@ -72,6 +72,7 @@ func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
 				"map": Tex,
 			},
 		)
+		mat.Set("transparent", true)
 		gTileMaterialCache[ti] = mat
 	}
 	return mat
