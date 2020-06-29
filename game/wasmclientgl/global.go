@@ -20,6 +20,7 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
+	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
 const (
@@ -47,6 +48,31 @@ func GetColorMaterialByCache(co uint32) js.Value {
 			},
 		)
 		gColorMaterialCache[co] = mat
+	}
+	return mat
+}
+
+var gTileMaterialCache map[webtilegroup.TileInfo]js.Value = make(map[webtilegroup.TileInfo]js.Value)
+
+func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
+	mat, exist := gTileMaterialCache[ti]
+	if !exist {
+		Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
+		Ctx := Cnv.Call("getContext", "2d")
+		Ctx.Set("imageSmoothingEnabled", false)
+		Cnv.Set("width", DstCellSize)
+		Cnv.Set("height", DstCellSize)
+		Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+			0, 0, DstCellSize, DstCellSize)
+
+		Tex := ThreeJsNew("CanvasTexture", Cnv)
+		mat = ThreeJsNew("MeshPhongMaterial",
+			map[string]interface{}{
+				"map": Tex,
+			},
+		)
+		gTileMaterialCache[ti] = mat
 	}
 	return mat
 }
