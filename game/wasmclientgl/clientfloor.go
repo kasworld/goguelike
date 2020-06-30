@@ -220,7 +220,10 @@ func (cf *ClientFloorGL) GetBias() bias.Bias {
 
 func (cf *ClientFloorGL) EnterFloor() {
 	cf.visitTime = time.Now()
-	cf.Resize()
+	win := js.Global().Get("window")
+	winW := win.Get("innerWidth").Float()
+	winH := win.Get("innerHeight").Float()
+	cf.Resize(winW, winH)
 }
 
 func (cf *ClientFloorGL) Resize(w, h float64) {
