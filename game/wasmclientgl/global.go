@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"math"
 	"math/rand"
 	"syscall/js"
 	"time"
@@ -94,10 +95,6 @@ func GetTextureTileMaterialByCache(ti tile.Tile) js.Value {
 			0, 0, DstCellSize, DstCellSize,
 			0, 0, DstCellSize, DstCellSize)
 
-		// Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		// 	ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		// 	0, 0, DstCellSize, DstCellSize)
-
 		Tex := ThreeJsNew("CanvasTexture", Cnv)
 		mat = ThreeJsNew("MeshPhongMaterial",
 			map[string]interface{}{
@@ -167,6 +164,18 @@ func GetBoxGeometryByCache(x, y, z int) js.Value {
 	if !exist {
 		geo = ThreeJsNew("BoxGeometry", x, y, z)
 		gBoxGeometryCache[[3]int{x, y, z}] = geo
+	}
+	return geo
+}
+
+var gConeGeometryCache map[[2]int]js.Value = make(map[[2]int]js.Value)
+
+func GetConeGeometryByCache(r, h int) js.Value {
+	geo, exist := gConeGeometryCache[[2]int{r, h}]
+	if !exist {
+		geo = ThreeJsNew("ConeGeometry", r, h)
+		geo.Call("rotateX", math.Pi/2)
+		gConeGeometryCache[[2]int{r, h}] = geo
 	}
 	return geo
 }

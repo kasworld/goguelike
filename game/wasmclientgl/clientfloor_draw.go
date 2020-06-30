@@ -35,7 +35,15 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 		shY := 0.0
 		tlt := tile.Tile(i)
 		if tl.TestByTile(tlt) {
-			if gTextureTileList[i] != nil {
+			if tlt == tile.Tree {
+				if cf.Tiles[fx][fy].TestByTile(tlt) {
+					continue // skip exist
+				}
+				mat := GetTextureTileMaterialByCache(tile.Grass)
+				geo := GetConeGeometryByCache(DstCellSize/2, DstCellSize)
+				cf.add9TileAt(mat, geo, fx, fy)
+
+			} else if gTextureTileList[i] != nil {
 				// texture tile
 				tlic := gTextureTileList[i]
 				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, shX, shY)
@@ -66,7 +74,6 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 				mat := GetTileMaterialByCache(ti)
 				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				cf.add9TileAt(mat, geo, fx, fy)
-
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
