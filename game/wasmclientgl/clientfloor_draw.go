@@ -12,6 +12,8 @@
 package wasmclientgl
 
 import (
+	"syscall/js"
+
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -45,39 +47,25 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 				if cf.Tiles[fx][fy].TestByTile(tlt) {
 					continue // skip exist
 				}
-				for dx := -1; dx < 2; dx++ {
-					for dy := -1; dy < 2; dy++ {
-						cf.addWallAt(
-							fx+dx*cf.XWrapper.GetWidth(),
-							fy+dy*cf.YWrapper.GetWidth(),
-						)
-					}
-				}
+				mat := GetTextureTileMaterialByCache(tile.Stone)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+				cf.add9TileAt(mat, geo, fx, fy)
 			} else if tlt == tile.Window {
 				if cf.Tiles[fx][fy].TestByTile(tlt) {
 					continue // skip exist
 				}
-				for dx := -1; dx < 2; dx++ {
-					for dy := -1; dy < 2; dy++ {
-						cf.addWindowAt(
-							fx+dx*cf.XWrapper.GetWidth(),
-							fy+dy*cf.YWrapper.GetWidth(),
-						)
-
-					}
-				}
+				mat := GetTextureTileMaterialByCache(tile.Fog)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+				cf.add9TileAt(mat, geo, fx, fy)
 			} else if tlt == tile.Door {
 				if cf.Tiles[fx][fy].TestByTile(tlt) {
 					continue // skip exist
 				}
-				for dx := -1; dx < 2; dx++ {
-					for dy := -1; dy < 2; dy++ {
-						cf.addDoorAt(
-							fx+dx*cf.XWrapper.GetWidth(),
-							fy+dy*cf.YWrapper.GetWidth(),
-						)
-					}
-				}
+				tlList := gClientTile.FloorTiles[tile.Door]
+				ti := tlList[0]
+				mat := GetTileMaterialByCache(ti)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+				cf.add9TileAt(mat, geo, fx, fy)
 
 			} else {
 				// bitmap tile
@@ -92,30 +80,20 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 	}
 }
 
-func (cf *ClientFloorGL) calcWallTileDiff(flx, fly int) int {
-	rtn := 0
-	if cf.checkWallAt(flx, fly-1) {
-		rtn |= 1
+func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) {
+	for dx := -1; dx < 2; dx++ {
+		for dy := -1; dy < 2; dy++ {
+			mesh := ThreeJsNew("Mesh", geo, mat)
+			x := fx + dx*cf.XWrapper.GetWidth()
+			y := fy + dy*cf.YWrapper.GetWidth()
+			SetPosition(
+				mesh,
+				float64(x)*DstCellSize+DstCellSize/2,
+				-float64(y)*DstCellSize-DstCellSize/2,
+				DstCellSize/2)
+			cf.scene.Call("add", mesh)
+		}
 	}
-	if cf.checkWallAt(flx+1, fly) {
-		rtn |= 1 << 1
-	}
-	if cf.checkWallAt(flx, fly+1) {
-		rtn |= 1 << 2
-	}
-	if cf.checkWallAt(flx-1, fly) {
-		rtn |= 1 << 3
-	}
-	return rtn
-}
-
-func (cf *ClientFloorGL) checkWallAt(flx, fly int) bool {
-	flx = cf.XWrapSafe(flx)
-	fly = cf.YWrapSafe(fly)
-	tl := cf.Tiles[flx][fly]
-	return tl.TestByTile(tile.Wall) ||
-		tl.TestByTile(tile.Door) ||
-		tl.TestByTile(tile.Window)
 }
 
 func (cf *ClientFloorGL) Draw(
@@ -224,48 +202,6 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	}
 }
 
-func (cf *ClientFloorGL) addWallAt(fx, fy int) {
-	mat := GetTextureTileMaterialByCache(tile.Stone)
-	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	cf.scene.Call("add", mesh)
-	SetPosition(
-		mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		DstCellSize/2)
-}
-
-func (cf *ClientFloorGL) addWindowAt(fx, fy int) {
-	mat := GetTextureTileMaterialByCache(tile.Fog)
-	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	cf.scene.Call("add", mesh)
-	SetPosition(
-		mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		DstCellSize/2)
-}
-
-func (cf *ClientFloorGL) addDoorAt(fx, fy int) {
-	tlList := gClientTile.FloorTiles[tile.Door]
-	if len(tlList) == 0 {
-		jslog.Errorf("tilelist empty")
-		return
-	}
-	ti := tlList[0]
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	cf.scene.Call("add", mesh)
-	SetPosition(
-		mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		DstCellSize/2)
-}
-
 func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
 	oldx, oldy, exist := cf.FieldObjPosMan.GetXYByUUID(o.ID)
 	if exist && o.X == oldx && o.Y == oldy {
@@ -293,12 +229,7 @@ func (cf *ClientFloorGL) addFieldObjAt(
 	fx, fy int,
 ) {
 	tlList := gClientTile.FieldObjTiles[o.DisplayType]
-	if len(tlList) == 0 {
-		jslog.Errorf("len=0 %v", o.DisplayType)
-		return
-	}
-	diffbase := fx*5 + fy*3
-	tilediff := diffbase
+	tilediff := fx*5 + fy*3
 	if tilediff < 0 {
 		tilediff = -tilediff
 	}
