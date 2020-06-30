@@ -48,18 +48,19 @@ type ClientFloorGL struct {
 	camera          js.Value
 	light           js.Value
 	scene           js.Value
-	jsSceneObjs     map[string]js.Value    // in sight only ao, carryobj
-	jsSceneTileObjs map[[2]int][9]js.Value // tile 3d obj at 9 pos
+	jsSceneObjs     map[string]js.Value   // in sight only ao, carryobj
+	jsSceneTreeObjs map[[2]int][]js.Value // tile 3d tree at 9 pos
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf := ClientFloorGL{
-		Tiles:       tilearea.New(fi.W, fi.H),
-		Visited:     visitarea.NewVisitArea(fi),
-		FloorInfo:   fi,
-		XWrapper:    wrapper.New(fi.W),
-		YWrapper:    wrapper.New(fi.H),
-		jsSceneObjs: make(map[string]js.Value),
+		Tiles:           tilearea.New(fi.W, fi.H),
+		Visited:         visitarea.NewVisitArea(fi),
+		FloorInfo:       fi,
+		XWrapper:        wrapper.New(fi.W),
+		YWrapper:        wrapper.New(fi.H),
+		jsSceneObjs:     make(map[string]js.Value),
+		jsSceneTreeObjs: make(map[[2]int][]js.Value),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()

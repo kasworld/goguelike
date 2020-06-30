@@ -30,6 +30,12 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	dstY := fy * DstCellSize
 	diffbase := fx*5 + fy*3
 	oldTile := cf.Tiles[fx][fy]
+	if oldTile.TestByTile(tile.Tree) && !newTile.TestByTile(tile.Tree) {
+		// del tree from scene
+		for _, v := range cf.jsSceneTreeObjs[[2]int{fx, fy}] {
+			cf.scene.Call("add", v)
+		}
+	}
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
 		if newTile.TestByTile(tlt) {
@@ -39,7 +45,8 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 				}
 				mat := GetTextureTileMaterialByCache(tile.Grass)
 				geo := GetConeGeometryByCache(DstCellSize/2, DstCellSize)
-				cf.add9TileAt(mat, geo, fx, fy)
+				addedTrees := cf.add9TileAt(mat, geo, fx, fy)
+				cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
 
 			} else if gTextureTileList[i] != nil {
 				// texture tile
@@ -84,20 +91,25 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	}
 }
 
-func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) {
+func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
+	w := cf.XWrapper.GetWidth()
+	h := cf.YWrapper.GetWidth()
+	rtn := make([]js.Value, 0, 9)
 	for dx := -1; dx < 2; dx++ {
 		for dy := -1; dy < 2; dy++ {
 			mesh := ThreeJsNew("Mesh", geo, mat)
-			x := fx + dx*cf.XWrapper.GetWidth()
-			y := fy + dy*cf.YWrapper.GetWidth()
+			x := fx + dx*w
+			y := fy + dy*h
 			SetPosition(
 				mesh,
 				float64(x)*DstCellSize+DstCellSize/2,
 				-float64(y)*DstCellSize-DstCellSize/2,
 				DstCellSize/2)
 			cf.scene.Call("add", mesh)
+			rtn = append(rtn, mesh)
 		}
 	}
+	return rtn
 }
 
 func (cf *ClientFloorGL) Draw(
