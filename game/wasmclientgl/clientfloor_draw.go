@@ -28,7 +28,6 @@ import (
 func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
 	dstY := fy * DstCellSize
-	diffbase := fx*5 + fy*3
 	oldTile := cf.Tiles[fx][fy]
 	if oldTile.TestByTile(tile.Tree) && !newTile.TestByTile(tile.Tree) {
 		// del tree from scene
@@ -38,55 +37,66 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	}
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
-		if newTile.TestByTile(tlt) {
-			if tlt == tile.Tree {
-				if oldTile.TestByTile(tlt) {
-					continue // skip exist
-				}
-				mat := GetTextureTileMaterialByCache(tile.Grass)
-				geo := GetConeGeometryByCache(DstCellSize/2, DstCellSize)
-				addedTrees := cf.add9TileAt(mat, geo, fx, fy)
-				cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
+		if !newTile.TestByTile(tlt) {
+			continue
+		}
+		switch tlt {
+		default:
+			jslog.Errorf("unhandled tile %v", tlt)
 
-			} else if gTextureTileList[i] != nil {
-				// texture tile
-				tlic := gTextureTileList[i]
-				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, 0, 0)
-				cf.PlaneTile.Ctx.Call("drawImage", tlic.Cnv,
-					srcx, srcy, srcCellSize, srcCellSize,
-					dstX, dstY, DstCellSize, DstCellSize)
-
-			} else if tlt == tile.Wall {
-				if oldTile.TestByTile(tlt) {
-					continue // skip exist
-				}
-				mat := GetTextureTileMaterialByCache(tile.Stone)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				cf.add9TileAt(mat, geo, fx, fy)
-			} else if tlt == tile.Window {
-				if oldTile.TestByTile(tlt) {
-					continue // skip exist
-				}
-				mat := GetTextureTileMaterialByCache(tile.Fog)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				cf.add9TileAt(mat, geo, fx, fy)
-			} else if tlt == tile.Door {
-				if oldTile.TestByTile(tlt) {
-					continue // skip exist
-				}
-				tlList := gClientTile.FloorTiles[tile.Door]
-				ti := tlList[0]
-				mat := GetTileMaterialByCache(ti)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				cf.add9TileAt(mat, geo, fx, fy)
-			} else {
-				// bitmap tile
-				tlList := gClientTile.FloorTiles[i]
-				ti := tlList[diffbase%len(tlList)]
-				cf.PlaneTile.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-					dstX, dstY, DstCellSize, DstCellSize)
+		case tile.Tree:
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
 			}
+			mat := GetTextureTileMaterialByCache(tile.Grass)
+			geo := GetConeGeometryByCache(DstCellSize/2, DstCellSize)
+			addedTrees := cf.add9TileAt(mat, geo, fx, fy)
+			cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
+
+		case
+			tile.Swamp,
+			tile.Soil,
+			tile.Stone,
+			tile.Sand,
+			tile.Sea,
+			tile.Magma,
+			tile.Ice,
+			tile.Grass,
+			tile.Road,
+			tile.Room,
+			tile.Fog,
+			tile.Smoke:
+			// texture tile
+			tlic := gTextureTileList[i]
+			srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, 0, 0)
+			cf.PlaneTile.Ctx.Call("drawImage", tlic.Cnv,
+				srcx, srcy, srcCellSize, srcCellSize,
+				dstX, dstY, DstCellSize, DstCellSize)
+
+		case tile.Wall:
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
+			}
+			mat := GetTextureTileMaterialByCache(tile.Stone)
+			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+			cf.add9TileAt(mat, geo, fx, fy)
+		case tile.Window:
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
+			}
+			mat := GetTextureTileMaterialByCache(tile.Fog)
+			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+			cf.add9TileAt(mat, geo, fx, fy)
+		case tile.Door:
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
+			}
+			tlList := gClientTile.FloorTiles[tile.Door]
+			ti := tlList[0]
+			mat := GetTileMaterialByCache(ti)
+			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+			cf.add9TileAt(mat, geo, fx, fy)
+
 		}
 	}
 }
