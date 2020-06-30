@@ -80,9 +80,6 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				cf.add9TileAt(mat, geo, fx, fy)
 			} else {
-				if oldTile.TestByTile(tlt) {
-					continue // skip exist
-				}
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
 				ti := tlList[diffbase%len(tlList)]
