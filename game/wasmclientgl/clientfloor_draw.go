@@ -25,18 +25,16 @@ import (
 )
 
 // fx,fy wrapped, no need wrap again
-func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
+func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
 	dstY := fy * DstCellSize
 	diffbase := fx*5 + fy*3
-
+	oldTile := cf.Tiles[fx][fy]
 	for i := 0; i < tile.Tile_Count; i++ {
-		shX := 0.0
-		shY := 0.0
 		tlt := tile.Tile(i)
-		if tl.TestByTile(tlt) {
+		if newTile.TestByTile(tlt) {
 			if tlt == tile.Tree {
-				if cf.Tiles[fx][fy].TestByTile(tlt) {
+				if oldTile.TestByTile(tlt) {
 					continue // skip exist
 				}
 				mat := GetTextureTileMaterialByCache(tile.Grass)
@@ -46,27 +44,27 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 			} else if gTextureTileList[i] != nil {
 				// texture tile
 				tlic := gTextureTileList[i]
-				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, shX, shY)
+				srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, 0, 0)
 				cf.PlaneTile.Ctx.Call("drawImage", tlic.Cnv,
 					srcx, srcy, srcCellSize, srcCellSize,
 					dstX, dstY, DstCellSize, DstCellSize)
 
 			} else if tlt == tile.Wall {
-				if cf.Tiles[fx][fy].TestByTile(tlt) {
+				if oldTile.TestByTile(tlt) {
 					continue // skip exist
 				}
 				mat := GetTextureTileMaterialByCache(tile.Stone)
 				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				cf.add9TileAt(mat, geo, fx, fy)
 			} else if tlt == tile.Window {
-				if cf.Tiles[fx][fy].TestByTile(tlt) {
+				if oldTile.TestByTile(tlt) {
 					continue // skip exist
 				}
 				mat := GetTextureTileMaterialByCache(tile.Fog)
 				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				cf.add9TileAt(mat, geo, fx, fy)
 			} else if tlt == tile.Door {
-				if cf.Tiles[fx][fy].TestByTile(tlt) {
+				if oldTile.TestByTile(tlt) {
 					continue // skip exist
 				}
 				tlList := gClientTile.FloorTiles[tile.Door]
@@ -77,8 +75,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, tl tile_flag.TileFlag) {
 			} else {
 				// bitmap tile
 				tlList := gClientTile.FloorTiles[i]
-				tilediff := diffbase + int(shX)
-				ti := tlList[tilediff%len(tlList)]
+				ti := tlList[diffbase%len(tlList)]
 				cf.PlaneTile.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 					ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 					dstX, dstY, DstCellSize, DstCellSize)

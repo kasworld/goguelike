@@ -45,10 +45,11 @@ type ClientFloorGL struct {
 	PlaneTile  *PlaneLayer
 	PlaneSight *PlaneLayer
 
-	camera      js.Value
-	light       js.Value
-	scene       js.Value
-	jsSceneObjs map[string]js.Value // in sight only ao, carryobj
+	camera          js.Value
+	light           js.Value
+	scene           js.Value
+	jsSceneObjs     map[string]js.Value    // in sight only ao, carryobj
+	jsSceneTileObjs map[[2]int][9]js.Value // tile 3d obj at 9 pos
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
