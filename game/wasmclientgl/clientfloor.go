@@ -220,6 +220,12 @@ func (cf *ClientFloorGL) GetBias() bias.Bias {
 
 func (cf *ClientFloorGL) EnterFloor() {
 	cf.visitTime = time.Now()
+	cf.Resize()
+}
+
+func (cf *ClientFloorGL) Resize(w, h float64) {
+	cf.camera.Set("aspect", w/h)
+	cf.camera.Call("updateProjectionMatrix")
 }
 
 func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {

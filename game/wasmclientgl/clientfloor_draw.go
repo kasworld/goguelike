@@ -142,11 +142,6 @@ func (cf *ClientFloorGL) Draw(
 	cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
 }
 
-func (cf *ClientFloorGL) Resize(w, h float64) {
-	cf.camera.Set("aspect", w/h)
-	cf.camera.Call("updateProjectionMatrix")
-}
-
 func calcShiftDxDy(frameProgress float64) (int, int) {
 	rate := 1 - frameProgress
 	// if rate < 0 {
