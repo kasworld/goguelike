@@ -448,9 +448,8 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		cf.addFieldObj(v)
 	}
 
-	cf.processNotiObjectList(newOLNotiData)
-
 	playerX, playerY := app.GetPlayerXY()
+	cf.processNotiObjectList(newOLNotiData, playerX, playerY)
 	if cf.IsValidPos(playerX, playerY) {
 		app.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
 	}

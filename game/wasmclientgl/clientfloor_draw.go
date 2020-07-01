@@ -14,6 +14,8 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/go-abs"
+
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 
 	"github.com/kasworld/goguelike/config/moneycolor"
@@ -233,8 +235,12 @@ func (cf *ClientFloorGL) addFieldObjAt(
 }
 
 func (cf *ClientFloorGL) processNotiObjectList(
-	olNoti *c2t_obj.NotiObjectList_data) {
-	// shY := int(-float64(DstCellSize) * 0.8)
+	olNoti *c2t_obj.NotiObjectList_data,
+	vpx, vpy int, // place obj around
+) {
+	floorW := cf.XWrapper.GetWidth()
+	floorH := cf.YWrapper.GetWidth()
+
 	addUUID := make(map[string]bool)
 
 	// make activeobj
@@ -257,10 +263,27 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+
+		// make fx,fy around vpx, vpy
+		fx, fy := o.X, o.Y
+		if abs.Absi(fx-vpx) > floorW/2 {
+			if fx > vpx {
+				fx -= floorW
+			} else {
+				fx += floorW
+			}
+		}
+		if abs.Absi(fy-vpy) > floorH/2 {
+			if fy > vpy {
+				fy -= floorH
+			} else {
+				fy += floorH
+			}
+		}
 		SetPosition(
 			mesh,
-			float64(o.X)*DstCellSize+(geoXmax-geoXmin)/2,
-			-float64(o.Y)*DstCellSize-(geoYmax-geoYmin)/2,
+			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
+			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
 			(geoZmax-geoZmin)/2)
 		addUUID[o.UUID] = true
 	}
@@ -304,10 +327,27 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+
+		// make fx,fy around vpx, vpy
+		fx, fy := o.X, o.Y
+		if abs.Absi(fx-vpx) > floorW/2 {
+			if fx > vpx {
+				fx -= floorW
+			} else {
+				fx += floorW
+			}
+		}
+		if abs.Absi(fy-vpy) > floorH/2 {
+			if fy > vpy {
+				fy -= floorH
+			} else {
+				fy += floorH
+			}
+		}
 		SetPosition(
 			mesh,
-			float64(o.X)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
-			-float64(o.Y)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
+			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
+			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
 			(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
 		)
 		addUUID[o.UUID] = true
