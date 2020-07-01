@@ -14,6 +14,8 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/lib/webtilegroup"
+
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -262,32 +264,48 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	// make carryobj
 	for _, o := range olNoti.CarryObjList {
 		mesh, exist := cf.jsSceneObjs[o.UUID]
-		str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
+		shInfo := carryObjClientOnFloor2DrawInfo(o)
 		if !exist {
-			geo := GetTextGeometryByCache(
-				str,
-				DstCellSize/2*posinfo.W,
+			var ti webtilegroup.TileInfo
+			switch o.CarryingObjectType {
+			case carryingobjecttype.Equip:
+				ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
+			case carryingobjecttype.Money:
+				var find bool
+				for i, v := range moneycolor.Attrib {
+					if o.Value < v.UpLimit {
+						ti = gClientTile.GoldTiles[i]
+						find = true
+						break
+					}
+				}
+				if !find {
+					ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
+				}
+			case carryingobjecttype.Potion:
+				ti = gClientTile.PotionTiles[o.PotionType]
+			case carryingobjecttype.Scroll:
+				ti = gClientTile.ScrollTiles[o.ScrollType]
+			}
+			mat := GetTileMaterialByCache(ti)
+			geo := GetBoxGeometryByCache(
+				DstCellSize/4, DstCellSize/4, DstCellSize/4,
 			)
-			mat := GetColorMaterialByCache(co)
+
 			mesh = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneObjs[o.UUID] = mesh
 		}
-		// geo := geo := mesh.Get("geometry")
-		// geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-		// geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-		// geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
-		// SetPosition(
-		// 	mesh,
-		// 	float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
-		// 	-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
-		// 	(geoZmax-geoZmin)/2)
-		miny, maxy := CalcGeoMinMaxY(mesh.Get("geometry"))
+		geo := mesh.Get("geometry")
+		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
 		SetPosition(
 			mesh,
-			float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
-			-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y-(maxy-miny)/2,
-			0)
+			float64(o.X)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
+			-float64(o.Y)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
+			(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
+		)
 		addUUID[o.UUID] = true
 	}
 
@@ -300,47 +318,19 @@ func (cf *ClientFloorGL) processNotiObjectList(
 }
 
 func carryObjClientOnFloor2DrawInfo(
-	co *c2t_obj.CarryObjClientOnFloor) (string, uint32, coShift) {
+	co *c2t_obj.CarryObjClientOnFloor) coShift {
 	switch co.CarryingObjectType {
-	case carryingobjecttype.Money:
-		for _, v := range moneycolor.Attrib {
-			if co.Value < v.UpLimit {
-				return "$", uint32(v.Color),
-					coShiftOther[co.CarryingObjectType]
-			}
-		}
-		v := moneycolor.Attrib[len(moneycolor.Attrib)-1]
-		return "$", uint32(v.Color),
-			coShiftOther[co.CarryingObjectType]
-
-	case carryingobjecttype.Potion:
-		return "!", uint32(co.PotionType.Color24()),
-			coShiftOther[co.CarryingObjectType]
-	case carryingobjecttype.Scroll:
-		return "~", uint32(co.ScrollType.Color24()),
-			coShiftOther[co.CarryingObjectType]
+	default:
+		return coShiftOther[co.CarryingObjectType]
 	case carryingobjecttype.Equip:
-		return eqtype2string[co.EquipType], uint32(co.Faction),
-			eqposShift[co.EquipType]
+		return eqposShift[co.EquipType]
 	}
-	return "?", 0x000000, coShiftOther[0]
-}
-
-var eqtype2string = [equipslottype.EquipSlotType_Count]string{
-	equipslottype.Weapon:   "/",
-	equipslottype.Shield:   "#",
-	equipslottype.Helmet:   "^",
-	equipslottype.Armor:    "%",
-	equipslottype.Gauntlet: "=",
-	equipslottype.Footwear: "_",
-	equipslottype.Ring:     "o",
-	equipslottype.Amulet:   "*",
 }
 
 type coShift struct {
 	X float64
 	Y float64
-	W float64
+	Z float64
 }
 
 var eqposShift = [equipslottype.EquipSlotType_Count]coShift{
