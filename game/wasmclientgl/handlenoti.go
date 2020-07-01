@@ -238,11 +238,12 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 
 	app.ServerClientTimeDiff = robj.Time.Sub(time.Now())
 	app.olNotiHeader = header
-	if app.olNotiData == nil {
-		app.lastOLNotiData = robj
-	} else {
-		app.lastOLNotiData = app.olNotiData
+
+	lastOLNotiData := app.olNotiData
+	if lastOLNotiData == nil {
+		lastOLNotiData = robj
 	}
+
 	app.olNotiData = robj
 	newOLNotiData := robj
 	app.onFieldObj = nil
@@ -256,21 +257,21 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 
 	oldLevel := 0
 	exp := 0
-	if app.lastOLNotiData != nil {
-		oldLevel = int(leveldata.CalcLevelFromExp(float64(app.lastOLNotiData.ActiveObj.Exp)))
-		app.HPdiff = newOLNotiData.ActiveObj.HP - app.lastOLNotiData.ActiveObj.HP
-		app.SPdiff = newOLNotiData.ActiveObj.SP - app.lastOLNotiData.ActiveObj.SP
-		exp = newOLNotiData.ActiveObj.Exp - app.lastOLNotiData.ActiveObj.Exp
 
-		if app.lastOLNotiData.ActiveObj.Bias.NearFaction() != robj.ActiveObj.Bias.NearFaction() {
-			app.systemMessage.Appendf(
-				"Faction changed to %v", robj.ActiveObj.Bias.NearFaction().String())
-		}
-		if app.lastOLNotiData.ActiveObj.Bias != robj.ActiveObj.Bias {
-			app.systemMessage.Append("Bias changed")
-		}
+	// check change
+	oldLevel = int(leveldata.CalcLevelFromExp(float64(lastOLNotiData.ActiveObj.Exp)))
+	app.HPdiff = newOLNotiData.ActiveObj.HP - lastOLNotiData.ActiveObj.HP
+	app.SPdiff = newOLNotiData.ActiveObj.SP - lastOLNotiData.ActiveObj.SP
+	exp = newOLNotiData.ActiveObj.Exp - lastOLNotiData.ActiveObj.Exp
 
+	if lastOLNotiData.ActiveObj.Bias.NearFaction() != robj.ActiveObj.Bias.NearFaction() {
+		app.systemMessage.Appendf(
+			"Faction changed to %v", robj.ActiveObj.Bias.NearFaction().String())
 	}
+	if lastOLNotiData.ActiveObj.Bias != robj.ActiveObj.Bias {
+		app.systemMessage.Append("Bias changed")
+	}
+
 	newLevel := int(leveldata.CalcLevelFromExp(float64(newOLNotiData.ActiveObj.Exp)))
 	if oldLevel < newLevel {
 		soundmap.Play("levelupsound")
