@@ -69,7 +69,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 
-	cf.PlaneTile = NewPlaneLayer(fi, -1)
+	cf.PlaneTile = NewPlaneLayer(fi, 0)
 	cf.PlaneSight = NewPlaneLayer(fi, 1)
 
 	cf.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)

@@ -190,29 +190,39 @@ func (cf *ClientFloorGL) processNotiObjectList(
 
 	// make activeobj
 	for _, o := range olNoti.ActiveObjList {
-		jso, exist := cf.jsSceneObjs[o.UUID]
+		mesh, exist := cf.jsSceneObjs[o.UUID]
 		if !exist {
 			geo := GetTextGeometryByCache(
 				o.Faction.String()[:2],
 				DstCellSize/2.0,
 			)
 			mat := GetColorMaterialByCache(uint32(o.Faction.Color24()))
-			jso = ThreeJsNew("Mesh", geo, mat)
-			cf.scene.Call("add", jso)
-			cf.jsSceneObjs[o.UUID] = jso
+			mesh = ThreeJsNew("Mesh", geo, mat)
+			cf.scene.Call("add", mesh)
+			cf.jsSceneObjs[o.UUID] = mesh
 		}
-		miny, maxy := CalcGeoMinMaxY(jso.Get("geometry"))
+		geo := mesh.Get("geometry")
+		// geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
 		SetPosition(
-			jso,
+			mesh,
 			float64(o.X)*DstCellSize,
-			-float64(o.Y)*DstCellSize-(maxy-miny)/2-DstCellSize/2,
-			0)
+			-float64(o.Y)*DstCellSize-DstCellSize/2-(geoYmax-geoYmin)/2,
+			(geoZmax-geoZmin)/2)
+
+		// miny, maxy := CalcGeoMinMaxY(mesh.Get("geometry"))
+		// SetPosition(
+		// 	mesh,
+		// 	float64(o.X)*DstCellSize,
+		// 	-float64(o.Y)*DstCellSize-(maxy-miny)/2-DstCellSize/2,
+		// 	0)
 		addUUID[o.UUID] = true
 	}
 
 	// make carryobj
 	for _, o := range olNoti.CarryObjList {
-		jso, exist := cf.jsSceneObjs[o.UUID]
+		mesh, exist := cf.jsSceneObjs[o.UUID]
 		str, co, posinfo := carryObjClientOnFloor2DrawInfo(o)
 		if !exist {
 			geo := GetTextGeometryByCache(
@@ -220,22 +230,31 @@ func (cf *ClientFloorGL) processNotiObjectList(
 				DstCellSize/2*posinfo.W,
 			)
 			mat := GetColorMaterialByCache(co)
-			jso = ThreeJsNew("Mesh", geo, mat)
-			cf.scene.Call("add", jso)
-			cf.jsSceneObjs[o.UUID] = jso
+			mesh = ThreeJsNew("Mesh", geo, mat)
+			cf.scene.Call("add", mesh)
+			cf.jsSceneObjs[o.UUID] = mesh
 		}
-		miny, maxy := CalcGeoMinMaxY(jso.Get("geometry"))
+		// geo := geo := mesh.Get("geometry")
+		// geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+		// geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+		// geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+		// SetPosition(
+		// 	mesh,
+		// 	float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+		// 	-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+		// 	(geoZmax-geoZmin)/2)
+		miny, maxy := CalcGeoMinMaxY(mesh.Get("geometry"))
 		SetPosition(
-			jso,
+			mesh,
 			float64(o.X)*DstCellSize+DstCellSize*posinfo.X,
 			-float64(o.Y)*DstCellSize-DstCellSize*posinfo.Y-(maxy-miny)/2,
 			0)
 		addUUID[o.UUID] = true
 	}
 
-	for id, jso := range cf.jsSceneObjs {
+	for id, mesh := range cf.jsSceneObjs {
 		if !addUUID[id] {
-			cf.scene.Call("remove", jso)
+			cf.scene.Call("remove", mesh)
 			delete(cf.jsSceneObjs, id)
 		}
 	}
