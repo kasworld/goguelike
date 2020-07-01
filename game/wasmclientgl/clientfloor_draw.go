@@ -156,10 +156,10 @@ func (cf *ClientFloorGL) Draw(
 	// move camera, light
 	cameraX := taNoti.VPX*DstCellSize + scrollDx
 	cameraY := -taNoti.VPY*DstCellSize + scrollDy
+	cameraZ := HelperSize - HelperSize*zoom/4
 	SetPosition(cf.light,
-		cameraX, cameraY, DstCellSize*2,
+		cameraX, cameraY, DstCellSize*10,
 	)
-	cameraZ := HelperSize / (zoom + 1)
 	SetPosition(cf.camera,
 		cameraX, cameraY, cameraZ,
 	)
