@@ -75,11 +75,11 @@ func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
 }
 
 func (pl *PlaneLayer) fillColor(co string) {
-	pl.Ctx.Set("globalAlpha", 0.5)
+	// pl.Ctx.Set("globalAlpha", 0.5)
 	pl.Ctx.Set("fillStyle", co)
 	pl.Ctx.Call("fillRect", 0, 0, pl.W, pl.H)
-	pl.Ctx.Set("globalAlpha", 1)
-	pl.Tex.Set("needsUpdate", true)
+	// pl.Ctx.Set("globalAlpha", 1)
+	// pl.Tex.Set("needsUpdate", true)
 }
 
 func (pl *PlaneLayer) clearSight(x, y int, vpTiles *viewportdata.ViewportTileArea2) {
@@ -103,5 +103,5 @@ func (pl *PlaneLayer) clearSight(x, y int, vpTiles *viewportdata.ViewportTileAre
 		}
 		pl.Ctx.Call("clearRect", posx, posy, DstCellSize, DstCellSize)
 	}
-	pl.Tex.Set("needsUpdate", true)
+	// pl.Tex.Set("needsUpdate", true)
 }

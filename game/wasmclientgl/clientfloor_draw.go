@@ -148,8 +148,9 @@ func (cf *ClientFloorGL) Draw(
 		),
 	)
 
-	cf.PlaneSight.fillColor("#00000008")
+	cf.PlaneSight.fillColor("#00000002")
 	cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
+	cf.PlaneSight.Tex.Set("needsUpdate", true)
 }
 
 func calcShiftDxDy(frameProgress float64) (int, int) {
