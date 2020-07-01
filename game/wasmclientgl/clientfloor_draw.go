@@ -192,31 +192,23 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	for _, o := range olNoti.ActiveObjList {
 		mesh, exist := cf.jsSceneObjs[o.UUID]
 		if !exist {
-			geo := GetTextGeometryByCache(
-				o.Faction.String()[:2],
-				DstCellSize/2.0,
-			)
-			mat := GetColorMaterialByCache(uint32(o.Faction.Color24()))
+			tlList := gClientTile.CharTiles[o.Faction]
+			ti := tlList[0]
+			mat := GetTileMaterialByCache(ti)
+			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 			mesh = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneObjs[o.UUID] = mesh
 		}
 		geo := mesh.Get("geometry")
-		// geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
 		SetPosition(
 			mesh,
-			float64(o.X)*DstCellSize,
-			-float64(o.Y)*DstCellSize-DstCellSize/2-(geoYmax-geoYmin)/2,
+			float64(o.X)*DstCellSize+(geoXmax-geoXmin)/2,
+			-float64(o.Y)*DstCellSize-(geoYmax-geoYmin)/2,
 			(geoZmax-geoZmin)/2)
-
-		// miny, maxy := CalcGeoMinMaxY(mesh.Get("geometry"))
-		// SetPosition(
-		// 	mesh,
-		// 	float64(o.X)*DstCellSize,
-		// 	-float64(o.Y)*DstCellSize-(maxy-miny)/2-DstCellSize/2,
-		// 	0)
 		addUUID[o.UUID] = true
 	}
 
