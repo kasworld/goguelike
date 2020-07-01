@@ -183,6 +183,53 @@ func calcShiftDxDy(frameProgress float64) (int, int) {
 	return dx, dy
 }
 
+func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
+	oldx, oldy, exist := cf.FieldObjPosMan.GetXYByUUID(o.ID)
+	if exist && o.X == oldx && o.Y == oldy {
+		return // no need to add
+	}
+	if exist { // handle obj move
+		// something wrong, field obj do not move
+		jslog.Errorf("fieldobj move? %v %v %v", o, oldx, oldy)
+		return
+	}
+	// add new obj
+	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
+	for dx := -1; dx < 2; dx++ {
+		for dy := -1; dy < 2; dy++ {
+			cf.addFieldObjAt(o,
+				o.X+dx*cf.XWrapper.GetWidth(),
+				o.Y+dy*cf.YWrapper.GetWidth(),
+			)
+		}
+	}
+}
+
+func (cf *ClientFloorGL) addFieldObjAt(
+	o *c2t_obj.FieldObjClient,
+	fx, fy int,
+) {
+	tlList := gClientTile.FieldObjTiles[o.DisplayType]
+	tilediff := fx*5 + fy*3
+	if tilediff < 0 {
+		tilediff = -tilediff
+	}
+	ti := tlList[tilediff%len(tlList)]
+
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+	mesh := ThreeJsNew("Mesh", geo, mat)
+	SetPosition(
+		mesh,
+		float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
+		-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
+		(geoZmax-geoZmin)/2)
+	cf.scene.Call("add", mesh)
+}
+
 func (cf *ClientFloorGL) processNotiObjectList(
 	olNoti *c2t_obj.NotiObjectList_data) {
 	// shY := int(-float64(DstCellSize) * 0.8)
@@ -250,50 +297,6 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			delete(cf.jsSceneObjs, id)
 		}
 	}
-}
-
-func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
-	oldx, oldy, exist := cf.FieldObjPosMan.GetXYByUUID(o.ID)
-	if exist && o.X == oldx && o.Y == oldy {
-		return // no need to add
-	}
-	if exist { // handle obj move
-		// something wrong, field obj do not move
-		jslog.Errorf("fieldobj move? %v %v %v", o, oldx, oldy)
-		return
-	}
-	// add new obj
-	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
-	for dx := -1; dx < 2; dx++ {
-		for dy := -1; dy < 2; dy++ {
-			cf.addFieldObjAt(o,
-				o.X+dx*cf.XWrapper.GetWidth(),
-				o.Y+dy*cf.YWrapper.GetWidth(),
-			)
-		}
-	}
-}
-
-func (cf *ClientFloorGL) addFieldObjAt(
-	o *c2t_obj.FieldObjClient,
-	fx, fy int,
-) {
-	tlList := gClientTile.FieldObjTiles[o.DisplayType]
-	tilediff := fx*5 + fy*3
-	if tilediff < 0 {
-		tilediff = -tilediff
-	}
-	ti := tlList[tilediff%len(tlList)]
-
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	cf.scene.Call("add", mesh)
-	SetPosition(
-		mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		DstCellSize/2)
 }
 
 func carryObjClientOnFloor2DrawInfo(
