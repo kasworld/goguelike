@@ -240,15 +240,19 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	// make activeobj
 	for _, o := range olNoti.ActiveObjList {
 		mesh, exist := cf.jsSceneObjs[o.UUID]
+		tlList := gClientTile.CharTiles[o.Faction]
+		ti := tlList[0]
+		if !o.Alive {
+			ti = tlList[1]
+		}
+		mat := GetTileMaterialByCache(ti)
 		if !exist {
-			tlList := gClientTile.CharTiles[o.Faction]
-			ti := tlList[0]
-			mat := GetTileMaterialByCache(ti)
 			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 			mesh = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneObjs[o.UUID] = mesh
 		}
+		mesh.Set("material", mat)
 		geo := mesh.Get("geometry")
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
