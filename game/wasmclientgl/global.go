@@ -194,6 +194,13 @@ func CalcGeoMinMaxY(geo js.Value) (float64, float64) {
 	return geoMin, geoMax
 }
 
+func CalcGeoMinMaxZ(geo js.Value) (float64, float64) {
+	geo.Call("computeBoundingBox")
+	geoMax := geo.Get("boundingBox").Get("max").Get("z").Float()
+	geoMin := geo.Get("boundingBox").Get("min").Get("z").Float()
+	return geoMin, geoMax
+}
+
 func CalcCurrentFrame(difftick int64, fps float64) int {
 	diffsec := float64(difftick) / float64(time.Second)
 	frame := fps * diffsec

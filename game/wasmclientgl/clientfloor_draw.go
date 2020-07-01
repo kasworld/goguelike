@@ -32,7 +32,13 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	if oldTile.TestByTile(tile.Tree) && !newTile.TestByTile(tile.Tree) {
 		// del tree from scene
 		for _, v := range cf.jsSceneTreeObjs[[2]int{fx, fy}] {
-			cf.scene.Call("add", v)
+			cf.scene.Call("remove", v)
+		}
+	}
+	if oldTile.TestByTile(tile.Grass) && !newTile.TestByTile(tile.Grass) {
+		// del grass from scene
+		for _, v := range cf.jsSceneGrassObjs[[2]int{fx, fy}] {
+			cf.scene.Call("remove", v)
 		}
 	}
 	for i := 0; i < tile.Tile_Count; i++ {
@@ -53,6 +59,15 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			addedTrees := cf.add9TileAt(mat, geo, fx, fy)
 			cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
 
+		case tile.Grass:
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
+			}
+			mat := GetTextureTileMaterialByCache(tile.Grass)
+			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize/8)
+			addedGrasss := cf.add9TileAt(mat, geo, fx, fy)
+			cf.jsSceneGrassObjs[[2]int{fx, fy}] = addedGrasss
+
 		case
 			tile.Swamp,
 			tile.Soil,
@@ -61,7 +76,6 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			tile.Sea,
 			tile.Magma,
 			tile.Ice,
-			tile.Grass,
 			tile.Road,
 			tile.Room,
 			tile.Fog,
@@ -105,6 +119,9 @@ func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
 	w := cf.XWrapper.GetWidth()
 	h := cf.YWrapper.GetWidth()
 	rtn := make([]js.Value, 0, 9)
+	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
 	for dx := -1; dx < 2; dx++ {
 		for dy := -1; dy < 2; dy++ {
 			mesh := ThreeJsNew("Mesh", geo, mat)
@@ -112,9 +129,9 @@ func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
 			y := fy + dy*h
 			SetPosition(
 				mesh,
-				float64(x)*DstCellSize+DstCellSize/2,
-				-float64(y)*DstCellSize-DstCellSize/2,
-				DstCellSize/2)
+				float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+				-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+				(geoZmax-geoZmin)/2)
 			cf.scene.Call("add", mesh)
 			rtn = append(rtn, mesh)
 		}
