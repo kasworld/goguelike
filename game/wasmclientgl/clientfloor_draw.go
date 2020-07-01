@@ -148,7 +148,7 @@ func (cf *ClientFloorGL) Draw(
 		),
 	)
 
-	cf.PlaneSight.fillColor("#00000010")
+	cf.PlaneSight.fillColor("#00000008")
 	cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
 }
 

@@ -75,7 +75,7 @@ func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
 }
 
 func (pl *PlaneLayer) fillColor(co string) {
-	pl.Ctx.Set("globalAlpha", 0.1)
+	pl.Ctx.Set("globalAlpha", 0.5)
 	pl.Ctx.Set("fillStyle", co)
 	pl.Ctx.Call("fillRect", 0, 0, pl.W, pl.H)
 	pl.Ctx.Set("globalAlpha", 1)
