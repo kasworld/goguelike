@@ -108,6 +108,8 @@ func (app *WasmClient) jsSendChat(this js.Value, args []js.Value) interface{} {
 	msg := getChatMsg()
 	go app.sendPacket(c2t_idcmd.Chat,
 		&c2t_obj.ReqChat_data{Chat: msg})
+	GetElementById("chatbutton").Call("blur")
+	GetElementById("chattext").Call("blur")
 	// app.Focus2Canvas()
 	return nil
 }
