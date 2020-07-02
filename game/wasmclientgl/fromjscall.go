@@ -40,7 +40,7 @@ func (app *WasmClient) jsUnequipCarryObj(this js.Value, args []js.Value) interfa
 	go app.sendPacket(c2t_idcmd.UnEquip,
 		&c2t_obj.ReqUnEquip_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 func (app *WasmClient) jsEquipCarryObj(this js.Value, args []js.Value) interface{} {
@@ -48,7 +48,7 @@ func (app *WasmClient) jsEquipCarryObj(this js.Value, args []js.Value) interface
 	go app.sendPacket(c2t_idcmd.Equip,
 		&c2t_obj.ReqEquip_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 func (app *WasmClient) jsDrinkPotion(this js.Value, args []js.Value) interface{} {
@@ -56,7 +56,7 @@ func (app *WasmClient) jsDrinkPotion(this js.Value, args []js.Value) interface{}
 	go app.sendPacket(c2t_idcmd.DrinkPotion,
 		&c2t_obj.ReqDrinkPotion_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 
@@ -65,7 +65,7 @@ func (app *WasmClient) jsReadScroll(this js.Value, args []js.Value) interface{} 
 	go app.sendPacket(c2t_idcmd.ReadScroll,
 		&c2t_obj.ReqReadScroll_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 
@@ -74,7 +74,7 @@ func (app *WasmClient) jsRecycleCarryObj(this js.Value, args []js.Value) interfa
 	go app.sendPacket(c2t_idcmd.Recycle,
 		&c2t_obj.ReqRecycle_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 func (app *WasmClient) jsDropCarryObj(this js.Value, args []js.Value) interface{} {
@@ -82,7 +82,7 @@ func (app *WasmClient) jsDropCarryObj(this js.Value, args []js.Value) interface{
 	go app.sendPacket(c2t_idcmd.Drop,
 		&c2t_obj.ReqDrop_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 
@@ -91,7 +91,7 @@ func (app *WasmClient) jsMove2Floor(this js.Value, args []js.Value) interface{} 
 	go app.sendPacket(c2t_idcmd.MoveFloor,
 		&c2t_obj.ReqMoveFloor_data{UUID: id},
 	)
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 
@@ -108,7 +108,7 @@ func (app *WasmClient) jsSendChat(this js.Value, args []js.Value) interface{} {
 	msg := getChatMsg()
 	go app.sendPacket(c2t_idcmd.Chat,
 		&c2t_obj.ReqChat_data{Chat: msg})
-	app.Focus2Canvas()
+	// app.Focus2Canvas()
 	return nil
 }
 
@@ -151,6 +151,43 @@ func (app *WasmClient) jsHandleMouseClickVP(this js.Value, args []js.Value) inte
 }
 
 func (app *WasmClient) makePathToMouseClick(mouseX, mouseY int) {
+	// switch gameOptions.GetByIDBase("Viewport").State {
+	// case 0: // play viewpot mode
+	// 	cf := app.currentFloor()
+	// 	if cf == nil {
+	// 		jslog.Error("no current floor")
+	// 		return
+	// 	}
+	// 	tand := app.taNotiData
+	// 	if tand == nil || cf.FloorInfo.UUID != tand.FloorUUID {
+	// 		jslog.Error("invalid floor x,y")
+	// 		return
+	// 	}
+	// 	flX, flY := gVP2d.CanvasXY2FloorXY(
+	// 		cf.XWrapSafe, cf.YWrapSafe,
+	// 		tand.VPX, tand.VPY,
+	// 		mouseX/gVP2d.CellSize, mouseY/gVP2d.CellSize)
+
+	// 	autoPlayButton := autoActs.GetByIDBase("AutoPlay")
+	// 	if autoPlayButton.State == 0 {
+	// 		autoPlayButton.JSFn(js.Null(), nil)
+	// 	}
+	// 	playerX, playerY := app.GetPlayerXY()
+
+	// 	if playerX == flX && playerY == flY {
+	// 		app.tryEnterPortal(flX, flY)
+	// 	} else {
+	// 		newPath := cf.Tiles4PathFind.FindPath(
+	// 			flX, flY, playerX, playerY, gameconst.ViewPortWH)
+	// 		if newPath != nil {
+	// 			app.Path2dst = newPath
+	// 		}
+	// 		app.ClientColtrolMode = clientcontroltype.MoveToDest
+	// 		app.KeyDir = way9type.Center
+	// 		// fmt.Printf("move2dest [%v %v] to [%v %v] %v", playerX, playerY, floorX, flY, newPath)
+	// 	}
+	// case 1: // floor viewport mode
+	// }
 }
 
 func (app *WasmClient) tryEnterPortal(x, y int) {
@@ -220,6 +257,29 @@ func (app *WasmClient) jsHandleMouseMoveVP(this js.Value, args []js.Value) inter
 	return nil
 }
 func (app *WasmClient) actByMouseMove(mouseX, mouseY int) {
+	// // update mouse pos
+	// if gVP2d.CellSize == 0 {
+	// 	return
+	// }
+	// oldDir := app.MouseDir
+	// gVP2d.MouseX = mouseX
+	// gVP2d.MouseY = mouseY
+	// app.MouseDir = way9type.RemoteDxDy2Way9(
+	// 	(mouseX-gVP2d.ViewWidth/2)/gVP2d.CellSize,
+	// 	(mouseY-gVP2d.ViewHeight/2)/gVP2d.CellSize,
+	// )
+	// switch gameOptions.GetByIDBase("Viewport").State {
+	// case 0: // play viewpot mode
+	// 	if app.ClientColtrolMode == clientcontroltype.FollowMouse {
+	// 		if oldDir != app.MouseDir {
+	// 			app.sendMovePacketByInput(app.MouseDir)
+	// 		}
+	// 	}
+	// case 1: // floor viewport mode
+	// 	dir := app.MouseDir
+	// 	app.floorVPPosX += dir.Dx()
+	// 	app.floorVPPosY += dir.Dy()
+	// }
 }
 
 ///////////////////////////////////////////////////////
@@ -227,9 +287,9 @@ func (app *WasmClient) actByMouseMove(mouseX, mouseY int) {
 
 var jsInputTarget = js.Global().Get("body")
 
-func (app *WasmClient) Focus2Canvas() {
-	jsInputTarget.Call("focus")
-}
+// func (app *WasmClient) Focus2Canvas() {
+// 	jsInputTarget.Call("focus")
+// }
 
 func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
