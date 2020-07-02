@@ -49,5 +49,6 @@ func (vp *Viewport) Focus() {
 }
 
 func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []js.Value) interface{}) {
-	vp.CanvasGL.Call("addEventListener", evt, js.FuncOf(fn))
+	GetElementById("canvasglholder").Call("addEventListener", evt, js.FuncOf(fn))
+	// vp.CanvasGL.Call("addEventListener", evt, js.FuncOf(fn))
 }

@@ -316,8 +316,8 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 
 func (app *WasmClient) ResizeCanvas() {
 	win := js.Global().Get("window")
-	winW := win.Get("innerWidth").Float()
-	winH := win.Get("innerHeight").Float()
+	winW := win.Get("innerWidth").Float() - 4
+	winH := win.Get("innerHeight").Float() - 4
 
 	if gInitData.AccountInfo == nil { // title
 		app.vp.Resize(winW, winH/3)

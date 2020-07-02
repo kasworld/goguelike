@@ -27,7 +27,7 @@ import (
 const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
 	DstCellSize      = 32
-	HelperSize       = 1024.0
+	HelperSize       = DstCellSize * 32
 )
 
 var gInitData *clientinitdata.InitData = clientinitdata.New()
