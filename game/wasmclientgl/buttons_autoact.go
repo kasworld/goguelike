@@ -29,16 +29,49 @@ import (
 var autoActs = htmlbutton.NewButtonGroup("AutoActs",
 	[]*htmlbutton.HTMLButton{
 		// not client ai
-		htmlbutton.New("z", "AutoPlay", []string{"AutoPlay", "NoAutoPlay"}, "ServerAI on/off", cmdToggleServerAI, 0),
-		htmlbutton.New("x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"}, "auto rebirth on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("z", "AutoPlay", []string{"AutoPlay", "NoAutoPlay"},
+			"ServerAI on/off", cmdToggleServerAI, 0),
+		htmlbutton.New("x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"},
+			"auto rebirth on/off", cmdToggleAutoRebirth, 0),
 		// client ai
-		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoBattle"}, "Auto Battle on/off", btnFocus2Canvas, 0),
-		htmlbutton.New("v", "AutoPickup", []string{"AutoPickup", "NoAutoPickup"}, "Auto Pickup on/off", btnFocus2Canvas, 0),
-		htmlbutton.New("b", "AutoEquip", []string{"AutoEquip", "NoAutoEquip"}, "Auto Equip/Unequip on/off", btnFocus2Canvas, 0),
-		htmlbutton.New("n", "AutoUsePotionScroll", []string{"AutoUsePotionScroll", "NoAutoUsePotionScroll"}, "Auto Use Potion and Scroll on/off", btnFocus2Canvas, 0),
-		htmlbutton.New("m", "AutoRecyclePotionScroll", []string{"AutoRecyclePotionScroll", "NoAutoRecyclePotionScroll"}, "Auto Recycle Potion and Scroll on/off", btnFocus2Canvas, 0),
-		htmlbutton.New(",", "AutoRecycleEquip", []string{"AutoRecycleEquip", "NoAutoRecycleEquip"}, "Auto Recycle CarryObj on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoBattle"},
+			"Auto Battle on/off", cmdToggleAutoBattle, 0),
+		htmlbutton.New("v", "AutoPickup", []string{"AutoPickup", "NoAutoPickup"},
+			"Auto Pickup on/off", cmdToggleAutoPickup, 0),
+		htmlbutton.New("b", "AutoEquip", []string{"AutoEquip", "NoAutoEquip"},
+			"Auto Equip/Unequip on/off", cmdToggleAutoEquip, 0),
+		htmlbutton.New("n", "AutoUsePotionScroll", []string{"AutoUsePotionScroll", "NoAutoUsePotionScroll"},
+			"Auto Use Potion and Scroll on/off", cmdToggleAutoUsePotionScroll, 0),
+		htmlbutton.New("m", "AutoRecyclePotionScroll", []string{"AutoRecyclePotionScroll", "NoAutoRecyclePotionScroll"},
+			"Auto Recycle Potion and Scroll on/off", cmdToggleAutoRecyclePotionScroll, 0),
+		htmlbutton.New(",", "AutoRecycleEquip", []string{"AutoRecycleEquip", "NoAutoRecycleEquip"},
+			"Auto Recycle CarryObj on/off", cmdToggleAutoRecycleEquip, 0),
 	})
+
+func cmdToggleAutoRebirth(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
+
+func cmdToggleAutoBattle(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
+
+func cmdToggleAutoPickup(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
+
+func cmdToggleAutoEquip(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
+func cmdToggleAutoUsePotionScroll(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
+func cmdToggleAutoRecyclePotionScroll(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
+func cmdToggleAutoRecycleEquip(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
 
 var tryAutoActFn = []func(app *WasmClient, v *htmlbutton.HTMLButton) bool{
 	tryAutoPlay,

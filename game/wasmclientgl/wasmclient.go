@@ -26,7 +26,6 @@ import (
 	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
-	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
@@ -208,8 +207,6 @@ func (app *WasmClient) enterTower(towerindex int) {
 	jsdoc.Call("getElementById", "centerinfo").Set("style",
 		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
 
-	app.Focus2Canvas()
-
 	commandButtons.RegisterJSFn(app)
 	autoActs.RegisterJSFn(app)
 	gameOptions.RegisterJSFn(app)
@@ -346,16 +343,6 @@ func (app *WasmClient) ResizeCanvas() {
 		GetElementById("chattext").Get("style").Set("font-size", ftsize)
 		GetElementById("chatbutton").Get("style").Set("font-size", ftsize)
 	}
-}
-
-// for htmlbutton click fn
-func btnFocus2Canvas(obj interface{}, v *htmlbutton.HTMLButton) {
-	app, ok := obj.(*WasmClient)
-	if !ok {
-		jslog.Errorf("obj not app %v", obj)
-		return
-	}
-	app.Focus2Canvas()
 }
 
 func (app *WasmClient) getScrollDir() way9type.Way9Type {

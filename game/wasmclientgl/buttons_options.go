@@ -24,7 +24,7 @@ var gameOptions *htmlbutton.HTMLButtonGroup
 var _gameopt = htmlbutton.NewButtonGroup("Options",
 	[]*htmlbutton.HTMLButton{
 		htmlbutton.New("q", "LeftInfo", []string{"LeftInfoOff", "LeftInfoOn"},
-			"show/hide left info", btnFocus2Canvas, 1),
+			"show/hide left info", cmdLeftInfo, 1),
 		htmlbutton.New("w", "CenterInfo", []string{"HelpOff", "Highscore", "ClientInfo", "Help", "FactionInfo",
 			"CarryObjectInfo", "PotionInfo", "ScrollInfo", "MoneyColor",
 			"TileInfo", "ConditionInfo", "FieldObjInfo"},
@@ -39,6 +39,10 @@ var _gameopt = htmlbutton.NewButtonGroup("Options",
 		htmlbutton.New("y", "Sound", []string{"SoundOn", "SoundOff"},
 			"Sound on/off", cmdToggleSound, 1),
 	})
+
+func cmdLeftInfo(obj interface{}, v *htmlbutton.HTMLButton) {
+	v.Blur()
+}
 
 func (app *WasmClient) updateLeftInfo() {
 	v := gameOptions.GetByIDBase("LeftInfo")
