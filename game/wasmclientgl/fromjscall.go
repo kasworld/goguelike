@@ -15,8 +15,6 @@ import (
 	"strings"
 	"syscall/js"
 
-	"github.com/kasworld/gowasmlib/jslog"
-
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
@@ -235,8 +233,6 @@ func (app *WasmClient) Focus2Canvas() {
 
 func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
-	jslog.Info("jsHandleKeyDownVP1", evt.Get("target"))
-	jslog.Info("jsHandleKeyDownVP2", jsInputTarget)
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
 		evt.Call("preventDefault")
@@ -250,7 +246,6 @@ func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interfa
 	return nil
 }
 func (app *WasmClient) jsHandleKeyPressVP(this js.Value, args []js.Value) interface{} {
-	jslog.Info("jsHandleKeyPressVP")
 	evt := args[0]
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
@@ -295,7 +290,6 @@ func (app *WasmClient) actByKeyPressMap(kcode string) bool {
 }
 
 func (app *WasmClient) jsHandleKeyUpVP(this js.Value, args []js.Value) interface{} {
-	jslog.Info("jsHandleKeyUpVP")
 	evt := args[0]
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
