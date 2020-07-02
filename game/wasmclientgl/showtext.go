@@ -237,12 +237,12 @@ func (app *WasmClient) getDefenceBias() bias.Bias {
 	return rtn
 }
 
-var makeRecycleButton = `<button style="font-size: %vpx" onclick="recycle('%s')">Recycle</button> `
-var makeUnequipButton = `<button style="font-size: %vpx" onclick="unequip('%s')">Unequip</button> `
-var makeEquipButton = `<button style="font-size: %vpx" onclick="equip('%s')">Equip</button> `
-var makeDropButton = `<button style="font-size: %vpx" onclick="drop('%s')">Drop</button> `
-var makeDrinkPotionButton = `<button style="font-size: %vpx" onclick="drinkpotion('%s')">DrinkPotion</button> `
-var makeReadScrollButton = `<button style="font-size: %vpx" onclick="readscroll('%s')">ReadScroll</button> `
+var makeRecycleButton = `<button style="font-size: %vpx" onclick="recycle('%s')" id="%s" >Recycle</button> `
+var makeUnequipButton = `<button style="font-size: %vpx" onclick="unequip('%s')" id="%s" >Unequip</button> `
+var makeEquipButton = `<button style="font-size: %vpx" onclick="equip('%s')" id="%s" >Equip</button> `
+var makeDropButton = `<button style="font-size: %vpx" onclick="drop('%s')" id="%s" >Drop</button> `
+var makeDrinkPotionButton = `<button style="font-size: %vpx" onclick="drinkpotion('%s')" id="%s" >DrinkPotion</button> `
+var makeReadScrollButton = `<button style="font-size: %vpx" onclick="readscroll('%s')" id="%s" >ReadScroll</button> `
 
 func (app *WasmClient) makeInvenInfoHTML() string {
 
@@ -279,10 +279,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			"%v %v(%v)", pt.String(), pt.Rune(), v.Count)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeDrinkPotionButton, ftSize, v.UUID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeDrinkPotionButton, ftSize, v.UUID, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID, v.UUID)
 		buf.WriteString("<br/>")
 	}
 	scrollType2info := make([]struct {
@@ -308,10 +308,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			"%v %v(%v)", st.String(), st.Rune(), v.Count)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeReadScrollButton, ftSize, v.UUID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeReadScrollButton, ftSize, v.UUID, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID, v.UUID)
 		buf.WriteString("<br/>")
 	}
 
@@ -326,10 +326,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			v.EquipType.Rune(), v.Faction.Rune(), v.BiasLen)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeUnequipButton, ftSize, v.UUID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeUnequipButton, ftSize, v.UUID, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID, v.UUID)
 		buf.WriteString("<br/>")
 	}
 
@@ -344,10 +344,10 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 			v.EquipType.Rune(), v.Faction.Rune(), v.BiasLen)
 		buf.WriteString(poStr)
 		if canRecycle {
-			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID)
+			fmt.Fprintf(&buf, makeRecycleButton, ftSize, v.UUID, v.UUID)
 		}
-		fmt.Fprintf(&buf, makeEquipButton, ftSize, v.UUID)
-		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID)
+		fmt.Fprintf(&buf, makeEquipButton, ftSize, v.UUID, v.UUID)
+		fmt.Fprintf(&buf, makeDropButton, ftSize, v.UUID, v.UUID)
 		buf.WriteString("<br/>")
 	}
 	return buf.String()

@@ -40,7 +40,7 @@ func (app *WasmClient) jsUnequipCarryObj(this js.Value, args []js.Value) interfa
 	go app.sendPacket(c2t_idcmd.UnEquip,
 		&c2t_obj.ReqUnEquip_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 func (app *WasmClient) jsEquipCarryObj(this js.Value, args []js.Value) interface{} {
@@ -48,7 +48,7 @@ func (app *WasmClient) jsEquipCarryObj(this js.Value, args []js.Value) interface
 	go app.sendPacket(c2t_idcmd.Equip,
 		&c2t_obj.ReqEquip_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 func (app *WasmClient) jsDrinkPotion(this js.Value, args []js.Value) interface{} {
@@ -56,7 +56,7 @@ func (app *WasmClient) jsDrinkPotion(this js.Value, args []js.Value) interface{}
 	go app.sendPacket(c2t_idcmd.DrinkPotion,
 		&c2t_obj.ReqDrinkPotion_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 
@@ -65,7 +65,7 @@ func (app *WasmClient) jsReadScroll(this js.Value, args []js.Value) interface{} 
 	go app.sendPacket(c2t_idcmd.ReadScroll,
 		&c2t_obj.ReqReadScroll_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 
@@ -74,7 +74,7 @@ func (app *WasmClient) jsRecycleCarryObj(this js.Value, args []js.Value) interfa
 	go app.sendPacket(c2t_idcmd.Recycle,
 		&c2t_obj.ReqRecycle_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 func (app *WasmClient) jsDropCarryObj(this js.Value, args []js.Value) interface{} {
@@ -82,7 +82,7 @@ func (app *WasmClient) jsDropCarryObj(this js.Value, args []js.Value) interface{
 	go app.sendPacket(c2t_idcmd.Drop,
 		&c2t_obj.ReqDrop_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 
@@ -91,7 +91,7 @@ func (app *WasmClient) jsMove2Floor(this js.Value, args []js.Value) interface{} 
 	go app.sendPacket(c2t_idcmd.MoveFloor,
 		&c2t_obj.ReqMoveFloor_data{UUID: id},
 	)
-	// app.Focus2Canvas()
+	GetElementById(id).Call("blur")
 	return nil
 }
 
@@ -110,7 +110,6 @@ func (app *WasmClient) jsSendChat(this js.Value, args []js.Value) interface{} {
 		&c2t_obj.ReqChat_data{Chat: msg})
 	GetElementById("chatbutton").Call("blur")
 	GetElementById("chattext").Call("blur")
-	// app.Focus2Canvas()
 	return nil
 }
 
@@ -288,10 +287,6 @@ func (app *WasmClient) actByMouseMove(mouseX, mouseY int) {
 // keyboard handle
 
 var jsInputTarget = js.Global().Get("body")
-
-// func (app *WasmClient) Focus2Canvas() {
-// 	jsInputTarget.Call("focus")
-// }
 
 func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
