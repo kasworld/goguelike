@@ -195,16 +195,15 @@ func (app *WasmClient) makeButtons() string {
 func (app *WasmClient) enterTower(towerindex int) {
 	gInitData.TowerIndex = towerindex
 
-	jsdoc := js.Global().Get("document")
-	jsobj.Hide(jsdoc.Call("getElementById", "titleform"))
+	jsobj.Hide(GetElementById("titleform"))
 	GetElementById("centerinfo").Set("innerHTML", "")
-	jsobj.Show(jsdoc.Call("getElementById", "cmdrow"))
+	jsobj.Show(GetElementById("cmdrow"))
 
-	jsdoc.Call("getElementById", "leftinfo").Set("style",
+	GetElementById("leftinfo").Set("style",
 		"color: white; position: fixed; top: 0; left: 0; overflow: hidden;")
-	jsdoc.Call("getElementById", "rightinfo").Set("style",
+	GetElementById("rightinfo").Set("style",
 		"color: white; position: fixed; top: 0; right: 0; overflow: hidden; text-align: right;")
-	jsdoc.Call("getElementById", "centerinfo").Set("style",
+	GetElementById("centerinfo").Set("style",
 		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden;")
 
 	commandButtons.RegisterJSFn(app)
@@ -214,7 +213,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 	if err := gameOptions.SetFromURLArg(); err != nil {
 		jslog.Errorf(err.Error())
 	}
-	jsdoc.Call("getElementById", "cmdbuttons").Set("innerHTML",
+	GetElementById("cmdbuttons").Set("innerHTML",
 		app.makeButtons())
 
 	app.reset2Default()
