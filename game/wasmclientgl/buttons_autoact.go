@@ -72,7 +72,7 @@ func cmdToggleServerAI(obj interface{}, v *htmlbutton.HTMLButton) {
 		app.systemMessage.Append("AutoPlayOff")
 		// app.vp.NotiMessage.AppendTf(tcsInfo, "AutoPlayOff")
 	}
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func tryAutoRebirth(app *WasmClient, v *htmlbutton.HTMLButton) bool {

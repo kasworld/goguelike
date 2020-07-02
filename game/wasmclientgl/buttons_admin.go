@@ -50,7 +50,7 @@ func adminCmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {
 			Y: 0,
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 func adminCmdIncExp(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
@@ -64,7 +64,7 @@ func adminCmdIncExp(obj interface{}, v *htmlbutton.HTMLButton) {
 			Arg: getChatMsg(),
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 func adminCmdFloorBefore(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
@@ -77,7 +77,7 @@ func adminCmdFloorBefore(obj interface{}, v *htmlbutton.HTMLButton) {
 			Floor: "Before",
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 func adminCmdFloorNext(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
@@ -90,7 +90,7 @@ func adminCmdFloorNext(obj interface{}, v *htmlbutton.HTMLButton) {
 			Floor: "Next",
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func adminCmdPotion(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -105,7 +105,7 @@ func adminCmdPotion(obj interface{}, v *htmlbutton.HTMLButton) {
 			Arg: getChatMsg(),
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func adminCmdScroll(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -120,7 +120,7 @@ func adminCmdScroll(obj interface{}, v *htmlbutton.HTMLButton) {
 			Arg: getChatMsg(),
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func adminCmdCondition(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -135,5 +135,5 @@ func adminCmdCondition(obj interface{}, v *htmlbutton.HTMLButton) {
 			Arg: getChatMsg(),
 		},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }

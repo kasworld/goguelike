@@ -358,10 +358,6 @@ func btnFocus2Canvas(obj interface{}, v *htmlbutton.HTMLButton) {
 	app.Focus2Canvas()
 }
 
-func (app *WasmClient) Focus2Canvas() {
-	app.vp.Focus()
-}
-
 func (app *WasmClient) getScrollDir() way9type.Way9Type {
 	scrollDir := way9type.Center
 	if pao, exist := app.AOUUID2AOClient[gInitData.AccountInfo.ActiveObjUUID]; exist {

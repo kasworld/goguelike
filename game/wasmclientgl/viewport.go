@@ -43,12 +43,3 @@ func (vp *Viewport) Resize(w, h float64) {
 	vp.CanvasGL.Call("setAttribute", "height", h)
 	vp.renderer.Call("setSize", w, h)
 }
-
-func (vp *Viewport) Focus() {
-	vp.CanvasGL.Call("focus")
-}
-
-func (vp *Viewport) AddEventListener(evt string, fn func(this js.Value, args []js.Value) interface{}) {
-	GetElementById("canvasglholder").Call("addEventListener", evt, js.FuncOf(fn))
-	// vp.CanvasGL.Call("addEventListener", evt, js.FuncOf(fn))
-}

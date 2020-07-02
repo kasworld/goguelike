@@ -93,6 +93,14 @@ func (v HTMLButton) Hide() {
 	v.JSButton().Get("style").Set("display", "none")
 }
 
+func (v HTMLButton) Focus() {
+	v.JSButton().Call("focus")
+}
+
+func (v HTMLButton) Blur() {
+	v.JSButton().Call("blur")
+}
+
 type HTMLButtonGroup struct {
 	Name           string
 	ButtonList     []*HTMLButton

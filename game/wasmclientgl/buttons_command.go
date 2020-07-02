@@ -37,7 +37,7 @@ func cmdKillSelf(obj interface{}, v *htmlbutton.HTMLButton) {
 	go app.sendPacket(c2t_idcmd.KillSelf,
 		&c2t_obj.ReqKillSelf_data{},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func cmdShowAchieve(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -47,7 +47,7 @@ func cmdShowAchieve(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 	go app.reqAchieveInfo()
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func cmdEnterPortal(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -59,7 +59,7 @@ func cmdEnterPortal(obj interface{}, v *htmlbutton.HTMLButton) {
 	go app.sendPacket(c2t_idcmd.EnterPortal,
 		&c2t_obj.ReqEnterPortal_data{},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func cmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -71,7 +71,7 @@ func cmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {
 	go app.sendPacket(c2t_idcmd.ActTeleport,
 		&c2t_obj.ReqActTeleport_data{},
 	)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func cmdRebirth(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -89,5 +89,5 @@ func cmdRebirth(obj interface{}, v *htmlbutton.HTMLButton) {
 			wrapspan.ColorText("OrangeRed",
 				"no need to rebirth"))
 	}
-	app.Focus2Canvas()
+	v.Blur()
 }

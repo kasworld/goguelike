@@ -59,7 +59,7 @@ func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 	app.updateCenterInfo()
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func (app *WasmClient) updateCenterInfo() {
@@ -102,7 +102,7 @@ func cmdRotateRightInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 	app.updateRightInfo()
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func (app *WasmClient) updateRightInfo() {
@@ -136,7 +136,7 @@ func cmdToggleVPFloorPlay(obj interface{}, v *htmlbutton.HTMLButton) {
 	case 1: // floor viewport mode
 		app.floorVPPosX, app.floorVPPosY = app.GetPlayerXY()
 	}
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -149,7 +149,7 @@ func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
 	// app.ResizeCanvas()
 	app.systemMessage.Appendf("Zoom%v", v.State)
 	// app.vp.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
-	app.Focus2Canvas()
+	v.Blur()
 }
 
 func cmdToggleSound(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -167,5 +167,5 @@ func cmdToggleSound(obj interface{}, v *htmlbutton.HTMLButton) {
 		app.systemMessage.Append("SoundOff")
 		// app.vp.NotiMessage.AppendTf(tcsInfo, "SoundOff")
 	}
-	app.Focus2Canvas()
+	v.Blur()
 }

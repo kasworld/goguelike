@@ -15,6 +15,8 @@ import (
 	"strings"
 	"syscall/js"
 
+	"github.com/kasworld/gowasmlib/jslog"
+
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
@@ -112,15 +114,23 @@ func (app *WasmClient) jsSendChat(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
+func AddEventListener(
+	dst js.Value,
+	evt string,
+	fn func(this js.Value, args []js.Value) interface{}) {
+	dst.Call("addEventListener", evt, js.FuncOf(fn))
+}
+
 func (app *WasmClient) registerKeyboardMouseEvent() {
-	app.vp.AddEventListener("click", app.jsHandleMouseClickVP)
-	app.vp.AddEventListener("mousemove", app.jsHandleMouseMoveVP)
-	app.vp.AddEventListener("mousedown", app.jsHandleMouseDownVP)
-	app.vp.AddEventListener("mouseup", app.jsHandleMouseUpVP)
-	app.vp.AddEventListener("contextmenu", app.jsHandleContextMenu)
-	app.vp.AddEventListener("keydown", app.jsHandleKeyDownVP)
-	app.vp.AddEventListener("keypress", app.jsHandleKeyPressVP)
-	app.vp.AddEventListener("keyup", app.jsHandleKeyUpVP)
+	dst := js.Global().Get("window")
+	AddEventListener(dst, "click", app.jsHandleMouseClickVP)
+	AddEventListener(dst, "mousemove", app.jsHandleMouseMoveVP)
+	AddEventListener(dst, "mousedown", app.jsHandleMouseDownVP)
+	AddEventListener(dst, "mouseup", app.jsHandleMouseUpVP)
+	AddEventListener(dst, "contextmenu", app.jsHandleContextMenu)
+	AddEventListener(dst, "keydown", app.jsHandleKeyDownVP)
+	AddEventListener(dst, "keypress", app.jsHandleKeyPressVP)
+	AddEventListener(dst, "keyup", app.jsHandleKeyUpVP)
 }
 
 func (app *WasmClient) jsHandleMouseClickVP(this js.Value, args []js.Value) interface{} {
@@ -214,18 +224,90 @@ func (app *WasmClient) jsHandleMouseMoveVP(this js.Value, args []js.Value) inter
 func (app *WasmClient) actByMouseMove(mouseX, mouseY int) {
 }
 
+///////////////////////////////////////////////////////
+// keyboard handle
+
+var jsInputTarget = js.Global().Get("body")
+
+func (app *WasmClient) Focus2Canvas() {
+	jsInputTarget.Call("focus")
+}
+
 func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interface{} {
+	evt := args[0]
+	jslog.Info("jsHandleKeyDownVP1", evt.Get("target"))
+	jslog.Info("jsHandleKeyDownVP2", jsInputTarget)
+	if evt.Get("target").Equal(jsInputTarget) {
+		evt.Call("stopPropagation")
+		evt.Call("preventDefault")
+
+		kcode := evt.Get("key").String()
+		if kcode != "" {
+			app.KeyboardPressedMap.KeyDown(kcode)
+		}
+		app.actByKeyPressMap(kcode)
+	}
 	return nil
 }
 func (app *WasmClient) jsHandleKeyPressVP(this js.Value, args []js.Value) interface{} {
+	jslog.Info("jsHandleKeyPressVP")
+	evt := args[0]
+	if evt.Get("target").Equal(jsInputTarget) {
+		evt.Call("stopPropagation")
+		evt.Call("preventDefault")
+
+		kcode := evt.Get("key").String()
+		app.actByKeyPressMap(kcode)
+	}
 	return nil
 }
 
 func (app *WasmClient) actByKeyPressMap(kcode string) bool {
+	oldDir := app.KeyDir
+	dx, dy := app.KeyboardPressedMap.SumMoveDxDy(Key2Dir)
+	app.KeyDir = way9type.RemoteDxDy2Way9(dx, dy)
+
+	switch gameOptions.GetByIDBase("Viewport").State {
+	case 0: // play viewpot mode
+		if app.KeyDir != way9type.Center {
+			app.ClientColtrolMode = clientcontroltype.Keyboard
+			app.Path2dst = nil
+			autoPlayButton := autoActs.GetByIDBase("AutoPlay")
+			if autoPlayButton.State == 0 {
+				autoPlayButton.JSFn(js.Null(), nil)
+			}
+			if oldDir != app.KeyDir {
+				app.sendMovePacketByInput(app.KeyDir)
+			}
+			return true
+		}
+	case 1: // floor viewport mode
+		if app.KeyDir != way9type.Center {
+			app.ClientColtrolMode = clientcontroltype.Keyboard
+			app.Path2dst = nil
+			dir := app.KeyDir
+			app.floorVPPosX += dir.Dx()
+			app.floorVPPosY += dir.Dy()
+			return true
+		}
+	}
 	return false
 }
 
 func (app *WasmClient) jsHandleKeyUpVP(this js.Value, args []js.Value) interface{} {
+	jslog.Info("jsHandleKeyUpVP")
+	evt := args[0]
+	if evt.Get("target").Equal(jsInputTarget) {
+		evt.Call("stopPropagation")
+		evt.Call("preventDefault")
+
+		kcode := evt.Get("key").String()
+		// jslog.Infof("%v %v", evt, kcode)
+		if kcode != "" {
+			app.KeyboardPressedMap.KeyUp(kcode)
+		}
+		app.processKeyUpEvent(kcode)
+	}
 	return nil
 }
 
