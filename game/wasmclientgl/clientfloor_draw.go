@@ -147,6 +147,7 @@ func (cf *ClientFloorGL) Draw(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
+	olNotiData *c2t_obj.NotiObjectList_data,
 ) {
 	zoom := gameOptions.GetByIDBase("Zoom").State
 	sx, sy := calcShiftDxDy(frameProgress)
@@ -170,7 +171,9 @@ func (cf *ClientFloorGL) Draw(
 	)
 
 	cf.PlaneSight.fillColor("#00000002")
-	cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
+	if olNotiData.ActiveObj.HP > 0 {
+		cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
+	}
 	cf.PlaneSight.Tex.Set("needsUpdate", true)
 }
 
