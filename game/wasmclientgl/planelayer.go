@@ -74,15 +74,16 @@ func NewPlaneLayer(fi *c2t_obj.FloorInfo, zpos int) *PlaneLayer {
 	}
 }
 
-func (pl *PlaneLayer) fillColor(co string) {
-	// pl.Ctx.Set("globalAlpha", 0.5)
+func (pl *PlaneLayer) FillColor(co string) {
 	pl.Ctx.Set("fillStyle", co)
 	pl.Ctx.Call("fillRect", 0, 0, pl.W, pl.H)
-	// pl.Ctx.Set("globalAlpha", 1)
-	// pl.Tex.Set("needsUpdate", true)
 }
 
-func (pl *PlaneLayer) clearSight(x, y int, vpTiles *viewportdata.ViewportTileArea2) {
+func (pl *PlaneLayer) ClearRect() {
+	pl.Ctx.Call("clearRect", 0, 0, pl.W, pl.H)
+}
+
+func (pl *PlaneLayer) ClearSight(x, y int, vpTiles *viewportdata.ViewportTileArea2) {
 	for i, v := range gInitData.ViewportXYLenList {
 		if vpTiles[i] == 0 {
 			continue

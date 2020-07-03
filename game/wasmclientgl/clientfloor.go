@@ -17,7 +17,6 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/tilearea"
@@ -155,7 +154,7 @@ func (cf *ClientFloorGL) String() string {
 
 func (cf *ClientFloorGL) UpdateFromViewportTile(
 	taNoti *c2t_obj.NotiVPTiles_data,
-	ViewportXYLenList findnear.XYLenList,
+	olNoti *c2t_obj.NotiObjectList_data,
 ) error {
 
 	if cf.FloorInfo.UUID != taNoti.FloorUUID {
@@ -165,7 +164,7 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 	}
 	cf.Visited.UpdateByViewport2(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
 
-	for i, v := range ViewportXYLenList {
+	for i, v := range gInitData.ViewportXYLenList {
 		fx := cf.XWrapSafe(v.X + taNoti.VPX)
 		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
 		if taNoti.VPTiles[i] != 0 {
@@ -175,6 +174,14 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 		}
 	}
 	cf.PlaneTile.Tex.Set("needsUpdate", true)
+
+	cf.PlaneSight.ClearRect()
+	cf.PlaneSight.FillColor("#000000a0")
+	if olNoti != nil && olNoti.ActiveObj.HP > 0 {
+		cf.PlaneSight.ClearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
+	}
+	cf.PlaneSight.Tex.Set("needsUpdate", true)
+
 	return nil
 }
 

@@ -143,11 +143,10 @@ func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
 	return rtn
 }
 
-func (cf *ClientFloorGL) Draw(
+func (cf *ClientFloorGL) UpdateFrame(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
-	olNotiData *c2t_obj.NotiObjectList_data,
 ) {
 	zoom := gameOptions.GetByIDBase("Zoom").State
 	sx, sy := calcShiftDxDy(frameProgress)
@@ -169,12 +168,6 @@ func (cf *ClientFloorGL) Draw(
 			cameraX, cameraY, 0,
 		),
 	)
-
-	cf.PlaneSight.fillColor("#00000002")
-	if olNotiData.ActiveObj.HP > 0 {
-		cf.PlaneSight.clearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
-	}
-	cf.PlaneSight.Tex.Set("needsUpdate", true)
 }
 
 func calcShiftDxDy(frameProgress float64) (int, int) {
@@ -353,7 +346,7 @@ func (cf *ClientFloorGL) makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.V
 	}
 	mat := GetTileMaterialByCache(ti)
 	geo := GetBoxGeometryByCache(
-		DstCellSize/4, DstCellSize/4, DstCellSize/4,
+		DstCellSize/3, DstCellSize/3, DstCellSize/3,
 	)
 
 	return ThreeJsNew("Mesh", geo, mat)

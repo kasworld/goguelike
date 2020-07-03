@@ -584,7 +584,7 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	}
 
 	oldComplete := cf.Visited.IsComplete()
-	if err := cf.UpdateFromViewportTile(app.taNotiData, gInitData.ViewportXYLenList); err != nil {
+	if err := cf.UpdateFromViewportTile(app.taNotiData, app.olNotiData); err != nil {
 		jslog.Warn("%v", err)
 		return nil
 	}
