@@ -262,41 +262,43 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			cf.jsSceneObjs[o.UUID] = mesh
 		}
 		mesh.Set("material", mat)
+
+		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
 		geo := mesh.Get("geometry")
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
-
-		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
 		SetPosition(
 			mesh,
 			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
 			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
 			(geoZmax-geoZmin)/2)
+
 		addUUID[o.UUID] = true
 	}
 
 	// make carryobj
 	for _, o := range olNoti.CarryObjList {
 		mesh, exist := cf.jsSceneObjs[o.UUID]
-		shInfo := carryObjClientOnFloor2DrawInfo(o)
 		if !exist {
 			mesh = cf.makeCarryObjMesh(o)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneObjs[o.UUID] = mesh
 		}
+
+		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
+		shInfo := carryObjClientOnFloor2DrawInfo(o)
 		geo := mesh.Get("geometry")
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
-
-		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
 		SetPosition(
 			mesh,
 			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
 			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
 			(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
 		)
+
 		addUUID[o.UUID] = true
 	}
 
