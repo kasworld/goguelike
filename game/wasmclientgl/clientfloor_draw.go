@@ -267,22 +267,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
 
-		// make fx,fy around vpx, vpy
-		fx, fy := o.X, o.Y
-		if abs.Absi(fx-vpx) > floorW/2 {
-			if fx > vpx {
-				fx -= floorW
-			} else {
-				fx += floorW
-			}
-		}
-		if abs.Absi(fy-vpy) > floorH/2 {
-			if fy > vpy {
-				fy -= floorH
-			} else {
-				fy += floorH
-			}
-		}
+		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
 		SetPosition(
 			mesh,
 			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
@@ -296,33 +281,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		mesh, exist := cf.jsSceneObjs[o.UUID]
 		shInfo := carryObjClientOnFloor2DrawInfo(o)
 		if !exist {
-			var ti webtilegroup.TileInfo
-			switch o.CarryingObjectType {
-			case carryingobjecttype.Equip:
-				ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
-			case carryingobjecttype.Money:
-				var find bool
-				for i, v := range moneycolor.Attrib {
-					if o.Value < v.UpLimit {
-						ti = gClientTile.GoldTiles[i]
-						find = true
-						break
-					}
-				}
-				if !find {
-					ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
-				}
-			case carryingobjecttype.Potion:
-				ti = gClientTile.PotionTiles[o.PotionType]
-			case carryingobjecttype.Scroll:
-				ti = gClientTile.ScrollTiles[o.ScrollType]
-			}
-			mat := GetTileMaterialByCache(ti)
-			geo := GetBoxGeometryByCache(
-				DstCellSize/4, DstCellSize/4, DstCellSize/4,
-			)
-
-			mesh = ThreeJsNew("Mesh", geo, mat)
+			mesh = cf.makeCarryObjMesh(o)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneObjs[o.UUID] = mesh
 		}
@@ -331,22 +290,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
 
-		// make fx,fy around vpx, vpy
-		fx, fy := o.X, o.Y
-		if abs.Absi(fx-vpx) > floorW/2 {
-			if fx > vpx {
-				fx -= floorW
-			} else {
-				fx += floorW
-			}
-		}
-		if abs.Absi(fy-vpy) > floorH/2 {
-			if fy > vpy {
-				fy -= floorH
-			} else {
-				fy += floorH
-			}
-		}
+		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
 		SetPosition(
 			mesh,
 			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
@@ -362,6 +306,55 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			delete(cf.jsSceneObjs, id)
 		}
 	}
+}
+
+// make fx,fy around vpx, vpy
+func (cf *ClientFloorGL) calcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
+	if abs.Absi(fx-vpx) > w/2 {
+		if fx > vpx {
+			fx -= w
+		} else {
+			fx += w
+		}
+	}
+	if abs.Absi(fy-vpy) > h/2 {
+		if fy > vpy {
+			fy -= h
+		} else {
+			fy += h
+		}
+	}
+	return fx, fy
+}
+
+func (cf *ClientFloorGL) makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
+	var ti webtilegroup.TileInfo
+	switch o.CarryingObjectType {
+	case carryingobjecttype.Equip:
+		ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
+	case carryingobjecttype.Money:
+		var find bool
+		for i, v := range moneycolor.Attrib {
+			if o.Value < v.UpLimit {
+				ti = gClientTile.GoldTiles[i]
+				find = true
+				break
+			}
+		}
+		if !find {
+			ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
+		}
+	case carryingobjecttype.Potion:
+		ti = gClientTile.PotionTiles[o.PotionType]
+	case carryingobjecttype.Scroll:
+		ti = gClientTile.ScrollTiles[o.ScrollType]
+	}
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(
+		DstCellSize/4, DstCellSize/4, DstCellSize/4,
+	)
+
+	return ThreeJsNew("Mesh", geo, mat)
 }
 
 func carryObjClientOnFloor2DrawInfo(
