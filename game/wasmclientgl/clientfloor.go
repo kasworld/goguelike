@@ -154,8 +154,7 @@ func (cf *ClientFloorGL) String() string {
 
 func (cf *ClientFloorGL) UpdateFromViewportTile(
 	taNoti *c2t_obj.NotiVPTiles_data,
-	olNoti *c2t_obj.NotiObjectList_data,
-) error {
+	olNoti *c2t_obj.NotiObjectList_data) error {
 
 	if cf.FloorInfo.UUID != taNoti.FloorUUID {
 		return fmt.Errorf("vptile data floor not match %v %v",
