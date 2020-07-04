@@ -240,11 +240,11 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	addUUID := make(map[string]bool)
 
 	// make activeobj
-	for _, o := range olNoti.ActiveObjList {
-		mesh, exist := cf.jsSceneObjs[o.UUID]
-		tlList := gClientTile.CharTiles[o.Faction]
+	for _, ao := range olNoti.ActiveObjList {
+		mesh, exist := cf.jsSceneObjs[ao.UUID]
+		tlList := gClientTile.CharTiles[ao.Faction]
 		ti := tlList[0]
-		if !o.Alive {
+		if !ao.Alive {
 			ti = tlList[1]
 		}
 		mat := GetTileMaterialByCache(ti)
@@ -252,11 +252,11 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 			mesh = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", mesh)
-			cf.jsSceneObjs[o.UUID] = mesh
+			cf.jsSceneObjs[ao.UUID] = mesh
 		}
 		mesh.Set("material", mat)
 
-		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
+		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		geo := mesh.Get("geometry")
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
@@ -267,20 +267,43 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
 			(geoZmax-geoZmin)/2)
 
-		addUUID[o.UUID] = true
+		addUUID[ao.UUID] = true
+
+		for _, eqo := range ao.EquippedPo {
+			mesh, exist := cf.jsSceneObjs[eqo.UUID]
+			if !exist {
+				mesh = cf.makeEquipedMesh(eqo)
+				cf.scene.Call("add", mesh)
+				cf.jsSceneObjs[eqo.UUID] = mesh
+			}
+
+			fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
+			shInfo := aoeqposShift[eqo.EquipType]
+			geo := mesh.Get("geometry")
+			geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+			geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+			geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+			SetPosition(
+				mesh,
+				float64(fx)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
+				-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
+				(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
+			)
+			addUUID[eqo.UUID] = true
+		}
 	}
 
 	// make carryobj
-	for _, o := range olNoti.CarryObjList {
-		mesh, exist := cf.jsSceneObjs[o.UUID]
+	for _, cro := range olNoti.CarryObjList {
+		mesh, exist := cf.jsSceneObjs[cro.UUID]
 		if !exist {
-			mesh = cf.makeCarryObjMesh(o)
+			mesh = cf.makeCarryObjMesh(cro)
 			cf.scene.Call("add", mesh)
-			cf.jsSceneObjs[o.UUID] = mesh
+			cf.jsSceneObjs[cro.UUID] = mesh
 		}
 
-		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, o.X, o.Y)
-		shInfo := carryObjClientOnFloor2DrawInfo(o)
+		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
+		shInfo := carryObjClientOnFloor2DrawInfo(cro)
 		geo := mesh.Get("geometry")
 		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
@@ -292,7 +315,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
 		)
 
-		addUUID[o.UUID] = true
+		addUUID[cro.UUID] = true
 	}
 
 	for id, mesh := range cf.jsSceneObjs {
@@ -322,6 +345,15 @@ func (cf *ClientFloorGL) calcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
 	return fx, fy
 }
 
+func (cf *ClientFloorGL) makeEquipedMesh(o *c2t_obj.EquipClient) js.Value {
+	ti := gClientTile.EquipTiles[o.EquipType][o.Faction]
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(
+		DstCellSize/3, DstCellSize/3, DstCellSize/3,
+	)
+	return ThreeJsNew("Mesh", geo, mat)
+}
+
 func (cf *ClientFloorGL) makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
 	var ti webtilegroup.TileInfo
 	switch o.CarryingObjectType {
@@ -348,7 +380,6 @@ func (cf *ClientFloorGL) makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.V
 	geo := GetBoxGeometryByCache(
 		DstCellSize/3, DstCellSize/3, DstCellSize/3,
 	)
-
 	return ThreeJsNew("Mesh", geo, mat)
 }
 
@@ -366,6 +397,20 @@ type coShift struct {
 	X float64
 	Y float64
 	Z float64
+}
+
+var aoeqposShift = [equipslottype.EquipSlotType_Count]coShift{
+	equipslottype.Helmet: {-0.33, 0.0, 0.66},
+	equipslottype.Amulet: {1.00, 0.0, 0.66},
+
+	equipslottype.Weapon: {-0.33, 0.25, 0.66},
+	equipslottype.Shield: {1.00, 0.25, 0.66},
+
+	equipslottype.Ring:     {-0.33, 0.50, 0.66},
+	equipslottype.Gauntlet: {1.00, 0.50, 0.66},
+
+	equipslottype.Armor:    {-0.33, 0.75, 0.66},
+	equipslottype.Footwear: {1.00, 0.75, 0.66},
 }
 
 var eqposShift = [equipslottype.EquipSlotType_Count]coShift{
