@@ -172,12 +172,12 @@ func (cf *ClientFloorGL) UpdateFrame(
 
 func calcShiftDxDy(frameProgress float64) (int, int) {
 	rate := 1 - frameProgress
-	// if rate < 0 {
-	// 	rate = 0
-	// }
-	// if rate > 1 {
-	// 	rate = 1
-	// }
+	if rate < 0 {
+		rate = 0
+	}
+	if rate > 1 {
+		rate = 1
+	}
 	dx := int(float64(DstCellSize) * rate)
 	dy := int(float64(DstCellSize) * rate)
 	return dx, dy
