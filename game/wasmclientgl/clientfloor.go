@@ -88,7 +88,6 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	axisHelper := ThreeJsNew("AxesHelper", axisSize*DstCellSize)
 	cf.scene.Call("add", axisHelper)
 
-	// set title camera pos
 	SetPosition(cf.camera,
 		HelperSize/2, HelperSize/2, HelperSize,
 	)
