@@ -43,7 +43,6 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	PlaneTile  *PlaneLayer
 	PlaneSight *PlaneLayer
 
 	camera      js.Value
@@ -72,7 +71,6 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 
-	cf.PlaneTile = NewPlaneLayer(fi, 0)
 	cf.PlaneSight = NewPlaneLayer(fi, DstCellSize)
 
 	cf.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
@@ -102,7 +100,6 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	)
 	cf.camera.Call("updateProjectionMatrix")
 
-	cf.scene.Call("add", cf.PlaneTile.Mesh)
 	cf.scene.Call("add", cf.PlaneSight.Mesh)
 
 	return &cf
@@ -140,7 +137,6 @@ func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
-	cf.PlaneTile.Tex.Set("needsUpdate", true)
 	cf.Tiles = fta.Tiles
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	return
@@ -175,7 +171,6 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 			cf.Tiles[fx][fy] = taNoti.VPTiles[i]
 		}
 	}
-	cf.PlaneTile.Tex.Set("needsUpdate", true)
 
 	cf.PlaneSight.ClearRect()
 	cf.PlaneSight.FillColor("#000000a0")

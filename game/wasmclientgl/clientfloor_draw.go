@@ -30,12 +30,15 @@ import (
 
 // fx,fy wrapped, no need wrap again
 func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
-	dstX := fx * DstCellSize
-	dstY := fy * DstCellSize
 	oldTile := cf.Tiles[fx][fy]
 
 	for _, tl := range []tile.Tile{
-		tile.Tree, tile.Grass, tile.Wall, tile.Door, tile.Window} {
+		tile.Tree, tile.Grass,
+		tile.Wall, tile.Door, tile.Window,
+		tile.Swamp, tile.Soil, tile.Stone, tile.Sand, tile.Sea,
+		tile.Magma, tile.Ice, tile.Road, tile.Room,
+		tile.Fog, tile.Smoke,
+	} {
 		if oldTile.TestByTile(tl) && !newTile.TestByTile(tl) {
 			// del from scene
 			v := cf.jsScene9Tile3D[tl][[2]int{fx, fy}]
@@ -96,7 +99,9 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			}
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
-				mat := GetTextureTileMaterialByCache(tile.Fog)
+				ti := gClientTile.CursorTiles[0]
+				mat := GetTileMaterialByCache(ti)
+				// mat := GetTextureTileMaterialByCache(tile.Fog)
 				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
@@ -126,15 +131,33 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			tile.Magma,
 			tile.Ice,
 			tile.Road,
-			tile.Room,
+			tile.Room:
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
+			}
+			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+			if !exist {
+				mat := GetTextureTileMaterialByCache(tlt)
+				geo := GetPlaneGeometryByCache(DstCellSize, DstCellSize)
+				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+			}
+			cf.scene.Call("add", mesh)
+
+		case
 			tile.Fog,
 			tile.Smoke:
-			// texture tile
-			tlic := gTextureTileList[i]
-			srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, 0, 0)
-			cf.PlaneTile.Ctx.Call("drawImage", tlic.Cnv,
-				srcx, srcy, srcCellSize, srcCellSize,
-				dstX, dstY, DstCellSize, DstCellSize)
+			if oldTile.TestByTile(tlt) {
+				continue // skip exist
+			}
+			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+			if !exist {
+				mat := GetTextureTileMaterialByCache(tlt)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+			}
+			cf.scene.Call("add", mesh)
 
 		}
 	}
