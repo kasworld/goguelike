@@ -168,6 +168,17 @@ func GetBoxGeometryByCache(x, y, z int) js.Value {
 	return geo
 }
 
+var gPlaneGeometryCache map[[2]int]js.Value = make(map[[2]int]js.Value)
+
+func GetPlaneGeometryByCache(w, h int) js.Value {
+	geo, exist := gPlaneGeometryCache[[2]int{w, h}]
+	if !exist {
+		geo = ThreeJsNew("PlaneGeometry", w, h)
+		gPlaneGeometryCache[[2]int{w, h}] = geo
+	}
+	return geo
+}
+
 var gConeGeometryCache map[[2]int]js.Value = make(map[[2]int]js.Value)
 
 func GetConeGeometryByCache(r, h int) js.Value {
