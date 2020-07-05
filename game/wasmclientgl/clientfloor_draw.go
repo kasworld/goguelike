@@ -35,15 +35,13 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	oldTile := cf.Tiles[fx][fy]
 	if oldTile.TestByTile(tile.Tree) && !newTile.TestByTile(tile.Tree) {
 		// del tree from scene
-		for _, v := range cf.jsSceneTreeObjs[[2]int{fx, fy}] {
-			cf.scene.Call("remove", v)
-		}
+		v := cf.jsSceneTreeObjs[[2]int{fx, fy}]
+		cf.scene.Call("remove", v)
 	}
 	if oldTile.TestByTile(tile.Grass) && !newTile.TestByTile(tile.Grass) {
 		// del grass from scene
-		for _, v := range cf.jsSceneGrassObjs[[2]int{fx, fy}] {
-			cf.scene.Call("remove", v)
-		}
+		v := cf.jsSceneGrassObjs[[2]int{fx, fy}]
+		cf.scene.Call("remove", v)
 	}
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
@@ -60,7 +58,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			}
 			mat := GetTextureTileMaterialByCache(tile.Grass)
 			geo := GetConeGeometryByCache(DstCellSize/2-1, DstCellSize-1)
-			addedTrees := cf.add9TileAt(mat, geo, fx, fy)
+			addedTrees := cf.add9InstancedMeshAt(mat, geo, fx, fy)
 			cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
 
 		case tile.Grass:
@@ -69,7 +67,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			}
 			mat := GetTextureTileMaterialByCache(tile.Grass)
 			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize/8)
-			addedGrasss := cf.add9TileAt(mat, geo, fx, fy)
+			addedGrasss := cf.add9InstancedMeshAt(mat, geo, fx, fy)
 			cf.jsSceneGrassObjs[[2]int{fx, fy}] = addedGrasss
 
 		case
@@ -117,6 +115,32 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 
 		}
 	}
+}
+
+func (cf *ClientFloorGL) add9InstancedMeshAt(
+	mat, geo js.Value, fx, fy int) js.Value {
+	w := cf.XWrapper.GetWidth()
+	h := cf.YWrapper.GetWidth()
+	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+	mesh := ThreeJsNew("InstancedMesh", geo, mat, 9)
+	matrix := ThreeJsNew("Matrix4")
+	for i := 0; i < way9type.Way9Type_Count; i++ {
+		dx, dy := way9type.Way9Type(i).DxDy()
+		x := fx + dx*w
+		y := fy + dy*h
+		matrix.Call("setPosition",
+			ThreeJsNew("Vector3",
+				float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+				-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+				(geoZmax-geoZmin)/2,
+			),
+		)
+		mesh.Call("setMatrixAt", i, matrix)
+	}
+	cf.scene.Call("add", mesh)
+	return mesh
 }
 
 func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
