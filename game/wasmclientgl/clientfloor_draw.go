@@ -59,7 +59,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 				continue // skip exist
 			}
 			mat := GetTextureTileMaterialByCache(tile.Grass)
-			geo := GetConeGeometryByCache(DstCellSize/2, DstCellSize)
+			geo := GetConeGeometryByCache(DstCellSize/2-1, DstCellSize-1)
 			addedTrees := cf.add9TileAt(mat, geo, fx, fy)
 			cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
 
@@ -217,7 +217,8 @@ func (cf *ClientFloorGL) addFieldObjAt(
 	ti := tlList[tilediff%len(tlList)]
 
 	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
+	// geo := GetSphereGeometryByCache(DstCellSize/2, DstCellSize, DstCellSize)
+	geo := GetBoxGeometryByCache(DstCellSize-1, DstCellSize-1, DstCellSize-1)
 	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)

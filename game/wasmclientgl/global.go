@@ -180,6 +180,18 @@ func GetConeGeometryByCache(r, h int) js.Value {
 	return geo
 }
 
+var gSphereGeometryCache map[[3]int]js.Value = make(map[[3]int]js.Value)
+
+func GetSphereGeometryByCache(r, ws, hs int) js.Value {
+	geo, exist := gSphereGeometryCache[[3]int{r, ws, hs}]
+	if !exist {
+		geo = ThreeJsNew("SphereGeometry", r, ws, hs)
+		// geo.Call("rotateX", math.Pi)
+		gSphereGeometryCache[[3]int{r, ws, hs}] = geo
+	}
+	return geo
+}
+
 func CalcGeoMinMaxX(geo js.Value) (float64, float64) {
 	geo.Call("computeBoundingBox")
 	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
