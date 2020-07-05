@@ -63,7 +63,8 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tile.Grass)
 				geo := GetConeGeometryByCache(DstCellSize/2-1, DstCellSize-1)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -75,8 +76,10 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tile.Grass)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize/8)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				geo := GetBoxGeometryByCache(
+					DstCellSize, DstCellSize, DstCellSize/8)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -88,8 +91,10 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tile.Stone)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				geo := GetBoxGeometryByCache(
+					DstCellSize, DstCellSize, DstCellSize)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -101,8 +106,10 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			if !exist {
 				ti := gClientTile.CursorTiles[2]
 				mat := GetTileMaterialByCache(ti)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				geo := GetBoxGeometryByCache(
+					DstCellSize, DstCellSize, DstCellSize)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -115,8 +122,10 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 				tlList := gClientTile.FloorTiles[tile.Door]
 				ti := tlList[0]
 				mat := GetTileMaterialByCache(ti)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				geo := GetBoxGeometryByCache(
+					DstCellSize, DstCellSize, DstCellSize)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -138,7 +147,8 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tlt)
 				geo := GetPlaneGeometryByCache(DstCellSize, DstCellSize)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -152,8 +162,11 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tlt)
-				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				// geo := GetPlaneGeometryByCache(DstCellSize, DstCellSize)
+				geo := GetBoxGeometryByCache(
+					DstCellSize, DstCellSize, DstCellSize)
+				mesh = cf.make9InstancedMeshAt(
+					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 			}
 			cf.scene.Call("add", mesh)
@@ -163,7 +176,9 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 }
 
 func (cf *ClientFloorGL) make9InstancedMeshAt(
-	mat, geo js.Value, fx, fy int) js.Value {
+	mat, geo js.Value, fx, fy int,
+	sx, sy, sz float64,
+) js.Value {
 	w := cf.XWrapper.GetWidth()
 	h := cf.YWrapper.GetWidth()
 	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
@@ -177,37 +192,14 @@ func (cf *ClientFloorGL) make9InstancedMeshAt(
 		y := fy + dy*h
 		matrix.Call("setPosition",
 			ThreeJsNew("Vector3",
-				float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
-				-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
-				(geoZmax-geoZmin)/2,
+				sx+float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+				-sy+-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+				sz+(geoZmax-geoZmin)/2,
 			),
 		)
 		mesh.Call("setMatrixAt", i, matrix)
 	}
 	return mesh
-}
-
-func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
-	w := cf.XWrapper.GetWidth()
-	h := cf.YWrapper.GetWidth()
-	rtn := make([]js.Value, 0, 9)
-	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
-	for i := 0; i < way9type.Way9Type_Count; i++ {
-		dx, dy := way9type.Way9Type(i).DxDy()
-		mesh := ThreeJsNew("Mesh", geo, mat)
-		x := fx + dx*w
-		y := fy + dy*h
-		SetPosition(
-			mesh,
-			float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
-			-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
-			(geoZmax-geoZmin)/2)
-		cf.scene.Call("add", mesh)
-		rtn = append(rtn, mesh)
-	}
-	return rtn
 }
 
 func (cf *ClientFloorGL) UpdateFrame(

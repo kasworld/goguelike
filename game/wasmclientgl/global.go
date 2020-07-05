@@ -75,6 +75,7 @@ func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
 			},
 		)
 		mat.Set("transparent", true)
+		// mat.Set("side", ThreeJs().Get("DoubleSide"))
 		gTileMaterialCache[ti] = mat
 	}
 	return mat
@@ -103,6 +104,7 @@ func GetTextureTileMaterialByCache(ti tile.Tile) js.Value {
 			},
 		)
 		mat.Set("transparent", true)
+		// mat.Set("side", ThreeJs().Get("DoubleSide"))
 		gTextureTileMaterialCache[ti] = mat
 	}
 	return mat
