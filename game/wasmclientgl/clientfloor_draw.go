@@ -33,16 +33,15 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	dstX := fx * DstCellSize
 	dstY := fy * DstCellSize
 	oldTile := cf.Tiles[fx][fy]
-	if oldTile.TestByTile(tile.Tree) && !newTile.TestByTile(tile.Tree) {
-		// del tree from scene
-		v := cf.jsSceneTreeObjs[[2]int{fx, fy}]
-		cf.scene.Call("remove", v)
+
+	for _, tl := range []tile.Tile{tile.Tree, tile.Grass} {
+		if oldTile.TestByTile(tl) && !newTile.TestByTile(tl) {
+			// del from scene
+			v := cf.jsScene9Tile3D[tl][[2]int{fx, fy}]
+			cf.scene.Call("remove", v)
+		}
 	}
-	if oldTile.TestByTile(tile.Grass) && !newTile.TestByTile(tile.Grass) {
-		// del grass from scene
-		v := cf.jsSceneGrassObjs[[2]int{fx, fy}]
-		cf.scene.Call("remove", v)
-	}
+
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
 		if !newTile.TestByTile(tlt) {
@@ -56,38 +55,27 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			if oldTile.TestByTile(tlt) {
 				continue // skip exist
 			}
-			mat := GetTextureTileMaterialByCache(tile.Grass)
-			geo := GetConeGeometryByCache(DstCellSize/2-1, DstCellSize-1)
-			addedTrees := cf.add9InstancedMeshAt(mat, geo, fx, fy)
-			cf.jsSceneTreeObjs[[2]int{fx, fy}] = addedTrees
+			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+			if !exist {
+				mat := GetTextureTileMaterialByCache(tile.Grass)
+				geo := GetConeGeometryByCache(DstCellSize/2-1, DstCellSize-1)
+				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+			}
+			cf.scene.Call("add", mesh)
 
 		case tile.Grass:
 			if oldTile.TestByTile(tlt) {
 				continue // skip exist
 			}
-			mat := GetTextureTileMaterialByCache(tile.Grass)
-			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize/8)
-			addedGrasss := cf.add9InstancedMeshAt(mat, geo, fx, fy)
-			cf.jsSceneGrassObjs[[2]int{fx, fy}] = addedGrasss
-
-		case
-			tile.Swamp,
-			tile.Soil,
-			tile.Stone,
-			tile.Sand,
-			tile.Sea,
-			tile.Magma,
-			tile.Ice,
-			tile.Road,
-			tile.Room,
-			tile.Fog,
-			tile.Smoke:
-			// texture tile
-			tlic := gTextureTileList[i]
-			srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, 0, 0)
-			cf.PlaneTile.Ctx.Call("drawImage", tlic.Cnv,
-				srcx, srcy, srcCellSize, srcCellSize,
-				dstX, dstY, DstCellSize, DstCellSize)
+			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+			if !exist {
+				mat := GetTextureTileMaterialByCache(tile.Grass)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize/8)
+				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
+				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+			}
+			cf.scene.Call("add", mesh)
 
 		case tile.Wall:
 			if oldTile.TestByTile(tlt) {
@@ -113,11 +101,30 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 			cf.add9TileAt(mat, geo, fx, fy)
 
+		case
+			tile.Swamp,
+			tile.Soil,
+			tile.Stone,
+			tile.Sand,
+			tile.Sea,
+			tile.Magma,
+			tile.Ice,
+			tile.Road,
+			tile.Room,
+			tile.Fog,
+			tile.Smoke:
+			// texture tile
+			tlic := gTextureTileList[i]
+			srcx, srcy, srcCellSize := gTextureTileList[i].CalcSrc(fx, fy, 0, 0)
+			cf.PlaneTile.Ctx.Call("drawImage", tlic.Cnv,
+				srcx, srcy, srcCellSize, srcCellSize,
+				dstX, dstY, DstCellSize, DstCellSize)
+
 		}
 	}
 }
 
-func (cf *ClientFloorGL) add9InstancedMeshAt(
+func (cf *ClientFloorGL) make9InstancedMeshAt(
 	mat, geo js.Value, fx, fy int) js.Value {
 	w := cf.XWrapper.GetWidth()
 	h := cf.YWrapper.GetWidth()
@@ -139,7 +146,6 @@ func (cf *ClientFloorGL) add9InstancedMeshAt(
 		)
 		mesh.Call("setMatrixAt", i, matrix)
 	}
-	cf.scene.Call("add", mesh)
 	return mesh
 }
 

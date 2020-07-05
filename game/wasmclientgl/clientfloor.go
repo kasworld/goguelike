@@ -17,6 +17,8 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/goguelike/enum/tile"
+
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/tilearea"
@@ -44,24 +46,26 @@ type ClientFloorGL struct {
 	PlaneTile  *PlaneLayer
 	PlaneSight *PlaneLayer
 
-	camera           js.Value
-	light            js.Value
-	scene            js.Value
-	jsSceneObjs      map[string]js.Value // in sight only ao, carryobj
-	jsSceneTreeObjs  map[[2]int]js.Value // instancedmesh tile 3d tree at 9 pos
-	jsSceneGrassObjs map[[2]int]js.Value // tile 3d grass at 9 pos
+	camera      js.Value
+	light       js.Value
+	scene       js.Value
+	jsSceneObjs map[string]js.Value // in sight only ao, carryobj
+
+	// instancedmesh 3d tile at 9 pos
+	jsScene9Tile3D [tile.Tile_Count]map[[2]int]js.Value
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf := ClientFloorGL{
-		Tiles:            tilearea.New(fi.W, fi.H),
-		Visited:          visitarea.NewVisitArea(fi),
-		FloorInfo:        fi,
-		XWrapper:         wrapper.New(fi.W),
-		YWrapper:         wrapper.New(fi.H),
-		jsSceneObjs:      make(map[string]js.Value),
-		jsSceneTreeObjs:  make(map[[2]int]js.Value),
-		jsSceneGrassObjs: make(map[[2]int]js.Value),
+		Tiles:       tilearea.New(fi.W, fi.H),
+		Visited:     visitarea.NewVisitArea(fi),
+		FloorInfo:   fi,
+		XWrapper:    wrapper.New(fi.W),
+		YWrapper:    wrapper.New(fi.H),
+		jsSceneObjs: make(map[string]js.Value),
+	}
+	for i := 0; i < tile.Tile_Count; i++ {
+		cf.jsScene9Tile3D[i] = make(map[[2]int]js.Value)
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
