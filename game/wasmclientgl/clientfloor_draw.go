@@ -126,19 +126,18 @@ func (cf *ClientFloorGL) add9TileAt(mat, geo js.Value, fx, fy int) []js.Value {
 	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
 	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
-	for dx := -1; dx < 2; dx++ {
-		for dy := -1; dy < 2; dy++ {
-			mesh := ThreeJsNew("Mesh", geo, mat)
-			x := fx + dx*w
-			y := fy + dy*h
-			SetPosition(
-				mesh,
-				float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
-				-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
-				(geoZmax-geoZmin)/2)
-			cf.scene.Call("add", mesh)
-			rtn = append(rtn, mesh)
-		}
+	for i := 0; i < way9type.Way9Type_Count; i++ {
+		dx, dy := way9type.Way9Type(i).DxDy()
+		mesh := ThreeJsNew("Mesh", geo, mat)
+		x := fx + dx*w
+		y := fy + dy*h
+		SetPosition(
+			mesh,
+			float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+			-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+			(geoZmax-geoZmin)/2)
+		cf.scene.Call("add", mesh)
+		rtn = append(rtn, mesh)
 	}
 	return rtn
 }
