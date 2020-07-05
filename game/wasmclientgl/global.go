@@ -38,9 +38,9 @@ var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 
-var gColorMaterialCache map[uint32]js.Value = make(map[uint32]js.Value)
+var gColorMaterialCache map[string]js.Value = make(map[string]js.Value)
 
-func GetColorMaterialByCache(co uint32) js.Value {
+func GetColorMaterialByCache(co string) js.Value {
 	mat, exist := gColorMaterialCache[co]
 	if !exist {
 		mat = ThreeJsNew("MeshPhongMaterial",
@@ -48,6 +48,7 @@ func GetColorMaterialByCache(co uint32) js.Value {
 				"color": co,
 			},
 		)
+		mat.Set("transparent", true)
 		gColorMaterialCache[co] = mat
 	}
 	return mat

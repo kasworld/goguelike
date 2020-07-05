@@ -99,9 +99,8 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			}
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
-				ti := gClientTile.CursorTiles[0]
+				ti := gClientTile.CursorTiles[2]
 				mat := GetTileMaterialByCache(ti)
-				// mat := GetTextureTileMaterialByCache(tile.Fog)
 				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				mesh = cf.make9InstancedMeshAt(mat, geo, fx, fy)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
