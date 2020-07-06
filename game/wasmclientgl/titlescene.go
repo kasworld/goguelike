@@ -61,7 +61,7 @@ func (ts *TitleScene) addTitle() {
 	ftGeo := GetTextGeometryByCache(str, 80)
 	geoMin, geoMax := CalcGeoMinMaxX(ftGeo)
 	co := gRnd.Uint32() & 0x00ffffff
-	ftMat := GetColorMaterialByCache(fmt.Sprintf("#0x08x", co))
+	ftMat := GetColorMaterialByCache(fmt.Sprintf("#%06x", co))
 	ts.jsoTitle = ThreeJsNew("Mesh", ftGeo, ftMat)
 	SetPosition(ts.jsoTitle,
 		HelperSize/2-(geoMax-geoMin)/2,
