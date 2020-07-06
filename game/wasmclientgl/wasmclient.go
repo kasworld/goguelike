@@ -100,6 +100,7 @@ type WasmClient struct {
 func InitPage() {
 	// hide loading message
 	GetElementById("loadmsg").Get("style").Set("display", "none")
+	preMakeTileMatGeo()
 
 	gameOptions = _gameopt // prevent compiler initialize loop
 
