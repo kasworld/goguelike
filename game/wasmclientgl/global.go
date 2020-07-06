@@ -39,7 +39,7 @@ var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
 var gTileMaterial [tile.Tile_Count]js.Value
 var gTileGeometry [tile.Tile_Count]js.Value
 
-func init() {
+func preMakeTileMatGeo() {
 	var tlt tile.Tile
 
 	tlt = tile.Swamp
@@ -153,7 +153,8 @@ var gTileMaterialCache map[webtilegroup.TileInfo]js.Value = make(map[webtilegrou
 func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
 	mat, exist := gTileMaterialCache[ti]
 	if !exist {
-		gTileMaterialCache[ti] = NewTileMaterial(ti)
+		mat = NewTileMaterial(ti)
+		gTileMaterialCache[ti] = mat
 	}
 	return mat
 }
@@ -186,7 +187,8 @@ var gTextureTileMaterialCache map[tile.Tile]js.Value = make(map[tile.Tile]js.Val
 func GetTextureTileMaterialByCache(ti tile.Tile) js.Value {
 	mat, exist := gTextureTileMaterialCache[ti]
 	if !exist {
-		gTextureTileMaterialCache[ti] = NewTextureTileMaterial(ti)
+		mat = NewTextureTileMaterial(ti)
+		gTextureTileMaterialCache[ti] = mat
 	}
 	return mat
 }
