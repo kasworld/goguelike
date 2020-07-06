@@ -32,16 +32,11 @@ import (
 func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 	oldTile := cf.Tiles[fx][fy]
 
-	for _, tl := range []tile.Tile{
-		tile.Tree, tile.Grass,
-		tile.Wall, tile.Door, tile.Window,
-		tile.Swamp, tile.Soil, tile.Stone, tile.Sand, tile.Sea,
-		tile.Magma, tile.Ice, tile.Road, tile.Room,
-		tile.Fog, tile.Smoke,
-	} {
-		if oldTile.TestByTile(tl) && !newTile.TestByTile(tl) {
+	for i := 0; i < tile.Tile_Count; i++ {
+		tlt := tile.Tile(i)
+		if oldTile.TestByTile(tlt) && !newTile.TestByTile(tlt) {
 			// del from scene
-			v := cf.jsScene9Tile3D[tl][[2]int{fx, fy}]
+			v := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			cf.scene.Call("remove", v)
 		}
 	}
@@ -51,118 +46,18 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 		if !newTile.TestByTile(tlt) {
 			continue
 		}
-		switch tlt {
-		default:
-			jslog.Errorf("unhandled tile %v", tlt)
-
-		case tile.Tree:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, 0.0)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-
-		case tile.Grass:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, 0.0)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-
-		case tile.Wall:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, 0.0)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-		case tile.Window:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, 0.0)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-		case tile.Door:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, 0.0)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-
-		case
-			tile.Swamp,
-			tile.Soil,
-			tile.Stone,
-			tile.Sand,
-			tile.Sea,
-			tile.Magma,
-			tile.Ice,
-			tile.Road,
-			tile.Room:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, 0.0)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-
-		case
-			tile.Fog,
-			tile.Smoke:
-			if oldTile.TestByTile(tlt) {
-				continue // skip exist
-			}
-			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			if !exist {
-				mat := gTileMaterial[tlt]
-				geo := gTileGeometry[tlt]
-				mesh = cf.make9InstancedMeshAt(
-					mat, geo, fx, fy, 0.0, 0.0, DstCellSize/2)
-				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-			}
-			cf.scene.Call("add", mesh)
-
+		if oldTile.TestByTile(tlt) {
+			continue // skip exist
 		}
+		mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+		if !exist {
+			mat := gTileMaterial[tlt]
+			geo := gTileGeometry[tlt]
+			mesh = cf.make9InstancedMeshAt(
+				mat, geo, fx, fy, 0.0, 0.0, 0.0)
+			cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+		}
+		cf.scene.Call("add", mesh)
 	}
 }
 
