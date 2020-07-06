@@ -54,7 +54,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			mat := gTileMaterial[tlt]
 			geo := gTileGeometry[tlt]
 			mesh = cf.make9InstancedMeshAt(
-				mat, geo, fx, fy, 0.0, 0.0, 0.0)
+				mat, geo, fx, fy, gTileShift[tlt])
 			cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
 		}
 		cf.scene.Call("add", mesh)
@@ -63,7 +63,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 
 func (cf *ClientFloorGL) make9InstancedMeshAt(
 	mat, geo js.Value, fx, fy int,
-	sx, sy, sz float64,
+	sh [3]float64,
 ) js.Value {
 	w := cf.XWrapper.GetWidth()
 	h := cf.YWrapper.GetWidth()
@@ -78,9 +78,9 @@ func (cf *ClientFloorGL) make9InstancedMeshAt(
 		y := fy + dy*h
 		matrix.Call("setPosition",
 			ThreeJsNew("Vector3",
-				sx+float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
-				-sy+-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
-				sz+(geoZmax-geoZmin)/2,
+				sh[0]+float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+				-sh[1]+-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+				sh[2]+(geoZmax-geoZmin)/2,
 			),
 		)
 		mesh.Call("setMatrixAt", i, matrix)

@@ -38,6 +38,7 @@ var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
 
 var gTileMaterial [tile.Tile_Count]js.Value
 var gTileGeometry [tile.Tile_Count]js.Value
+var gTileShift [tile.Tile_Count][3]float64
 
 func preMakeTileMatGeo() {
 	var tlt tile.Tile
@@ -102,10 +103,12 @@ func preMakeTileMatGeo() {
 	tlt = tile.Fog
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, DstCellSize + 1}
 
 	tlt = tile.Smoke
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, DstCellSize + 2}
 
 }
 
