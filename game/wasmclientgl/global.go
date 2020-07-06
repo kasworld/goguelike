@@ -46,6 +46,7 @@ func preMakeTileMatGeo() {
 	tlt = tile.Swamp
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, -1}
 
 	tlt = tile.Soil
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
@@ -62,10 +63,12 @@ func preMakeTileMatGeo() {
 	tlt = tile.Sea
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, -2}
 
 	tlt = tile.Magma
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, -2}
 
 	tlt = tile.Ice
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
@@ -83,10 +86,12 @@ func preMakeTileMatGeo() {
 	tlt = tile.Road
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, 1}
 
 	tlt = tile.Room
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTileShift[tlt] = [3]float64{0, 0, 1}
 
 	tlt = tile.Wall
 	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Stone)
@@ -103,12 +108,12 @@ func preMakeTileMatGeo() {
 	tlt = tile.Fog
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, DstCellSize + 1}
+	gTileShift[tlt] = [3]float64{0, 0, DstCellSize/8 + 1}
 
 	tlt = tile.Smoke
 	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, DstCellSize + 2}
+	gTileShift[tlt] = [3]float64{0, 0, DstCellSize/8 + 1}
 
 }
 
