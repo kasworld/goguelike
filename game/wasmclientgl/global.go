@@ -30,11 +30,84 @@ const (
 	HelperSize       = DstCellSize * 32
 )
 
+var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
 
-var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+var gTileMaterial [tile.Tile_Count]js.Value
+var gTileGeometry [tile.Tile_Count]js.Value
+
+func init() {
+	var tlt tile.Tile
+
+	tlt = tile.Swamp
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Soil
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Stone
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Sand
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Sea
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Magma
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Ice
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Grass
+	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Grass)
+	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize/8)
+
+	tlt = tile.Tree
+	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Grass)
+	gTileGeometry[tlt] = ThreeJsNew("ConeGeometry", DstCellSize/2-1, DstCellSize-1)
+	gTileGeometry[tlt].Call("rotateX", math.Pi/2)
+
+	tlt = tile.Road
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Room
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Wall
+	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Stone)
+	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+
+	tlt = tile.Window
+	gTileMaterial[tlt] = NewTileMaterial(gClientTile.CursorTiles[2])
+	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+
+	tlt = tile.Door
+	gTileMaterial[tlt] = NewTileMaterial(gClientTile.FloorTiles[tile.Door][0])
+	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+
+	tlt = tile.Fog
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+	tlt = tile.Smoke
+	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
+	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+
+}
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 
@@ -54,30 +127,57 @@ func GetColorMaterialByCache(co string) js.Value {
 	return mat
 }
 
+func NewTileMaterial(ti webtilegroup.TileInfo) js.Value {
+	Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
+	Ctx := Cnv.Call("getContext", "2d")
+	Ctx.Set("imageSmoothingEnabled", false)
+	Cnv.Set("width", DstCellSize)
+	Cnv.Set("height", DstCellSize)
+	Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+		0, 0, DstCellSize, DstCellSize)
+
+	Tex := ThreeJsNew("CanvasTexture", Cnv)
+	mat := ThreeJsNew("MeshPhongMaterial",
+		map[string]interface{}{
+			"map": Tex,
+		},
+	)
+	mat.Set("transparent", true)
+	// mat.Set("side", ThreeJs().Get("DoubleSide"))
+	return mat
+}
+
 var gTileMaterialCache map[webtilegroup.TileInfo]js.Value = make(map[webtilegroup.TileInfo]js.Value)
 
 func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
 	mat, exist := gTileMaterialCache[ti]
 	if !exist {
-		Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-		Ctx := Cnv.Call("getContext", "2d")
-		Ctx.Set("imageSmoothingEnabled", false)
-		Cnv.Set("width", DstCellSize)
-		Cnv.Set("height", DstCellSize)
-		Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-			ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-			0, 0, DstCellSize, DstCellSize)
-
-		Tex := ThreeJsNew("CanvasTexture", Cnv)
-		mat = ThreeJsNew("MeshPhongMaterial",
-			map[string]interface{}{
-				"map": Tex,
-			},
-		)
-		mat.Set("transparent", true)
-		// mat.Set("side", ThreeJs().Get("DoubleSide"))
-		gTileMaterialCache[ti] = mat
+		gTileMaterialCache[ti] = NewTileMaterial(ti)
 	}
+	return mat
+}
+
+func NewTextureTileMaterial(ti tile.Tile) js.Value {
+	Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
+	Ctx := Cnv.Call("getContext", "2d")
+	Ctx.Set("imageSmoothingEnabled", false)
+	Cnv.Set("width", DstCellSize)
+	Cnv.Set("height", DstCellSize)
+
+	tlic := gTextureTileList[ti]
+	Ctx.Call("drawImage", tlic.Cnv,
+		0, 0, DstCellSize, DstCellSize,
+		0, 0, DstCellSize, DstCellSize)
+
+	Tex := ThreeJsNew("CanvasTexture", Cnv)
+	mat := ThreeJsNew("MeshPhongMaterial",
+		map[string]interface{}{
+			"map": Tex,
+		},
+	)
+	mat.Set("transparent", true)
+	// mat.Set("side", ThreeJs().Get("DoubleSide"))
 	return mat
 }
 
@@ -86,26 +186,7 @@ var gTextureTileMaterialCache map[tile.Tile]js.Value = make(map[tile.Tile]js.Val
 func GetTextureTileMaterialByCache(ti tile.Tile) js.Value {
 	mat, exist := gTextureTileMaterialCache[ti]
 	if !exist {
-		Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-		Ctx := Cnv.Call("getContext", "2d")
-		Ctx.Set("imageSmoothingEnabled", false)
-		Cnv.Set("width", DstCellSize)
-		Cnv.Set("height", DstCellSize)
-
-		tlic := gTextureTileList[ti]
-		Ctx.Call("drawImage", tlic.Cnv,
-			0, 0, DstCellSize, DstCellSize,
-			0, 0, DstCellSize, DstCellSize)
-
-		Tex := ThreeJsNew("CanvasTexture", Cnv)
-		mat = ThreeJsNew("MeshPhongMaterial",
-			map[string]interface{}{
-				"map": Tex,
-			},
-		)
-		mat.Set("transparent", true)
-		// mat.Set("side", ThreeJs().Get("DoubleSide"))
-		gTextureTileMaterialCache[ti] = mat
+		gTextureTileMaterialCache[ti] = NewTextureTileMaterial(ti)
 	}
 	return mat
 }

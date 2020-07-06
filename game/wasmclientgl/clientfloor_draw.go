@@ -76,8 +76,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tile.Grass)
-				geo := GetBoxGeometryByCache(
-					DstCellSize, DstCellSize, DstCellSize/8)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize/8)
 				mesh = cf.make9InstancedMeshAt(
 					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
@@ -91,8 +90,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
 			if !exist {
 				mat := GetTextureTileMaterialByCache(tile.Stone)
-				geo := GetBoxGeometryByCache(
-					DstCellSize, DstCellSize, DstCellSize)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				mesh = cf.make9InstancedMeshAt(
 					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
@@ -106,8 +104,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 			if !exist {
 				ti := gClientTile.CursorTiles[2]
 				mat := GetTileMaterialByCache(ti)
-				geo := GetBoxGeometryByCache(
-					DstCellSize, DstCellSize, DstCellSize)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				mesh = cf.make9InstancedMeshAt(
 					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
@@ -122,8 +119,7 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 				tlList := gClientTile.FloorTiles[tile.Door]
 				ti := tlList[0]
 				mat := GetTileMaterialByCache(ti)
-				geo := GetBoxGeometryByCache(
-					DstCellSize, DstCellSize, DstCellSize)
+				geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 				mesh = cf.make9InstancedMeshAt(
 					mat, geo, fx, fy, 0.0, 0.0, 0.0)
 				cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
