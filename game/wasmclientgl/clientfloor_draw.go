@@ -34,30 +34,35 @@ func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
-		if oldTile.TestByTile(tlt) && !newTile.TestByTile(tlt) {
-			// del from scene
-			v := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-			cf.scene.Call("remove", v)
-		}
-	}
 
-	for i := 0; i < tile.Tile_Count; i++ {
-		tlt := tile.Tile(i)
-		if !newTile.TestByTile(tlt) {
-			continue
-		}
 		if oldTile.TestByTile(tlt) {
-			continue // skip exist
+			if newTile.TestByTile(tlt) {
+				// tile exist -> exist
+				// do nothing
+			} else {
+				// tile exist -> not exist
+				// del from scene
+				v := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+				cf.scene.Call("remove", v)
+			}
+		} else {
+			if newTile.TestByTile(tlt) {
+				// tile not exist -> exist
+				// add new tile
+				mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+				if !exist {
+					mat := gTileMaterial[tlt]
+					geo := gTileGeometry[tlt]
+					mesh = cf.make9InstancedMeshAt(
+						mat, geo, fx, fy, gTileShift[tlt])
+					cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+				}
+				cf.scene.Call("add", mesh)
+			} else {
+				// tile not exist -> not exist
+				// do nothing
+			}
 		}
-		mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-		if !exist {
-			mat := gTileMaterial[tlt]
-			geo := gTileGeometry[tlt]
-			mesh = cf.make9InstancedMeshAt(
-				mat, geo, fx, fy, gTileShift[tlt])
-			cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-		}
-		cf.scene.Call("add", mesh)
 	}
 }
 
