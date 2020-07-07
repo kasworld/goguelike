@@ -41,94 +41,143 @@ var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
 
 var gXYLenListView = findnear.NewXYLenList(ClientViewLen, ClientViewLen)
 
-var gTileMaterial [tile.Tile_Count]js.Value
-var gTileGeometry [tile.Tile_Count]js.Value
-var gTileShift [tile.Tile_Count][3]float64
-var gTileGeoMinMax [tile.Tile_Count][3][2]float64
+type Tile3D struct {
+	Mat    js.Value
+	Geo    js.Value
+	Shift  [3]float64
+	GeoMin [3]float64
+	GeoMax [3]float64
+	GeoLen [3]float64
+}
+
+var gTile3D [tile.Tile_Count]Tile3D
 
 func preMakeTileMatGeo() {
 	var tlt tile.Tile
 
 	tlt = tile.Swamp
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, -1}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, -1},
+	}
 
 	tlt = tile.Soil
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tlt),
+		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Stone
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tlt),
+		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Sand
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tlt),
+		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Sea
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, -2}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, -2},
+	}
 
 	tlt = tile.Magma
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, -2}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, -2},
+	}
 
 	tlt = tile.Ice
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tlt),
+		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Grass
-	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Grass)
-	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize/8)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tile.Grass),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize/8),
+	}
 
 	tlt = tile.Tree
-	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Grass)
-	gTileGeometry[tlt] = ThreeJsNew("ConeGeometry", DstCellSize/2-1, DstCellSize-1)
-	gTileGeometry[tlt].Call("rotateX", math.Pi/2)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tile.Grass),
+		Geo: ThreeJsNew("ConeGeometry", DstCellSize/2-1, DstCellSize-1),
+	}
+	gTile3D[tlt].Geo.Call("rotateX", math.Pi/2)
 
 	tlt = tile.Road
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, 1}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 1},
+	}
 
 	tlt = tile.Room
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, 1}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 1},
+	}
 
 	tlt = tile.Wall
-	gTileMaterial[tlt] = NewTextureTileMaterial(tile.Stone)
-	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tile.Stone),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Window
-	gTileMaterial[tlt] = NewTileMaterial(gClientTile.CursorTiles[2])
-	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTileMaterial(gClientTile.CursorTiles[2]),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Door
-	gTileMaterial[tlt] = NewTileMaterial(gClientTile.FloorTiles[tile.Door][0])
-	gTileGeometry[tlt] = ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+	gTile3D[tlt] = Tile3D{
+		Mat: NewTileMaterial(gClientTile.FloorTiles[tile.Door][0]),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Fog
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, DstCellSize/8 + 1}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, DstCellSize/8 + 1},
+	}
 
 	tlt = tile.Smoke
-	gTileMaterial[tlt] = NewTextureTileMaterial(tlt)
-	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	gTileShift[tlt] = [3]float64{0, 0, DstCellSize/8 + 1}
+	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, DstCellSize/8 + 1},
+	}
 
 	for i := 0; i < tile.Tile_Count; i++ {
-		geo := gTileGeometry[i]
+		geo := gTile3D[i].Geo
 		geo.Call("computeBoundingBox")
-		bbox := geo.Get("boundingBox")
-		gTileGeoMinMax[i] = [3][2]float64{
-			{bbox.Get("min").Get("x").Float(), bbox.Get("max").Get("x").Float()},
-			{bbox.Get("min").Get("y").Float(), bbox.Get("max").Get("y").Float()},
-			{bbox.Get("min").Get("z").Float(), bbox.Get("max").Get("z").Float()},
+		minbox := geo.Get("boundingBox").Get("min")
+		maxbox := geo.Get("boundingBox").Get("max")
+		gTile3D[i].GeoMin = [3]float64{
+			minbox.Get("x").Float(),
+			minbox.Get("y").Float(),
+			minbox.Get("z").Float(),
+		}
+		gTile3D[i].GeoMax = [3]float64{
+			maxbox.Get("x").Float(),
+			maxbox.Get("y").Float(),
+			maxbox.Get("z").Float(),
+		}
+		gTile3D[i].GeoLen = [3]float64{
+			maxbox.Get("x").Float() - minbox.Get("x").Float(),
+			maxbox.Get("y").Float() - minbox.Get("y").Float(),
+			maxbox.Get("z").Float() - minbox.Get("z").Float(),
 		}
 	}
 }

@@ -103,8 +103,8 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
-		mat := gTileMaterial[tlt]
-		geo := gTileGeometry[tlt]
+		mat := gTile3D[tlt].Mat
+		geo := gTile3D[tlt].Geo
 		mesh := ThreeJsNew("InstancedMesh", geo, mat, ClientViewLen*ClientViewLen)
 		mesh.Set("count", 0)
 		cf.scene.Call("add", mesh)

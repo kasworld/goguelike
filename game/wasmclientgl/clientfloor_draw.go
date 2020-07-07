@@ -37,13 +37,13 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		for i := 0; i < tile.Tile_Count; i++ {
 			if newTile.TestByTile(tile.Tile(i)) {
-				minmax := gTileGeoMinMax[i]
-				sh := gTileShift[i]
+				geolen := gTile3D[i].GeoLen
+				sh := gTile3D[i].Shift
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
-						sh[0]+float64(fx)*DstCellSize+(minmax[0][1]-minmax[0][0])/2,
-						-sh[1]+-float64(fy)*DstCellSize-(minmax[1][1]-minmax[1][0])/2,
-						sh[2]+(minmax[2][1]-minmax[2][0])/2,
+						sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
+						-sh[1]+-float64(fy)*DstCellSize-geolen[1]/2,
+						sh[2]+geolen[2]/2,
 					),
 				)
 				cf.jsInstacedMesh[i].Call("setMatrixAt", cf.jsInstacedCount[i], matrix)
