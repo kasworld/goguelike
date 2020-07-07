@@ -44,6 +44,7 @@ var gXYLenListView = findnear.NewXYLenList(ClientViewLen, ClientViewLen)
 var gTileMaterial [tile.Tile_Count]js.Value
 var gTileGeometry [tile.Tile_Count]js.Value
 var gTileShift [tile.Tile_Count][3]float64
+var gTileGeoMinMax [tile.Tile_Count][3][2]float64
 
 func preMakeTileMatGeo() {
 	var tlt tile.Tile
@@ -120,6 +121,16 @@ func preMakeTileMatGeo() {
 	gTileGeometry[tlt] = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
 	gTileShift[tlt] = [3]float64{0, 0, DstCellSize/8 + 1}
 
+	for i := 0; i < tile.Tile_Count; i++ {
+		geo := gTileGeometry[i]
+		geo.Call("computeBoundingBox")
+		bbox := geo.Get("boundingBox")
+		gTileGeoMinMax[i] = [3][2]float64{
+			{bbox.Get("min").Get("x").Float(), bbox.Get("max").Get("x").Float()},
+			{bbox.Get("min").Get("y").Float(), bbox.Get("max").Get("y").Float()},
+			{bbox.Get("min").Get("z").Float(), bbox.Get("max").Get("z").Float()},
+		}
+	}
 }
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")

@@ -15,14 +15,12 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/go-abs"
-
-	"github.com/kasworld/goguelike/lib/webtilegroup"
-
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
+	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -39,16 +37,13 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		for i := 0; i < tile.Tile_Count; i++ {
 			if newTile.TestByTile(tile.Tile(i)) {
-				geo := gTileGeometry[i]
-				geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-				geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-				geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+				minmax := gTileGeoMinMax[i]
 				sh := gTileShift[i]
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
-						sh[0]+float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
-						-sh[1]+-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
-						sh[2]+(geoZmax-geoZmin)/2,
+						sh[0]+float64(fx)*DstCellSize+(minmax[0][1]-minmax[0][0])/2,
+						-sh[1]+-float64(fy)*DstCellSize-(minmax[1][1]-minmax[1][0])/2,
+						sh[2]+(minmax[2][1]-minmax[2][0])/2,
 					),
 				)
 				cf.jsInstacedMesh[i].Call("setMatrixAt", cf.jsInstacedCount[i], matrix)
