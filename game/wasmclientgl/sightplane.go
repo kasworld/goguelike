@@ -31,15 +31,12 @@ type SightPlane struct {
 func NewSightPlane() *SightPlane {
 	w := ClientViewLen * DstCellSize
 	h := ClientViewLen * DstCellSize
-	xRepeat := 3
-	yRepeat := 3
 	Cnv := js.Global().Get("document").Call("createElement",
 		"CANVAS")
 	Ctx := Cnv.Call("getContext", "2d")
 	Ctx.Set("imageSmoothingEnabled", false)
 	Cnv.Set("width", w)
 	Cnv.Set("height", h)
-	// Ctx.Call("clearRect", 0, 0, w, h)
 
 	Tex := ThreeJsNew("CanvasTexture", Cnv)
 	Mat := ThreeJsNew("MeshBasicMaterial",
@@ -48,8 +45,7 @@ func NewSightPlane() *SightPlane {
 		},
 	)
 	Mat.Set("transparent", true)
-	// Geo := ThreeJsNew("PlaneBufferGeometry", w*xRepeat, h*yRepeat)
-	Geo := ThreeJsNew("PlaneGeometry", w*xRepeat, h*yRepeat)
+	Geo := ThreeJsNew("PlaneGeometry", w, h)
 	Mesh := ThreeJsNew("Mesh", Geo, Mat)
 
 	return &SightPlane{
@@ -62,8 +58,11 @@ func NewSightPlane() *SightPlane {
 	}
 }
 
-func (pl *SightPlane) MoveTo(x, y int) {
-	SetPosition(pl.Mesh, x, y, DstCellSize+1)
+func (pl *SightPlane) MoveCenterTo(fx, fy int) {
+	SetPosition(pl.Mesh,
+		fx*DstCellSize,
+		-fy*DstCellSize,
+		DstCellSize+1)
 }
 
 func (pl *SightPlane) FillColor(co string) {
@@ -76,14 +75,14 @@ func (pl *SightPlane) ClearRect() {
 }
 
 func (pl *SightPlane) ClearSight(vpTiles *viewportdata.ViewportTileArea2) {
-	x := ClientViewLen / 2
-	y := ClientViewLen / 2
+	cx := ClientViewLen / 2
+	cy := ClientViewLen / 2
 	for i, v := range gInitData.ViewportXYLenList {
 		if vpTiles[i] == 0 {
 			continue
 		}
-		posx := (v.X + x) * DstCellSize
-		posy := (v.Y + y) * DstCellSize
+		posx := (cx + v.X) * DstCellSize
+		posy := (cy + v.Y) * DstCellSize
 		pl.Ctx.Call("clearRect", posx, posy, DstCellSize, DstCellSize)
 	}
 	pl.Tex.Set("needsUpdate", true)

@@ -182,7 +182,7 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 
 	cf.sightPlane.ClearRect()
 	cf.sightPlane.FillColor("#000000a0")
-	cf.sightPlane.MoveTo(taNoti.VPX*DstCellSize, -taNoti.VPY*DstCellSize)
+	cf.sightPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
 	if olNoti != nil && olNoti.ActiveObj.HP > 0 {
 		cf.sightPlane.ClearSight(taNoti.VPTiles)
 	}
