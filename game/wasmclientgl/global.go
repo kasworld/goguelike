@@ -17,6 +17,8 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/kasworld/findnear"
+
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
@@ -28,6 +30,7 @@ const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
 	DstCellSize      = 32
 	HelperSize       = DstCellSize * 32
+	ClientViewLen    = 64
 )
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -35,6 +38,8 @@ var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
+
+var gXYLenListView = findnear.NewXYLenList(ClientViewLen, ClientViewLen)
 
 var gTileMaterial [tile.Tile_Count]js.Value
 var gTileGeometry [tile.Tile_Count]js.Value

@@ -50,8 +50,9 @@ type ClientFloorGL struct {
 	scene       js.Value
 	jsSceneObjs map[string]js.Value // in sight only ao, carryobj
 
-	// instancedmesh 3d tile at 9 pos
-	jsScene9Tile3D [tile.Tile_Count]map[[2]int]js.Value
+	// count = ClientViewLen*ClientViewLen
+	jsInstacedMesh  [tile.Tile_Count]js.Value
+	jsInstacedCount [tile.Tile_Count]int // in use count
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
@@ -62,9 +63,6 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		XWrapper:    wrapper.New(fi.W),
 		YWrapper:    wrapper.New(fi.H),
 		jsSceneObjs: make(map[string]js.Value),
-	}
-	for i := 0; i < tile.Tile_Count; i++ {
-		cf.jsScene9Tile3D[i] = make(map[[2]int]js.Value)
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
@@ -102,6 +100,16 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.scene.Call("add", cf.PlaneSight.Mesh)
 
+	for i := 0; i < tile.Tile_Count; i++ {
+		tlt := tile.Tile(i)
+		mat := gTileMaterial[tlt]
+		geo := gTileGeometry[tlt]
+		mesh := ThreeJsNew("InstancedMesh", geo, mat, ClientViewLen*ClientViewLen)
+		mesh.Set("count", 0)
+		cf.scene.Call("add", mesh)
+		cf.jsInstacedMesh[i] = mesh
+	}
+
 	return &cf
 }
 
@@ -133,7 +141,7 @@ func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 		for y, yv := range xv {
 			if yv != 0 {
 				cf.Visited.CheckAndSetNolock(x, y)
-				cf.drawTileAt(x, y, yv) // must before cf.tiles update
+				// cf.drawTileAt(x, y, yv) // must before cf.tiles update
 			}
 		}
 	}
@@ -166,12 +174,10 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 		fx := cf.XWrapSafe(v.X + taNoti.VPX)
 		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
 		if taNoti.VPTiles[i] != 0 {
-			tl := taNoti.VPTiles[i]
-			cf.drawTileAt(fx, fy, tl) // must before cf.tiles update
 			cf.Tiles[fx][fy] = taNoti.VPTiles[i]
 		}
 	}
-
+	cf.makeClientTileView(taNoti.VPX, taNoti.VPY)
 	cf.PlaneSight.ClearRect()
 	cf.PlaneSight.FillColor("#000000a0")
 	if olNoti != nil && olNoti.ActiveObj.HP > 0 {

@@ -22,76 +22,113 @@ import (
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
 
-// fx,fy wrapped, no need wrap again
-func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
-	oldTile := cf.Tiles[fx][fy]
-
+// cf.VPTiles to webgl
+func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 	for i := 0; i < tile.Tile_Count; i++ {
-		tlt := tile.Tile(i)
-
-		if oldTile.TestByTile(tlt) {
-			if newTile.TestByTile(tlt) {
-				// tile exist -> exist
-				// do nothing
-			} else {
-				// tile exist -> not exist
-				// del from scene
-				v := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-				cf.scene.Call("remove", v)
-			}
-		} else {
-			if newTile.TestByTile(tlt) {
-				// tile not exist -> exist
-				// add new tile
-				mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
-				if !exist {
-					mat := gTileMaterial[tlt]
-					geo := gTileGeometry[tlt]
-					mesh = cf.make9InstancedMeshAt(
-						mat, geo, fx, fy, gTileShift[tlt])
-					cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
-				}
-				cf.scene.Call("add", mesh)
-			} else {
-				// tile not exist -> not exist
-				// do nothing
+		cf.jsInstacedCount[i] = 0 // clear use count
+	}
+	matrix := ThreeJsNew("Matrix4")
+	for _, v := range gXYLenListView {
+		// place pos
+		fx := v.X + vpx
+		fy := v.Y + vpy
+		// logical pos
+		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		for i := 0; i < tile.Tile_Count; i++ {
+			if newTile.TestByTile(tile.Tile(i)) {
+				geo := gTileGeometry[i]
+				geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+				geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+				geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+				sh := gTileShift[i]
+				matrix.Call("setPosition",
+					ThreeJsNew("Vector3",
+						sh[0]+float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
+						-sh[1]+-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
+						sh[2]+(geoZmax-geoZmin)/2,
+					),
+				)
+				cf.jsInstacedMesh[i].Call("setMatrixAt", cf.jsInstacedCount[i], matrix)
+				cf.jsInstacedCount[i]++
 			}
 		}
 	}
+	for i := 0; i < tile.Tile_Count; i++ {
+		// jslog.Infof("%v %v", tile.Tile(i), cf.jsInstacedCount[i])
+		cf.jsInstacedMesh[i].Set("count", cf.jsInstacedCount[i])
+		cf.jsInstacedMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
+	}
 }
 
-func (cf *ClientFloorGL) make9InstancedMeshAt(
-	mat, geo js.Value, fx, fy int,
-	sh [3]float64,
-) js.Value {
-	w := cf.XWrapper.GetWidth()
-	h := cf.YWrapper.GetWidth()
-	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
-	mesh := ThreeJsNew("InstancedMesh", geo, mat, 9)
-	matrix := ThreeJsNew("Matrix4")
-	for i := 0; i < way9type.Way9Type_Count; i++ {
-		dx, dy := way9type.Way9Type(i).DxDy()
-		x := fx + dx*w
-		y := fy + dy*h
-		matrix.Call("setPosition",
-			ThreeJsNew("Vector3",
-				sh[0]+float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
-				-sh[1]+-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
-				sh[2]+(geoZmax-geoZmin)/2,
-			),
-		)
-		mesh.Call("setMatrixAt", i, matrix)
-	}
-	return mesh
-}
+// fx,fy wrapped, no need wrap again
+// func (cf *ClientFloorGL) drawTileAt(fx, fy int, newTile tile_flag.TileFlag) {
+// 	oldTile := cf.Tiles[fx][fy]
+
+// 	for i := 0; i < tile.Tile_Count; i++ {
+// 		tlt := tile.Tile(i)
+
+// 		if oldTile.TestByTile(tlt) {
+// 			if newTile.TestByTile(tlt) {
+// 				// tile exist -> exist
+// 				// do nothing
+// 			} else {
+// 				// tile exist -> not exist
+// 				// del from scene
+// 				v := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+// 				cf.scene.Call("remove", v)
+// 			}
+// 		} else {
+// 			if newTile.TestByTile(tlt) {
+// 				// tile not exist -> exist
+// 				// add new tile
+// 				mesh, exist := cf.jsScene9Tile3D[tlt][[2]int{fx, fy}]
+// 				if !exist {
+// 					mat := gTileMaterial[tlt]
+// 					geo := gTileGeometry[tlt]
+// 					mesh = cf.make9InstancedMeshAt(
+// 						mat, geo, fx, fy, gTileShift[tlt])
+// 					cf.jsScene9Tile3D[tlt][[2]int{fx, fy}] = mesh
+// 				}
+// 				cf.scene.Call("add", mesh)
+// 			} else {
+// 				// tile not exist -> not exist
+// 				// do nothing
+// 			}
+// 		}
+// 	}
+// }
+
+// func (cf *ClientFloorGL) make9InstancedMeshAt(
+// 	mat, geo js.Value, fx, fy int,
+// 	sh [3]float64,
+// ) js.Value {
+// 	w := cf.XWrapper.GetWidth()
+// 	h := cf.YWrapper.GetWidth()
+// 	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
+// 	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
+// 	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+// 	mesh := ThreeJsNew("InstancedMesh", geo, mat, 9)
+// 	matrix := ThreeJsNew("Matrix4")
+// 	for i := 0; i < way9type.Way9Type_Count; i++ {
+// 		dx, dy := way9type.Way9Type(i).DxDy()
+// 		x := fx + dx*w
+// 		y := fy + dy*h
+// 		matrix.Call("setPosition",
+// 			ThreeJsNew("Vector3",
+// 				sh[0]+float64(x)*DstCellSize+(geoXmax-geoXmin)/2,
+// 				-sh[1]+-float64(y)*DstCellSize-(geoYmax-geoYmin)/2,
+// 				sh[2]+(geoZmax-geoZmin)/2,
+// 			),
+// 		)
+// 		mesh.Call("setMatrixAt", i, matrix)
+// 	}
+// 	return mesh
+// }
 
 func (cf *ClientFloorGL) UpdateFrame(
 	frameProgress float64,
@@ -145,13 +182,12 @@ func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
 	}
 	// add new obj
 	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
-	for dx := -1; dx < 2; dx++ {
-		for dy := -1; dy < 2; dy++ {
-			cf.addFieldObjAt(o,
-				o.X+dx*cf.XWrapper.GetWidth(),
-				o.Y+dy*cf.YWrapper.GetWidth(),
-			)
-		}
+	for i := 0; i < way9type.Way9Type_Count; i++ {
+		dx, dy := way9type.Way9Type(i).DxDy()
+		cf.addFieldObjAt(o,
+			o.X+dx*cf.XWrapper.GetWidth(),
+			o.Y+dy*cf.YWrapper.GetWidth(),
+		)
 	}
 }
 
