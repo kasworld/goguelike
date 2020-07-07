@@ -30,7 +30,7 @@ const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
 	DstCellSize      = 32
 	HelperSize       = DstCellSize * 32
-	ClientViewLen    = 64
+	ClientViewLen    = 40
 )
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
