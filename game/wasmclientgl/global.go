@@ -195,17 +195,6 @@ func NewTextureTileMaterial(ti tile.Tile) js.Value {
 	return mat
 }
 
-var gTextureTileMaterialCache map[tile.Tile]js.Value = make(map[tile.Tile]js.Value)
-
-func GetTextureTileMaterialByCache(ti tile.Tile) js.Value {
-	mat, exist := gTextureTileMaterialCache[ti]
-	if !exist {
-		mat = NewTextureTileMaterial(ti)
-		gTextureTileMaterialCache[ti] = mat
-	}
-	return mat
-}
-
 type textGeoKey struct {
 	Str  string
 	Size float64
@@ -263,41 +252,6 @@ func GetBoxGeometryByCache(x, y, z int) js.Value {
 	if !exist {
 		geo = ThreeJsNew("BoxGeometry", x, y, z)
 		gBoxGeometryCache[[3]int{x, y, z}] = geo
-	}
-	return geo
-}
-
-var gPlaneGeometryCache map[[2]int]js.Value = make(map[[2]int]js.Value)
-
-func GetPlaneGeometryByCache(w, h int) js.Value {
-	geo, exist := gPlaneGeometryCache[[2]int{w, h}]
-	if !exist {
-		geo = ThreeJsNew("PlaneGeometry", w, h)
-		gPlaneGeometryCache[[2]int{w, h}] = geo
-	}
-	return geo
-}
-
-var gConeGeometryCache map[[2]int]js.Value = make(map[[2]int]js.Value)
-
-func GetConeGeometryByCache(r, h int) js.Value {
-	geo, exist := gConeGeometryCache[[2]int{r, h}]
-	if !exist {
-		geo = ThreeJsNew("ConeGeometry", r, h)
-		geo.Call("rotateX", math.Pi/2)
-		gConeGeometryCache[[2]int{r, h}] = geo
-	}
-	return geo
-}
-
-var gSphereGeometryCache map[[3]int]js.Value = make(map[[3]int]js.Value)
-
-func GetSphereGeometryByCache(r, ws, hs int) js.Value {
-	geo, exist := gSphereGeometryCache[[3]int{r, ws, hs}]
-	if !exist {
-		geo = ThreeJsNew("SphereGeometry", r, ws, hs)
-		// geo.Call("rotateX", math.Pi)
-		gSphereGeometryCache[[3]int{r, ws, hs}] = geo
 	}
 	return geo
 }

@@ -142,7 +142,6 @@ func (cf *ClientFloorGL) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 		for y, yv := range xv {
 			if yv != 0 {
 				cf.Visited.CheckAndSetNolock(x, y)
-				// cf.drawTileAt(x, y, yv) // must before cf.tiles update
 			}
 		}
 	}

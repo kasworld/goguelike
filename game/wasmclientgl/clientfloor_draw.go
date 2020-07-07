@@ -34,10 +34,8 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 	}
 	matrix := ThreeJsNew("Matrix4")
 	for _, v := range gXYLenListView {
-		// place pos
 		fx := v.X + vpx
 		fy := v.Y + vpy
-		// logical pos
 		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		for i := 0; i < tile.Tile_Count; i++ {
 			if newTile.TestByTile(tile.Tile(i)) {
@@ -59,7 +57,6 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 		}
 	}
 	for i := 0; i < tile.Tile_Count; i++ {
-		// jslog.Infof("%v %v", tile.Tile(i), cf.jsInstacedCount[i])
 		cf.jsInstacedMesh[i].Set("count", cf.jsInstacedCount[i])
 		cf.jsInstacedMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
 	}
@@ -138,7 +135,6 @@ func (cf *ClientFloorGL) addFieldObjAt(
 	ti := tlList[tilediff%len(tlList)]
 
 	mat := GetTileMaterialByCache(ti)
-	// geo := GetSphereGeometryByCache(DstCellSize/2, DstCellSize, DstCellSize)
 	geo := GetBoxGeometryByCache(DstCellSize-1, DstCellSize-1, DstCellSize-1)
 	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
 	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
