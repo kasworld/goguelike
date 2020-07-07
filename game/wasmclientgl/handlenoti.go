@@ -156,10 +156,7 @@ func objRecvNotiFn_Death(recvobj interface{}, header c2t_packet.Header, obj inte
 	app.remainTurn2Rebirth = gameconst.ActiveObjRebirthWaitTurn
 
 	cf := app.currentFloor()
-	cf.PlaneSight.ClearRect()
-	cf.PlaneSight.FillColor("#000000a0")
-	cf.PlaneSight.Tex.Set("needsUpdate", true)
-
+	cf.sightPlane.Death()
 	return nil
 }
 
@@ -188,10 +185,7 @@ func objRecvNotiFn_ReadyToRebirth(recvobj interface{}, header c2t_packet.Header,
 	app.remainTurn2Rebirth = 0
 
 	cf := app.currentFloor()
-	cf.PlaneSight.ClearRect()
-	cf.PlaneSight.FillColor("#00000020")
-	cf.PlaneSight.Tex.Set("needsUpdate", true)
-
+	cf.sightPlane.Ready2Rebirth()
 	return nil
 }
 

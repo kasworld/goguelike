@@ -43,11 +43,12 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	PlaneSight *PlaneLayer
+	camera js.Value
+	light  js.Value
+	scene  js.Value
 
-	camera      js.Value
-	light       js.Value
-	scene       js.Value
+	sightPlane *SightPlane
+
 	jsSceneObjs map[string]js.Value // in sight only ao, carryobj
 
 	// count = ClientViewLen*ClientViewLen
@@ -69,7 +70,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 
-	cf.PlaneSight = NewPlaneLayer(fi, DstCellSize+1)
+	cf.sightPlane = NewSightPlane()
 
 	cf.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
 	cf.scene = ThreeJsNew("Scene")
@@ -98,7 +99,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	)
 	cf.camera.Call("updateProjectionMatrix")
 
-	cf.scene.Call("add", cf.PlaneSight.Mesh)
+	cf.scene.Call("add", cf.sightPlane.Mesh)
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
@@ -178,12 +179,13 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 		}
 	}
 	cf.makeClientTileView(taNoti.VPX, taNoti.VPY)
-	cf.PlaneSight.ClearRect()
-	cf.PlaneSight.FillColor("#000000a0")
+
+	cf.sightPlane.ClearRect()
+	cf.sightPlane.FillColor("#000000a0")
+	cf.sightPlane.MoveTo(taNoti.VPX*DstCellSize, -taNoti.VPY*DstCellSize)
 	if olNoti != nil && olNoti.ActiveObj.HP > 0 {
-		cf.PlaneSight.ClearSight(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
+		cf.sightPlane.ClearSight(taNoti.VPTiles)
 	}
-	cf.PlaneSight.Tex.Set("needsUpdate", true)
 
 	return nil
 }
