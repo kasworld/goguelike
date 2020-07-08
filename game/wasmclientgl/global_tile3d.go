@@ -19,12 +19,10 @@ import (
 )
 
 type Tile3D struct {
-	Mat    js.Value
-	Geo    js.Value
-	Shift  [3]float64
-	GeoMin [3]float64
-	GeoMax [3]float64
-	GeoLen [3]float64
+	Mat     js.Value
+	Geo     js.Value
+	Shift   [3]float64
+	GeoInfo GeoInfo
 }
 
 var gTile3D [tile.Tile_Count]Tile3D
@@ -138,23 +136,6 @@ func preMakeTileMatGeo() {
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		geo := gTile3D[i].Geo
-		geo.Call("computeBoundingBox")
-		minbox := geo.Get("boundingBox").Get("min")
-		maxbox := geo.Get("boundingBox").Get("max")
-		gTile3D[i].GeoMin = [3]float64{
-			minbox.Get("x").Float(),
-			minbox.Get("y").Float(),
-			minbox.Get("z").Float(),
-		}
-		gTile3D[i].GeoMax = [3]float64{
-			maxbox.Get("x").Float(),
-			maxbox.Get("y").Float(),
-			maxbox.Get("z").Float(),
-		}
-		gTile3D[i].GeoLen = [3]float64{
-			maxbox.Get("x").Float() - minbox.Get("x").Float(),
-			maxbox.Get("y").Float() - minbox.Get("y").Float(),
-			maxbox.Get("z").Float() - minbox.Get("z").Float(),
-		}
+		gTile3D[i].GeoInfo = GetGeoInfo(geo)
 	}
 }

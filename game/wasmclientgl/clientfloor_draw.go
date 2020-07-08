@@ -37,7 +37,7 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		for i := 0; i < tile.Tile_Count; i++ {
 			if newTile.TestByTile(tile.Tile(i)) {
-				geolen := gTile3D[i].GeoLen
+				geolen := gTile3D[i].GeoInfo.Len
 				sh := gTile3D[i].Shift
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
