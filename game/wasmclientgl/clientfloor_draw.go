@@ -36,7 +36,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 		cameraX, cameraY, DstCellSize*16,
 	)
 	SetPosition(cf.camera,
-		cameraX, cameraY-cameraZ, cameraZ,
+		cameraX, cameraY-cameraZ/2, cameraZ,
 	)
 	cf.camera.Call("lookAt",
 		ThreeJsNew("Vector3",
