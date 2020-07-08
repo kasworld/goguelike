@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"math/rand"
 	"syscall/js"
 	"time"
@@ -36,7 +37,6 @@ var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
-var gTextureTileList [tile.Tile_Count]*TextureTile = LoadTextureTileList()
 
 var gXYLenListView = findnear.NewXYLenList(ClientViewLen, ClientViewLen)
 
@@ -97,8 +97,8 @@ func NewTextureTileMaterial(ti tile.Tile) js.Value {
 	Cnv.Set("width", DstCellSize)
 	Cnv.Set("height", DstCellSize)
 
-	tlic := gTextureTileList[ti]
-	Ctx.Call("drawImage", tlic.Cnv,
+	img := GetElementById(fmt.Sprintf("%vPng", ti))
+	Ctx.Call("drawImage", img,
 		0, 0, DstCellSize, DstCellSize,
 		0, 0, DstCellSize, DstCellSize)
 
