@@ -12,14 +12,8 @@
 package wasmclientgl
 
 import (
-	"syscall/js"
-
-	"github.com/kasworld/go-abs"
-	"github.com/kasworld/goguelike/config/moneycolor"
-	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -97,34 +91,12 @@ func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
 	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
 	for i := 0; i < way9type.Way9Type_Count; i++ {
 		dx, dy := way9type.Way9Type(i).DxDy()
-		cf.addFieldObjAt(o,
+		mesh := newFieldObjAt(o,
 			o.X+dx*cf.XWrapper.GetWidth(),
 			o.Y+dy*cf.YWrapper.GetWidth(),
 		)
+		cf.scene.Call("add", mesh)
 	}
-}
-
-func (cf *ClientFloorGL) addFieldObjAt(
-	o *c2t_obj.FieldObjClient,
-	fx, fy int,
-) {
-	tlList := gClientTile.FieldObjTiles[o.DisplayType]
-	tilediff := fx*5 + fy*3
-	if tilediff < 0 {
-		tilediff = -tilediff
-	}
-	ti := tlList[tilediff%len(tlList)]
-
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(DstCellSize-1, DstCellSize-1, DstCellSize-1)
-	geoInfo := GetGeoInfo(geo)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	SetPosition(
-		mesh,
-		float64(fx)*DstCellSize+geoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-		geoInfo.Len[2]/2)
-	cf.scene.Call("add", mesh)
 }
 
 func (cf *ClientFloorGL) processNotiObjectList(
@@ -153,7 +125,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		}
 		mesh.Set("material", mat)
 
-		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
+		fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		geo := mesh.Get("geometry")
 		geoInfo := GetGeoInfo(geo)
 		SetPosition(
@@ -167,12 +139,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		for _, eqo := range ao.EquippedPo {
 			mesh, exist := cf.jsSceneObjs[eqo.UUID]
 			if !exist {
-				mesh = cf.makeEquipedMesh(eqo)
+				mesh = makeEquipedMesh(eqo)
 				cf.scene.Call("add", mesh)
 				cf.jsSceneObjs[eqo.UUID] = mesh
 			}
 
-			fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
+			fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 			shInfo := aoEqPosShift[eqo.EquipType]
 			geo := mesh.Get("geometry")
 			geoInfo := GetGeoInfo(geo)
@@ -190,12 +162,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	for _, cro := range olNoti.CarryObjList {
 		mesh, exist := cf.jsSceneObjs[cro.UUID]
 		if !exist {
-			mesh = cf.makeCarryObjMesh(cro)
+			mesh = makeCarryObjMesh(cro)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneObjs[cro.UUID] = mesh
 		}
 
-		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
+		fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
 		shInfo := CarryObjClientOnFloor2DrawInfo(cro)
 		geo := mesh.Get("geometry")
 		geoInfo := GetGeoInfo(geo)
@@ -215,61 +187,4 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			delete(cf.jsSceneObjs, id)
 		}
 	}
-}
-
-// make fx,fy around vpx, vpy
-func (cf *ClientFloorGL) calcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
-	if abs.Absi(fx-vpx) > w/2 {
-		if fx > vpx {
-			fx -= w
-		} else {
-			fx += w
-		}
-	}
-	if abs.Absi(fy-vpy) > h/2 {
-		if fy > vpy {
-			fy -= h
-		} else {
-			fy += h
-		}
-	}
-	return fx, fy
-}
-
-func (cf *ClientFloorGL) makeEquipedMesh(o *c2t_obj.EquipClient) js.Value {
-	ti := gClientTile.EquipTiles[o.EquipType][o.Faction]
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize/3, DstCellSize/3, DstCellSize/3,
-	)
-	return ThreeJsNew("Mesh", geo, mat)
-}
-
-func (cf *ClientFloorGL) makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
-	var ti webtilegroup.TileInfo
-	switch o.CarryingObjectType {
-	case carryingobjecttype.Equip:
-		ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
-	case carryingobjecttype.Money:
-		var find bool
-		for i, v := range moneycolor.Attrib {
-			if o.Value < v.UpLimit {
-				ti = gClientTile.GoldTiles[i]
-				find = true
-				break
-			}
-		}
-		if !find {
-			ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
-		}
-	case carryingobjecttype.Potion:
-		ti = gClientTile.PotionTiles[o.PotionType]
-	case carryingobjecttype.Scroll:
-		ti = gClientTile.ScrollTiles[o.ScrollType]
-	}
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize/3, DstCellSize/3, DstCellSize/3,
-	)
-	return ThreeJsNew("Mesh", geo, mat)
 }

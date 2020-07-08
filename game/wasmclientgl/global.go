@@ -18,8 +18,10 @@ import (
 	"time"
 
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/go-abs"
 
 	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/tile"
@@ -237,6 +239,7 @@ type ShiftInfo struct {
 	Z float64
 }
 
+// equipped shift, around ao
 var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
 	equipslottype.Helmet: {-0.33, 0.0, 0.66},
 	equipslottype.Amulet: {1.00, 0.0, 0.66},
@@ -251,6 +254,7 @@ var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
 	equipslottype.Footwear: {1.00, 0.75, 0.66},
 }
 
+// on floor in tile
 var eqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
 	equipslottype.Helmet: {0.0, 0.0, 0.33},
 	equipslottype.Amulet: {0.75, 0.0, 0.33},
@@ -269,4 +273,81 @@ var otherCarryObjShift = [carryingobjecttype.CarryingObjectType_Count]ShiftInfo{
 	carryingobjecttype.Money:  {0.33, 0.0, 0.33},
 	carryingobjecttype.Potion: {0.33, 0.33, 0.33},
 	carryingobjecttype.Scroll: {0.33, 0.66, 0.33},
+}
+
+// make fx,fy around vpx, vpy
+func calcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
+	if abs.Absi(fx-vpx) > w/2 {
+		if fx > vpx {
+			fx -= w
+		} else {
+			fx += w
+		}
+	}
+	if abs.Absi(fy-vpy) > h/2 {
+		if fy > vpy {
+			fy -= h
+		} else {
+			fy += h
+		}
+	}
+	return fx, fy
+}
+
+func makeEquipedMesh(o *c2t_obj.EquipClient) js.Value {
+	ti := gClientTile.EquipTiles[o.EquipType][o.Faction]
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(
+		DstCellSize/3, DstCellSize/3, DstCellSize/3,
+	)
+	return ThreeJsNew("Mesh", geo, mat)
+}
+
+func makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
+	var ti webtilegroup.TileInfo
+	switch o.CarryingObjectType {
+	case carryingobjecttype.Equip:
+		ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
+	case carryingobjecttype.Money:
+		var find bool
+		for i, v := range moneycolor.Attrib {
+			if o.Value < v.UpLimit {
+				ti = gClientTile.GoldTiles[i]
+				find = true
+				break
+			}
+		}
+		if !find {
+			ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
+		}
+	case carryingobjecttype.Potion:
+		ti = gClientTile.PotionTiles[o.PotionType]
+	case carryingobjecttype.Scroll:
+		ti = gClientTile.ScrollTiles[o.ScrollType]
+	}
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(
+		DstCellSize/3, DstCellSize/3, DstCellSize/3,
+	)
+	return ThreeJsNew("Mesh", geo, mat)
+}
+
+func newFieldObjAt(o *c2t_obj.FieldObjClient, fx, fy int) js.Value {
+	tlList := gClientTile.FieldObjTiles[o.DisplayType]
+	tilediff := fx*5 + fy*3
+	if tilediff < 0 {
+		tilediff = -tilediff
+	}
+	ti := tlList[tilediff%len(tlList)]
+
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(DstCellSize-1, DstCellSize-1, DstCellSize-1)
+	geoInfo := GetGeoInfo(geo)
+	mesh := ThreeJsNew("Mesh", geo, mat)
+	SetPosition(
+		mesh,
+		float64(fx)*DstCellSize+geoInfo.Len[0]/2,
+		-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
+		geoInfo.Len[2]/2)
+	return mesh
 }
