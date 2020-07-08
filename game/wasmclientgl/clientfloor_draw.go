@@ -31,12 +31,12 @@ func (cf *ClientFloorGL) UpdateFrame(
 	// move camera, light
 	cameraX := taNoti.VPX*DstCellSize + scrollDx
 	cameraY := -taNoti.VPY*DstCellSize + scrollDy
-	cameraZ := HelperSize - HelperSize*zoom/4
+	cameraZ := HelperSize*0.75 - HelperSize*0.75*zoom/4
 	SetPosition(cf.light,
-		cameraX, cameraY, DstCellSize*10,
+		cameraX-DstCellSize*8, cameraY, DstCellSize*16,
 	)
 	SetPosition(cf.camera,
-		cameraX, cameraY, cameraZ,
+		cameraX, cameraY-cameraZ/2, cameraZ,
 	)
 	cf.camera.Call("lookAt",
 		ThreeJsNew("Vector3",

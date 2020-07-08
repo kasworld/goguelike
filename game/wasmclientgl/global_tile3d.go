@@ -51,8 +51,9 @@ func preMakeTileMatGeo() {
 
 	tlt = tile.Sand
 	gTile3D[tlt] = Tile3D{
-		Mat: NewTextureTileMaterial(tlt),
-		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 0},
 	}
 
 	tlt = tile.Sea
@@ -71,8 +72,9 @@ func preMakeTileMatGeo() {
 
 	tlt = tile.Ice
 	gTile3D[tlt] = Tile3D{
-		Mat: NewTextureTileMaterial(tlt),
-		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 1},
 	}
 
 	tlt = tile.Grass
@@ -99,7 +101,7 @@ func preMakeTileMatGeo() {
 	gTile3D[tlt] = Tile3D{
 		Mat:   NewTextureTileMaterial(tlt),
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
-		Shift: [3]float64{0, 0, 1},
+		Shift: [3]float64{0, 0, 0},
 	}
 
 	tlt = tile.Wall
