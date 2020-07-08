@@ -332,26 +332,6 @@ func makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
 	return ThreeJsNew("Mesh", geo, mat)
 }
 
-func newFieldObjAt(o *c2t_obj.FieldObjClient, fx, fy int) js.Value {
-	tlList := gClientTile.FieldObjTiles[o.DisplayType]
-	tilediff := fx*5 + fy*3
-	if tilediff < 0 {
-		tilediff = -tilediff
-	}
-	ti := tlList[tilediff%len(tlList)]
-
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(DstCellSize-1, DstCellSize-1, DstCellSize-1)
-	geoInfo := GetGeoInfo(geo)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	SetPosition(
-		mesh,
-		float64(fx)*DstCellSize+geoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-		geoInfo.Len[2]/2)
-	return mesh
-}
-
 func MakeFieldObjMatGeo(
 	o *c2t_obj.FieldObjClient, fx, fy int) (js.Value, js.Value) {
 

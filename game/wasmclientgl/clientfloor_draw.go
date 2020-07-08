@@ -89,13 +89,23 @@ func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
 	}
 	// add new obj
 	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
+	mat, geo := MakeFieldObjMatGeo(o, o.X, o.Y)
+	geoInfo := GetGeoInfo(geo)
+	mesh := ThreeJsNew("InstancedMesh", geo, mat, 9)
+	cf.scene.Call("add", mesh)
+	matrix := ThreeJsNew("Matrix4")
 	for i := 0; i < way9type.Way9Type_Count; i++ {
 		dx, dy := way9type.Way9Type(i).DxDy()
-		mesh := newFieldObjAt(o,
-			o.X+dx*cf.XWrapper.GetWidth(),
-			o.Y+dy*cf.YWrapper.GetWidth(),
+		fx := o.X + dx*cf.XWrapper.GetWidth()
+		fy := o.Y + dy*cf.YWrapper.GetWidth()
+		matrix.Call("setPosition",
+			ThreeJsNew("Vector3",
+				float64(fx)*DstCellSize+geoInfo.Len[0]/2,
+				-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
+				geoInfo.Len[2]/2,
+			),
 		)
-		cf.scene.Call("add", mesh)
+		mesh.Call("setMatrixAt", i, matrix)
 	}
 }
 
