@@ -18,6 +18,33 @@ import (
 	"github.com/kasworld/gowasmlib/jslog"
 )
 
+func (cf *ClientFloorGL) UpdateFrame(
+	frameProgress float64,
+	scrollDir way9type.Way9Type,
+	taNoti *c2t_obj.NotiVPTiles_data) {
+
+	zoom := gameOptions.GetByIDBase("Zoom").State
+	sx, sy := CalcShiftDxDy(frameProgress)
+	scrollDx := -scrollDir.Dx() * sx
+	scrollDy := scrollDir.Dy() * sy
+
+	// move camera, light
+	cameraX := taNoti.VPX*DstCellSize + scrollDx
+	cameraY := -taNoti.VPY*DstCellSize + scrollDy
+	cameraZ := HelperSize - HelperSize*zoom/4
+	SetPosition(cf.light,
+		cameraX, cameraY, DstCellSize*10,
+	)
+	SetPosition(cf.camera,
+		cameraX, cameraY, cameraZ,
+	)
+	cf.camera.Call("lookAt",
+		ThreeJsNew("Vector3",
+			cameraX, cameraY, 0,
+		),
+	)
+}
+
 // cf.VPTiles to webgl
 func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 	for i := 0; i < tile.Tile_Count; i++ {
@@ -48,33 +75,6 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 		cf.jsInstacedMesh[i].Set("count", cf.jsInstacedCount[i])
 		cf.jsInstacedMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
 	}
-}
-
-func (cf *ClientFloorGL) UpdateFrame(
-	frameProgress float64,
-	scrollDir way9type.Way9Type,
-	taNoti *c2t_obj.NotiVPTiles_data,
-) {
-	zoom := gameOptions.GetByIDBase("Zoom").State
-	sx, sy := CalcShiftDxDy(frameProgress)
-	scrollDx := -scrollDir.Dx() * sx
-	scrollDy := scrollDir.Dy() * sy
-
-	// move camera, light
-	cameraX := taNoti.VPX*DstCellSize + scrollDx
-	cameraY := -taNoti.VPY*DstCellSize + scrollDy
-	cameraZ := HelperSize - HelperSize*zoom/4
-	SetPosition(cf.light,
-		cameraX, cameraY, DstCellSize*10,
-	)
-	SetPosition(cf.camera,
-		cameraX, cameraY, cameraZ,
-	)
-	cf.camera.Call("lookAt",
-		ThreeJsNew("Vector3",
-			cameraX, cameraY, 0,
-		),
-	)
 }
 
 func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
