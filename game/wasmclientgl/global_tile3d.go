@@ -78,7 +78,7 @@ func preMakeTileMatGeo() {
 	tlt = tile.Grass
 	gTile3D[tlt] = Tile3D{
 		Mat: NewTextureTileMaterial(tile.Grass),
-		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize/8),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8),
 	}
 
 	tlt = tile.Tree
@@ -105,13 +105,13 @@ func preMakeTileMatGeo() {
 	tlt = tile.Wall
 	gTile3D[tlt] = Tile3D{
 		Mat: NewTextureTileMaterial(tile.Stone),
-		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize),
 	}
 
 	tlt = tile.Window
 	gTile3D[tlt] = Tile3D{
 		Mat: NewTileMaterial(gClientTile.CursorTiles[2]),
-		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize),
 	}
 
 	tlt = tile.Door
