@@ -17,7 +17,6 @@ import (
 	"github.com/kasworld/go-abs"
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
-	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
@@ -63,7 +62,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 	taNoti *c2t_obj.NotiVPTiles_data,
 ) {
 	zoom := gameOptions.GetByIDBase("Zoom").State
-	sx, sy := calcShiftDxDy(frameProgress)
+	sx, sy := CalcShiftDxDy(frameProgress)
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
 
@@ -82,19 +81,6 @@ func (cf *ClientFloorGL) UpdateFrame(
 			cameraX, cameraY, 0,
 		),
 	)
-}
-
-func calcShiftDxDy(frameProgress float64) (int, int) {
-	rate := 1 - frameProgress
-	if rate < 0 {
-		rate = 0
-	}
-	if rate > 1 {
-		rate = 1
-	}
-	dx := int(float64(DstCellSize) * rate)
-	dy := int(float64(DstCellSize) * rate)
-	return dx, dy
 }
 
 func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
@@ -187,7 +173,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			}
 
 			fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
-			shInfo := aoeqposShift[eqo.EquipType]
+			shInfo := aoEqPosShift[eqo.EquipType]
 			geo := mesh.Get("geometry")
 			geoInfo := GetGeoInfo(geo)
 			SetPosition(
@@ -210,7 +196,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		}
 
 		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
-		shInfo := carryObjClientOnFloor2DrawInfo(cro)
+		shInfo := CarryObjClientOnFloor2DrawInfo(cro)
 		geo := mesh.Get("geometry")
 		geoInfo := GetGeoInfo(geo)
 		SetPosition(
@@ -286,54 +272,4 @@ func (cf *ClientFloorGL) makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.V
 		DstCellSize/3, DstCellSize/3, DstCellSize/3,
 	)
 	return ThreeJsNew("Mesh", geo, mat)
-}
-
-func carryObjClientOnFloor2DrawInfo(
-	co *c2t_obj.CarryObjClientOnFloor) coShift {
-	switch co.CarryingObjectType {
-	default:
-		return coShiftOther[co.CarryingObjectType]
-	case carryingobjecttype.Equip:
-		return eqposShift[co.EquipType]
-	}
-}
-
-type coShift struct {
-	X float64
-	Y float64
-	Z float64
-}
-
-var aoeqposShift = [equipslottype.EquipSlotType_Count]coShift{
-	equipslottype.Helmet: {-0.33, 0.0, 0.66},
-	equipslottype.Amulet: {1.00, 0.0, 0.66},
-
-	equipslottype.Weapon: {-0.33, 0.25, 0.66},
-	equipslottype.Shield: {1.00, 0.25, 0.66},
-
-	equipslottype.Ring:     {-0.33, 0.50, 0.66},
-	equipslottype.Gauntlet: {1.00, 0.50, 0.66},
-
-	equipslottype.Armor:    {-0.33, 0.75, 0.66},
-	equipslottype.Footwear: {1.00, 0.75, 0.66},
-}
-
-var eqposShift = [equipslottype.EquipSlotType_Count]coShift{
-	equipslottype.Helmet: {0.0, 0.0, 0.33},
-	equipslottype.Amulet: {0.75, 0.0, 0.33},
-
-	equipslottype.Weapon: {0.0, 0.25, 0.33},
-	equipslottype.Shield: {0.75, 0.25, 0.33},
-
-	equipslottype.Ring:     {0.0, 0.50, 0.33},
-	equipslottype.Gauntlet: {0.75, 0.50, 0.33},
-
-	equipslottype.Armor:    {0.0, 0.75, 0.33},
-	equipslottype.Footwear: {0.75, 0.75, 0.33},
-}
-
-var coShiftOther = [carryingobjecttype.CarryingObjectType_Count]coShift{
-	carryingobjecttype.Money:  {0.33, 0.0, 0.33},
-	carryingobjecttype.Potion: {0.33, 0.33, 0.33},
-	carryingobjecttype.Scroll: {0.33, 0.66, 0.33},
 }

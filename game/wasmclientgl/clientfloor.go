@@ -51,6 +51,7 @@ type ClientFloorGL struct {
 
 	jsSceneObjs map[string]js.Value // in sight only ao, carryobj
 
+	// tile 3d instancedmesh
 	// count = ClientViewLen*ClientViewLen
 	jsInstacedMesh  [tile.Tile_Count]js.Value
 	jsInstacedCount [tile.Tile_Count]int // in use count

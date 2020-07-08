@@ -20,10 +20,13 @@ import (
 	"github.com/kasworld/findnear"
 
 	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/enum/carryingobjecttype"
+	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 const (
@@ -180,6 +183,19 @@ func CalcCurrentFrame(difftick int64, fps float64) int {
 	return int(frame)
 }
 
+func CalcShiftDxDy(frameProgress float64) (int, int) {
+	rate := 1 - frameProgress
+	if rate < 0 {
+		rate = 0
+	}
+	if rate > 1 {
+		rate = 1
+	}
+	dx := int(float64(DstCellSize) * rate)
+	dy := int(float64(DstCellSize) * rate)
+	return dx, dy
+}
+
 func SetPosition(jso js.Value, pos ...interface{}) {
 	po := jso.Get("position")
 	if len(pos) >= 1 {
@@ -203,4 +219,54 @@ func ThreeJs() js.Value {
 
 func GetElementById(id string) js.Value {
 	return js.Global().Get("document").Call("getElementById", id)
+}
+
+func CarryObjClientOnFloor2DrawInfo(
+	co *c2t_obj.CarryObjClientOnFloor) ShiftInfo {
+	switch co.CarryingObjectType {
+	default:
+		return otherCarryObjShift[co.CarryingObjectType]
+	case carryingobjecttype.Equip:
+		return eqPosShift[co.EquipType]
+	}
+}
+
+type ShiftInfo struct {
+	X float64
+	Y float64
+	Z float64
+}
+
+var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
+	equipslottype.Helmet: {-0.33, 0.0, 0.66},
+	equipslottype.Amulet: {1.00, 0.0, 0.66},
+
+	equipslottype.Weapon: {-0.33, 0.25, 0.66},
+	equipslottype.Shield: {1.00, 0.25, 0.66},
+
+	equipslottype.Ring:     {-0.33, 0.50, 0.66},
+	equipslottype.Gauntlet: {1.00, 0.50, 0.66},
+
+	equipslottype.Armor:    {-0.33, 0.75, 0.66},
+	equipslottype.Footwear: {1.00, 0.75, 0.66},
+}
+
+var eqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
+	equipslottype.Helmet: {0.0, 0.0, 0.33},
+	equipslottype.Amulet: {0.75, 0.0, 0.33},
+
+	equipslottype.Weapon: {0.0, 0.25, 0.33},
+	equipslottype.Shield: {0.75, 0.25, 0.33},
+
+	equipslottype.Ring:     {0.0, 0.50, 0.33},
+	equipslottype.Gauntlet: {0.75, 0.50, 0.33},
+
+	equipslottype.Armor:    {0.0, 0.75, 0.33},
+	equipslottype.Footwear: {0.75, 0.75, 0.33},
+}
+
+var otherCarryObjShift = [carryingobjecttype.CarryingObjectType_Count]ShiftInfo{
+	carryingobjecttype.Money:  {0.33, 0.0, 0.33},
+	carryingobjecttype.Potion: {0.33, 0.33, 0.33},
+	carryingobjecttype.Scroll: {0.33, 0.66, 0.33},
 }
