@@ -131,15 +131,13 @@ func (cf *ClientFloorGL) addFieldObjAt(
 
 	mat := GetTileMaterialByCache(ti)
 	geo := GetBoxGeometryByCache(DstCellSize-1, DstCellSize-1, DstCellSize-1)
-	geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-	geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-	geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+	geoInfo := GetGeoInfo(geo)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	SetPosition(
 		mesh,
-		float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
-		-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
-		(geoZmax-geoZmin)/2)
+		float64(fx)*DstCellSize+geoInfo.Len[0]/2,
+		-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
+		geoInfo.Len[2]/2)
 	cf.scene.Call("add", mesh)
 }
 
@@ -171,14 +169,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 
 		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		geo := mesh.Get("geometry")
-		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+		geoInfo := GetGeoInfo(geo)
 		SetPosition(
 			mesh,
-			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2,
-			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2,
-			(geoZmax-geoZmin)/2)
+			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
+			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
+			geoInfo.Len[2]/2)
 
 		addUUID[ao.UUID] = true
 
@@ -193,14 +189,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 			shInfo := aoeqposShift[eqo.EquipType]
 			geo := mesh.Get("geometry")
-			geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-			geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-			geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+			geoInfo := GetGeoInfo(geo)
 			SetPosition(
 				mesh,
-				float64(fx)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
-				-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
-				(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
+				float64(fx)*DstCellSize+geoInfo.Len[0]/2+DstCellSize*shInfo.X,
+				-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
+				geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
 			)
 			addUUID[eqo.UUID] = true
 		}
@@ -218,14 +212,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		fx, fy := cf.calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
 		shInfo := carryObjClientOnFloor2DrawInfo(cro)
 		geo := mesh.Get("geometry")
-		geoXmin, geoXmax := CalcGeoMinMaxX(geo)
-		geoYmin, geoYmax := CalcGeoMinMaxY(geo)
-		geoZmin, geoZmax := CalcGeoMinMaxZ(geo)
+		geoInfo := GetGeoInfo(geo)
 		SetPosition(
 			mesh,
-			float64(fx)*DstCellSize+(geoXmax-geoXmin)/2+DstCellSize*shInfo.X,
-			-float64(fy)*DstCellSize-(geoYmax-geoYmin)/2-DstCellSize*shInfo.Y,
-			(geoZmax-geoZmin)/2+DstCellSize*shInfo.Z,
+			float64(fx)*DstCellSize+geoInfo.Len[0]/2+DstCellSize*shInfo.X,
+			-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
+			geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
 		)
 
 		addUUID[cro.UUID] = true

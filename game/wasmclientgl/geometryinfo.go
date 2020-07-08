@@ -16,9 +16,9 @@ import (
 )
 
 type GeoInfo struct {
-	GeoMin [3]float64
-	GeoMax [3]float64
-	GeoLen [3]float64
+	Min [3]float64
+	Max [3]float64
+	Len [3]float64
 }
 
 func GetGeoInfo(geo js.Value) GeoInfo {
@@ -26,41 +26,20 @@ func GetGeoInfo(geo js.Value) GeoInfo {
 	geo.Call("computeBoundingBox")
 	minbox := geo.Get("boundingBox").Get("min")
 	maxbox := geo.Get("boundingBox").Get("max")
-	rtn.GeoMin = [3]float64{
+	rtn.Min = [3]float64{
 		minbox.Get("x").Float(),
 		minbox.Get("y").Float(),
 		minbox.Get("z").Float(),
 	}
-	rtn.GeoMax = [3]float64{
+	rtn.Max = [3]float64{
 		maxbox.Get("x").Float(),
 		maxbox.Get("y").Float(),
 		maxbox.Get("z").Float(),
 	}
-	rtn.GeoLen = [3]float64{
+	rtn.Len = [3]float64{
 		maxbox.Get("x").Float() - minbox.Get("x").Float(),
 		maxbox.Get("y").Float() - minbox.Get("y").Float(),
 		maxbox.Get("z").Float() - minbox.Get("z").Float(),
 	}
 	return rtn
-}
-
-func CalcGeoMinMaxX(geo js.Value) (float64, float64) {
-	geo.Call("computeBoundingBox")
-	geoMax := geo.Get("boundingBox").Get("max").Get("x").Float()
-	geoMin := geo.Get("boundingBox").Get("min").Get("x").Float()
-	return geoMin, geoMax
-}
-
-func CalcGeoMinMaxY(geo js.Value) (float64, float64) {
-	geo.Call("computeBoundingBox")
-	geoMax := geo.Get("boundingBox").Get("max").Get("y").Float()
-	geoMin := geo.Get("boundingBox").Get("min").Get("y").Float()
-	return geoMin, geoMax
-}
-
-func CalcGeoMinMaxZ(geo js.Value) (float64, float64) {
-	geo.Call("computeBoundingBox")
-	geoMax := geo.Get("boundingBox").Get("max").Get("z").Float()
-	geoMin := geo.Get("boundingBox").Get("min").Get("z").Float()
-	return geoMin, geoMax
 }

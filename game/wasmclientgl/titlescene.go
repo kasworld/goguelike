@@ -59,12 +59,12 @@ func (ts *TitleScene) Resize(w, h float64) {
 func (ts *TitleScene) addTitle() {
 	str := "Goguelike"
 	ftGeo := GetTextGeometryByCache(str, 80)
-	geoMin, geoMax := CalcGeoMinMaxX(ftGeo)
+	geoInfo := GetGeoInfo(ftGeo)
 	co := gRnd.Uint32() & 0x00ffffff
 	ftMat := GetColorMaterialByCache(fmt.Sprintf("#%06x", co))
 	ts.jsoTitle = ThreeJsNew("Mesh", ftGeo, ftMat)
 	SetPosition(ts.jsoTitle,
-		HelperSize/2-(geoMax-geoMin)/2,
+		HelperSize/2-geoInfo.Len[0]/2,
 		HelperSize/2,
 		HelperSize/2,
 	)
