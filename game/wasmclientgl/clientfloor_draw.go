@@ -12,8 +12,11 @@
 package wasmclientgl
 
 import (
+	"math"
+
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
+	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -21,7 +24,8 @@ import (
 func (cf *ClientFloorGL) UpdateFrame(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
-	taNoti *c2t_obj.NotiVPTiles_data) {
+	taNoti *c2t_obj.NotiVPTiles_data,
+	envBias bias.Bias) {
 
 	zoom := gameOptions.GetByIDBase("Zoom").State
 	sx, sy := CalcShiftDxDy(frameProgress)
@@ -32,9 +36,22 @@ func (cf *ClientFloorGL) UpdateFrame(
 	cameraX := taNoti.VPX*DstCellSize + scrollDx
 	cameraY := -taNoti.VPY*DstCellSize + scrollDy
 	cameraZ := HelperSize
-	SetPosition(cf.light,
-		cameraX, cameraY, DstCellSize*16,
-	)
+
+	envBias = envBias.MakeAbsSumTo(1)
+	// cx := float64(cf.XWrapper.GetWidth()) * DstCellSize / 2
+	// cy := float64(cf.YWrapper.GetWidth()) * DstCellSize / 2
+	// r := math.Sqrt(cx*cx+cy*cy) / 2
+	cx := float64(cameraX)
+	cy := float64(cameraY)
+	r := float64(DstCellSize * 32)
+	for i := range cf.light {
+		rad := envBias[i] * 2 * math.Pi
+		x := cx + r*math.Sin(rad)
+		y := cy + r*math.Cos(rad)
+		SetPosition(cf.light[i],
+			x, y, r,
+		)
+	}
 	SetPosition(cf.camera,
 		cameraX, cameraY-cameraZ/2, cameraZ,
 	)

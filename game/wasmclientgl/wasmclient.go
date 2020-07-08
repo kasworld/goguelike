@@ -303,9 +303,10 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 	frameProgress := app.ClientJitter.GetInFrameProgress2()
 	scrollDir := app.getScrollDir()
 
+	envBias := app.GetEnvBias()
 	cf := app.currentFloor()
 	if cf != nil {
-		cf.UpdateFrame(frameProgress, scrollDir, app.taNotiData)
+		cf.UpdateFrame(frameProgress, scrollDir, app.taNotiData, envBias)
 		app.vp.renderer.Call("render", cf.scene, cf.camera)
 	}
 	return nil
