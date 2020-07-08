@@ -33,7 +33,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 	cameraY := -taNoti.VPY*DstCellSize + scrollDy
 	cameraZ := HelperSize*0.75 - HelperSize*0.75*zoom/4
 	SetPosition(cf.light,
-		cameraX-DstCellSize*8, cameraY, DstCellSize*16,
+		cameraX, cameraY, DstCellSize*16,
 	)
 	SetPosition(cf.camera,
 		cameraX, cameraY-cameraZ/2, cameraZ,
