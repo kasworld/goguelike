@@ -69,7 +69,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 	cf.camera.Call("updateProjectionMatrix")
 }
 
-// cf.VPTiles to webgl
+// add tiles in gXYLenListView
 func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 	for i := 0; i < tile.Tile_Count; i++ {
 		cf.jsInstacedCount[i] = 0 // clear use count
