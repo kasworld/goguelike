@@ -44,7 +44,8 @@ type ClientFloorGL struct {
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
 	camera js.Value
-	light  [3]js.Value
+	light  [3]js.Value // rgb light
+	lightW js.Value    // white light
 	scene  js.Value
 
 	sightPlane *SightPlane
@@ -76,13 +77,18 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 1, HelperSize*2)
 	cf.scene = ThreeJsNew("Scene")
 
+	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 1)
+	SetPosition(cf.lightW,
+		HelperSize/2, HelperSize/2, HelperSize/2,
+	)
+	cf.scene.Call("add", cf.lightW)
 	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
 		cf.light[i] = ThreeJsNew("PointLight", co, 1)
 		SetPosition(cf.light[i],
 			HelperSize/2, HelperSize/2, HelperSize/2,
 		)
 		cf.scene.Call("add", cf.light[i])
-		lightHelper := ThreeJsNew("PointLightHelper", cf.light[i], 1)
+		lightHelper := ThreeJsNew("PointLightHelper", cf.light[i], 2)
 		cf.scene.Call("add", lightHelper)
 	}
 

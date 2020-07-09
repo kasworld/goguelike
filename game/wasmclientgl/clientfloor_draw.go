@@ -12,6 +12,8 @@
 package wasmclientgl
 
 import (
+	"math"
+
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -36,20 +38,25 @@ func (cf *ClientFloorGL) UpdateFrame(
 	cameraZ := HelperSize
 
 	envBias = envBias.MakeAbsSumTo(1)
-	// cx := float64(cf.XWrapper.GetWidth()) * DstCellSize / 2
-	// cy := float64(cf.YWrapper.GetWidth()) * DstCellSize / 2
-	// r := math.Sqrt(cx*cx+cy*cy) / 2
-	cx := float64(cameraX)
-	cy := float64(cameraY)
-	// r := float64(DstCellSize * 4)
+	cx := float64(cf.XWrapper.GetWidth()) * DstCellSize / 2
+	cy := float64(cf.YWrapper.GetWidth()) * DstCellSize / 2
+	r := cx
+	if cy < cx {
+		r = cy
+	}
+	r *= 0.7
 	for i := range cf.light {
-		// rad := envBias[i] * 2 * math.Pi
-		// x := cx + r*math.Sin(rad)
-		// y := cy + r*math.Cos(rad)
+		rad := envBias[i] * 2 * math.Pi
+		x := cx + r*math.Sin(rad)
+		y := cy + r*math.Cos(rad)
 		SetPosition(cf.light[i],
-			cx, cy, (envBias[i]+1)*DstCellSize*8,
+			x, -y, DstCellSize*8,
 		)
 	}
+	SetPosition(cf.lightW,
+		cameraX, cameraY-cameraZ/2, cameraZ,
+	)
+
 	SetPosition(cf.camera,
 		cameraX, cameraY-cameraZ/2, cameraZ,
 	)
