@@ -15,10 +15,9 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/lib/webtilegroup"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-type ActiveObjGL struct {
+type ActiveObj3D struct {
 	Cnv     js.Value
 	Ctx     js.Value
 	Tex     js.Value
@@ -26,19 +25,12 @@ type ActiveObjGL struct {
 	Mesh    js.Value
 }
 
-func NewActiveObjGL(ao *c2t_obj.ActiveObjClient) *ActiveObjGL {
-	tlList := gClientTile.CharTiles[ao.Faction]
-	ti := tlList[0]
-
+func NewActiveObj3D() *ActiveObj3D {
 	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	ctx := cnv.Call("getContext", "2d")
 	ctx.Set("imageSmoothingEnabled", false)
 	cnv.Set("width", DstCellSize)
 	cnv.Set("height", DstCellSize)
-	ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-
 	tex := ThreeJsNew("CanvasTexture", cnv)
 	mat := ThreeJsNew("MeshPhongMaterial",
 		map[string]interface{}{
@@ -48,7 +40,7 @@ func NewActiveObjGL(ao *c2t_obj.ActiveObjClient) *ActiveObjGL {
 	mat.Set("transparent", true)
 	geo := ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
 	mesh := ThreeJsNew("Mesh", geo, mat)
-	return &ActiveObjGL{
+	return &ActiveObj3D{
 		Cnv:     cnv,
 		Ctx:     ctx,
 		Tex:     tex,
@@ -57,14 +49,14 @@ func NewActiveObjGL(ao *c2t_obj.ActiveObjClient) *ActiveObjGL {
 	}
 }
 
-func (aog *ActiveObjGL) ChangeTile(ti webtilegroup.TileInfo) {
+func (aog *ActiveObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 		0, 0, DstCellSize, DstCellSize)
 	aog.Tex.Set("needsUpdate", true)
 }
 
-func (aog *ActiveObjGL) Dispose() {
+func (aog *ActiveObj3D) Dispose() {
 	// mesh do not need dispose
 	aog.Mesh.Get("geometry").Call("dispose")
 	aog.Mesh.Get("material").Call("dispose")

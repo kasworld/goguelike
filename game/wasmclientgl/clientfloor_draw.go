@@ -140,11 +140,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	floorW := cf.XWrapper.GetWidth()
 	floorH := cf.YWrapper.GetWidth()
 
-	addUUID := make(map[string]bool)
+	addAOUUID := make(map[string]bool)
+	addCOUUID := make(map[string]bool)
 
 	// make activeobj
 	for _, ao := range olNoti.ActiveObjList {
-		mesh, exist := cf.jsSceneObjs[ao.UUID]
+		mesh, exist := cf.jsSceneAOs[ao.UUID]
 		tlList := gClientTile.CharTiles[ao.Faction]
 		ti := tlList[0]
 		if !ao.Alive {
@@ -155,7 +156,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
 			mesh = ThreeJsNew("Mesh", geo, mat)
 			cf.scene.Call("add", mesh)
-			cf.jsSceneObjs[ao.UUID] = mesh
+			cf.jsSceneAOs[ao.UUID] = mesh
 		}
 		mesh.Set("material", mat)
 
@@ -168,14 +169,14 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
 			geoInfo.Len[2]/2)
 
-		addUUID[ao.UUID] = true
+		addAOUUID[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {
-			mesh, exist := cf.jsSceneObjs[eqo.UUID]
+			mesh, exist := cf.jsSceneCOs[eqo.UUID]
 			if !exist {
 				mesh = makeEquipedMesh(eqo)
 				cf.scene.Call("add", mesh)
-				cf.jsSceneObjs[eqo.UUID] = mesh
+				cf.jsSceneCOs[eqo.UUID] = mesh
 			}
 
 			fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
@@ -188,17 +189,24 @@ func (cf *ClientFloorGL) processNotiObjectList(
 				-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
 				geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
 			)
-			addUUID[eqo.UUID] = true
+			addCOUUID[eqo.UUID] = true
+		}
+	}
+
+	for id, mesh := range cf.jsSceneAOs {
+		if !addAOUUID[id] {
+			cf.scene.Call("remove", mesh)
+			delete(cf.jsSceneAOs, id)
 		}
 	}
 
 	// make carryobj
 	for _, cro := range olNoti.CarryObjList {
-		mesh, exist := cf.jsSceneObjs[cro.UUID]
+		mesh, exist := cf.jsSceneCOs[cro.UUID]
 		if !exist {
 			mesh = makeCarryObjMesh(cro)
 			cf.scene.Call("add", mesh)
-			cf.jsSceneObjs[cro.UUID] = mesh
+			cf.jsSceneCOs[cro.UUID] = mesh
 		}
 
 		fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
@@ -212,13 +220,13 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
 		)
 
-		addUUID[cro.UUID] = true
+		addCOUUID[cro.UUID] = true
 	}
 
-	for id, mesh := range cf.jsSceneObjs {
-		if !addUUID[id] {
+	for id, mesh := range cf.jsSceneCOs {
+		if !addCOUUID[id] {
 			cf.scene.Call("remove", mesh)
-			delete(cf.jsSceneObjs, id)
+			delete(cf.jsSceneCOs, id)
 		}
 	}
 }
