@@ -145,30 +145,25 @@ func (cf *ClientFloorGL) processNotiObjectList(
 
 	// make activeobj
 	for _, ao := range olNoti.ActiveObjList {
-		mesh, exist := cf.jsSceneAOs[ao.UUID]
-		tlList := gClientTile.CharTiles[ao.Faction]
-		ti := tlList[0]
-		if !ao.Alive {
-			ti = tlList[1]
-		}
-		mat := GetTileMaterialByCache(ti)
+		ao3d, exist := cf.jsSceneAOs[ao.UUID]
 		if !exist {
-			geo := GetBoxGeometryByCache(DstCellSize, DstCellSize, DstCellSize)
-			mesh = ThreeJsNew("Mesh", geo, mat)
-			cf.scene.Call("add", mesh)
-			cf.jsSceneAOs[ao.UUID] = mesh
+			ao3d = NewActiveObj3D()
+			cf.scene.Call("add", ao3d.Mesh)
+			cf.jsSceneAOs[ao.UUID] = ao3d
 		}
-		mesh.Set("material", mat)
-
+		tlList := gClientTile.CharTiles[ao.Faction]
+		if ao.Alive {
+			ao3d.ChangeTile(tlList[0])
+		} else {
+			ao3d.ChangeTile(tlList[1])
+		}
+		geoInfo := ao3d.GeoInfo
 		fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
-		geo := mesh.Get("geometry")
-		geoInfo := GetGeoInfo(geo)
 		SetPosition(
-			mesh,
+			ao3d.Mesh,
 			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
 			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
 			geoInfo.Len[2]/2)
-
 		addAOUUID[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {
@@ -193,10 +188,11 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		}
 	}
 
-	for id, mesh := range cf.jsSceneAOs {
+	for id, ao3d := range cf.jsSceneAOs {
 		if !addAOUUID[id] {
-			cf.scene.Call("remove", mesh)
+			cf.scene.Call("remove", ao3d.Mesh)
 			delete(cf.jsSceneAOs, id)
+			ao3d.Dispose()
 		}
 	}
 

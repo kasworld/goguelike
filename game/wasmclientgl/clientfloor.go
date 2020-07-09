@@ -50,8 +50,8 @@ type ClientFloorGL struct {
 
 	sightPlane *SightPlane
 
-	jsSceneCOs map[string]js.Value // in sight only  carryobj
-	jsSceneAOs map[string]js.Value // in sight only ao
+	jsSceneCOs map[string]js.Value     // in sight only  carryobj
+	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
 
 	// tile 3d instancedmesh
 	// count = ClientViewLen*ClientViewLen
@@ -66,7 +66,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		FloorInfo:  fi,
 		XWrapper:   wrapper.New(fi.W),
 		YWrapper:   wrapper.New(fi.H),
-		jsSceneAOs: make(map[string]js.Value),
+		jsSceneAOs: make(map[string]*ActiveObj3D),
 		jsSceneCOs: make(map[string]js.Value),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
