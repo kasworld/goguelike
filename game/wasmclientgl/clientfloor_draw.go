@@ -12,8 +12,6 @@
 package wasmclientgl
 
 import (
-	"math"
-
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -43,13 +41,13 @@ func (cf *ClientFloorGL) UpdateFrame(
 	// r := math.Sqrt(cx*cx+cy*cy) / 2
 	cx := float64(cameraX)
 	cy := float64(cameraY)
-	r := float64(DstCellSize * 32)
+	// r := float64(DstCellSize * 4)
 	for i := range cf.light {
-		rad := envBias[i] * 2 * math.Pi
-		x := cx + r*math.Sin(rad)
-		y := cy + r*math.Cos(rad)
+		// rad := envBias[i] * 2 * math.Pi
+		// x := cx + r*math.Sin(rad)
+		// y := cy + r*math.Cos(rad)
 		SetPosition(cf.light[i],
-			x, y, r,
+			cx, cy, (envBias[i]+1)*DstCellSize*8,
 		)
 	}
 	SetPosition(cf.camera,
@@ -60,7 +58,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 			cameraX, cameraY, 0,
 		),
 	)
-	cf.camera.Set("zoom", 1.5+float64(zoom)/2)
+	cf.camera.Set("zoom", 1.0+float64(zoom)/2)
 	cf.camera.Call("updateProjectionMatrix")
 }
 

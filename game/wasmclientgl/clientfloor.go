@@ -82,6 +82,8 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 			HelperSize/2, HelperSize/2, HelperSize/2,
 		)
 		cf.scene.Call("add", cf.light[i])
+		lightHelper := ThreeJsNew("PointLightHelper", cf.light[i], 1)
+		cf.scene.Call("add", lightHelper)
 	}
 
 	axisSize := fi.W
