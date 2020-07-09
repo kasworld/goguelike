@@ -61,5 +61,11 @@ func (aog *ActiveObj3D) Dispose() {
 	aog.Mesh.Get("geometry").Call("dispose")
 	aog.Mesh.Get("material").Call("dispose")
 	aog.Tex.Call("dispose")
-	js.Global().Get("document").Call("removeChild", aog.Cnv)
+
+	aog.Cnv = js.Undefined()
+	aog.Ctx = js.Undefined()
+	aog.Mesh = js.Undefined()
+	aog.Tex = js.Undefined()
+	// no need createElement canvas dom obj
+	// aog.Cnv.Get("parentNode").Call("removeChild", aog.Cnv)
 }
