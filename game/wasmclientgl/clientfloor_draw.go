@@ -123,7 +123,7 @@ func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
 			cf.scene.Call("add", fo3d.Mesh)
 		}
 		addFOuuid[obj.GetUUID()] = true
-		fo3d.SetPosition(fx, fy)
+		fo3d.SetFieldPosition(fx, fy)
 	}
 
 	// del removed obj
@@ -160,14 +160,8 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		} else {
 			ao3d.ChangeTile(tlList[1])
 		}
-		geoInfo := ao3d.GeoInfo
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
-		SetPosition(
-			ao3d.Mesh,
-			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
-			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-			geoInfo.Len[2]/2+2,
-		)
+		ao3d.SetFieldPosition(fx, fy)
 		addAOuuid[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {

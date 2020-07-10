@@ -59,7 +59,7 @@ func (aog *FieldObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Tex.Set("needsUpdate", true)
 }
 
-func (aog *FieldObj3D) SetPosition(fx, fy int) {
+func (aog *FieldObj3D) SetFieldPosition(fx, fy int) {
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2,
