@@ -78,7 +78,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.sightPlane = NewSightPlane()
 
-	cf.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 1, HelperSize*2)
+	cf.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
 	cf.scene = ThreeJsNew("Scene")
 
 	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 1)

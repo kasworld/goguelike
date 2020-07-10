@@ -128,7 +128,7 @@ func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
 			fo3d.Mesh,
 			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
 			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-			geoInfo.Len[2]/2,
+			geoInfo.Len[2]/2+2,
 		)
 	}
 
@@ -172,7 +172,8 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			ao3d.Mesh,
 			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
 			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-			geoInfo.Len[2]/2)
+			geoInfo.Len[2]/2+2,
+		)
 		addAOuuid[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {
