@@ -61,6 +61,15 @@ func (aog *CarryObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Tex.Set("needsUpdate", true)
 }
 
+func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shInfo ShiftInfo) {
+	SetPosition(
+		aog.Mesh,
+		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2+DstCellSize*shInfo.X,
+		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-DstCellSize*shInfo.Y,
+		aog.GeoInfo.Len[2]/2+DstCellSize*shInfo.Z,
+	)
+}
+
 func (aog *CarryObj3D) Dispose() {
 	// mesh do not need dispose
 	aog.Mesh.Get("geometry").Call("dispose")

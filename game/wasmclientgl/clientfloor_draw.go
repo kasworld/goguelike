@@ -174,13 +174,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 				cf.jsSceneCOs[eqo.UUID] = cr3d
 			}
 			shInfo := aoEqPosShift[eqo.EquipType]
-			geoInfo := cr3d.GeoInfo
-			SetPosition(
-				cr3d.Mesh,
-				float64(fx)*DstCellSize+geoInfo.Len[0]/2+DstCellSize*shInfo.X,
-				-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
-				geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
-			)
+			cr3d.SetFieldPosition(fx, fy, shInfo)
 			addCOuuid[eqo.UUID] = true
 		}
 	}
@@ -206,14 +200,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
 		shInfo := CarryObjClientOnFloor2DrawInfo(cro)
-		geoInfo := cr3d.GeoInfo
-		SetPosition(
-			cr3d.Mesh,
-			float64(fx)*DstCellSize+geoInfo.Len[0]/2+DstCellSize*shInfo.X,
-			-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
-			geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
-		)
-
+		cr3d.SetFieldPosition(fx, fy, shInfo)
 		addCOuuid[cro.UUID] = true
 	}
 
