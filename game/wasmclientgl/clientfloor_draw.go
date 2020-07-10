@@ -20,13 +20,17 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
+func (cf *ClientFloorGL) Zoom(zoom int) {
+	cf.camera.Set("zoom", 1.0+float64(zoom)/2)
+	cf.camera.Call("updateProjectionMatrix")
+}
+
 func (cf *ClientFloorGL) UpdateFrame(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
 	envBias bias.Bias) {
 
-	zoom := gameOptions.GetByIDBase("Zoom").State
 	sx, sy := CalcShiftDxDy(frameProgress)
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
@@ -64,8 +68,6 @@ func (cf *ClientFloorGL) UpdateFrame(
 			cameraX, cameraY, 0,
 		),
 	)
-	cf.camera.Set("zoom", 1.0+float64(zoom)/2)
-	cf.camera.Call("updateProjectionMatrix")
 }
 
 // add tiles in gXYLenListView

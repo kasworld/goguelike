@@ -255,6 +255,7 @@ func (cf *ClientFloorGL) EnterFloor() {
 	winW := win.Get("innerWidth").Float()
 	winH := win.Get("innerHeight").Float()
 	cf.Resize(winW, winH)
+	cf.Zoom(gameOptions.GetByIDBase("Zoom").State)
 }
 
 func (cf *ClientFloorGL) Resize(w, h float64) {
