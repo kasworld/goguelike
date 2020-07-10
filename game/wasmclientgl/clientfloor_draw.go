@@ -18,7 +18,6 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/gowasmlib/jslog"
 )
 
 func (cf *ClientFloorGL) UpdateFrame(
@@ -101,35 +100,43 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 	}
 }
 
-func (cf *ClientFloorGL) addFieldObj(o *c2t_obj.FieldObjClient) {
-	oldx, oldy, exist := cf.FieldObjPosMan.GetXYByUUID(o.ID)
-	if exist && o.X == oldx && o.Y == oldy {
-		return // no need to add
-	}
-	if exist { // handle obj move
-		// something wrong, field obj do not move
-		jslog.Errorf("fieldobj move? %v %v %v", o, oldx, oldy)
-		return
-	}
-	// add new obj
-	cf.FieldObjPosMan.AddToXY(o, o.X, o.Y)
-	mat, geo := MakeFieldObjMatGeo(o, o.X, o.Y)
-	geoInfo := GetGeoInfo(geo)
-	mesh := ThreeJsNew("InstancedMesh", geo, mat, 9)
-	cf.scene.Call("add", mesh)
-	matrix := ThreeJsNew("Matrix4")
-	for i := 0; i < way9type.Way9Type_Count; i++ {
-		dx, dy := way9type.Way9Type(i).DxDy()
-		fx := o.X + dx*cf.XWrapper.GetWidth()
-		fy := o.Y + dy*cf.YWrapper.GetWidth()
-		matrix.Call("setPosition",
-			ThreeJsNew("Vector3",
-				float64(fx)*DstCellSize+geoInfo.Len[0]/2,
-				-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-				geoInfo.Len[2]/2,
-			),
+// add fo to clientview by cf.FieldObjPosMan
+func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
+	addFOuuid := make(map[string]bool)
+	for _, v := range gXYLenListView {
+		fx := v.X + vpx
+		fy := v.Y + vpy
+		obj := cf.FieldObjPosMan.Get1stObjAt(fx, fy) // wrap in fn
+		if obj == nil {
+			continue
+		}
+		fo := obj.(*c2t_obj.FieldObjClient)
+		fo3d, exist := cf.jsSceneFOs[obj.GetUUID()]
+		if !exist {
+			// add new fieldobj
+			fo3d = NewFieldObj3D()
+			ti := FieldObj2TileInfo(fo.DisplayType, fo.X, fo.Y)
+			fo3d.ChangeTile(ti)
+			cf.jsSceneFOs[obj.GetUUID()] = fo3d
+			cf.scene.Call("add", fo3d.Mesh)
+		}
+		addFOuuid[obj.GetUUID()] = true
+		geoInfo := fo3d.GeoInfo
+		SetPosition(
+			fo3d.Mesh,
+			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
+			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
+			geoInfo.Len[2]/2,
 		)
-		mesh.Call("setMatrixAt", i, matrix)
+	}
+
+	// del removed obj
+	for id, fo3d := range cf.jsSceneFOs {
+		if !addFOuuid[id] {
+			cf.scene.Call("remove", fo3d.Mesh)
+			fo3d.Dispose()
+			delete(cf.jsSceneFOs, id)
+		}
 	}
 }
 
@@ -140,8 +147,8 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	floorW := cf.XWrapper.GetWidth()
 	floorH := cf.YWrapper.GetWidth()
 
-	addAOUUID := make(map[string]bool)
-	addCOUUID := make(map[string]bool)
+	addAOuuid := make(map[string]bool)
+	addCOuuid := make(map[string]bool)
 
 	// make activeobj
 	for _, ao := range olNoti.ActiveObjList {
@@ -164,7 +171,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
 			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
 			geoInfo.Len[2]/2)
-		addAOUUID[ao.UUID] = true
+		addAOuuid[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {
 			mesh, exist := cf.jsSceneCOs[eqo.UUID]
@@ -182,12 +189,12 @@ func (cf *ClientFloorGL) processNotiObjectList(
 				-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
 				geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
 			)
-			addCOUUID[eqo.UUID] = true
+			addCOuuid[eqo.UUID] = true
 		}
 	}
 
 	for id, ao3d := range cf.jsSceneAOs {
-		if !addAOUUID[id] {
+		if !addAOuuid[id] {
 			cf.scene.Call("remove", ao3d.Mesh)
 			delete(cf.jsSceneAOs, id)
 			ao3d.Dispose()
@@ -214,11 +221,11 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
 		)
 
-		addCOUUID[cro.UUID] = true
+		addCOuuid[cro.UUID] = true
 	}
 
 	for id, mesh := range cf.jsSceneCOs {
-		if !addCOUUID[id] {
+		if !addCOuuid[id] {
 			cf.scene.Call("remove", mesh)
 			delete(cf.jsSceneCOs, id)
 		}

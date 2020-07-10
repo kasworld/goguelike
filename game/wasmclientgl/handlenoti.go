@@ -451,10 +451,11 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		return nil
 	}
 	for _, v := range newOLNotiData.FieldObjList {
-		cf.addFieldObj(v)
+		cf.FieldObjPosMan.AddToXY(v, v.X, v.Y)
 	}
 
 	playerX, playerY := app.GetPlayerXY()
+	// cf.updateFieldObjInView(playerX, playerY)
 	cf.processNotiObjectList(newOLNotiData, playerX, playerY)
 	if cf.IsValidPos(playerX, playerY) {
 		app.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
@@ -594,6 +595,8 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 		jslog.Warn("%v", err)
 		return nil
 	}
+	cf.updateFieldObjInView(app.taNotiData.VPX, app.taNotiData.VPY)
+
 	if !oldComplete && cf.Visited.IsComplete() { // just completed
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Discover floor complete %v", cf.FloorInfo.Name))
@@ -645,7 +648,8 @@ func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, 
 		jslog.Warnf("FoundFieldObj unknonw floor %v", robj)
 	}
 	if fromFloor.FieldObjPosMan.Get1stObjAt(robj.FieldObj.X, robj.FieldObj.Y) == nil {
-		fromFloor.addFieldObj(robj.FieldObj)
+		fromFloor.FieldObjPosMan.AddToXY(robj.FieldObj, robj.FieldObj.X, robj.FieldObj.Y)
+		// fromFloor.addFieldObj(robj.FieldObj)
 		notiString := "Found Hidden FieldObj"
 		app.systemMessage.Append(wrapspan.ColorText("yellow",
 			notiString))

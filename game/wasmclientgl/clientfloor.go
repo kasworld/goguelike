@@ -67,8 +67,9 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		FloorInfo:  fi,
 		XWrapper:   wrapper.New(fi.W),
 		YWrapper:   wrapper.New(fi.H),
-		jsSceneAOs: make(map[string]*ActiveObj3D),
 		jsSceneCOs: make(map[string]js.Value),
+		jsSceneAOs: make(map[string]*ActiveObj3D),
+		jsSceneFOs: make(map[string]*FieldObj3D),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()

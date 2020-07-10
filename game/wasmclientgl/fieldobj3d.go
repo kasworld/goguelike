@@ -17,7 +17,6 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 
 	"github.com/kasworld/goguelike/lib/webtilegroup"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 type FieldObj3D struct {
@@ -80,13 +79,4 @@ func FieldObj2TileInfo(
 	tilediff := fx*5 + fy*3
 	ti := tlList[tilediff%len(tlList)]
 	return ti
-}
-
-func MakeFieldObjMatGeo(
-	o *c2t_obj.FieldObjClient, fx, fy int) (js.Value, js.Value) {
-	ti := FieldObj2TileInfo(o.DisplayType, fx, fy)
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize-1, DstCellSize-1, DstCellSize-1)
-	return mat, geo
 }
