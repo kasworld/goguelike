@@ -32,7 +32,7 @@ func NewActiveObj3D() *ActiveObj3D {
 	cnv.Set("width", DstCellSize)
 	cnv.Set("height", DstCellSize)
 	tex := ThreeJsNew("CanvasTexture", cnv)
-	mat := ThreeJsNew("MeshPhongMaterial",
+	mat := ThreeJsNew("MeshBasicMaterial",
 		map[string]interface{}{
 			"map": tex,
 		},
