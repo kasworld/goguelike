@@ -221,7 +221,7 @@ func GetElementById(id string) js.Value {
 }
 
 // make fx,fy around vpx, vpy
-func calcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
+func CalcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
 	if abs.Absi(fx-vpx) > w/2 {
 		if fx > vpx {
 			fx -= w

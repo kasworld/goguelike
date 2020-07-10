@@ -158,7 +158,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			ao3d.ChangeTile(tlList[1])
 		}
 		geoInfo := ao3d.GeoInfo
-		fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
+		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		SetPosition(
 			ao3d.Mesh,
 			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
@@ -173,8 +173,6 @@ func (cf *ClientFloorGL) processNotiObjectList(
 				cf.scene.Call("add", mesh)
 				cf.jsSceneCOs[eqo.UUID] = mesh
 			}
-
-			fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 			shInfo := aoEqPosShift[eqo.EquipType]
 			geo := mesh.Get("geometry")
 			geoInfo := GetGeoInfo(geo)
@@ -205,7 +203,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 			cf.jsSceneCOs[cro.UUID] = mesh
 		}
 
-		fx, fy := calcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
+		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
 		shInfo := CarryObjClientOnFloor2DrawInfo(cro)
 		geo := mesh.Get("geometry")
 		geoInfo := GetGeoInfo(geo)
