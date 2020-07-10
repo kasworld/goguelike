@@ -25,7 +25,6 @@ import (
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 const (
@@ -237,16 +236,4 @@ func CalcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
 		}
 	}
 	return fx, fy
-}
-
-func MakeFieldObjMatGeo(
-	o *c2t_obj.FieldObjClient, fx, fy int) (js.Value, js.Value) {
-
-	tlList := gClientTile.FieldObjTiles[o.DisplayType]
-	tilediff := fx*5 + fy*3
-	ti := tlList[tilediff%len(tlList)]
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize-1, DstCellSize-1, DstCellSize-1)
-	return mat, geo
 }
