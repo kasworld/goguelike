@@ -48,7 +48,7 @@ var gColorMaterialCache map[string]js.Value = make(map[string]js.Value)
 func GetColorMaterialByCache(co string) js.Value {
 	mat, exist := gColorMaterialCache[co]
 	if !exist {
-		mat = ThreeJsNew("MeshPhongMaterial",
+		mat = ThreeJsNew("MeshStandardMaterial",
 			map[string]interface{}{
 				"color": co,
 			},
@@ -70,7 +70,7 @@ func NewTileMaterial(ti webtilegroup.TileInfo) js.Value {
 		0, 0, DstCellSize, DstCellSize)
 
 	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	mat := ThreeJsNew("MeshPhongMaterial",
+	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"map": Tex,
 		},
@@ -104,7 +104,7 @@ func NewTextureTileMaterial(ti tile.Tile) js.Value {
 		0, 0, DstCellSize, DstCellSize)
 
 	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	mat := ThreeJsNew("MeshPhongMaterial",
+	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"map": Tex,
 		},

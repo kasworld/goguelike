@@ -46,7 +46,8 @@ type ClientFloorGL struct {
 	camera js.Value
 	light  [3]js.Value // rgb light
 	lightW js.Value    // white light
-	scene  js.Value
+	// fog    js.Value
+	scene js.Value
 
 	sightPlane *SightPlane
 
@@ -81,6 +82,9 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.sightPlane = NewSightPlane()
 	cf.scene.Call("add", cf.sightPlane.Mesh)
+
+	// cf.fog = ThreeJsNew("Fog", 0xffffff, 1, HelperSize*2)
+	// cf.scene.Call("add", cf.fog)
 
 	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 1)
 	SetPosition(cf.lightW,

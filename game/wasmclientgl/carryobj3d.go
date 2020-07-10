@@ -36,7 +36,7 @@ func NewCarryObj3D() *CarryObj3D {
 	cnv.Set("width", DstCellSize)
 	cnv.Set("height", DstCellSize)
 	tex := ThreeJsNew("CanvasTexture", cnv)
-	mat := ThreeJsNew("MeshBasicMaterial",
+	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"map": tex,
 		},

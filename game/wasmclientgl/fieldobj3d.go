@@ -34,8 +34,7 @@ func NewFieldObj3D() *FieldObj3D {
 	cnv.Set("width", DstCellSize)
 	cnv.Set("height", DstCellSize)
 	tex := ThreeJsNew("CanvasTexture", cnv)
-	// mat := ThreeJsNew("MeshPhongMaterial",
-	mat := ThreeJsNew("MeshBasicMaterial",
+	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"map": tex,
 		},

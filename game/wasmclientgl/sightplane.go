@@ -39,7 +39,7 @@ func NewSightPlane() *SightPlane {
 	Cnv.Set("height", h)
 
 	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	Mat := ThreeJsNew("MeshBasicMaterial",
+	Mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"map": Tex,
 		},
