@@ -29,11 +29,17 @@ func (cf *ClientFloorGL) UpdateFrame(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
-	envBias bias.Bias) {
+	envBias bias.Bias,
+) {
 
 	sx, sy := CalcShiftDxDy(frameProgress)
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
+
+	rad := 2 * math.Pi / 360
+	for _, fo := range cf.jsSceneFOs {
+		fo.RotateZ(rad)
+	}
 
 	// move camera, light
 	cameraX := taNoti.VPX*DstCellSize + scrollDx
