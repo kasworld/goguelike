@@ -165,17 +165,18 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		addAOuuid[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {
-			mesh, exist := cf.jsSceneCOs[eqo.UUID]
+			cr3d, exist := cf.jsSceneCOs[eqo.UUID]
 			if !exist {
-				mesh = MakeEquipedMesh(eqo)
-				cf.scene.Call("add", mesh)
-				cf.jsSceneCOs[eqo.UUID] = mesh
+				cr3d = NewCarryObj3D()
+				ti := Equiped2TileInfo(eqo)
+				cr3d.ChangeTile(ti)
+				cf.scene.Call("add", cr3d.Mesh)
+				cf.jsSceneCOs[eqo.UUID] = cr3d
 			}
 			shInfo := aoEqPosShift[eqo.EquipType]
-			geo := mesh.Get("geometry")
-			geoInfo := GetGeoInfo(geo)
+			geoInfo := cr3d.GeoInfo
 			SetPosition(
-				mesh,
+				cr3d.Mesh,
 				float64(fx)*DstCellSize+geoInfo.Len[0]/2+DstCellSize*shInfo.X,
 				-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
 				geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
@@ -194,19 +195,20 @@ func (cf *ClientFloorGL) processNotiObjectList(
 
 	// make carryobj
 	for _, cro := range olNoti.CarryObjList {
-		mesh, exist := cf.jsSceneCOs[cro.UUID]
+		cr3d, exist := cf.jsSceneCOs[cro.UUID]
 		if !exist {
-			mesh = MakeCarryObjMesh(cro)
-			cf.scene.Call("add", mesh)
-			cf.jsSceneCOs[cro.UUID] = mesh
+			cr3d = NewCarryObj3D()
+			ti := CarryObj2TileInfo(cro)
+			cr3d.ChangeTile(ti)
+			cf.scene.Call("add", cr3d.Mesh)
+			cf.jsSceneCOs[cro.UUID] = cr3d
 		}
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
 		shInfo := CarryObjClientOnFloor2DrawInfo(cro)
-		geo := mesh.Get("geometry")
-		geoInfo := GetGeoInfo(geo)
+		geoInfo := cr3d.GeoInfo
 		SetPosition(
-			mesh,
+			cr3d.Mesh,
 			float64(fx)*DstCellSize+geoInfo.Len[0]/2+DstCellSize*shInfo.X,
 			-float64(fy)*DstCellSize-geoInfo.Len[1]/2-DstCellSize*shInfo.Y,
 			geoInfo.Len[2]/2+DstCellSize*shInfo.Z,
@@ -215,10 +217,11 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		addCOuuid[cro.UUID] = true
 	}
 
-	for id, mesh := range cf.jsSceneCOs {
+	for id, cr3d := range cf.jsSceneCOs {
 		if !addCOuuid[id] {
-			cf.scene.Call("remove", mesh)
+			cf.scene.Call("remove", cr3d.Mesh)
 			delete(cf.jsSceneCOs, id)
+			cr3d.Dispose()
 		}
 	}
 }

@@ -50,7 +50,7 @@ type ClientFloorGL struct {
 
 	sightPlane *SightPlane
 
-	jsSceneCOs map[string]js.Value     // in sight only  carryobj
+	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
@@ -67,7 +67,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		FloorInfo:  fi,
 		XWrapper:   wrapper.New(fi.W),
 		YWrapper:   wrapper.New(fi.H),
-		jsSceneCOs: make(map[string]js.Value),
+		jsSceneCOs: make(map[string]*CarryObj3D),
 		jsSceneAOs: make(map[string]*ActiveObj3D),
 		jsSceneFOs: make(map[string]*FieldObj3D),
 	}

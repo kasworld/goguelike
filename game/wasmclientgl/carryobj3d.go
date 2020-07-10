@@ -42,7 +42,8 @@ func NewCarryObj3D() *CarryObj3D {
 		},
 	)
 	mat.Set("transparent", true)
-	geo := ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+	geo := ThreeJsNew("BoxGeometry",
+		DstCellSize/3, DstCellSize/3, DstCellSize/3)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &CarryObj3D{
 		Cnv:     cnv,
@@ -100,24 +101,6 @@ func CarryObj2TileInfo(o *c2t_obj.CarryObjClientOnFloor) webtilegroup.TileInfo {
 		ti = gClientTile.ScrollTiles[o.ScrollType]
 	}
 	return ti
-}
-
-func MakeEquipedMesh(o *c2t_obj.EquipClient) js.Value {
-	ti := Equiped2TileInfo(o)
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize/3, DstCellSize/3, DstCellSize/3,
-	)
-	return ThreeJsNew("Mesh", geo, mat)
-}
-
-func MakeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
-	ti := CarryObj2TileInfo(o)
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize/3, DstCellSize/3, DstCellSize/3,
-	)
-	return ThreeJsNew("Mesh", geo, mat)
 }
 
 type ShiftInfo struct {
