@@ -21,8 +21,6 @@ import (
 	"github.com/kasworld/go-abs"
 
 	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/config/moneycolor"
-	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
@@ -239,44 +237,6 @@ func calcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
 		}
 	}
 	return fx, fy
-}
-
-func makeEquipedMesh(o *c2t_obj.EquipClient) js.Value {
-	ti := gClientTile.EquipTiles[o.EquipType][o.Faction]
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize/3, DstCellSize/3, DstCellSize/3,
-	)
-	return ThreeJsNew("Mesh", geo, mat)
-}
-
-func makeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
-	var ti webtilegroup.TileInfo
-	switch o.CarryingObjectType {
-	case carryingobjecttype.Equip:
-		ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
-	case carryingobjecttype.Money:
-		var find bool
-		for i, v := range moneycolor.Attrib {
-			if o.Value < v.UpLimit {
-				ti = gClientTile.GoldTiles[i]
-				find = true
-				break
-			}
-		}
-		if !find {
-			ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
-		}
-	case carryingobjecttype.Potion:
-		ti = gClientTile.PotionTiles[o.PotionType]
-	case carryingobjecttype.Scroll:
-		ti = gClientTile.ScrollTiles[o.ScrollType]
-	}
-	mat := GetTileMaterialByCache(ti)
-	geo := GetBoxGeometryByCache(
-		DstCellSize/3, DstCellSize/3, DstCellSize/3,
-	)
-	return ThreeJsNew("Mesh", geo, mat)
 }
 
 func MakeFieldObjMatGeo(

@@ -103,6 +103,24 @@ func CarryObj2TileInfo(o *c2t_obj.CarryObjClientOnFloor) webtilegroup.TileInfo {
 	return ti
 }
 
+func MakeEquipedMesh(o *c2t_obj.EquipClient) js.Value {
+	ti := Equiped2TileInfo(o)
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(
+		DstCellSize/3, DstCellSize/3, DstCellSize/3,
+	)
+	return ThreeJsNew("Mesh", geo, mat)
+}
+
+func MakeCarryObjMesh(o *c2t_obj.CarryObjClientOnFloor) js.Value {
+	ti := CarryObj2TileInfo(o)
+	mat := GetTileMaterialByCache(ti)
+	geo := GetBoxGeometryByCache(
+		DstCellSize/3, DstCellSize/3, DstCellSize/3,
+	)
+	return ThreeJsNew("Mesh", geo, mat)
+}
+
 type ShiftInfo struct {
 	X float64
 	Y float64

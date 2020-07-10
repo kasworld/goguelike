@@ -169,7 +169,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		for _, eqo := range ao.EquippedPo {
 			mesh, exist := cf.jsSceneCOs[eqo.UUID]
 			if !exist {
-				mesh = makeEquipedMesh(eqo)
+				mesh = MakeEquipedMesh(eqo)
 				cf.scene.Call("add", mesh)
 				cf.jsSceneCOs[eqo.UUID] = mesh
 			}
@@ -200,7 +200,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	for _, cro := range olNoti.CarryObjList {
 		mesh, exist := cf.jsSceneCOs[cro.UUID]
 		if !exist {
-			mesh = makeCarryObjMesh(cro)
+			mesh = MakeCarryObjMesh(cro)
 			cf.scene.Call("add", mesh)
 			cf.jsSceneCOs[cro.UUID] = mesh
 		}
