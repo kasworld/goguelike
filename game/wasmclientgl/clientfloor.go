@@ -76,10 +76,11 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
 
-	cf.sightPlane = NewSightPlane()
-
 	cf.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
 	cf.scene = ThreeJsNew("Scene")
+
+	cf.sightPlane = NewSightPlane()
+	cf.scene.Call("add", cf.sightPlane.Mesh)
 
 	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 1)
 	SetPosition(cf.lightW,
@@ -112,8 +113,6 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 		),
 	)
 	cf.camera.Call("updateProjectionMatrix")
-
-	cf.scene.Call("add", cf.sightPlane.Mesh)
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)

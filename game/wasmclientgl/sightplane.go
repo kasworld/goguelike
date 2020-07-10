@@ -62,7 +62,7 @@ func (pl *SightPlane) MoveCenterTo(fx, fy int) {
 	SetPosition(pl.Mesh,
 		fx*DstCellSize,
 		-fy*DstCellSize,
-		DstCellSize+1)
+		DstCellSize/2)
 }
 
 func (pl *SightPlane) FillColor(co string) {
