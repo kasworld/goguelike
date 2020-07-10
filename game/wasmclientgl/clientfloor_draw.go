@@ -123,13 +123,7 @@ func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
 			cf.scene.Call("add", fo3d.Mesh)
 		}
 		addFOuuid[obj.GetUUID()] = true
-		geoInfo := fo3d.GeoInfo
-		SetPosition(
-			fo3d.Mesh,
-			float64(fx)*DstCellSize+geoInfo.Len[0]/2,
-			-float64(fy)*DstCellSize-geoInfo.Len[1]/2,
-			geoInfo.Len[2]/2+2,
-		)
+		fo3d.SetPosition(fx, fy)
 	}
 
 	// del removed obj
