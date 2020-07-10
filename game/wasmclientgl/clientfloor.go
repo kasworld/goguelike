@@ -52,6 +52,7 @@ type ClientFloorGL struct {
 
 	jsSceneCOs map[string]js.Value     // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
+	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
 	// tile 3d instancedmesh
 	// count = ClientViewLen*ClientViewLen

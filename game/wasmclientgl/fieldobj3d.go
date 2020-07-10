@@ -14,6 +14,8 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
+
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
@@ -71,12 +73,18 @@ func (aog *FieldObj3D) Dispose() {
 	// aog.Cnv.Get("parentNode").Call("removeChild", aog.Cnv)
 }
 
-func MakeFieldObjMatGeo(
-	o *c2t_obj.FieldObjClient, fx, fy int) (js.Value, js.Value) {
-
-	tlList := gClientTile.FieldObjTiles[o.DisplayType]
+func FieldObj2TileInfo(
+	fotype fieldobjdisplaytype.FieldObjDisplayType,
+	fx, fy int) webtilegroup.TileInfo {
+	tlList := gClientTile.FieldObjTiles[fotype]
 	tilediff := fx*5 + fy*3
 	ti := tlList[tilediff%len(tlList)]
+	return ti
+}
+
+func MakeFieldObjMatGeo(
+	o *c2t_obj.FieldObjClient, fx, fy int) (js.Value, js.Value) {
+	ti := FieldObj2TileInfo(o.DisplayType, fx, fy)
 	mat := GetTileMaterialByCache(ti)
 	geo := GetBoxGeometryByCache(
 		DstCellSize-1, DstCellSize-1, DstCellSize-1)
