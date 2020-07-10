@@ -71,7 +71,6 @@ func (aog *CarryObj3D) Dispose() {
 	aog.Mesh = js.Undefined()
 	aog.Tex = js.Undefined()
 	// no need createElement canvas dom obj
-	// aog.Cnv.Get("parentNode").Call("removeChild", aog.Cnv)
 }
 
 func Equiped2TileInfo(o *c2t_obj.EquipClient) webtilegroup.TileInfo {
