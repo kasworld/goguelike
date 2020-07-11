@@ -125,7 +125,7 @@ func InitPage() {
 		}),
 	)
 
-	js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
+	js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 
 	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		go app.enterTower(args[0].Int())
@@ -272,14 +272,14 @@ loop:
 	}
 }
 
-func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{} {
 	if app.waitObjList {
 		app.needRefreshSet = true
 		return nil
 	}
 
 	defer func() {
-		js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
+		js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 	}()
 	act := app.DispInterDur.BeginAct()
 	defer act.End()
@@ -305,6 +305,7 @@ func (app *WasmClient) drawCanvas(this js.Value, args []js.Value) interface{} {
 	cf := app.currentFloor()
 	if cf != nil {
 		cf.UpdateFrame(frameProgress, scrollDir, app.taNotiData, envBias)
+		cf.processRayCasting(app.vp.jsMouse)
 		app.vp.renderer.Call("render", cf.scene, cf.camera)
 	}
 	return nil

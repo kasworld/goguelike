@@ -18,11 +18,13 @@ import (
 type Viewport struct {
 	CanvasGL js.Value
 	renderer js.Value
+	jsMouse  js.Value
 }
 
 func NewViewport() *Viewport {
 	vp := &Viewport{}
 
+	vp.jsMouse = ThreeJsNew("Vector2")
 	vp.renderer = ThreeJsNew("WebGLRenderer")
 	vp.CanvasGL = vp.renderer.Get("domElement")
 	GetElementById("canvasglholder").Call("appendChild", vp.CanvasGL)

@@ -238,7 +238,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		app.waitObjList = false
 		if app.needRefreshSet {
 			app.needRefreshSet = false
-			js.Global().Call("requestAnimationFrame", js.FuncOf(app.drawCanvas))
+			js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 		}
 	}()
 

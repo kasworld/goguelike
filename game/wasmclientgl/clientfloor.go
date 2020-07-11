@@ -43,11 +43,12 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	camera js.Value
 	light  [3]js.Value // rgb light
 	lightW js.Value    // white light
 	// fog    js.Value
-	scene js.Value
+	scene     js.Value
+	camera    js.Value
+	raycaster js.Value
 
 	sightPlane *SightPlane
 
@@ -79,6 +80,7 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
 	cf.scene = ThreeJsNew("Scene")
+	cf.raycaster = ThreeJsNew("Raycaster")
 
 	cf.sightPlane = NewSightPlane()
 	cf.scene.Call("add", cf.sightPlane.Mesh)
@@ -272,4 +274,25 @@ func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {
 		return nil
 	}
 	return po
+}
+
+func (cf *ClientFloorGL) processRayCasting(mouse js.Value) {
+	// update the picking ray with the camera and mouse position
+	cf.raycaster.Call("setFromCamera", mouse, cf.camera)
+
+	// calculate objects intersecting the picking ray
+	intersects := cf.raycaster.Call(
+		"intersectObject", cf.sightPlane.Mesh)
+
+	for i := 0; i < intersects.Length(); i++ {
+		obj := intersects.Index(i)
+		pos3 := obj.Get("point")
+		x := pos3.Get("x").Float()
+		y := pos3.Get("y").Float()
+		fx := int(x / DstCellSize)
+		fy := int(-y / DstCellSize)
+		_ = fx
+		_ = fy
+		// jslog.Infof("pos fx:%v fy:%v z:%v", fx, fy)
+	}
 }

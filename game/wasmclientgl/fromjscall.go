@@ -253,6 +253,12 @@ func (app *WasmClient) jsHandleMouseMoveVP(this js.Value, args []js.Value) inter
 	evt.Call("stopPropagation")
 	evt.Call("preventDefault")
 
+	win := js.Global().Get("window")
+	winW := win.Get("innerWidth").Float()
+	winH := win.Get("innerHeight").Float()
+	app.vp.jsMouse.Set("x", (evt.Get("clientX").Float()/winW)*2-1)
+	app.vp.jsMouse.Set("y", -(evt.Get("clientY").Float()/winH)*2+1)
+
 	mouseX, mouseY := evt.Get("offsetX").Int(), evt.Get("offsetY").Int()
 	app.actByMouseMove(mouseX, mouseY)
 	return nil
