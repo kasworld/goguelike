@@ -43,22 +43,6 @@ var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(ClientViewLen, Cli
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 
-var gColorMaterialCache map[string]js.Value = make(map[string]js.Value)
-
-func GetColorMaterialByCache(co string) js.Value {
-	mat, exist := gColorMaterialCache[co]
-	if !exist {
-		mat = ThreeJsNew("MeshStandardMaterial",
-			map[string]interface{}{
-				"color": co,
-			},
-		)
-		mat.Set("transparent", true)
-		gColorMaterialCache[co] = mat
-	}
-	return mat
-}
-
 func NewTileMaterial(ti webtilegroup.TileInfo) js.Value {
 	Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	Ctx := Cnv.Call("getContext", "2d")
@@ -77,17 +61,6 @@ func NewTileMaterial(ti webtilegroup.TileInfo) js.Value {
 	)
 	mat.Set("transparent", true)
 	// mat.Set("side", ThreeJs().Get("DoubleSide"))
-	return mat
-}
-
-var gTileMaterialCache map[webtilegroup.TileInfo]js.Value = make(map[webtilegroup.TileInfo]js.Value)
-
-func GetTileMaterialByCache(ti webtilegroup.TileInfo) js.Value {
-	mat, exist := gTileMaterialCache[ti]
-	if !exist {
-		mat = NewTileMaterial(ti)
-		gTileMaterialCache[ti] = mat
-	}
 	return mat
 }
 
@@ -112,17 +85,6 @@ func NewTextureTileMaterial(ti tile.Tile) js.Value {
 	mat.Set("transparent", true)
 	// mat.Set("side", ThreeJs().Get("DoubleSide"))
 	return mat
-}
-
-var gBoxGeometryCache map[[3]int]js.Value = make(map[[3]int]js.Value)
-
-func GetBoxGeometryByCache(x, y, z int) js.Value {
-	geo, exist := gBoxGeometryCache[[3]int{x, y, z}]
-	if !exist {
-		geo = ThreeJsNew("BoxGeometry", x, y, z)
-		gBoxGeometryCache[[3]int{x, y, z}] = geo
-	}
-	return geo
 }
 
 func CalcCurrentFrame(difftick int64, fps float64) int {

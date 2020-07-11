@@ -120,3 +120,19 @@ func GetTextGeometryByCache(str string, size float64) js.Value {
 	}
 	return geo
 }
+
+var gColorMaterialCache map[string]js.Value = make(map[string]js.Value)
+
+func GetColorMaterialByCache(co string) js.Value {
+	mat, exist := gColorMaterialCache[co]
+	if !exist {
+		mat = ThreeJsNew("MeshStandardMaterial",
+			map[string]interface{}{
+				"color": co,
+			},
+		)
+		mat.Set("transparent", true)
+		gColorMaterialCache[co] = mat
+	}
+	return mat
+}
