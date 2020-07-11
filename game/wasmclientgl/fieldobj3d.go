@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"math"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
@@ -40,7 +41,10 @@ func NewFieldObj3D() *FieldObj3D {
 		},
 	)
 	mat.Set("transparent", true)
-	geo := ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+	geo := ThreeJsNew("CylinderGeometry",
+		DstCellSize/2, DstCellSize/4, DstCellSize)
+	geo.Call("rotateX", math.Pi/2)
+	// geo := ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &FieldObj3D{
 		Cnv:     cnv,
