@@ -50,6 +50,7 @@ func NewActiveObj3D() *ActiveObj3D {
 }
 
 func (aog *ActiveObj3D) ChangeTile(ti webtilegroup.TileInfo) {
+	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
 	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 		0, 0, DstCellSize, DstCellSize)

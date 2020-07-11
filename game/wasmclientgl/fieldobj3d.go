@@ -56,6 +56,7 @@ func NewFieldObj3D() *FieldObj3D {
 }
 
 func (aog *FieldObj3D) ChangeTile(ti webtilegroup.TileInfo) {
+	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
 	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
 		0, 0, DstCellSize, DstCellSize)
