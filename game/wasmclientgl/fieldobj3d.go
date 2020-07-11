@@ -12,13 +12,55 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"math"
+	"sync"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
+
+type PoolFieldObj3D struct {
+	mutex    sync.Mutex
+	poolData []*FieldObj3D
+	limit    int
+}
+
+func NewPoolFieldObj3D(limit int) *PoolFieldObj3D {
+	return &PoolFieldObj3D{
+		poolData: make([]*FieldObj3D, 0, limit),
+		limit:    limit,
+	}
+}
+
+func (p *PoolFieldObj3D) String() string {
+	return fmt.Sprintf("PacketPoolFieldObj3D[%v %v/%v]",
+		len(p.poolData), p.limit,
+	)
+}
+
+func (p *PoolFieldObj3D) Get() *FieldObj3D {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	var rtn *FieldObj3D
+	if l := len(p.poolData); l > 0 {
+		rtn = p.poolData[l-1]
+		p.poolData = p.poolData[:l-1]
+	} else {
+		rtn = NewFieldObj3D()
+	}
+	return rtn
+}
+
+func (p *PoolFieldObj3D) Put(pb *FieldObj3D) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	if len(p.poolData) < p.limit {
+		p.poolData = append(p.poolData, pb)
+	}
+}
 
 type FieldObj3D struct {
 	Cnv     js.Value
