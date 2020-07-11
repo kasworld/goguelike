@@ -64,9 +64,9 @@ func (aog *CarryObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shInfo ShiftInfo) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2+DstCellSize*shInfo.X,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-DstCellSize*shInfo.Y,
-		aog.GeoInfo.Len[2]/2+DstCellSize*shInfo.Z,
+		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2+shInfo.X,
+		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-shInfo.Y,
+		aog.GeoInfo.Len[2]/2+shInfo.Z,
 	)
 }
 
@@ -120,17 +120,17 @@ type ShiftInfo struct {
 
 // equipped shift, around ao
 var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
-	equipslottype.Helmet: {-0.33, 0.0, 0.66},
-	equipslottype.Amulet: {1.00, 0.0, 0.66},
+	equipslottype.Helmet: {DstCellSize * -0.33, DstCellSize * 0.0, DstCellSize * 0.66},
+	equipslottype.Amulet: {DstCellSize * 1.00, DstCellSize * 0.0, DstCellSize * 0.66},
 
-	equipslottype.Weapon: {-0.33, 0.25, 0.66},
-	equipslottype.Shield: {1.00, 0.25, 0.66},
+	equipslottype.Weapon: {DstCellSize * -0.33, DstCellSize * 0.25, DstCellSize * 0.66},
+	equipslottype.Shield: {DstCellSize * 1.00, DstCellSize * 0.25, DstCellSize * 0.66},
 
-	equipslottype.Ring:     {-0.33, 0.50, 0.66},
-	equipslottype.Gauntlet: {1.00, 0.50, 0.66},
+	equipslottype.Ring:     {DstCellSize * -0.33, DstCellSize * 0.50, DstCellSize * 0.66},
+	equipslottype.Gauntlet: {DstCellSize * 1.00, DstCellSize * 0.50, DstCellSize * 0.66},
 
-	equipslottype.Armor:    {-0.33, 0.75, 0.66},
-	equipslottype.Footwear: {1.00, 0.75, 0.66},
+	equipslottype.Armor:    {DstCellSize * -0.33, DstCellSize * 0.75, DstCellSize * 0.66},
+	equipslottype.Footwear: {DstCellSize * 1.00, DstCellSize * 0.75, DstCellSize * 0.66},
 }
 
 func CarryObjClientOnFloor2DrawInfo(
@@ -145,21 +145,21 @@ func CarryObjClientOnFloor2DrawInfo(
 
 // on floor in tile
 var eqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
-	equipslottype.Helmet: {0.0, 0.0, 0.33},
-	equipslottype.Amulet: {0.75, 0.0, 0.33},
+	equipslottype.Helmet: {DstCellSize * 0.0, DstCellSize * 0.0, DstCellSize * 0.33},
+	equipslottype.Amulet: {DstCellSize * 0.75, DstCellSize * 0.0, DstCellSize * 0.33},
 
-	equipslottype.Weapon: {0.0, 0.25, 0.33},
-	equipslottype.Shield: {0.75, 0.25, 0.33},
+	equipslottype.Weapon: {DstCellSize * 0.0, DstCellSize * 0.25, DstCellSize * 0.33},
+	equipslottype.Shield: {DstCellSize * 0.75, DstCellSize * 0.25, DstCellSize * 0.33},
 
-	equipslottype.Ring:     {0.0, 0.50, 0.33},
-	equipslottype.Gauntlet: {0.75, 0.50, 0.33},
+	equipslottype.Ring:     {DstCellSize * 0.0, DstCellSize * 0.50, DstCellSize * 0.33},
+	equipslottype.Gauntlet: {DstCellSize * 0.75, DstCellSize * 0.50, DstCellSize * 0.33},
 
-	equipslottype.Armor:    {0.0, 0.75, 0.33},
-	equipslottype.Footwear: {0.75, 0.75, 0.33},
+	equipslottype.Armor:    {DstCellSize * 0.0, DstCellSize * 0.75, DstCellSize * 0.33},
+	equipslottype.Footwear: {DstCellSize * 0.75, DstCellSize * 0.75, DstCellSize * 0.33},
 }
 
 var otherCarryObjShift = [carryingobjecttype.CarryingObjectType_Count]ShiftInfo{
-	carryingobjecttype.Money:  {0.33, 0.0, 0.33},
-	carryingobjecttype.Potion: {0.33, 0.33, 0.33},
-	carryingobjecttype.Scroll: {0.33, 0.66, 0.33},
+	carryingobjecttype.Money:  {DstCellSize * 0.33, DstCellSize * 0.0, DstCellSize * 0.33},
+	carryingobjecttype.Potion: {DstCellSize * 0.33, DstCellSize * 0.33, DstCellSize * 0.33},
+	carryingobjecttype.Scroll: {DstCellSize * 0.33, DstCellSize * 0.66, DstCellSize * 0.33},
 }
