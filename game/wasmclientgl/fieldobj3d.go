@@ -22,6 +22,8 @@ import (
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
+var gPoolFieldObj3D = NewPoolFieldObj3D(PoolSizeFieldObj3D)
+
 type PoolFieldObj3D struct {
 	mutex    sync.Mutex
 	poolData []*FieldObj3D
@@ -59,6 +61,8 @@ func (p *PoolFieldObj3D) Put(pb *FieldObj3D) {
 	defer p.mutex.Unlock()
 	if len(p.poolData) < p.limit {
 		p.poolData = append(p.poolData, pb)
+	} else {
+		pb.Dispose()
 	}
 }
 

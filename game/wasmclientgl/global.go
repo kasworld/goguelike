@@ -32,6 +32,10 @@ const (
 	DstCellSize      = 32
 	HelperSize       = DstCellSize * 32
 	ClientViewLen    = 40
+
+	PoolSizeActiveObj3D = 1000
+	PoolSizeCarryObj3D  = 1000
+	PoolSizeFieldObj3D  = 1000
 )
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))

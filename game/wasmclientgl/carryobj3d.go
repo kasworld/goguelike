@@ -71,6 +71,16 @@ func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shInfo ShiftInfo) {
 	)
 }
 
+func (aog *CarryObj3D) RotateX(rad float64) {
+	aog.Mesh.Get("rotation").Set("x", rad)
+}
+func (aog *CarryObj3D) RotateY(rad float64) {
+	aog.Mesh.Get("rotation").Set("y", rad)
+}
+func (aog *CarryObj3D) RotateZ(rad float64) {
+	aog.Mesh.Get("rotation").Set("z", rad)
+}
+
 func (aog *CarryObj3D) Dispose() {
 	// mesh do not need dispose
 	aog.Mesh.Get("geometry").Call("dispose")

@@ -123,7 +123,7 @@ func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
 		fo3d, exist := cf.jsSceneFOs[obj.GetUUID()]
 		if !exist {
 			// add new fieldobj
-			fo3d = NewFieldObj3D()
+			fo3d = gPoolFieldObj3D.Get()
 			ti := FieldObj2TileInfo(fo.DisplayType, fo.X, fo.Y)
 			fo3d.ChangeTile(ti)
 			cf.jsSceneFOs[obj.GetUUID()] = fo3d
@@ -137,7 +137,7 @@ func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
 	for id, fo3d := range cf.jsSceneFOs {
 		if !addFOuuid[id] {
 			cf.scene.Call("remove", fo3d.Mesh)
-			fo3d.Dispose()
+			gPoolFieldObj3D.Put(fo3d)
 			delete(cf.jsSceneFOs, id)
 		}
 	}
