@@ -157,7 +157,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	for _, ao := range olNoti.ActiveObjList {
 		ao3d, exist := cf.jsSceneAOs[ao.UUID]
 		if !exist {
-			ao3d = NewActiveObj3D()
+			ao3d = gPoolActiveObj3D.Get()
 			cf.scene.Call("add", ao3d.Mesh)
 			cf.jsSceneAOs[ao.UUID] = ao3d
 		}
@@ -174,7 +174,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		for _, eqo := range ao.EquippedPo {
 			cr3d, exist := cf.jsSceneCOs[eqo.UUID]
 			if !exist {
-				cr3d = NewCarryObj3D()
+				cr3d = gPoolCarryObj3D.Get()
 				ti := Equiped2TileInfo(eqo)
 				cr3d.ChangeTile(ti)
 				cf.scene.Call("add", cr3d.Mesh)
@@ -190,7 +190,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		if !addAOuuid[id] {
 			cf.scene.Call("remove", ao3d.Mesh)
 			delete(cf.jsSceneAOs, id)
-			ao3d.Dispose()
+			gPoolActiveObj3D.Put(ao3d)
 		}
 	}
 
@@ -198,7 +198,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 	for _, cro := range olNoti.CarryObjList {
 		cr3d, exist := cf.jsSceneCOs[cro.UUID]
 		if !exist {
-			cr3d = NewCarryObj3D()
+			cr3d = gPoolCarryObj3D.Get()
 			ti := CarryObj2TileInfo(cro)
 			cr3d.ChangeTile(ti)
 			cf.scene.Call("add", cr3d.Mesh)
@@ -215,7 +215,7 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		if !addCOuuid[id] {
 			cf.scene.Call("remove", cr3d.Mesh)
 			delete(cf.jsSceneCOs, id)
-			cr3d.Dispose()
+			gPoolCarryObj3D.Put(cr3d)
 		}
 	}
 }
