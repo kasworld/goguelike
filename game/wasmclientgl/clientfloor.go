@@ -50,7 +50,8 @@ type ClientFloorGL struct {
 	camera    js.Value
 	raycaster js.Value
 
-	sightPlane *SightPlane
+	sightPlane   *SightPlane
+	raycastPlane *RaycastPlane
 
 	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
@@ -84,6 +85,9 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 
 	cf.sightPlane = NewSightPlane()
 	cf.scene.Call("add", cf.sightPlane.Mesh)
+
+	cf.raycastPlane = NewRaycastPlane()
+	cf.scene.Call("add", cf.raycastPlane.Mesh)
 
 	// cf.fog = ThreeJsNew("Fog", 0xffffff, 1, HelperSize*2)
 	// cf.scene.Call("add", cf.fog)
@@ -198,6 +202,8 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 	}
 	cf.makeClientTileView(taNoti.VPX, taNoti.VPY)
 
+	cf.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
+
 	cf.sightPlane.ClearRect()
 	cf.sightPlane.FillColor("#000000a0")
 	cf.sightPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
@@ -282,7 +288,7 @@ func (cf *ClientFloorGL) processRayCasting(mouse js.Value) {
 
 	// calculate objects intersecting the picking ray
 	intersects := cf.raycaster.Call(
-		"intersectObject", cf.sightPlane.Mesh)
+		"intersectObject", cf.raycastPlane.Mesh)
 
 	for i := 0; i < intersects.Length(); i++ {
 		obj := intersects.Index(i)
@@ -293,6 +299,6 @@ func (cf *ClientFloorGL) processRayCasting(mouse js.Value) {
 		fy := int(-y / DstCellSize)
 		_ = fx
 		_ = fy
-		// jslog.Infof("pos fx:%v fy:%v z:%v", fx, fy)
+		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
 	}
 }
