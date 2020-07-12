@@ -28,6 +28,9 @@ var gPoolCarryObj3D = NewPoolCarryObj3D(PoolSizeCarryObj3D)
 type PoolCarryObj3D struct {
 	mutex    sync.Mutex
 	poolData []*CarryObj3D
+	newCount int
+	getCount int
+	putCount int
 }
 
 func NewPoolCarryObj3D(initCap int) *PoolCarryObj3D {
@@ -37,8 +40,8 @@ func NewPoolCarryObj3D(initCap int) *PoolCarryObj3D {
 }
 
 func (p *PoolCarryObj3D) String() string {
-	return fmt.Sprintf("PacketPoolCarryObj3D[%v/%v]",
-		len(p.poolData), cap(p.poolData),
+	return fmt.Sprintf("PoolCarryObj3D[%v/%v new:%v get:%v put:%v]",
+		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
 	)
 }
 
@@ -49,8 +52,10 @@ func (p *PoolCarryObj3D) Get() *CarryObj3D {
 	if l := len(p.poolData); l > 0 {
 		rtn = p.poolData[l-1]
 		p.poolData = p.poolData[:l-1]
+		p.getCount++
 	} else {
 		rtn = NewCarryObj3D()
+		p.newCount++
 	}
 	return rtn
 }
@@ -59,6 +64,7 @@ func (p *PoolCarryObj3D) Put(pb *CarryObj3D) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.poolData = append(p.poolData, pb)
+	p.putCount++
 }
 
 type CarryObj3D struct {

@@ -24,6 +24,9 @@ var gPoolActiveObj3D = NewPoolActiveObj3D(PoolSizeActiveObj3D)
 type PoolActiveObj3D struct {
 	mutex    sync.Mutex
 	poolData []*ActiveObj3D
+	newCount int
+	getCount int
+	putCount int
 }
 
 func NewPoolActiveObj3D(initCap int) *PoolActiveObj3D {
@@ -33,8 +36,8 @@ func NewPoolActiveObj3D(initCap int) *PoolActiveObj3D {
 }
 
 func (p *PoolActiveObj3D) String() string {
-	return fmt.Sprintf("PacketPoolActiveObj3D[%v/%v]",
-		len(p.poolData), cap(p.poolData),
+	return fmt.Sprintf("PoolActiveObj3D[%v/%v new:%v get:%v put:%v]",
+		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
 	)
 }
 
@@ -45,8 +48,10 @@ func (p *PoolActiveObj3D) Get() *ActiveObj3D {
 	if l := len(p.poolData); l > 0 {
 		rtn = p.poolData[l-1]
 		p.poolData = p.poolData[:l-1]
+		p.getCount++
 	} else {
 		rtn = NewActiveObj3D()
+		p.newCount++
 	}
 	return rtn
 }
@@ -55,6 +60,7 @@ func (p *PoolActiveObj3D) Put(pb *ActiveObj3D) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.poolData = append(p.poolData, pb)
+	p.putCount++
 }
 
 type ActiveObj3D struct {
