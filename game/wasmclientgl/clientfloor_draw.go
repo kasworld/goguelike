@@ -43,9 +43,10 @@ func (cf *ClientFloorGL) UpdateFrame(
 	}
 
 	// move camera, light
-	cameraX := taNoti.VPX*DstCellSize + scrollDx
-	cameraY := -taNoti.VPY*DstCellSize + scrollDy
-	cameraZ := HelperSize
+	cameraX := float64(taNoti.VPX*DstCellSize + scrollDx)
+	cameraY := float64(-taNoti.VPY*DstCellSize + scrollDy)
+	cameraR := float64(HelperSize)
+	cameraRad := math.Pi / 4
 
 	envBias = envBias.MakeAbsSumTo(1)
 	cx := float64(cf.XWrapper.GetWidth()) * DstCellSize / 2
@@ -64,11 +65,11 @@ func (cf *ClientFloorGL) UpdateFrame(
 		)
 	}
 	SetPosition(cf.lightW,
-		cameraX, cameraY, cameraZ,
+		cameraX, cameraY, cameraR,
 	)
 
 	SetPosition(cf.camera,
-		cameraX, cameraY-cameraZ/2, cameraZ,
+		cameraX, cameraY-cameraR*math.Cos(cameraRad), cameraR*math.Sin(cameraRad),
 	)
 	cf.camera.Call("lookAt",
 		ThreeJsNew("Vector3",
