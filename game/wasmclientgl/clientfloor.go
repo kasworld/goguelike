@@ -44,9 +44,8 @@ type ClientFloorGL struct {
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
-	light  [3]js.Value // rgb light
-	lightW js.Value    // white light
-	// fog    js.Value
+	light     [3]js.Value // rgb light
+	lightW    js.Value    // white light
 	scene     js.Value
 	camera    js.Value
 	raycaster js.Value
@@ -87,17 +86,16 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.sightPlane = NewSightPlane()
 	cf.scene.Call("add", cf.sightPlane.Mesh)
 
-	cf.raycastPlane = NewRaycastPlane()
 	// no need to add to scene for raycasting
-	// cf.scene.Call("add", cf.raycastPlane.Mesh)
+	cf.raycastPlane = NewRaycastPlane()
 
-	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 1)
-	SetPosition(cf.lightW,
-		HelperSize/2, HelperSize/2, HelperSize/2,
-	)
+	lightAm := ThreeJsNew("AmbientLight", 0x808080)
+	cf.scene.Call("add", lightAm)
+
+	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 0.5)
 	cf.scene.Call("add", cf.lightW)
 	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
-		cf.light[i] = ThreeJsNew("PointLight", co, 1)
+		cf.light[i] = ThreeJsNew("PointLight", co, 0.5)
 		SetPosition(cf.light[i],
 			HelperSize/2, HelperSize/2, HelperSize/2,
 		)

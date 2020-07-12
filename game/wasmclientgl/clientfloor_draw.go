@@ -64,7 +64,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 		)
 	}
 	SetPosition(cf.lightW,
-		cameraX, cameraY-cameraZ/2, cameraZ,
+		cameraX, cameraY, cameraZ,
 	)
 
 	SetPosition(cf.camera,
