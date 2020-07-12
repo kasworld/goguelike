@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/gowasmlib/jslog"
 
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -87,10 +88,8 @@ func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf.scene.Call("add", cf.sightPlane.Mesh)
 
 	cf.raycastPlane = NewRaycastPlane()
-	cf.scene.Call("add", cf.raycastPlane.Mesh)
-
-	// cf.fog = ThreeJsNew("Fog", 0xffffff, 1, HelperSize*2)
-	// cf.scene.Call("add", cf.fog)
+	// no need to add to scene for raycasting
+	// cf.scene.Call("add", cf.raycastPlane.Mesh)
 
 	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 1)
 	SetPosition(cf.lightW,
@@ -299,6 +298,6 @@ func (cf *ClientFloorGL) processRayCasting(mouse js.Value) {
 		fy := int(-y / DstCellSize)
 		_ = fx
 		_ = fy
-		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
+		jslog.Infof("pos fx:%v fy:%v", fx, fy)
 	}
 }
