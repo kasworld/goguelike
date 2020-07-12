@@ -115,13 +115,13 @@ func (aog *FieldObj3D) SetFieldPosition(fx, fy int) {
 }
 
 func (aog *FieldObj3D) RotateX(rad float64) {
-	aog.Mesh.Get("geometry").Call("rotateX", rad)
+	aog.Mesh.Get("rotation").Set("x", rad)
 }
 func (aog *FieldObj3D) RotateY(rad float64) {
-	aog.Mesh.Get("geometry").Call("rotateY", rad)
+	aog.Mesh.Get("rotation").Set("y", rad)
 }
 func (aog *FieldObj3D) RotateZ(rad float64) {
-	aog.Mesh.Get("geometry").Call("rotateZ", rad)
+	aog.Mesh.Get("rotation").Set("z", rad)
 }
 
 func (aog *FieldObj3D) Dispose() {

@@ -13,6 +13,7 @@ package wasmclientgl
 
 import (
 	"math"
+	"time"
 
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -36,7 +37,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
 
-	rad := 2 * math.Pi / 360
+	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
 	for _, fo := range cf.jsSceneFOs {
 		fo.RotateZ(rad)
 	}
