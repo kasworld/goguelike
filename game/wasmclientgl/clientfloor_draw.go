@@ -46,7 +46,12 @@ func (cf *ClientFloorGL) UpdateFrame(
 	cameraX := float64(taNoti.VPX*DstCellSize + scrollDx)
 	cameraY := float64(-taNoti.VPY*DstCellSize + scrollDy)
 	cameraR := float64(HelperSize)
-	cameraRad := math.Pi / 4
+
+	cameraRad := []float64{
+		math.Pi / 2,
+		math.Pi / 3,
+		math.Pi / 4,
+	}[gameOptions.GetByIDBase("Angle").State]
 
 	envBias = envBias.MakeAbsSumTo(1)
 	cx := float64(cf.XWrapper.GetWidth()) * DstCellSize / 2

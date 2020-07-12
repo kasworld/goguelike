@@ -36,6 +36,9 @@ var _gameopt = htmlbutton.NewButtonGroup("Options",
 			"play view / floor view", cmdToggleVPFloorPlay, 0),
 		htmlbutton.New("t", "Zoom", []string{"Zoom0", "Zoom1", "Zoom2"},
 			"Zoom viewport", cmdToggleZoom, 0),
+		htmlbutton.New("t", "Angle", []string{"Angle0", "Angle1", "Angle2"},
+			"Angle viewport", cmdToggleAngle, 0),
+
 		htmlbutton.New("y", "Sound", []string{"SoundOn", "SoundOff"},
 			"Sound on/off", cmdToggleSound, 1),
 	})
@@ -155,6 +158,21 @@ func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
 	}
 
 	app.systemMessage.Appendf("Zoom%v", v.State)
+	v.Blur()
+}
+
+func cmdToggleAngle(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+
+	// if cf := app.currentFloor(); cf != nil {
+	// 	cf.Angle(v.State)
+	// }
+
+	app.systemMessage.Appendf("Angle%v", v.State)
 	v.Blur()
 }
 
