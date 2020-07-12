@@ -12,6 +12,8 @@
 package wasmclientgl
 
 import (
+	"fmt"
+	"sync"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/config/moneycolor"
@@ -20,6 +22,44 @@ import (
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
+
+var gPoolCarryObj3D = NewPoolCarryObj3D(PoolSizeCarryObj3D)
+
+type PoolCarryObj3D struct {
+	mutex    sync.Mutex
+	poolData []*CarryObj3D
+}
+
+func NewPoolCarryObj3D(initCap int) *PoolCarryObj3D {
+	return &PoolCarryObj3D{
+		poolData: make([]*CarryObj3D, 0, initCap),
+	}
+}
+
+func (p *PoolCarryObj3D) String() string {
+	return fmt.Sprintf("PacketPoolCarryObj3D[%v/%v]",
+		len(p.poolData), cap(p.poolData),
+	)
+}
+
+func (p *PoolCarryObj3D) Get() *CarryObj3D {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	var rtn *CarryObj3D
+	if l := len(p.poolData); l > 0 {
+		rtn = p.poolData[l-1]
+		p.poolData = p.poolData[:l-1]
+	} else {
+		rtn = NewCarryObj3D()
+	}
+	return rtn
+}
+
+func (p *PoolCarryObj3D) Put(pb *CarryObj3D) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	p.poolData = append(p.poolData, pb)
+}
 
 type CarryObj3D struct {
 	Cnv     js.Value

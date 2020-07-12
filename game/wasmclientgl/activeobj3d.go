@@ -12,10 +12,50 @@
 package wasmclientgl
 
 import (
+	"fmt"
+	"sync"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
+
+var gPoolActiveObj3D = NewPoolActiveObj3D(PoolSizeActiveObj3D)
+
+type PoolActiveObj3D struct {
+	mutex    sync.Mutex
+	poolData []*ActiveObj3D
+}
+
+func NewPoolActiveObj3D(initCap int) *PoolActiveObj3D {
+	return &PoolActiveObj3D{
+		poolData: make([]*ActiveObj3D, 0, initCap),
+	}
+}
+
+func (p *PoolActiveObj3D) String() string {
+	return fmt.Sprintf("PacketPoolActiveObj3D[%v/%v]",
+		len(p.poolData), cap(p.poolData),
+	)
+}
+
+func (p *PoolActiveObj3D) Get() *ActiveObj3D {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	var rtn *ActiveObj3D
+	if l := len(p.poolData); l > 0 {
+		rtn = p.poolData[l-1]
+		p.poolData = p.poolData[:l-1]
+	} else {
+		rtn = NewActiveObj3D()
+	}
+	return rtn
+}
+
+func (p *PoolActiveObj3D) Put(pb *ActiveObj3D) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	p.poolData = append(p.poolData, pb)
+}
 
 type ActiveObj3D struct {
 	Cnv     js.Value

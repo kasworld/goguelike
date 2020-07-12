@@ -27,19 +27,17 @@ var gPoolFieldObj3D = NewPoolFieldObj3D(PoolSizeFieldObj3D)
 type PoolFieldObj3D struct {
 	mutex    sync.Mutex
 	poolData []*FieldObj3D
-	limit    int
 }
 
-func NewPoolFieldObj3D(limit int) *PoolFieldObj3D {
+func NewPoolFieldObj3D(initCap int) *PoolFieldObj3D {
 	return &PoolFieldObj3D{
-		poolData: make([]*FieldObj3D, 0, limit),
-		limit:    limit,
+		poolData: make([]*FieldObj3D, 0, initCap),
 	}
 }
 
 func (p *PoolFieldObj3D) String() string {
-	return fmt.Sprintf("PacketPoolFieldObj3D[%v %v/%v]",
-		len(p.poolData), p.limit,
+	return fmt.Sprintf("PacketPoolFieldObj3D[%v/%v]",
+		len(p.poolData), cap(p.poolData),
 	)
 }
 
@@ -59,11 +57,7 @@ func (p *PoolFieldObj3D) Get() *FieldObj3D {
 func (p *PoolFieldObj3D) Put(pb *FieldObj3D) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	if len(p.poolData) < p.limit {
-		p.poolData = append(p.poolData, pb)
-	} else {
-		pb.Dispose()
-	}
+	p.poolData = append(p.poolData, pb)
 }
 
 type FieldObj3D struct {
