@@ -84,11 +84,27 @@ func preMakeTileMatGeo() {
 	}
 
 	tlt = tile.Tree
+	matrix := ThreeJsNew("Matrix4")
+	geo := ThreeJsNew("CylinderGeometry", 2, 4, DstCellSize-1)
+	geo.Call("rotateX", math.Pi/2)
+	geo1 := ThreeJsNew("ConeGeometry", DstCellSize/3-2, DstCellSize/2-2)
+	geo1.Call("rotateX", math.Pi/2)
+	geo2 := ThreeJsNew("ConeGeometry", DstCellSize/2-2, DstCellSize/2-2)
+	geo2.Call("rotateX", math.Pi/2)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, 0, DstCellSize/2-2,
+	))
+	geo.Call("merge", geo1, matrix)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, 0, 5,
+	))
+	geo.Call("merge", geo2, matrix)
+	geo1.Call("dispose")
+	geo2.Call("dispose")
 	gTile3D[tlt] = Tile3D{
 		Mat: NewTextureTileMaterial(tile.Grass),
-		Geo: ThreeJsNew("ConeGeometry", DstCellSize/2-1, DstCellSize-1),
+		Geo: geo,
 	}
-	gTile3D[tlt].Geo.Call("rotateX", math.Pi/2)
 
 	tlt = tile.Road
 	gTile3D[tlt] = Tile3D{
