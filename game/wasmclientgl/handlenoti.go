@@ -155,8 +155,7 @@ func objRecvNotiFn_Death(recvobj interface{}, header c2t_packet.Header, obj inte
 	app.systemMessage.Append("You died.")
 	app.remainTurn2Rebirth = gameconst.ActiveObjRebirthWaitTurn
 
-	cf := app.currentFloor()
-	cf.sightPlane.Death()
+	app.vp.sightPlane.Death()
 	return nil
 }
 
@@ -184,8 +183,7 @@ func objRecvNotiFn_ReadyToRebirth(recvobj interface{}, header c2t_packet.Header,
 	app.CaObjUUID2CaObjClient = make(map[string]interface{})
 	app.remainTurn2Rebirth = 0
 
-	cf := app.currentFloor()
-	cf.sightPlane.Ready2Rebirth()
+	app.vp.sightPlane.Ready2Rebirth()
 	return nil
 }
 
@@ -456,7 +454,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 
 	playerX, playerY := app.GetPlayerXY()
 	// cf.updateFieldObjInView(playerX, playerY)
-	cf.processNotiObjectList(newOLNotiData, playerX, playerY)
+	app.vp.processNotiObjectList(cf, newOLNotiData, playerX, playerY)
 	if cf.IsValidPos(playerX, playerY) {
 		app.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
 	}
@@ -595,7 +593,7 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 		jslog.Warn("%v", err)
 		return nil
 	}
-	cf.updateFieldObjInView(app.taNotiData.VPX, app.taNotiData.VPY)
+	app.vp.UpdateFromViewportTile(cf, app.taNotiData, app.olNotiData)
 
 	if !oldComplete && cf.Visited.IsComplete() { // just completed
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",

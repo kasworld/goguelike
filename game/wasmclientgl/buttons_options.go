@@ -153,10 +153,7 @@ func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 
-	if cf := app.currentFloor(); cf != nil {
-		cf.Zoom(v.State)
-	}
-
+	app.vp.Zoom(v.State)
 	app.systemMessage.Appendf("Zoom%v", v.State)
 	v.Blur()
 }

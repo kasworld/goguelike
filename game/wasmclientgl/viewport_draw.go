@@ -21,12 +21,8 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-func (cf *ClientFloorGL) Zoom(zoom int) {
-	cf.camera.Set("zoom", 1.0+float64(zoom)/2)
-	cf.camera.Call("updateProjectionMatrix")
-}
-
-func (cf *ClientFloorGL) UpdateFrame(
+func (vp *Viewport) UpdateFrame(
+	cf *ClientFloorGL,
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
@@ -38,7 +34,7 @@ func (cf *ClientFloorGL) UpdateFrame(
 	scrollDy := scrollDir.Dy() * sy
 
 	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
-	for _, fo := range cf.jsSceneFOs {
+	for _, fo := range vp.jsSceneFOs {
 		fo.RotateZ(rad)
 	}
 
@@ -61,22 +57,22 @@ func (cf *ClientFloorGL) UpdateFrame(
 		r = cy
 	}
 	r *= 0.7
-	for i := range cf.light {
+	for i := range vp.light {
 		rad := envBias[i] * 2 * math.Pi
 		x := cx + r*math.Sin(rad)
 		y := cy + r*math.Cos(rad)
-		SetPosition(cf.light[i],
+		SetPosition(vp.light[i],
 			x, -y, DstCellSize*8,
 		)
 	}
-	SetPosition(cf.lightW,
+	SetPosition(vp.lightW,
 		cameraX, cameraY, cameraR,
 	)
 
-	SetPosition(cf.camera,
+	SetPosition(vp.camera,
 		cameraX, cameraY-cameraR*math.Cos(cameraRad), cameraR*math.Sin(cameraRad),
 	)
-	cf.camera.Call("lookAt",
+	vp.camera.Call("lookAt",
 		ThreeJsNew("Vector3",
 			cameraX, cameraY, 0,
 		),
@@ -84,9 +80,10 @@ func (cf *ClientFloorGL) UpdateFrame(
 }
 
 // add tiles in gXYLenListView
-func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
+func (vp *Viewport) makeClientTileView(
+	cf *ClientFloorGL, vpx, vpy int) {
 	for i := 0; i < tile.Tile_Count; i++ {
-		cf.jsInstacedCount[i] = 0 // clear use count
+		vp.jsInstacedCount[i] = 0 // clear use count
 	}
 	matrix := ThreeJsNew("Matrix4")
 	for _, v := range gXYLenListView {
@@ -104,19 +101,20 @@ func (cf *ClientFloorGL) makeClientTileView(vpx, vpy int) {
 						sh[2]+geolen[2]/2,
 					),
 				)
-				cf.jsInstacedMesh[i].Call("setMatrixAt", cf.jsInstacedCount[i], matrix)
-				cf.jsInstacedCount[i]++
+				vp.jsInstacedMesh[i].Call("setMatrixAt", vp.jsInstacedCount[i], matrix)
+				vp.jsInstacedCount[i]++
 			}
 		}
 	}
 	for i := 0; i < tile.Tile_Count; i++ {
-		cf.jsInstacedMesh[i].Set("count", cf.jsInstacedCount[i])
-		cf.jsInstacedMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
+		vp.jsInstacedMesh[i].Set("count", vp.jsInstacedCount[i])
+		vp.jsInstacedMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
 	}
 }
 
-// add fo to clientview by cf.FieldObjPosMan
-func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
+// add fo to clientview by vp.FieldObjPosMan
+func (vp *Viewport) updateFieldObjInView(
+	cf *ClientFloorGL, vpx, vpy int) {
 	addFOuuid := make(map[string]bool)
 	for _, v := range gXYLenListView {
 		fx := v.X + vpx
@@ -126,30 +124,31 @@ func (cf *ClientFloorGL) updateFieldObjInView(vpx, vpy int) {
 			continue
 		}
 		fo := obj.(*c2t_obj.FieldObjClient)
-		fo3d, exist := cf.jsSceneFOs[obj.GetUUID()]
+		fo3d, exist := vp.jsSceneFOs[obj.GetUUID()]
 		if !exist {
 			// add new fieldobj
 			fo3d = gPoolFieldObj3D.Get()
 			ti := FieldObj2TileInfo(fo.DisplayType, fo.X, fo.Y)
 			fo3d.ChangeTile(ti)
-			cf.jsSceneFOs[obj.GetUUID()] = fo3d
-			cf.scene.Call("add", fo3d.Mesh)
+			vp.jsSceneFOs[obj.GetUUID()] = fo3d
+			vp.scene.Call("add", fo3d.Mesh)
 		}
 		addFOuuid[obj.GetUUID()] = true
 		fo3d.SetFieldPosition(fx, fy)
 	}
 
 	// del removed obj
-	for id, fo3d := range cf.jsSceneFOs {
+	for id, fo3d := range vp.jsSceneFOs {
 		if !addFOuuid[id] {
-			cf.scene.Call("remove", fo3d.Mesh)
+			vp.scene.Call("remove", fo3d.Mesh)
 			gPoolFieldObj3D.Put(fo3d)
-			delete(cf.jsSceneFOs, id)
+			delete(vp.jsSceneFOs, id)
 		}
 	}
 }
 
-func (cf *ClientFloorGL) processNotiObjectList(
+func (vp *Viewport) processNotiObjectList(
+	cf *ClientFloorGL,
 	olNoti *c2t_obj.NotiObjectList_data,
 	vpx, vpy int, // place obj around
 ) {
@@ -161,11 +160,11 @@ func (cf *ClientFloorGL) processNotiObjectList(
 
 	// make activeobj
 	for _, ao := range olNoti.ActiveObjList {
-		ao3d, exist := cf.jsSceneAOs[ao.UUID]
+		ao3d, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
 			ao3d = gPoolActiveObj3D.Get()
-			cf.scene.Call("add", ao3d.Mesh)
-			cf.jsSceneAOs[ao.UUID] = ao3d
+			vp.scene.Call("add", ao3d.Mesh)
+			vp.jsSceneAOs[ao.UUID] = ao3d
 		}
 		tlList := gClientTile.CharTiles[ao.Faction]
 		if ao.Alive {
@@ -178,13 +177,13 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		addAOuuid[ao.UUID] = true
 
 		for _, eqo := range ao.EquippedPo {
-			cr3d, exist := cf.jsSceneCOs[eqo.UUID]
+			cr3d, exist := vp.jsSceneCOs[eqo.UUID]
 			if !exist {
 				cr3d = gPoolCarryObj3D.Get()
 				ti := Equiped2TileInfo(eqo)
 				cr3d.ChangeTile(ti)
-				cf.scene.Call("add", cr3d.Mesh)
-				cf.jsSceneCOs[eqo.UUID] = cr3d
+				vp.scene.Call("add", cr3d.Mesh)
+				vp.jsSceneCOs[eqo.UUID] = cr3d
 			}
 			shInfo := aoEqPosShift[eqo.EquipType]
 			cr3d.SetFieldPosition(fx, fy, shInfo)
@@ -192,23 +191,23 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		}
 	}
 
-	for id, ao3d := range cf.jsSceneAOs {
+	for id, ao3d := range vp.jsSceneAOs {
 		if !addAOuuid[id] {
-			cf.scene.Call("remove", ao3d.Mesh)
-			delete(cf.jsSceneAOs, id)
+			vp.scene.Call("remove", ao3d.Mesh)
+			delete(vp.jsSceneAOs, id)
 			gPoolActiveObj3D.Put(ao3d)
 		}
 	}
 
 	// make carryobj
 	for _, cro := range olNoti.CarryObjList {
-		cr3d, exist := cf.jsSceneCOs[cro.UUID]
+		cr3d, exist := vp.jsSceneCOs[cro.UUID]
 		if !exist {
 			cr3d = gPoolCarryObj3D.Get()
 			ti := CarryObj2TileInfo(cro)
 			cr3d.ChangeTile(ti)
-			cf.scene.Call("add", cr3d.Mesh)
-			cf.jsSceneCOs[cro.UUID] = cr3d
+			vp.scene.Call("add", cr3d.Mesh)
+			vp.jsSceneCOs[cro.UUID] = cr3d
 		}
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
@@ -217,10 +216,10 @@ func (cf *ClientFloorGL) processNotiObjectList(
 		addCOuuid[cro.UUID] = true
 	}
 
-	for id, cr3d := range cf.jsSceneCOs {
+	for id, cr3d := range vp.jsSceneCOs {
 		if !addCOuuid[id] {
-			cf.scene.Call("remove", cr3d.Mesh)
-			delete(cf.jsSceneCOs, id)
+			vp.scene.Call("remove", cr3d.Mesh)
+			delete(vp.jsSceneCOs, id)
 			gPoolCarryObj3D.Put(cr3d)
 		}
 	}

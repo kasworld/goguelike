@@ -14,11 +14,7 @@ package wasmclientgl
 import (
 	"fmt"
 	"math/rand"
-	"syscall/js"
 	"time"
-
-	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/gowasmlib/jslog"
 
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -43,93 +39,20 @@ type ClientFloorGL struct {
 	visitTime      time.Time                            `prettystring:"simple"`
 
 	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
-
-	light     [3]js.Value // rgb light
-	lightW    js.Value    // white light
-	scene     js.Value
-	camera    js.Value
-	raycaster js.Value
-
-	sightPlane   *SightPlane
-	raycastPlane *RaycastPlane
-
-	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
-	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
-	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
-
-	// tile 3d instancedmesh
-	// count = ClientViewLen*ClientViewLen
-	jsInstacedMesh  [tile.Tile_Count]js.Value
-	jsInstacedCount [tile.Tile_Count]int // in use count
 }
 
 func NewClientFloorGL(fi *c2t_obj.FloorInfo) *ClientFloorGL {
 	cf := ClientFloorGL{
-		Tiles:      tilearea.New(fi.W, fi.H),
-		Visited:    visitarea.NewVisitArea(fi),
-		FloorInfo:  fi,
-		XWrapper:   wrapper.New(fi.W),
-		YWrapper:   wrapper.New(fi.H),
-		jsSceneCOs: make(map[string]*CarryObj3D),
-		jsSceneAOs: make(map[string]*ActiveObj3D),
-		jsSceneFOs: make(map[string]*FieldObj3D),
+		Tiles:     tilearea.New(fi.W, fi.H),
+		Visited:   visitarea.NewVisitArea(fi),
+		FloorInfo: fi,
+		XWrapper:  wrapper.New(fi.W),
+		YWrapper:  wrapper.New(fi.H),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman.New(fi.W, fi.H)
-
-	cf.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
-	cf.scene = ThreeJsNew("Scene")
-	cf.raycaster = ThreeJsNew("Raycaster")
-
-	cf.sightPlane = NewSightPlane()
-	cf.scene.Call("add", cf.sightPlane.Mesh)
-
-	// no need to add to scene for raycasting
-	cf.raycastPlane = NewRaycastPlane()
-
-	lightAm := ThreeJsNew("AmbientLight", 0x808080)
-	cf.scene.Call("add", lightAm)
-
-	cf.lightW = ThreeJsNew("PointLight", 0xffffff, 0.5)
-	cf.scene.Call("add", cf.lightW)
-	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
-		cf.light[i] = ThreeJsNew("PointLight", co, 0.5)
-		SetPosition(cf.light[i],
-			HelperSize/2, HelperSize/2, HelperSize/2,
-		)
-		cf.scene.Call("add", cf.light[i])
-		lightHelper := ThreeJsNew("PointLightHelper", cf.light[i], 2)
-		cf.scene.Call("add", lightHelper)
-	}
-
-	axisSize := fi.W
-	if fi.H > axisSize {
-		axisSize = fi.H
-	}
-	axisHelper := ThreeJsNew("AxesHelper", axisSize*DstCellSize)
-	cf.scene.Call("add", axisHelper)
-
-	SetPosition(cf.camera,
-		HelperSize/2, HelperSize/2, HelperSize,
-	)
-	cf.camera.Call("lookAt",
-		ThreeJsNew("Vector3",
-			HelperSize/2, HelperSize/2, 0,
-		),
-	)
-	cf.camera.Call("updateProjectionMatrix")
-
-	for i := 0; i < tile.Tile_Count; i++ {
-		tlt := tile.Tile(i)
-		mat := gTile3D[tlt].Mat
-		geo := gTile3D[tlt].Geo
-		mesh := ThreeJsNew("InstancedMesh", geo, mat, ClientViewLen*ClientViewLen)
-		mesh.Set("count", 0)
-		cf.scene.Call("add", mesh)
-		cf.jsInstacedMesh[i] = mesh
-	}
 
 	return &cf
 }
@@ -189,23 +112,12 @@ func (cf *ClientFloorGL) UpdateFromViewportTile(
 
 	}
 	cf.Visited.UpdateByViewport2(taNoti.VPX, taNoti.VPY, taNoti.VPTiles)
-
 	for i, v := range gInitData.ViewportXYLenList {
 		fx := cf.XWrapSafe(v.X + taNoti.VPX)
 		fy := cf.YWrapSafe(v.Y + taNoti.VPY)
 		if taNoti.VPTiles[i] != 0 {
 			cf.Tiles[fx][fy] = taNoti.VPTiles[i]
 		}
-	}
-	cf.makeClientTileView(taNoti.VPX, taNoti.VPY)
-
-	cf.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
-
-	cf.sightPlane.ClearRect()
-	cf.sightPlane.FillColor("#000000a0")
-	cf.sightPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
-	if olNoti != nil && olNoti.ActiveObj.HP > 0 {
-		cf.sightPlane.ClearSight(taNoti.VPTiles)
 	}
 
 	return nil
@@ -259,16 +171,6 @@ func (cf *ClientFloorGL) GetBias() bias.Bias {
 
 func (cf *ClientFloorGL) EnterFloor() {
 	cf.visitTime = time.Now()
-	win := js.Global().Get("window")
-	winW := win.Get("innerWidth").Float()
-	winH := win.Get("innerHeight").Float()
-	cf.Resize(winW, winH)
-	cf.Zoom(gameOptions.GetByIDBase("Zoom").State)
-}
-
-func (cf *ClientFloorGL) Resize(w, h float64) {
-	cf.camera.Set("aspect", w/h)
-	cf.camera.Call("updateProjectionMatrix")
 }
 
 func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {
@@ -277,25 +179,4 @@ func (cf *ClientFloorGL) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {
 		return nil
 	}
 	return po
-}
-
-func (cf *ClientFloorGL) processRayCasting(mouse js.Value) {
-	// update the picking ray with the camera and mouse position
-	cf.raycaster.Call("setFromCamera", mouse, cf.camera)
-
-	// calculate objects intersecting the picking ray
-	intersects := cf.raycaster.Call(
-		"intersectObject", cf.raycastPlane.Mesh)
-
-	for i := 0; i < intersects.Length(); i++ {
-		obj := intersects.Index(i)
-		pos3 := obj.Get("point")
-		x := pos3.Get("x").Float()
-		y := pos3.Get("y").Float()
-		fx := int(x / DstCellSize)
-		fy := int(-y / DstCellSize)
-		_ = fx
-		_ = fy
-		jslog.Infof("pos fx:%v fy:%v", fx, fy)
-	}
 }

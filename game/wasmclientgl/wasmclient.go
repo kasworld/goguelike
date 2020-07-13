@@ -304,9 +304,9 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 	envBias := app.GetEnvBias()
 	cf := app.currentFloor()
 	if cf != nil {
-		cf.UpdateFrame(frameProgress, scrollDir, app.taNotiData, envBias)
-		cf.processRayCasting(app.vp.jsMouse)
-		app.vp.renderer.Call("render", cf.scene, cf.camera)
+		app.vp.UpdateFrame(cf, frameProgress, scrollDir, app.taNotiData, envBias)
+		app.vp.processRayCasting(app.vp.jsMouse)
+		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
 	}
 	return nil
 }
@@ -321,10 +321,6 @@ func (app *WasmClient) ResizeCanvas() {
 		app.titlescene.Resize(winW, winH/3)
 	} else {
 		app.vp.Resize(winW, winH)
-		cf := app.currentFloor()
-		if cf != nil {
-			cf.Resize(winW, winH)
-		}
 
 		ftsize := fmt.Sprintf("%vpx", winH/100)
 		GetElementById("body").Get("style").Set("font-size", ftsize)
