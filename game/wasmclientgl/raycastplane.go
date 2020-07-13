@@ -13,6 +13,8 @@ package wasmclientgl
 
 import (
 	"syscall/js"
+
+	"github.com/kasworld/goguelike/config/gameconst"
 )
 
 type RaycastPlane struct {
@@ -25,8 +27,8 @@ type RaycastPlane struct {
 }
 
 func NewRaycastPlane() *RaycastPlane {
-	w := ClientViewLen * DstCellSize
-	h := ClientViewLen * DstCellSize
+	w := gameconst.ViewPortW * 2 * DstCellSize
+	h := gameconst.ViewPortH * 2 * DstCellSize
 	Cnv := js.Global().Get("document").Call("createElement",
 		"CANVAS")
 	Ctx := Cnv.Call("getContext", "2d")

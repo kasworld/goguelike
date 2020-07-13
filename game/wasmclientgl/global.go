@@ -31,7 +31,6 @@ const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
 	DstCellSize      = 32
 	HelperSize       = DstCellSize * 32
-	ClientViewLen    = 40
 
 	PoolSizeActiveObj3D = 1000
 	PoolSizeCarryObj3D  = 1000
@@ -43,7 +42,7 @@ var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 
-var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(ClientViewLen, ClientViewLen)
+var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(gameconst.ViewPortW*2, gameconst.ViewPortH*2)
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 
