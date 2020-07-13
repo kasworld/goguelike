@@ -34,7 +34,6 @@ type Viewport struct {
 	camera    js.Value
 	raycaster js.Value
 
-	sightPlane   *SightPlane
 	raycastPlane *RaycastPlane
 
 	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
@@ -66,9 +65,6 @@ func NewViewport() *Viewport {
 	vp.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
 	vp.scene = ThreeJsNew("Scene")
 	vp.raycaster = ThreeJsNew("Raycaster")
-
-	vp.sightPlane = NewSightPlane()
-	vp.scene.Call("add", vp.sightPlane.Mesh)
 
 	// no need to add to scene for raycasting
 	vp.raycastPlane = NewRaycastPlane()
@@ -155,17 +151,8 @@ func (vp *Viewport) UpdateFromViewportTile(
 			cf.FloorInfo.UUID, taNoti.FloorUUID)
 
 	}
-
-	vp.makeClientTileView(cf, taNoti.VPX, taNoti.VPY)
-
+	vp.makeClientTileView(cf, taNoti)
 	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
-
-	vp.sightPlane.ClearRect()
-	vp.sightPlane.FillColor("#000000a0")
-	vp.sightPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
-	if olNoti != nil && olNoti.ActiveObj.HP > 0 {
-		vp.sightPlane.ClearSight(taNoti.VPTiles)
-	}
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
 	return nil
 }

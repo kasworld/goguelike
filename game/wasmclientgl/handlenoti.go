@@ -156,7 +156,6 @@ func objRecvNotiFn_Death(recvobj interface{}, header c2t_packet.Header, obj inte
 	app.systemMessage.Append("You died.")
 	app.remainTurn2Rebirth = gameconst.ActiveObjRebirthWaitTurn
 
-	app.vp.sightPlane.Death()
 	return nil
 }
 
@@ -184,7 +183,6 @@ func objRecvNotiFn_ReadyToRebirth(recvobj interface{}, header c2t_packet.Header,
 	app.CaObjUUID2CaObjClient = make(map[string]interface{})
 	app.remainTurn2Rebirth = 0
 
-	app.vp.sightPlane.Ready2Rebirth()
 	return nil
 }
 

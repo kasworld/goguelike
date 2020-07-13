@@ -211,7 +211,10 @@ func preMakeTileMatGeo() {
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		gTile3D[i].GeoInfo = GetGeoInfo(gTile3D[i].Geo)
+		// gTile3D[i].Mat.Set("metalness", 1.0)
 		gTile3DDark[i].GeoInfo = GetGeoInfo(gTile3DDark[i].Geo)
+		gTile3DDark[i].Mat.Set("metalness", 1.0)
+		// gTile3DDark[i].Mat.Set("roughness", 1.0)
 	}
 }
 
