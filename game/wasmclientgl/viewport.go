@@ -16,6 +16,7 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
 )
@@ -135,7 +136,7 @@ func (vp *Viewport) Zoom(zoom int) {
 }
 
 func (vp *Viewport) UpdateFromViewportTile(
-	cf *ClientFloorGL,
+	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data,
 	olNoti *c2t_obj.NotiObjectList_data) error {
 

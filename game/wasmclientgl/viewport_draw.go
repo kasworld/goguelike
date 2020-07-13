@@ -18,11 +18,12 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 func (vp *Viewport) UpdateFrame(
-	cf *ClientFloorGL,
+	cf *clientfloor.ClientFloor,
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
@@ -81,7 +82,7 @@ func (vp *Viewport) UpdateFrame(
 
 // add tiles in gXYLenListView
 func (vp *Viewport) makeClientTileView(
-	cf *ClientFloorGL, vpx, vpy int) {
+	cf *clientfloor.ClientFloor, vpx, vpy int) {
 	for i := 0; i < tile.Tile_Count; i++ {
 		vp.jsInstacedCount[i] = 0 // clear use count
 	}
@@ -114,7 +115,7 @@ func (vp *Viewport) makeClientTileView(
 
 // add fo to clientview by vp.FieldObjPosMan
 func (vp *Viewport) updateFieldObjInView(
-	cf *ClientFloorGL, vpx, vpy int) {
+	cf *clientfloor.ClientFloor, vpx, vpy int) {
 	addFOuuid := make(map[string]bool)
 	for _, v := range gXYLenListView {
 		fx := v.X + vpx
@@ -148,7 +149,7 @@ func (vp *Viewport) updateFieldObjInView(
 }
 
 func (vp *Viewport) processNotiObjectList(
-	cf *ClientFloorGL,
+	cf *clientfloor.ClientFloor,
 	olNoti *c2t_obj.NotiObjectList_data,
 	vpx, vpy int, // place obj around
 ) {

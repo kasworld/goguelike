@@ -25,6 +25,7 @@ import (
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
+	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
@@ -99,7 +100,7 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
 		// new floor
-		cf = NewClientFloorGL(robj.FI)
+		cf = clientfloor.New(robj.FI)
 		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
@@ -589,7 +590,7 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	}
 
 	oldComplete := cf.Visited.IsComplete()
-	if err := cf.UpdateFromViewportTile(app.taNotiData, app.olNotiData); err != nil {
+	if err := cf.UpdateFromViewportTile(app.taNotiData, gInitData.ViewportXYLenList); err != nil {
 		jslog.Warn("%v", err)
 		return nil
 	}
@@ -614,7 +615,7 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	cf, exist := app.UUID2ClientFloor[robj.FI.UUID]
 	if !exist {
 		// new floor
-		cf = NewClientFloorGL(robj.FI)
+		cf = clientfloor.New(robj.FI)
 		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
