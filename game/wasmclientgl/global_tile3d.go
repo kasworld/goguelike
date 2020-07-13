@@ -26,6 +26,7 @@ type Tile3D struct {
 }
 
 var gTile3D [tile.Tile_Count]Tile3D
+var gTile3DDark [tile.Tile_Count]Tile3D
 
 func preMakeTileMatGeo() {
 	var tlt tile.Tile
@@ -36,9 +37,18 @@ func preMakeTileMatGeo() {
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, -1},
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, -1},
+	}
 
 	tlt = tile.Soil
 	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tlt),
+		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat: NewTextureTileMaterial(tlt),
 		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 	}
@@ -48,9 +58,18 @@ func preMakeTileMatGeo() {
 		Mat: NewTextureTileMaterial(tlt),
 		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tlt),
+		Geo: ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Sand
 	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 0},
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat:   NewTextureTileMaterial(tlt),
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, 0},
@@ -62,9 +81,19 @@ func preMakeTileMatGeo() {
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, -2},
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, -2},
+	}
 
 	tlt = tile.Magma
 	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, -2},
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat:   NewTextureTileMaterial(tlt),
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, -2},
@@ -76,9 +105,18 @@ func preMakeTileMatGeo() {
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, 1},
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 1},
+	}
 
 	tlt = tile.Grass
 	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tile.Grass),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8),
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat: NewTextureTileMaterial(tile.Grass),
 		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8),
 	}
@@ -88,9 +126,18 @@ func preMakeTileMatGeo() {
 		Mat: NewTextureTileMaterial(tile.Grass),
 		Geo: MakeTreeGeo(),
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tile.Grass),
+		Geo: MakeTreeGeo(),
+	}
 
 	tlt = tile.Road
 	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 1},
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat:   NewTextureTileMaterial(tlt),
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, 1},
@@ -102,9 +149,18 @@ func preMakeTileMatGeo() {
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, 0},
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, 0},
+	}
 
 	tlt = tile.Wall
 	gTile3D[tlt] = Tile3D{
+		Mat: NewTextureTileMaterial(tile.Stone),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize),
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat: NewTextureTileMaterial(tile.Stone),
 		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize),
 	}
@@ -114,15 +170,28 @@ func preMakeTileMatGeo() {
 		Mat: NewTileMaterial(gClientTile.CursorTiles[2]),
 		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize),
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat: NewTileMaterial(gClientTile.CursorTiles[2]),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize),
+	}
 
 	tlt = tile.Door
 	gTile3D[tlt] = Tile3D{
 		Mat: NewTileMaterial(gClientTile.FloorTiles[tile.Door][0]),
 		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat: NewTileMaterial(gClientTile.FloorTiles[tile.Door][0]),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+	}
 
 	tlt = tile.Fog
 	gTile3D[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, DstCellSize/8 + 1},
+	}
+	gTile3DDark[tlt] = Tile3D{
 		Mat:   NewTextureTileMaterial(tlt),
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, DstCellSize/8 + 1},
@@ -134,10 +203,15 @@ func preMakeTileMatGeo() {
 		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
 		Shift: [3]float64{0, 0, DstCellSize/8 + 1},
 	}
+	gTile3DDark[tlt] = Tile3D{
+		Mat:   NewTextureTileMaterial(tlt),
+		Geo:   ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize),
+		Shift: [3]float64{0, 0, DstCellSize/8 + 1},
+	}
 
 	for i := 0; i < tile.Tile_Count; i++ {
-		geo := gTile3D[i].Geo
-		gTile3D[i].GeoInfo = GetGeoInfo(geo)
+		gTile3D[i].GeoInfo = GetGeoInfo(gTile3D[i].Geo)
+		gTile3DDark[i].GeoInfo = GetGeoInfo(gTile3DDark[i].Geo)
 	}
 }
 

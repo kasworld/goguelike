@@ -43,8 +43,10 @@ type Viewport struct {
 
 	// tile 3d instancedmesh
 	// count = ClientViewLen*ClientViewLen
-	jsInstacedMesh  [tile.Tile_Count]js.Value
-	jsInstacedCount [tile.Tile_Count]int // in use count
+	jsTile3DMesh      [tile.Tile_Count]js.Value
+	jsTile3DCount     [tile.Tile_Count]int // in use count
+	jsTile3DDarkMesh  [tile.Tile_Count]js.Value
+	jsTile3DDarkCount [tile.Tile_Count]int // in use count
 
 }
 
@@ -107,7 +109,15 @@ func NewViewport() *Viewport {
 		mesh := ThreeJsNew("InstancedMesh", geo, mat, ClientViewLen*ClientViewLen)
 		mesh.Set("count", 0)
 		vp.scene.Call("add", mesh)
-		vp.jsInstacedMesh[i] = mesh
+		vp.jsTile3DMesh[i] = mesh
+
+		tlt = tile.Tile(i)
+		mat = gTile3DDark[tlt].Mat
+		geo = gTile3DDark[tlt].Geo
+		mesh = ThreeJsNew("InstancedMesh", geo, mat, ClientViewLen*ClientViewLen)
+		mesh.Set("count", 0)
+		vp.scene.Call("add", mesh)
+		vp.jsTile3DDarkMesh[i] = mesh
 	}
 
 	return vp

@@ -84,7 +84,7 @@ func (vp *Viewport) UpdateFrame(
 func (vp *Viewport) makeClientTileView(
 	cf *clientfloor.ClientFloor, vpx, vpy int) {
 	for i := 0; i < tile.Tile_Count; i++ {
-		vp.jsInstacedCount[i] = 0 // clear use count
+		vp.jsTile3DCount[i] = 0 // clear use count
 	}
 	matrix := ThreeJsNew("Matrix4")
 	for _, v := range gXYLenListView {
@@ -102,14 +102,14 @@ func (vp *Viewport) makeClientTileView(
 						sh[2]+geolen[2]/2,
 					),
 				)
-				vp.jsInstacedMesh[i].Call("setMatrixAt", vp.jsInstacedCount[i], matrix)
-				vp.jsInstacedCount[i]++
+				vp.jsTile3DMesh[i].Call("setMatrixAt", vp.jsTile3DCount[i], matrix)
+				vp.jsTile3DCount[i]++
 			}
 		}
 	}
 	for i := 0; i < tile.Tile_Count; i++ {
-		vp.jsInstacedMesh[i].Set("count", vp.jsInstacedCount[i])
-		vp.jsInstacedMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
+		vp.jsTile3DMesh[i].Set("count", vp.jsTile3DCount[i])
+		vp.jsTile3DMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
 	}
 }
 
