@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/gowasmlib/jslog"
 )
 
 type Viewport struct {
@@ -185,6 +184,6 @@ func (vp *Viewport) processRayCasting(mouse js.Value) {
 		vp.cursor.SetFieldPosition(fx, fy)
 		_ = fx
 		_ = fy
-		jslog.Infof("pos fx:%v fy:%v", fx, fy)
+		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
 	}
 }
