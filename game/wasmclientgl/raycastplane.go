@@ -13,53 +13,31 @@ package wasmclientgl
 
 import (
 	"syscall/js"
-
-	"github.com/kasworld/goguelike/config/gameconst"
 )
 
 type RaycastPlane struct {
-	W    int // canvas width
-	H    int // canvas height
-	Cnv  js.Value
-	Ctx  js.Value
-	Tex  js.Value
 	Mesh js.Value
 }
 
 func NewRaycastPlane() *RaycastPlane {
-	w := gameconst.ClientViewPortW * DstCellSize
-	h := gameconst.ClientViewPortH * DstCellSize
-	Cnv := js.Global().Get("document").Call("createElement",
-		"CANVAS")
-	Ctx := Cnv.Call("getContext", "2d")
-	Ctx.Set("imageSmoothingEnabled", false)
-	Cnv.Set("width", w)
-	Cnv.Set("height", h)
-	Ctx.Call("clearRect", 0, 0, w, h)
-	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	Mat := ThreeJsNew("MeshStandardMaterial",
-		map[string]interface{}{
-			"map": Tex,
-		},
-	)
-	Mat.Set("transparent", true)
+	// must big enough to cover all floor
+	// because cannot move mesh
+	w := 1024 * DstCellSize
+	h := 1024 * DstCellSize
+	Mat := ThreeJsNew("MeshBasicMaterial")
+
 	Geo := ThreeJsNew("PlaneGeometry", w, h)
 	Mesh := ThreeJsNew("Mesh", Geo, Mat)
 
 	return &RaycastPlane{
-		W:    w,
-		H:    h,
-		Cnv:  Cnv,
-		Ctx:  Ctx,
-		Tex:  Tex,
 		Mesh: Mesh,
 	}
 }
 
-func (pl *RaycastPlane) MoveCenterTo(fx, fy int) {
-	SetPosition(pl.Mesh,
-		fx*DstCellSize,
-		-fy*DstCellSize,
-		0,
-	)
-}
+// func (pl *RaycastPlane) MoveCenterTo(fx, fy int) {
+// 	SetPosition(pl.Mesh,
+// 		fx*DstCellSize,
+// 		-fy*DstCellSize,
+// 		0,
+// 	)
+// }
