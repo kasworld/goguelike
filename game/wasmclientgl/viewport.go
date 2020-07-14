@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/gowasmlib/jslog"
 )
 
 type Viewport struct {
@@ -101,6 +100,7 @@ func NewViewport() *Viewport {
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
+
 		mat := gTile3D[tlt].Mat
 		geo := gTile3D[tlt].Geo
 		mesh := ThreeJsNew("InstancedMesh", geo, mat,
@@ -109,7 +109,6 @@ func NewViewport() *Viewport {
 		vp.scene.Call("add", mesh)
 		vp.jsTile3DMesh[i] = mesh
 
-		tlt = tile.Tile(i)
 		mat = gTile3DDark[tlt].Mat
 		geo = gTile3DDark[tlt].Geo
 		mesh = ThreeJsNew("InstancedMesh", geo, mat,
@@ -177,6 +176,6 @@ func (vp *Viewport) processRayCasting(mouse js.Value) {
 		fy := int(-y / DstCellSize)
 		_ = fx
 		_ = fy
-		jslog.Infof("pos fx:%v fy:%v", fx, fy)
+		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
 	}
 }

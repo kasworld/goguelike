@@ -240,3 +240,24 @@ func MakeTreeGeo() js.Value {
 	geo2.Call("dispose")
 	return geo
 }
+
+func MakeWallGeo() js.Value {
+	shape := ThreeJsNew("Shape")
+	shape.Call("moveTo", 0, 0)
+	shape.Call("lineTo", 0, DstCellSize-1)
+	shape.Call("lineTo", DstCellSize-1, DstCellSize-1)
+	shape.Call("lineTo", DstCellSize-1, 0)
+	shape.Call("lineTo", 0, 0)
+	extrudeSettings := map[string]interface{}{
+		"steps":          1,
+		"depth":          DstCellSize - 1,
+		"bevelEnabled":   true,
+		"bevelThickness": 1,
+		"bevelSize":      1,
+		"bevelOffset":    0,
+		"bevelSegments":  1,
+	}
+	geo := ThreeJsNew("ExtrudeGeometry", shape, extrudeSettings)
+	geo.Call("translate", -DstCellSize/2, -DstCellSize/2, -DstCellSize/2)
+	return geo
+}
