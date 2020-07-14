@@ -15,9 +15,15 @@ import "math"
 
 // game const
 const (
+
+	// packet viewport size
 	ViewPortW  = 19
 	ViewPortH  = 19
 	ViewPortWH = ViewPortW * ViewPortH
+
+	// client gl viewport tile size
+	ClientViewPortW = ViewPortW * 2
+	ClientViewPortH = ViewPortH * 2
 
 	// int packet
 	ActiveObjCountInViewportLimit = 100

@@ -17,7 +17,9 @@ import (
 	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
-var ViewportXYLenList = findnear.NewXYLenList(gameconst.ViewPortW*2, gameconst.ViewPortH*2)[:gameconst.ViewPortWH]
+var ViewportXYLenList = findnear.NewXYLenList(
+	gameconst.ClientViewPortW, gameconst.ClientViewPortH)[:gameconst.ViewPortWH]
 
+// same order with ViewportXYLenList
 type ViewportSight2 [gameconst.ViewPortWH]float32
 type ViewportTileArea2 [gameconst.ViewPortWH]tile_flag.TileFlag

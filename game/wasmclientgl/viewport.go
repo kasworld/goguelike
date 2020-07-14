@@ -42,7 +42,7 @@ type Viewport struct {
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
 	// tile 3d instancedmesh
-	// count = gameconst.ViewPortW*2, gameconst.ViewPortH*2
+	// count = gameconst.ClientViewPortW * gameconst.ClientViewPortH
 	jsTile3DMesh      [tile.Tile_Count]js.Value
 	jsTile3DCount     [tile.Tile_Count]int // in use count
 	jsTile3DDarkMesh  [tile.Tile_Count]js.Value
@@ -103,7 +103,8 @@ func NewViewport() *Viewport {
 		tlt := tile.Tile(i)
 		mat := gTile3D[tlt].Mat
 		geo := gTile3D[tlt].Geo
-		mesh := ThreeJsNew("InstancedMesh", geo, mat, gameconst.ViewPortW*2*gameconst.ViewPortH*2)
+		mesh := ThreeJsNew("InstancedMesh", geo, mat,
+			gameconst.ClientViewPortW*gameconst.ClientViewPortH)
 		mesh.Set("count", 0)
 		vp.scene.Call("add", mesh)
 		vp.jsTile3DMesh[i] = mesh
@@ -111,7 +112,8 @@ func NewViewport() *Viewport {
 		tlt = tile.Tile(i)
 		mat = gTile3DDark[tlt].Mat
 		geo = gTile3DDark[tlt].Geo
-		mesh = ThreeJsNew("InstancedMesh", geo, mat, gameconst.ViewPortW*2*gameconst.ViewPortH*2)
+		mesh = ThreeJsNew("InstancedMesh", geo, mat,
+			gameconst.ClientViewPortW*gameconst.ClientViewPortH)
 		mesh.Set("count", 0)
 		vp.scene.Call("add", mesh)
 		vp.jsTile3DDarkMesh[i] = mesh

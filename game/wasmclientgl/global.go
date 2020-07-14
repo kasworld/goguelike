@@ -42,7 +42,8 @@ var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
 
-var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(gameconst.ViewPortW*2, gameconst.ViewPortH*2)
+var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(
+	gameconst.ClientViewPortW, gameconst.ClientViewPortH)
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 
