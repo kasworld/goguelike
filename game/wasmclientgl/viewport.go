@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/gowasmlib/jslog"
 )
 
 type Viewport struct {
@@ -35,6 +36,7 @@ type Viewport struct {
 	raycaster js.Value
 
 	raycastPlane *RaycastPlane
+	cursor       *Cursor3D
 
 	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
@@ -68,6 +70,10 @@ func NewViewport() *Viewport {
 
 	// no need to add to scene for raycasting
 	vp.raycastPlane = NewRaycastPlane()
+
+	vp.cursor = NewCursor3D()
+	vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
+	vp.scene.Call("add", vp.cursor.Mesh)
 
 	lightAm := ThreeJsNew("AmbientLight", 0x808080)
 	vp.scene.Call("add", lightAm)
@@ -174,8 +180,9 @@ func (vp *Viewport) processRayCasting(mouse js.Value) {
 		y := pos3.Get("y").Float()
 		fx := int(x / DstCellSize)
 		fy := int(-y / DstCellSize)
+		vp.cursor.SetFieldPosition(fx, fy)
 		_ = fx
 		_ = fy
-		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
+		jslog.Infof("pos fx:%v fy:%v", fx, fy)
 	}
 }

@@ -27,8 +27,8 @@ type RaycastPlane struct {
 }
 
 func NewRaycastPlane() *RaycastPlane {
-	w := gameconst.ViewPortW * 2 * DstCellSize
-	h := gameconst.ViewPortH * 2 * DstCellSize
+	w := gameconst.ClientViewPortW * DstCellSize
+	h := gameconst.ClientViewPortH * DstCellSize
 	Cnv := js.Global().Get("document").Call("createElement",
 		"CANVAS")
 	Ctx := Cnv.Call("getContext", "2d")
