@@ -22,8 +22,8 @@ const (
 	ViewPortWH = ViewPortW * ViewPortH
 
 	// client gl viewport tile size
-	ClientViewPortW = ViewPortW * 2
-	ClientViewPortH = ViewPortH * 2
+	ClientViewPortW = ViewPortW * 3
+	ClientViewPortH = ViewPortH * 3
 
 	// int packet
 	ActiveObjCountInViewportLimit = 100
