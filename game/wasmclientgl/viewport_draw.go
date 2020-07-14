@@ -160,8 +160,14 @@ func (vp *Viewport) updateFieldObjInView(
 			vp.jsSceneFOs[obj.GetUUID()] = fo3d
 			vp.scene.Call("add", fo3d.Mesh)
 		}
-		addFOuuid[obj.GetUUID()] = true
-		fo3d.SetFieldPosition(fx, fy)
+		if !addFOuuid[obj.GetUUID()] {
+			fo3d.SetFieldPosition(fx, fy)
+			addFOuuid[obj.GetUUID()] = true
+		} else {
+			// same fo in gXYLenListView
+			// field too small
+			// skip farther fo
+		}
 	}
 
 	// del removed obj
