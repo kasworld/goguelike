@@ -105,7 +105,7 @@ func (cf *ClientFloor) String() string {
 
 func (cf *ClientFloor) UpdateFromViewportTile(
 	vp *c2t_obj.NotiVPTiles_data,
-	ViewportXYLenList findnear.XYLenList,
+	vpXYLenList findnear.XYLenList,
 ) error {
 
 	if cf.FloorInfo.UUID != vp.FloorUUID {
@@ -113,9 +113,9 @@ func (cf *ClientFloor) UpdateFromViewportTile(
 			cf.FloorInfo.UUID, vp.FloorUUID)
 
 	}
-	cf.Visited.UpdateByViewport2(vp.VPX, vp.VPY, vp.VPTiles)
+	cf.Visited.UpdateByViewport2(vp.VPX, vp.VPY, vp.VPTiles, vpXYLenList)
 
-	for i, v := range ViewportXYLenList {
+	for i, v := range vpXYLenList {
 		fx := cf.XWrapSafe(v.X + vp.VPX)
 		fy := cf.YWrapSafe(v.Y + vp.VPY)
 		if vp.VPTiles[i] != 0 {

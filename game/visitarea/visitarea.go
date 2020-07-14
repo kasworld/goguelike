@@ -19,6 +19,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/tilearea"
@@ -171,9 +172,12 @@ func (va *VisitArea) GetXYNolock(x, y int) bool {
 	return va.bitsList[index]&bit != 0
 }
 
+// client use only
 func (va *VisitArea) UpdateByViewport2(
 	vpCenterX, vpCenterY int,
-	vpTiles *viewportdata.ViewportTileArea2) int {
+	vpTiles *viewportdata.ViewportTileArea2,
+	vpXYLenList findnear.XYLenList,
+) int {
 	va.mutex.Lock()
 	defer va.mutex.Unlock()
 
@@ -181,7 +185,7 @@ func (va *VisitArea) UpdateByViewport2(
 	ywrapper := va.yWrap
 
 	old := va.discoveredTileCount
-	for i, v := range viewportdata.ViewportXYLenList {
+	for i, v := range vpXYLenList {
 		fx := xwrapper(v.X + vpCenterX)
 		fy := ywrapper(v.Y + vpCenterY)
 		if vpTiles[i] != 0 {
@@ -196,6 +200,7 @@ func (va *VisitArea) UpdateByViewport2(
 	return va.discoveredTileCount - old
 }
 
+// server use only
 func (va *VisitArea) UpdateBySightMat2(
 	floorTiles tilearea.TileArea,
 	vpCenterX, vpCenterY int,

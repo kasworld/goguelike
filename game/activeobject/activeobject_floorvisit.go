@@ -39,7 +39,11 @@ func (ao *ActiveObject) UpdateBySightMat2(
 		ao.log.Fatal("floor not visited %v %v", ao, f.GetUUID())
 		va = ao.uuid2VisitArea.Add(f)
 	}
-	va.UpdateBySightMat2(f.GetTerrain().GetTiles(), vpCenterX, vpCenterY, sightMat, sight)
+	va.UpdateBySightMat2(
+		f.GetTerrain().GetTiles(),
+		vpCenterX, vpCenterY,
+		sightMat,
+		sight)
 }
 
 func (ao *ActiveObject) forgetAnyFloor() error {
