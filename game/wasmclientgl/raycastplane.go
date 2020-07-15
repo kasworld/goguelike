@@ -13,6 +13,8 @@ package wasmclientgl
 
 import (
 	"syscall/js"
+
+	"github.com/kasworld/goguelike/config/gameconst"
 )
 
 type RaycastPlane struct {
@@ -20,24 +22,20 @@ type RaycastPlane struct {
 }
 
 func NewRaycastPlane() *RaycastPlane {
-	// must big enough to cover all floor
-	// because cannot move mesh
-	w := 1024 * DstCellSize
-	h := 1024 * DstCellSize
+	w := gameconst.ClientViewPortW * DstCellSize
+	h := gameconst.ClientViewPortH * DstCellSize
 	Mat := ThreeJsNew("MeshBasicMaterial")
-
 	Geo := ThreeJsNew("PlaneGeometry", w, h)
 	Mesh := ThreeJsNew("Mesh", Geo, Mat)
-
 	return &RaycastPlane{
 		Mesh: Mesh,
 	}
 }
 
-// func (pl *RaycastPlane) MoveCenterTo(fx, fy int) {
-// 	SetPosition(pl.Mesh,
-// 		fx*DstCellSize,
-// 		-fy*DstCellSize,
-// 		0,
-// 	)
-// }
+func (pl *RaycastPlane) MoveCenterTo(fx, fy int) {
+	SetPosition(pl.Mesh,
+		fx*DstCellSize,
+		-fy*DstCellSize,
+		0,
+	)
+}

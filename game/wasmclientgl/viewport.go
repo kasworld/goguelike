@@ -69,7 +69,8 @@ func NewViewport() *Viewport {
 
 	// no need to add to scene for raycasting
 	vp.raycastPlane = NewRaycastPlane()
-	// vp.scene.Call("add", vp.raycastPlane.Mesh)
+	vp.scene.Call("add", vp.raycastPlane.Mesh)
+	vp.raycastPlane.Mesh.Set("visible", false)
 
 	vp.cursor = NewCursor3D()
 	vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
@@ -161,8 +162,7 @@ func (vp *Viewport) UpdateFromViewportTile(
 	}
 	vp.makeClientTileView(cf, taNoti)
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
-	// no move, position not change if not add to scene. why?
-	// vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
+	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
 	return nil
 }
 
