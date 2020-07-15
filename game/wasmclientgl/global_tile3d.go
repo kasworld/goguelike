@@ -15,8 +15,6 @@ import (
 	"math"
 	"syscall/js"
 
-	"github.com/kasworld/gowasmlib/jslog"
-
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 )
@@ -181,11 +179,11 @@ func preMakeTileMatGeo() {
 	tlt = tile.Door
 	gTile3D[tlt] = Tile3D{
 		Mat: NewTileMaterial(gClientTile.FloorTiles[tile.Door][0]),
-		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1),
 	}
 	gTile3DDark[tlt] = Tile3D{
 		Mat: NewTileMaterial(gClientTile.FloorTiles[tile.Door][0]),
-		Geo: ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize),
+		Geo: ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1),
 	}
 
 	tlt = tile.Fog
@@ -295,7 +293,6 @@ func GetTile3DHeightByCache(tl tile_flag.TileFlag) float64 {
 			z = 0 // prevent recalc empty tile
 		}
 		tileHeightCache[tl] = z
-		jslog.Infof("tl %v z %v", tl, z)
 	}
 	return z
 }
