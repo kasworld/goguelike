@@ -14,6 +14,8 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/tile_flag"
+
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
@@ -58,7 +60,18 @@ func (aog *Cursor3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Tex.Set("needsUpdate", true)
 }
 
-func (aog *Cursor3D) SetFieldPosition(fx, fy int, height float64) {
+func (aog *Cursor3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
+	height := GetTile3DHeightByCache(tl)
+	if !tl.CharPlaceable() {
+		aog.ChangeTile(gClientTile.CursorTiles[2])
+	} else {
+		if tl.Safe() {
+			aog.ChangeTile(gClientTile.CursorTiles[0])
+
+		} else {
+			aog.ChangeTile(gClientTile.CursorTiles[1])
+		}
+	}
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2,

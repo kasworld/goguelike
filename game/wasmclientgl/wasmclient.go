@@ -308,18 +308,7 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 		app.vp.UpdateFrame(cf, frameProgress, scrollDir, app.taNotiData, envBias)
 		fx, fy := app.vp.FindRayCastingFxFy()
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		height := GetTile3DHeightByCache(tl)
-		if !tl.CharPlaceable() {
-			app.vp.cursor.ChangeTile(gClientTile.CursorTiles[2])
-		} else {
-			if tl.Safe() {
-				app.vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
-
-			} else {
-				app.vp.cursor.ChangeTile(gClientTile.CursorTiles[1])
-			}
-		}
-		app.vp.cursor.SetFieldPosition(fx, fy, height)
+		app.vp.cursor.SetFieldPosition(fx, fy, tl)
 		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
 	}
 	return nil
