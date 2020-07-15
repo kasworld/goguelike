@@ -166,9 +166,9 @@ func (vp *Viewport) UpdateFromViewportTile(
 	return nil
 }
 
-func (vp *Viewport) processRayCasting(mouse js.Value) {
+func (vp *Viewport) FindRayCastingFxFy() (int, int) {
 	// update the picking ray with the camera and mouse position
-	vp.raycaster.Call("setFromCamera", mouse, vp.camera)
+	vp.raycaster.Call("setFromCamera", vp.jsMouse, vp.camera)
 
 	// calculate objects intersecting the picking ray
 	intersects := vp.raycaster.Call(
@@ -181,9 +181,10 @@ func (vp *Viewport) processRayCasting(mouse js.Value) {
 		y := pos3.Get("y").Float()
 		fx := int(x / DstCellSize)
 		fy := int(-y / DstCellSize)
-		vp.cursor.SetFieldPosition(fx, fy)
+		return fx, fy
 		_ = fx
 		_ = fy
 		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
 	}
+	return 0, 0
 }

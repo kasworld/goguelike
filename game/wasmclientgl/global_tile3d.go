@@ -15,6 +15,8 @@ import (
 	"math"
 	"syscall/js"
 
+	"github.com/kasworld/gowasmlib/jslog"
+
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 )
@@ -265,6 +267,12 @@ func MakeWallGeo() js.Value {
 
 var tileHeightCache [1 << uint(tile.Tile_Count)]float64
 
+func init() {
+	for i := range tileHeightCache {
+		tileHeightCache[i] = Tile3DHeightMin
+	}
+}
+
 func calcTile3DHeight(tl tile_flag.TileFlag) float64 {
 	rtn := Tile3DHeightMin
 	for i := 0; i < tile.Tile_Count; i++ {
@@ -287,6 +295,7 @@ func GetTile3DHeightByCache(tl tile_flag.TileFlag) float64 {
 			z = 0 // prevent recalc empty tile
 		}
 		tileHeightCache[tl] = z
+		jslog.Infof("tl %v z %v", tl, z)
 	}
 	return z
 }

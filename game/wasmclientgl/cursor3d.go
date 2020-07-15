@@ -58,12 +58,12 @@ func (aog *Cursor3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Tex.Set("needsUpdate", true)
 }
 
-func (aog *Cursor3D) SetFieldPosition(fx, fy int) {
+func (aog *Cursor3D) SetFieldPosition(fx, fy int, height float64) {
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2,
 		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2,
-		aog.GeoInfo.Len[2]/2+DstCellSize/2,
+		aog.GeoInfo.Len[2]/2+1+height,
 	)
 }
 
