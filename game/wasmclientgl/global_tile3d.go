@@ -16,6 +16,7 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
 type Tile3D struct {
@@ -260,4 +261,32 @@ func MakeWallGeo() js.Value {
 	geo := ThreeJsNew("ExtrudeGeometry", shape, extrudeSettings)
 	geo.Call("translate", -DstCellSize/2, -DstCellSize/2, -DstCellSize/2)
 	return geo
+}
+
+var tileHeightCache [1 << uint(tile.Tile_Count)]float64
+
+func calcTile3DHeight(tl tile_flag.TileFlag) float64 {
+	rtn := Tile3DHeightMin
+	for i := 0; i < tile.Tile_Count; i++ {
+		if !tl.TestByTile(tile.Tile(i)) {
+			continue
+		}
+		z := gTile3D[i].GeoInfo.Max[2] + gTile3D[i].Shift[2]
+		if z > rtn {
+			rtn = z
+		}
+	}
+	return rtn
+}
+
+func GetTile3DHeightByCache(tl tile_flag.TileFlag) float64 {
+	z := tileHeightCache[tl]
+	if z == Tile3DHeightMin {
+		z = calcTile3DHeight(tl)
+		if z == Tile3DHeightMin { // empty tile
+			z = 0 // prevent recalc empty tile
+		}
+		tileHeightCache[tl] = z
+	}
+	return z
 }

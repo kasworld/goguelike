@@ -35,6 +35,9 @@ const (
 	PoolSizeActiveObj3D = 1000
 	PoolSizeCarryObj3D  = 1000
 	PoolSizeFieldObj3D  = 1000
+
+	// invalid value
+	Tile3DHeightMin = -1000.0
 )
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
