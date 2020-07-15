@@ -277,7 +277,7 @@ func calcTile3DHeight(tl tile_flag.TileFlag) float64 {
 		if !tl.TestByTile(tile.Tile(i)) {
 			continue
 		}
-		z := gTile3D[i].GeoInfo.Max[2] + gTile3D[i].Shift[2]
+		z := gTile3D[i].GeoInfo.Len[2] + gTile3D[i].Shift[2]
 		if z > rtn {
 			rtn = z
 		}
