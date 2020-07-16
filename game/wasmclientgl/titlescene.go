@@ -58,7 +58,7 @@ func (ts *TitleScene) Resize(w, h float64) {
 
 func (ts *TitleScene) addTitle() {
 	str := "Goguelike-GL"
-	ftGeo := GetTextGeometryByCache(str, 80)
+	ftGeo := GetTitleTextGeometry(str, 80)
 	geoInfo := GetGeoInfo(ftGeo)
 	co := gRnd.Uint32() & 0x00ffffff
 	ftMat := GetColorMaterialByCache(fmt.Sprintf("#%06x", co))
@@ -71,18 +71,7 @@ func (ts *TitleScene) addTitle() {
 	ts.scene.Call("add", ts.jsoTitle)
 }
 
-var gFontLoader js.Value = ThreeJsNew("FontLoader")
-var gFont_helvetiker_regular js.Value
-
-type textGeoKey struct {
-	Str  string
-	Size float64
-}
-
-var gTextGeometryCache map[textGeoKey]js.Value = make(map[textGeoKey]js.Value)
-
-func GetTextGeometryByCache(str string, size float64) js.Value {
-	geo, exist := gTextGeometryCache[textGeoKey{str, size}]
+func GetTitleTextGeometry(str string, size float64) js.Value {
 	curveSegments := size / 3
 	if curveSegments < 1 {
 		curveSegments = 1
@@ -103,21 +92,18 @@ func GetTextGeometryByCache(str string, size float64) js.Value {
 	if bevelSegments < 1 {
 		bevelSegments = 1
 	}
-	if !exist {
-		geo = ThreeJsNew("TextGeometry", str,
-			map[string]interface{}{
-				"font":           gFont_helvetiker_regular,
-				"size":           size,
-				"height":         5,
-				"curveSegments":  curveSegments,
-				"bevelEnabled":   bevelEnabled,
-				"bevelThickness": bevelThickness,
-				"bevelSize":      bevelSize,
-				"bevelOffset":    0,
-				"bevelSegments":  bevelSegments,
-			})
-		gTextGeometryCache[textGeoKey{str, size}] = geo
-	}
+	geo := ThreeJsNew("TextGeometry", str,
+		map[string]interface{}{
+			"font":           gFont_helvetiker_regular,
+			"size":           size,
+			"height":         5,
+			"curveSegments":  curveSegments,
+			"bevelEnabled":   bevelEnabled,
+			"bevelThickness": bevelThickness,
+			"bevelSize":      bevelSize,
+			"bevelOffset":    0,
+			"bevelSegments":  bevelSegments,
+		})
 	return geo
 }
 

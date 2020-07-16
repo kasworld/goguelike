@@ -41,14 +41,13 @@ const (
 )
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-var gInitData *clientinitdata.InitData = clientinitdata.New()
-var gClientTile *clienttile.ClientTile = clienttile.New()
-
 var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(
 	gameconst.ClientViewPortW, gameconst.ClientViewPortH)
-
+var gInitData *clientinitdata.InitData = clientinitdata.New()
+var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
+var gFontLoader js.Value = ThreeJsNew("FontLoader")
+var gFont_helvetiker_regular js.Value
 
 func NewTileMaterial(ti webtilegroup.TileInfo) js.Value {
 	Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
