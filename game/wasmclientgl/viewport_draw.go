@@ -76,7 +76,7 @@ func (vp *Viewport) UpdateFrame(
 		if ao.UUID == playerUUID {
 			// player
 			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
-				aod.RotateZ(CalcRotateFrameProgress(frameProgress))
+				aod.RotateY(CalcRotateFrameProgress(frameProgress))
 			}
 		}
 		if ao.DamageTake > 0 {
