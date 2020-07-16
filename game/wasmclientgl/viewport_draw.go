@@ -73,17 +73,17 @@ func (vp *Viewport) UpdateFrame(
 			continue // ??
 		}
 		aod.ResetMatrix()
+		if ao.UUID == playerUUID {
+			// player
+			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
+				aod.RotateZ(CalcRotateFrameProgress(frameProgress))
+			}
+		}
 		if ao.DamageTake > 0 {
 			if i%2 == 0 {
 				aod.ScaleX(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
 			} else {
 				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
-			}
-		}
-		if ao.UUID == playerUUID {
-			// player
-			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
-				aod.RotateZ(CalcRotateFrameProgress(frameProgress))
 			}
 		}
 	}
