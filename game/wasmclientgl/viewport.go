@@ -83,9 +83,6 @@ func NewViewport() *Viewport {
 	vp.scene.Call("add", vp.lightW)
 	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
 		vp.light[i] = ThreeJsNew("PointLight", co, 0.5)
-		SetPosition(vp.light[i],
-			HelperSize/2, HelperSize/2, HelperSize/2,
-		)
 		vp.scene.Call("add", vp.light[i])
 		lightHelper := ThreeJsNew("PointLightHelper", vp.light[i], 2)
 		vp.scene.Call("add", lightHelper)
@@ -94,16 +91,6 @@ func NewViewport() *Viewport {
 	axisSize := HelperSize
 	axisHelper := ThreeJsNew("AxesHelper", axisSize*DstCellSize)
 	vp.scene.Call("add", axisHelper)
-
-	SetPosition(vp.camera,
-		HelperSize/2, HelperSize/2, HelperSize,
-	)
-	vp.camera.Call("lookAt",
-		ThreeJsNew("Vector3",
-			HelperSize/2, HelperSize/2, 0,
-		),
-	)
-	vp.camera.Call("updateProjectionMatrix")
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		tlt := tile.Tile(i)
