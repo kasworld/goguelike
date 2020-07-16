@@ -23,8 +23,29 @@ import (
 )
 
 // 0~1 -> 1->1.5->1->0.5->1
-func CalcSinFrameProgress(frameProgress float64) float64 {
-	return math.Sin(frameProgress*math.Pi*2)/2 + 1.0
+func CalcScaleFrameProgress(frameProgress float64, damage int) float64 {
+
+	amplitude := math.Log10(float64(damage)) / 2
+	if amplitude < 0.1 {
+		amplitude = 0.1
+	}
+	if amplitude > 2 {
+		amplitude = 2
+	}
+
+	// 0~1 -> 1->2->1->0->1
+	progress := math.Sin(frameProgress * math.Pi * 2)
+
+	rtn := 1 + progress*amplitude
+	if rtn < 0 {
+		rtn = -rtn
+	}
+	return rtn
+}
+
+// 0~1 -> 0-> -pi -> 0 -> +pi
+func CalcRotateFrameProgress(frameProgress float64) float64 {
+	return math.Sin(frameProgress*math.Pi*2) * math.Pi / 4
 }
 
 func (vp *Viewport) UpdateFrame(
@@ -46,28 +67,25 @@ func (vp *Viewport) UpdateFrame(
 		fo.RotateZ(rad)
 	}
 
-	for _, ao := range olNoti.ActiveObjList {
+	for i, ao := range olNoti.ActiveObjList {
 		aod, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
 			continue // ??
 		}
 		aod.ResetMatrix()
 		if ao.DamageTake > 0 {
-			aod.ScaleX(CalcSinFrameProgress(frameProgress))
-			aod.ScaleY(CalcSinFrameProgress(frameProgress))
-			aod.ScaleZ(CalcSinFrameProgress(frameProgress))
+			if i%2 == 0 {
+				aod.ScaleX(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
+			} else {
+				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
+			}
 		}
 		if ao.UUID == playerUUID {
 			// player
 			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
-				aod.RotateZ(2 * math.Pi * frameProgress)
+				aod.RotateZ(CalcRotateFrameProgress(frameProgress))
 			}
 		}
-		// if !ao.Alive {
-		// 	aod.ScaleX(1 - frameProgress/2)
-		// 	aod.ScaleY(1 - frameProgress/2)
-		// 	aod.ScaleZ(1 - frameProgress/2)
-		// }
 	}
 
 	// move camera, light
