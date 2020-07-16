@@ -19,13 +19,6 @@ import (
 	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
-type Tile3D struct {
-	Mat     js.Value
-	Geo     js.Value
-	Shift   [3]float64
-	GeoInfo GeoInfo
-}
-
 var gTile3D [tile.Tile_Count]Tile3D
 var gTile3DDark [tile.Tile_Count]Tile3D
 
