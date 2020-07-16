@@ -33,9 +33,10 @@ func (vp *Viewport) UpdateFrame(
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
 	olNoti *c2t_obj.NotiObjectList_data,
+	lastOLNoti *c2t_obj.NotiObjectList_data,
 	envBias bias.Bias,
 ) {
-
+	playerUUID := gInitData.AccountInfo.ActiveObjUUID
 	sx, sy := CalcShiftDxDy(frameProgress)
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
@@ -50,11 +51,17 @@ func (vp *Viewport) UpdateFrame(
 		if !exist {
 			continue // ??
 		}
-		aod.ResetScale()
+		aod.ResetMatrix()
 		if ao.DamageTake > 0 {
 			aod.ScaleX(CalcSinFrameProgress(frameProgress))
 			aod.ScaleY(CalcSinFrameProgress(frameProgress))
 			aod.ScaleZ(CalcSinFrameProgress(frameProgress))
+		}
+		if ao.UUID == playerUUID {
+			// player
+			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
+				aod.RotateZ(2 * math.Pi * frameProgress)
+			}
 		}
 		// if !ao.Alive {
 		// 	aod.ScaleX(1 - frameProgress/2)

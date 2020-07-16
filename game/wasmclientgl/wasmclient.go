@@ -72,8 +72,9 @@ type WasmClient struct {
 	waitObjList    bool
 	needRefreshSet bool
 
-	taNotiData *c2t_obj.NotiVPTiles_data
-	olNotiData *c2t_obj.NotiObjectList_data
+	taNotiData     *c2t_obj.NotiVPTiles_data
+	olNotiData     *c2t_obj.NotiObjectList_data
+	lastOLNotiData *c2t_obj.NotiObjectList_data
 
 	movePacketPerTurn int32
 	actPacketPerTurn  int32
@@ -309,6 +310,7 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 			cf, frameProgress, scrollDir,
 			app.taNotiData,
 			app.olNotiData,
+			app.lastOLNotiData,
 			envBias)
 		fx, fy := app.vp.FindRayCastingFxFy()
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]

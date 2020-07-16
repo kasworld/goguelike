@@ -242,9 +242,9 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	app.ServerClientTimeDiff = robj.Time.Sub(time.Now())
 	app.olNotiHeader = header
 
-	lastOLNotiData := app.olNotiData
-	if lastOLNotiData == nil {
-		lastOLNotiData = robj
+	app.lastOLNotiData = app.olNotiData
+	if app.lastOLNotiData == nil {
+		app.lastOLNotiData = robj
 	}
 
 	app.olNotiData = robj
@@ -262,16 +262,16 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	exp := 0
 
 	// check change
-	oldLevel = int(leveldata.CalcLevelFromExp(float64(lastOLNotiData.ActiveObj.Exp)))
-	app.HPdiff = newOLNotiData.ActiveObj.HP - lastOLNotiData.ActiveObj.HP
-	app.SPdiff = newOLNotiData.ActiveObj.SP - lastOLNotiData.ActiveObj.SP
-	exp = newOLNotiData.ActiveObj.Exp - lastOLNotiData.ActiveObj.Exp
+	oldLevel = int(leveldata.CalcLevelFromExp(float64(app.lastOLNotiData.ActiveObj.Exp)))
+	app.HPdiff = newOLNotiData.ActiveObj.HP - app.lastOLNotiData.ActiveObj.HP
+	app.SPdiff = newOLNotiData.ActiveObj.SP - app.lastOLNotiData.ActiveObj.SP
+	exp = newOLNotiData.ActiveObj.Exp - app.lastOLNotiData.ActiveObj.Exp
 
-	if lastOLNotiData.ActiveObj.Bias.NearFaction() != robj.ActiveObj.Bias.NearFaction() {
+	if app.lastOLNotiData.ActiveObj.Bias.NearFaction() != robj.ActiveObj.Bias.NearFaction() {
 		app.systemMessage.Appendf(
 			"Faction changed to %v", robj.ActiveObj.Bias.NearFaction().String())
 	}
-	if lastOLNotiData.ActiveObj.Bias != robj.ActiveObj.Bias {
+	if app.lastOLNotiData.ActiveObj.Bias != robj.ActiveObj.Bias {
 		app.systemMessage.Append("Bias changed")
 	}
 

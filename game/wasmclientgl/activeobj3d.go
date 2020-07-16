@@ -112,10 +112,13 @@ func (aog *ActiveObj3D) SetFieldPosition(fx, fy int) {
 	)
 }
 
-func (aog *ActiveObj3D) ResetScale() {
+func (aog *ActiveObj3D) ResetMatrix() {
 	aog.ScaleX(1.0)
 	aog.ScaleY(1.0)
 	aog.ScaleZ(1.0)
+	aog.RotateX(0.0)
+	aog.RotateY(0.0)
+	aog.RotateZ(0.0)
 }
 
 func (aog *ActiveObj3D) RotateX(rad float64) {
