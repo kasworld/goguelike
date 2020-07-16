@@ -22,11 +22,17 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
+// 0~1 -> 1->1.5->1->0.5->1
+func CalcSinFrameProgress(frameProgress float64) float64 {
+	return math.Sin(frameProgress*math.Pi*2)/2 + 1.0
+}
+
 func (vp *Viewport) UpdateFrame(
 	cf *clientfloor.ClientFloor,
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
+	olNoti *c2t_obj.NotiObjectList_data,
 	envBias bias.Bias,
 ) {
 
@@ -37,6 +43,24 @@ func (vp *Viewport) UpdateFrame(
 	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
 	for _, fo := range vp.jsSceneFOs {
 		fo.RotateZ(rad)
+	}
+
+	for _, ao := range olNoti.ActiveObjList {
+		aod, exist := vp.jsSceneAOs[ao.UUID]
+		if !exist {
+			continue // ??
+		}
+		aod.ResetScale()
+		if ao.DamageTake > 0 {
+			aod.ScaleX(CalcSinFrameProgress(frameProgress))
+			aod.ScaleY(CalcSinFrameProgress(frameProgress))
+			aod.ScaleZ(CalcSinFrameProgress(frameProgress))
+		}
+		// if !ao.Alive {
+		// 	aod.ScaleX(1 - frameProgress/2)
+		// 	aod.ScaleY(1 - frameProgress/2)
+		// 	aod.ScaleZ(1 - frameProgress/2)
+		// }
 	}
 
 	// move camera, light

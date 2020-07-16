@@ -305,7 +305,11 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 	envBias := app.GetEnvBias()
 	cf := app.currentFloor()
 	if cf != nil {
-		app.vp.UpdateFrame(cf, frameProgress, scrollDir, app.taNotiData, envBias)
+		app.vp.UpdateFrame(
+			cf, frameProgress, scrollDir,
+			app.taNotiData,
+			app.olNotiData,
+			envBias)
 		fx, fy := app.vp.FindRayCastingFxFy()
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		app.vp.cursor.SetFieldPosition(fx, fy, tl)

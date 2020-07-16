@@ -112,6 +112,12 @@ func (aog *ActiveObj3D) SetFieldPosition(fx, fy int) {
 	)
 }
 
+func (aog *ActiveObj3D) ResetScale() {
+	aog.ScaleX(1.0)
+	aog.ScaleY(1.0)
+	aog.ScaleZ(1.0)
+}
+
 func (aog *ActiveObj3D) RotateX(rad float64) {
 	aog.Mesh.Get("rotation").Set("x", rad)
 }
@@ -120,6 +126,16 @@ func (aog *ActiveObj3D) RotateY(rad float64) {
 }
 func (aog *ActiveObj3D) RotateZ(rad float64) {
 	aog.Mesh.Get("rotation").Set("z", rad)
+}
+
+func (aog *ActiveObj3D) ScaleX(x float64) {
+	aog.Mesh.Get("scale").Set("x", x)
+}
+func (aog *ActiveObj3D) ScaleY(y float64) {
+	aog.Mesh.Get("scale").Set("y", y)
+}
+func (aog *ActiveObj3D) ScaleZ(z float64) {
+	aog.Mesh.Get("scale").Set("z", z)
 }
 
 func (aog *ActiveObj3D) Dispose() {
