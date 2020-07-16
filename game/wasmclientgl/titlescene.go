@@ -58,7 +58,7 @@ func (ts *TitleScene) Resize(w, h float64) {
 
 func (ts *TitleScene) addTitle() {
 	str := "Goguelike-GL"
-	ftGeo := GetTitleTextGeometry(str, 80)
+	ftGeo := GetTextGeometryByCache(str, 80)
 	geoInfo := GetGeoInfo(ftGeo)
 	co := gRnd.Uint32() & 0x00ffffff
 	ftMat := GetColorMaterialByCache(fmt.Sprintf("#%06x", co))
@@ -69,6 +69,22 @@ func (ts *TitleScene) addTitle() {
 		HelperSize/2,
 	)
 	ts.scene.Call("add", ts.jsoTitle)
+}
+
+type textGeoKey struct {
+	Str  string
+	Size float64
+}
+
+var gTextGeometryCache map[textGeoKey]js.Value = make(map[textGeoKey]js.Value)
+
+func GetTextGeometryByCache(str string, size float64) js.Value {
+	geo, exist := gTextGeometryCache[textGeoKey{str, size}]
+	if !exist {
+		geo = GetTitleTextGeometry(str, size)
+		gTextGeometryCache[textGeoKey{str, size}] = geo
+	}
+	return geo
 }
 
 func GetTitleTextGeometry(str string, size float64) js.Value {
