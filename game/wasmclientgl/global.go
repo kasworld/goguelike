@@ -24,6 +24,7 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
+	"github.com/kasworld/goguelike/lib/imagecanvas"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
@@ -45,6 +46,17 @@ var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(
 	gameconst.ClientViewPortW, gameconst.ClientViewPortH)
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
+var gTextureTileList [tile.Tile_Count]*imagecanvas.ImageCanvas
+
+func init() {
+	for i, v := range tile.TileScrollAttrib {
+		if v.Texture {
+			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
+			gTextureTileList[i] = imagecanvas.NewByID(idstr)
+		}
+	}
+}
+
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 var gFontLoader js.Value = ThreeJsNew("FontLoader")
 var gFont_helvetiker_regular js.Value

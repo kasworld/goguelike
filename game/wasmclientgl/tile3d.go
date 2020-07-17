@@ -12,7 +12,6 @@
 package wasmclientgl
 
 import (
-	"fmt"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
@@ -20,10 +19,9 @@ import (
 )
 
 type Tile3D struct {
-	Cnv js.Value
-	Ctx js.Value
-	Tex js.Value
-
+	Cnv     js.Value
+	Ctx     js.Value
+	Tex     js.Value
 	Mat     js.Value
 	Geo     js.Value
 	Shift   [3]float64
@@ -51,6 +49,18 @@ func NewTile3DCanvas(tl tile.Tile) Tile3D {
 	}
 }
 
+func (aog *Tile3D) Dispose() {
+	// mesh do not need dispose
+	aog.Geo.Call("dispose")
+	aog.Mat.Call("dispose")
+	aog.Tex.Call("dispose")
+
+	aog.Cnv = js.Undefined()
+	aog.Ctx = js.Undefined()
+	aog.Tex = js.Undefined()
+	// no need createElement canvas dom obj
+}
+
 func (t3d Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
 	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
 	t3d.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
@@ -59,11 +69,11 @@ func (t3d Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
 	t3d.Tex.Set("needsUpdate", true)
 }
 
-func (t3d Tile3D) DrawTexture(ti webtilegroup.TileInfo) {
+func (t3d Tile3D) DrawTexture(tl tile.Tile, srcx, srcy int) {
 	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	img := GetElementById(fmt.Sprintf("%vPng", ti))
-	t3d.Ctx.Call("drawImage", img,
-		0, 0, DstCellSize, DstCellSize,
+	src := gTextureTileList[tl].Cnv
+	t3d.Ctx.Call("drawImage", src,
+		srcx, srcy, DstCellSize, DstCellSize,
 		0, 0, DstCellSize, DstCellSize)
 	t3d.Tex.Set("needsUpdate", true)
 }
