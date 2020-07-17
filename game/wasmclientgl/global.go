@@ -19,6 +19,7 @@ import (
 
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/go-abs"
+	"github.com/kasworld/wrapper"
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/tile"
@@ -46,13 +47,24 @@ var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(
 	gameconst.ClientViewPortW, gameconst.ClientViewPortH)
 var gInitData *clientinitdata.InitData = clientinitdata.New()
 var gClientTile *clienttile.ClientTile = clienttile.New()
+
 var gTextureTileList [tile.Tile_Count]*imagecanvas.ImageCanvas
+var gTextureTileWrapInfo = [tile.Tile_Count]struct {
+	Xcount int
+	Ycount int
+	WrapX  func(int) int
+	WrapY  func(int) int
+}{}
 
 func init() {
 	for i, v := range tile.TileScrollAttrib {
 		if v.Texture {
 			idstr := fmt.Sprintf("%vPng", tile.Tile(i))
 			gTextureTileList[i] = imagecanvas.NewByID(idstr)
+			gTextureTileWrapInfo[i].Xcount = gTextureTileList[i].W / DstCellSize
+			gTextureTileWrapInfo[i].Ycount = gTextureTileList[i].H / DstCellSize
+			gTextureTileWrapInfo[i].WrapX = wrapper.New(gTextureTileList[i].W - DstCellSize).WrapSafe
+			gTextureTileWrapInfo[i].WrapY = wrapper.New(gTextureTileList[i].H - DstCellSize).WrapSafe
 		}
 	}
 }

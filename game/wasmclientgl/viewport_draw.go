@@ -62,11 +62,13 @@ func (vp *Viewport) UpdateFrame(
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
 
+	// fieldobj animate
 	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
 	for _, fo := range vp.jsSceneFOs {
 		fo.RotateZ(rad)
 	}
 
+	// activeobj animate
 	for i, ao := range olNoti.ActiveObjList {
 		aod, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
@@ -86,6 +88,35 @@ func (vp *Viewport) UpdateFrame(
 				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
 			}
 		}
+	}
+
+	// tile scroll list of animate
+	for _, i := range []tile.Tile{
+		tile.Swamp,
+		tile.Soil,
+		tile.Stone,
+		tile.Sand,
+		tile.Sea,
+		tile.Magma,
+		tile.Ice,
+		tile.Grass,
+		// tile.Tree,
+		// tile.Road,
+		// tile.Room,
+		// tile.Wall,
+		// tile.Window,
+		// tile.Door,
+		tile.Fog,
+		tile.Smoke,
+	} {
+		tilc := tile.TileScrollAttrib[i]
+		shX := envBias[tilc.SrcXBiasAxis] * tilc.AniXSpeed
+		shY := envBias[tilc.SrcYBiasAxis] * tilc.AniYSpeed
+
+		wrap := gTextureTileWrapInfo[i]
+		srcx := wrap.WrapX(int(shX))
+		srcy := wrap.WrapY(int(shY))
+		gTile3D[i].DrawTexture(tile.Tile(i), srcx, srcy)
 	}
 
 	// move camera, light
