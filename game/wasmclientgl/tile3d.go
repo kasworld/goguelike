@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"math"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
@@ -28,7 +29,7 @@ type Tile3D struct {
 	GeoInfo GeoInfo
 }
 
-func NewTile3DCanvas(tl tile.Tile) Tile3D {
+func newTile3D() Tile3D {
 	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	ctx := cnv.Call("getContext", "2d")
 	ctx.Set("imageSmoothingEnabled", false)
@@ -47,6 +48,74 @@ func NewTile3DCanvas(tl tile.Tile) Tile3D {
 		Tex: tex,
 		Mat: mat,
 	}
+}
+
+func NewTile3D_PlaneGeo(tl tile.Tile, shiftZ float64) Tile3D {
+	t3d := newTile3D()
+	t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	t3d.Shift = [3]float64{0, 0, shiftZ}
+	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+	t3d.DrawTexture(tl, 0, 0)
+	return t3d
+}
+
+func NewTile3D_Wall(shiftZ float64) Tile3D {
+	tl := tile.Stone
+	t3d := newTile3D()
+	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize)
+	t3d.Shift = [3]float64{0, 0, shiftZ}
+	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+	t3d.DrawTexture(tl, 0, 0)
+	return t3d
+}
+
+func NewTile3D_Grass(shiftZ float64) Tile3D {
+	tl := tile.Grass
+	t3d := newTile3D()
+	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8)
+	t3d.Shift = [3]float64{0, 0, shiftZ}
+	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+	t3d.DrawTexture(tl, 0, 0)
+	return t3d
+}
+
+func NewTile3D_Tree(shiftZ float64) Tile3D {
+	tl := tile.Grass
+	t3d := newTile3D()
+	t3d.Geo = MakeTreeGeo()
+	t3d.Shift = [3]float64{0, 0, shiftZ}
+	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+	t3d.DrawTexture(tl, 0, 0)
+	return t3d
+}
+func MakeTreeGeo() js.Value {
+	matrix := ThreeJsNew("Matrix4")
+	geo := ThreeJsNew("CylinderGeometry", 2, 4, DstCellSize-1)
+	geo.Call("rotateX", math.Pi/2)
+	geo1 := ThreeJsNew("ConeGeometry", DstCellSize/3-2, DstCellSize/2-2)
+	geo1.Call("rotateX", math.Pi/2)
+	geo2 := ThreeJsNew("ConeGeometry", DstCellSize/2-2, DstCellSize/2-2)
+	geo2.Call("rotateX", math.Pi/2)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, 0, DstCellSize/2-2,
+	))
+	geo.Call("merge", geo1, matrix)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, 0, 5,
+	))
+	geo.Call("merge", geo2, matrix)
+	geo1.Call("dispose")
+	geo2.Call("dispose")
+	return geo
+}
+
+func NewTile3D_BoxTile(ti webtilegroup.TileInfo, shiftZ float64) Tile3D {
+	t3d := newTile3D()
+	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1)
+	t3d.Shift = [3]float64{0, 0, shiftZ}
+	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+	t3d.ChangeTile(ti)
+	return t3d
 }
 
 func (aog *Tile3D) Dispose() {
