@@ -117,6 +117,7 @@ func (vp *Viewport) UpdateFrame(
 		srcx := wrap.WrapX(int(shX))
 		srcy := wrap.WrapY(int(shY))
 		gTile3D[i].DrawTexture(tile.Tile(i), srcx, srcy)
+		gTile3DDark[i].DrawTexture(tile.Tile(i), srcx, srcy)
 	}
 
 	// move camera, light
