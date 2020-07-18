@@ -110,14 +110,10 @@ func (vp *Viewport) UpdateFrame(
 		tile.Smoke,
 	} {
 		tilc := tile.TileScrollAttrib[i]
-		shX := envBias[tilc.SrcXBiasAxis] * tilc.AniXSpeed
-		shY := envBias[tilc.SrcYBiasAxis] * tilc.AniYSpeed
-
-		wrap := gTextureTileWrapInfo[i]
-		srcx := wrap.WrapX(int(shX))
-		srcy := wrap.WrapY(int(shY))
-		gTile3D[i].DrawTexture(tile.Tile(i), srcx, srcy)
-		gTile3DDark[i].DrawTexture(tile.Tile(i), srcx, srcy)
+		shX := int(envBias[tilc.SrcXBiasAxis] * tilc.AniXSpeed)
+		shY := int(envBias[tilc.SrcYBiasAxis] * tilc.AniYSpeed)
+		gTile3D[i].DrawTexture(tile.Tile(i), shX, shY)
+		gTile3DDark[i].DrawTexture(tile.Tile(i), shX, shY)
 	}
 
 	// move camera, light

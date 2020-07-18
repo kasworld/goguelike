@@ -16,8 +16,8 @@ import (
 	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
-var gTile3D [tile.Tile_Count]Tile3D
-var gTile3DDark [tile.Tile_Count]Tile3D
+var gTile3D [tile.Tile_Count]*Tile3D
+var gTile3DDark [tile.Tile_Count]*Tile3D
 
 func preMakeTileMatGeo() {
 	var tlt tile.Tile

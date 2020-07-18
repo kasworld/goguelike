@@ -12,14 +12,24 @@
 package wasmclientgl
 
 import (
+	"fmt"
 	"math"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
+	"github.com/kasworld/gowasmlib/jslog"
+	"github.com/kasworld/wrapper"
 )
 
 type Tile3D struct {
+	// for texture tile
+	SrcW     int
+	SrcH     int
+	SrcCnv   js.Value
+	SrcWrapX func(int) int
+	SrcWrapY func(int) int
+
 	Cnv     js.Value
 	Ctx     js.Value
 	Tex     js.Value
@@ -29,7 +39,7 @@ type Tile3D struct {
 	GeoInfo GeoInfo
 }
 
-func newTile3D() Tile3D {
+func newTile3D() *Tile3D {
 	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	ctx := cnv.Call("getContext", "2d")
 	ctx.Set("imageSmoothingEnabled", false)
@@ -42,7 +52,7 @@ func newTile3D() Tile3D {
 		},
 	)
 	mat.Set("transparent", true)
-	return Tile3D{
+	return &Tile3D{
 		Cnv: cnv,
 		Ctx: ctx,
 		Tex: tex,
@@ -50,8 +60,38 @@ func newTile3D() Tile3D {
 	}
 }
 
-func NewTile3D_PlaneGeo(tl tile.Tile, shiftZ float64) Tile3D {
-	t3d := newTile3D()
+// for texture tile
+func (aog *Tile3D) initSrc(tl tile.Tile) *Tile3D {
+	srcImageID := fmt.Sprintf("%vPng", tile.Tile(tl))
+	img := GetElementById(srcImageID)
+	if !img.Truthy() {
+		jslog.Errorf("fail to get %v", srcImageID)
+		return aog
+	}
+	srcw := img.Get("naturalWidth").Int()
+	srch := img.Get("naturalHeight").Int()
+
+	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
+	ctx := cnv.Call("getContext", "2d")
+	if !ctx.Truthy() {
+		jslog.Errorf("fail to get context", srcImageID)
+		return aog
+	}
+	ctx.Set("imageSmoothingEnabled", false)
+	cnv.Set("width", srcw)
+	cnv.Set("height", srch)
+	ctx.Call("clearRect", 0, 0, srcw, srch)
+	ctx.Call("drawImage", img, 0, 0)
+	aog.SrcW = srcw
+	aog.SrcH = srch
+	aog.SrcCnv = cnv
+	aog.SrcWrapX = wrapper.New(srcw - DstCellSize).WrapSafe
+	aog.SrcWrapY = wrapper.New(srch - DstCellSize).WrapSafe
+	return aog
+}
+
+func NewTile3D_PlaneGeo(tl tile.Tile, shiftZ float64) *Tile3D {
+	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
 	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
@@ -59,9 +99,9 @@ func NewTile3D_PlaneGeo(tl tile.Tile, shiftZ float64) Tile3D {
 	return t3d
 }
 
-func NewTile3D_Wall(shiftZ float64) Tile3D {
+func NewTile3D_Wall(shiftZ float64) *Tile3D {
 	tl := tile.Stone
-	t3d := newTile3D()
+	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize)
 	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
@@ -69,9 +109,9 @@ func NewTile3D_Wall(shiftZ float64) Tile3D {
 	return t3d
 }
 
-func NewTile3D_Grass(shiftZ float64) Tile3D {
+func NewTile3D_Grass(shiftZ float64) *Tile3D {
 	tl := tile.Grass
-	t3d := newTile3D()
+	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8)
 	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
@@ -79,9 +119,9 @@ func NewTile3D_Grass(shiftZ float64) Tile3D {
 	return t3d
 }
 
-func NewTile3D_Tree(shiftZ float64) Tile3D {
+func NewTile3D_Tree(shiftZ float64) *Tile3D {
 	tl := tile.Grass
-	t3d := newTile3D()
+	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = MakeTreeGeo()
 	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
@@ -109,7 +149,7 @@ func MakeTreeGeo() js.Value {
 	return geo
 }
 
-func NewTile3D_BoxTile(ti webtilegroup.TileInfo, shiftZ float64) Tile3D {
+func NewTile3D_BoxTile(ti webtilegroup.TileInfo, shiftZ float64) *Tile3D {
 	t3d := newTile3D()
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1)
 	t3d.Shift = [3]float64{0, 0, shiftZ}
@@ -130,7 +170,7 @@ func (aog *Tile3D) Dispose() {
 	// no need createElement canvas dom obj
 }
 
-func (t3d Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
+func (t3d *Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
 	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
 	t3d.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
 		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
@@ -138,10 +178,11 @@ func (t3d Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
 	t3d.Tex.Set("needsUpdate", true)
 }
 
-func (t3d Tile3D) DrawTexture(tl tile.Tile, srcx, srcy int) {
+func (t3d *Tile3D) DrawTexture(tl tile.Tile, srcx, srcy int) {
+	srcx = t3d.SrcWrapX(srcx)
+	srcy = t3d.SrcWrapY(srcy)
 	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	src := gTextureTileList[tl].Cnv
-	t3d.Ctx.Call("drawImage", src,
+	t3d.Ctx.Call("drawImage", t3d.SrcCnv,
 		srcx, srcy, DstCellSize, DstCellSize,
 		0, 0, DstCellSize, DstCellSize)
 	t3d.Tex.Set("needsUpdate", true)
