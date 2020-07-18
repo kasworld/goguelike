@@ -112,8 +112,8 @@ func (vp *Viewport) UpdateFrame(
 		tilc := tile.TileScrollAttrib[i]
 		shX := int(envBias[tilc.SrcXBiasAxis] * tilc.AniXSpeed)
 		shY := int(envBias[tilc.SrcYBiasAxis] * tilc.AniYSpeed)
-		gTile3D[i].DrawTexture(tile.Tile(i), shX, shY)
-		gTile3DDark[i].DrawTexture(tile.Tile(i), shX, shY)
+		gTile3D[i].DrawTexture(shX, shY)
+		gTile3DDark[i].DrawTexture(shX, shY)
 	}
 
 	// move camera, light
