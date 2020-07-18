@@ -78,6 +78,10 @@ func NewViewport() *Viewport {
 
 	lightAm := ThreeJsNew("AmbientLight", 0x808080)
 	vp.scene.Call("add", lightAm)
+	// hemisphereLight := ThreeJsNew("HemisphereLight", 0xffffff, 0x000000)
+	// vp.scene.Call("add", hemisphereLight)
+	// dirLight := ThreeJsNew("DirectionalLight", 0xffffff)
+	// vp.scene.Call("add", dirLight)
 
 	vp.lightW = ThreeJsNew("PointLight", 0xffffff, 0.5)
 	vp.scene.Call("add", vp.lightW)
