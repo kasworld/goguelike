@@ -35,7 +35,8 @@ type Viewport struct {
 	raycastPlane *RaycastPlane
 	cursor       *Cursor3D
 
-	jsMouse js.Value
+	mouseCursorFx int
+	mouseCursorFy int
 
 	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
@@ -57,7 +58,6 @@ func NewViewport() *Viewport {
 		jsSceneFOs: make(map[string]*FieldObj3D),
 	}
 
-	vp.jsMouse = ThreeJsNew("Vector2")
 	vp.renderer = ThreeJsNew("WebGLRenderer")
 	rendererDom := vp.renderer.Get("domElement")
 	GetElementById("canvasglholder").Call("appendChild", rendererDom)
@@ -143,4 +143,27 @@ func (vp *Viewport) UpdateFromViewportTile(
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
 	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
 	return nil
+}
+
+func (vp *Viewport) FindRayCastingFxFy(jsMouse js.Value) (int, int) {
+	// update the picking ray with the camera and mouse position
+	vp.raycaster.Call("setFromCamera", jsMouse, vp.camera)
+
+	// calculate objects intersecting the picking ray
+	intersects := vp.raycaster.Call(
+		"intersectObject", vp.raycastPlane.Mesh)
+
+	for i := 0; i < intersects.Length(); i++ {
+		obj := intersects.Index(i)
+		pos3 := obj.Get("point")
+		x := pos3.Get("x").Float()
+		y := pos3.Get("y").Float()
+		fx := int(x / DstCellSize)
+		fy := int(-y / DstCellSize)
+		return fx, fy
+		_ = fx
+		_ = fy
+		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
+	}
+	return 0, 0
 }

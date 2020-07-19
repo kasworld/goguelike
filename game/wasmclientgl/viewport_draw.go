@@ -156,33 +156,10 @@ func (vp *Viewport) UpdateFrame(
 		),
 	)
 
-	fx, fy := vp.FindRayCastingFxFy()
+	fx, fy := vp.mouseCursorFx, vp.mouseCursorFy
 	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 	vp.cursor.SetFieldPosition(fx, fy, tl)
 	vp.renderer.Call("render", vp.scene, vp.camera)
-}
-
-func (vp *Viewport) FindRayCastingFxFy() (int, int) {
-	// update the picking ray with the camera and mouse position
-	vp.raycaster.Call("setFromCamera", vp.jsMouse, vp.camera)
-
-	// calculate objects intersecting the picking ray
-	intersects := vp.raycaster.Call(
-		"intersectObject", vp.raycastPlane.Mesh)
-
-	for i := 0; i < intersects.Length(); i++ {
-		obj := intersects.Index(i)
-		pos3 := obj.Get("point")
-		x := pos3.Get("x").Float()
-		y := pos3.Get("y").Float()
-		fx := int(x / DstCellSize)
-		fy := int(-y / DstCellSize)
-		return fx, fy
-		_ = fx
-		_ = fy
-		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
-	}
-	return 0, 0
 }
 
 // add tiles in gXYLenListView

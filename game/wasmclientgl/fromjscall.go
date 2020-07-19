@@ -256,37 +256,35 @@ func (app *WasmClient) jsHandleMouseMoveVP(this js.Value, args []js.Value) inter
 	win := js.Global().Get("window")
 	winW := win.Get("innerWidth").Float()
 	winH := win.Get("innerHeight").Float()
-	app.vp.jsMouse.Set("x", (evt.Get("clientX").Float()/winW)*2-1)
-	app.vp.jsMouse.Set("y", -(evt.Get("clientY").Float()/winH)*2+1)
+	jsMouse := ThreeJsNew("Vector2")
+	jsMouse.Set("x", (evt.Get("clientX").Float()/winW)*2-1)
+	jsMouse.Set("y", -(evt.Get("clientY").Float()/winH)*2+1)
 
-	mouseX, mouseY := evt.Get("offsetX").Int(), evt.Get("offsetY").Int()
-	app.actByMouseMove(mouseX, mouseY)
+	app.vp.mouseCursorFx, app.vp.mouseCursorFy = app.vp.FindRayCastingFxFy(jsMouse)
+
+	app.actByMouseMove()
 	return nil
 }
-func (app *WasmClient) actByMouseMove(mouseX, mouseY int) {
-	// // update mouse pos
-	// if gVP2d.CellSize == 0 {
-	// 	return
-	// }
-	// oldDir := app.MouseDir
-	// gVP2d.MouseX = mouseX
-	// gVP2d.MouseY = mouseY
-	// app.MouseDir = way9type.RemoteDxDy2Way9(
-	// 	(mouseX-gVP2d.ViewWidth/2)/gVP2d.CellSize,
-	// 	(mouseY-gVP2d.ViewHeight/2)/gVP2d.CellSize,
-	// )
-	// switch gameOptions.GetByIDBase("Viewport").State {
-	// case 0: // play viewpot mode
-	// 	if app.ClientColtrolMode == clientcontroltype.FollowMouse {
-	// 		if oldDir != app.MouseDir {
-	// 			app.sendMovePacketByInput(app.MouseDir)
-	// 		}
-	// 	}
-	// case 1: // floor viewport mode
-	// 	dir := app.MouseDir
-	// 	app.floorVPPosX += dir.Dx()
-	// 	app.floorVPPosY += dir.Dy()
-	// }
+
+func (app *WasmClient) actByMouseMove() {
+	oldDir := app.MouseDir
+	plx, ply := app.GetPlayerXY()
+	app.MouseDir = way9type.RemoteDxDy2Way9(
+		app.vp.mouseCursorFx-plx,
+		app.vp.mouseCursorFy-ply,
+	)
+	switch gameOptions.GetByIDBase("Viewport").State {
+	case 0: // play viewpot mode
+		if app.ClientColtrolMode == clientcontroltype.FollowMouse {
+			if oldDir != app.MouseDir {
+				app.sendMovePacketByInput(app.MouseDir)
+			}
+		}
+	case 1: // floor viewport mode
+		dir := app.MouseDir
+		app.floorVPPosX += dir.Dx()
+		app.floorVPPosY += dir.Dy()
+	}
 }
 
 ///////////////////////////////////////////////////////
