@@ -22,9 +22,8 @@ import (
 )
 
 type Viewport struct {
-	CanvasGL js.Value
-	renderer js.Value
-	jsMouse  js.Value
+	renderer      js.Value
+	labelRenderer js.Value
 
 	// from client floor gl
 
@@ -36,6 +35,8 @@ type Viewport struct {
 
 	raycastPlane *RaycastPlane
 	cursor       *Cursor3D
+
+	jsMouse js.Value
 
 	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
@@ -59,9 +60,14 @@ func NewViewport() *Viewport {
 
 	vp.jsMouse = ThreeJsNew("Vector2")
 	vp.renderer = ThreeJsNew("WebGLRenderer")
-	vp.CanvasGL = vp.renderer.Get("domElement")
-	GetElementById("canvasglholder").Call("appendChild", vp.CanvasGL)
-	vp.CanvasGL.Set("tabindex", "1")
+	rendererDom := vp.renderer.Get("domElement")
+	GetElementById("canvasglholder").Call("appendChild", rendererDom)
+
+	// vp.labelRenderer = ThreeJsNew("CSS2DRenderer")
+	// labelDomEle := vp.labelRenderer.Get("domElement")
+	// labelDomEle.Get("style").Set("top", "0px")
+	// labelDomEle.Get("style").Set("position", "absolute")
+	// GetElementById("canvasglholder").Call("appendChild", labelDomEle)
 
 	vp.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
 	vp.scene = ThreeJsNew("Scene")
@@ -120,16 +126,13 @@ func NewViewport() *Viewport {
 }
 
 func (vp *Viewport) Hide() {
-	vp.CanvasGL.Get("style").Set("display", "none")
 }
 func (vp *Viewport) Show() {
-	vp.CanvasGL.Get("style").Set("display", "initial")
 }
 
 func (vp *Viewport) Resize(w, h float64) {
-	vp.CanvasGL.Call("setAttribute", "width", w)
-	vp.CanvasGL.Call("setAttribute", "height", h)
 	vp.renderer.Call("setSize", w, h)
+	// vp.labelRenderer.Call("setSize", w, h)
 
 	vp.camera.Set("aspect", w/h)
 	vp.camera.Call("updateProjectionMatrix")
