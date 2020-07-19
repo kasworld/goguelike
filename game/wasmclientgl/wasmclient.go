@@ -119,7 +119,7 @@ func InitPage() {
 	app.titlescene = NewTitleScene()
 	app.vp = NewViewport()
 
-	gFontLoader.Call("load", "/fonts/helvetiker_regular.typeface.json",
+	gFontLoader.Call("load", "three.js/examples/fonts/helvetiker_regular.typeface.json",
 		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			gFont_helvetiker_regular = args[0]
 			app.titlescene.addTitle()
