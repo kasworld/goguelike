@@ -160,8 +160,6 @@ func (vp *Viewport) UpdateFrame(
 	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 	vp.cursor.SetFieldPosition(fx, fy, tl)
 	vp.renderer.Call("render", vp.scene, vp.camera)
-	// vp.labelRenderer.Call("render", vp.scene, vp.camera)
-
 }
 
 func (vp *Viewport) FindRayCastingFxFy() (int, int) {

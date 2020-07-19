@@ -22,8 +22,7 @@ import (
 )
 
 type Viewport struct {
-	renderer      js.Value
-	labelRenderer js.Value
+	renderer js.Value
 
 	// from client floor gl
 
@@ -62,12 +61,6 @@ func NewViewport() *Viewport {
 	vp.renderer = ThreeJsNew("WebGLRenderer")
 	rendererDom := vp.renderer.Get("domElement")
 	GetElementById("canvasglholder").Call("appendChild", rendererDom)
-
-	// vp.labelRenderer = ThreeJsNew("CSS2DRenderer")
-	// labelDomEle := vp.labelRenderer.Get("domElement")
-	// labelDomEle.Get("style").Set("top", "0px")
-	// labelDomEle.Get("style").Set("position", "absolute")
-	// GetElementById("canvasglholder").Call("appendChild", labelDomEle)
 
 	vp.camera = ThreeJsNew("PerspectiveCamera", 50, 1, 0.1, HelperSize*2)
 	vp.scene = ThreeJsNew("Scene")
@@ -127,11 +120,8 @@ func NewViewport() *Viewport {
 
 func (vp *Viewport) Resize(w, h float64) {
 	vp.renderer.Call("setSize", w, h)
-	// vp.labelRenderer.Call("setSize", w, h)
-
 	vp.camera.Set("aspect", w/h)
 	vp.camera.Call("updateProjectionMatrix")
-
 }
 
 func (vp *Viewport) Zoom(zoom int) {
