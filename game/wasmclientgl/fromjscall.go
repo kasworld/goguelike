@@ -22,6 +22,7 @@ import (
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/gowasmlib/jslog"
 )
 
 func (app *WasmClient) registerJSButton() {
@@ -137,12 +138,11 @@ func (app *WasmClient) jsHandleMouseClickVP(this js.Value, args []js.Value) inte
 	evt.Call("stopPropagation")
 	evt.Call("preventDefault")
 
-	mouseX, mouseY := evt.Get("offsetX").Int(), evt.Get("offsetY").Int()
 	btn := evt.Get("button").Int()
 
 	switch btn {
 	case 0: // left
-		app.makePathToMouseClick(mouseX, mouseY)
+		app.makePathToMouseClick()
 		return nil
 	case 1: // wheel
 
@@ -151,44 +151,41 @@ func (app *WasmClient) jsHandleMouseClickVP(this js.Value, args []js.Value) inte
 	return nil
 }
 
-func (app *WasmClient) makePathToMouseClick(mouseX, mouseY int) {
-	// switch gameOptions.GetByIDBase("Viewport").State {
-	// case 0: // play viewpot mode
-	// 	cf := app.currentFloor()
-	// 	if cf == nil {
-	// 		jslog.Error("no current floor")
-	// 		return
-	// 	}
-	// 	tand := app.taNotiData
-	// 	if tand == nil || cf.FloorInfo.UUID != tand.FloorUUID {
-	// 		jslog.Error("invalid floor x,y")
-	// 		return
-	// 	}
-	// 	flX, flY := gVP2d.CanvasXY2FloorXY(
-	// 		cf.XWrapSafe, cf.YWrapSafe,
-	// 		tand.VPX, tand.VPY,
-	// 		mouseX/gVP2d.CellSize, mouseY/gVP2d.CellSize)
+func (app *WasmClient) makePathToMouseClick() {
+	switch gameOptions.GetByIDBase("Viewport").State {
+	case 0: // play viewpot mode
+		cf := app.currentFloor()
+		if cf == nil {
+			jslog.Error("no current floor")
+			return
+		}
+		tand := app.taNotiData
+		if tand == nil || cf.FloorInfo.UUID != tand.FloorUUID {
+			jslog.Error("invalid floor x,y")
+			return
+		}
+		flX, flY := app.vp.mouseCursorFx, app.vp.mouseCursorFy
 
-	// 	autoPlayButton := autoActs.GetByIDBase("AutoPlay")
-	// 	if autoPlayButton.State == 0 {
-	// 		autoPlayButton.JSFn(js.Null(), nil)
-	// 	}
-	// 	playerX, playerY := app.GetPlayerXY()
+		autoPlayButton := autoActs.GetByIDBase("AutoPlay")
+		if autoPlayButton.State == 0 {
+			autoPlayButton.JSFn(js.Null(), nil)
+		}
+		playerX, playerY := app.GetPlayerXY()
 
-	// 	if playerX == flX && playerY == flY {
-	// 		app.tryEnterPortal(flX, flY)
-	// 	} else {
-	// 		newPath := cf.Tiles4PathFind.FindPath(
-	// 			flX, flY, playerX, playerY, gameconst.ViewPortWH)
-	// 		if newPath != nil {
-	// 			app.Path2dst = newPath
-	// 		}
-	// 		app.ClientColtrolMode = clientcontroltype.MoveToDest
-	// 		app.KeyDir = way9type.Center
-	// 		// fmt.Printf("move2dest [%v %v] to [%v %v] %v", playerX, playerY, floorX, flY, newPath)
-	// 	}
-	// case 1: // floor viewport mode
-	// }
+		if playerX == flX && playerY == flY {
+			app.tryEnterPortal(flX, flY)
+		} else {
+			newPath := cf.Tiles4PathFind.FindPath(
+				flX, flY, playerX, playerY, gameconst.ViewPortWH)
+			if newPath != nil {
+				app.Path2dst = newPath
+			}
+			app.ClientColtrolMode = clientcontroltype.MoveToDest
+			app.KeyDir = way9type.Center
+			// fmt.Printf("move2dest [%v %v] to [%v %v] %v", playerX, playerY, floorX, flY, newPath)
+		}
+	case 1: // floor viewport mode
+	}
 }
 
 func (app *WasmClient) tryEnterPortal(x, y int) {
