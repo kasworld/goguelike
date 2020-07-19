@@ -159,6 +159,13 @@ func (vp *Viewport) UpdateFrame(
 	fx, fy := vp.mouseCursorFx, vp.mouseCursorFy
 	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 	vp.cursor.SetFieldPosition(fx, fy, tl)
+
+	fx, fy = taNoti.VPX, taNoti.VPY
+	tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+	dx, dy := scrollDir.DxDy()
+	vp.moveArrow.ChangeTile(gClientTile.DirTiles[scrollDir])
+	vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
+
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 

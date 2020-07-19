@@ -34,6 +34,7 @@ type Viewport struct {
 
 	raycastPlane *RaycastPlane
 	cursor       *Cursor3D
+	moveArrow    *Arrow3D
 
 	mouseCursorFx int
 	mouseCursorFy int
@@ -74,6 +75,10 @@ func NewViewport() *Viewport {
 	vp.cursor = NewCursor3D()
 	vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
 	vp.scene.Call("add", vp.cursor.Mesh)
+
+	vp.moveArrow = NewArrow3D()
+	vp.moveArrow.ChangeTile(gClientTile.Dir2Tiles[0])
+	vp.scene.Call("add", vp.moveArrow.Mesh)
 
 	lightAm := ThreeJsNew("AmbientLight", 0x808080)
 	vp.scene.Call("add", lightAm)
