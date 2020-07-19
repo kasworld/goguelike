@@ -312,11 +312,6 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 			app.olNotiData,
 			app.lastOLNotiData,
 			envBias)
-		fx, fy := app.vp.FindRayCastingFxFy()
-		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		app.vp.cursor.SetFieldPosition(fx, fy, tl)
-		app.vp.renderer.Call("render", app.vp.scene, app.vp.camera)
-		// app.vp.labelRenderer.Call("render", app.vp.scene, app.vp.camera)
 	}
 	return nil
 }

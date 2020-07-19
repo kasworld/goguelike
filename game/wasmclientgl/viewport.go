@@ -125,11 +125,6 @@ func NewViewport() *Viewport {
 	return vp
 }
 
-func (vp *Viewport) Hide() {
-}
-func (vp *Viewport) Show() {
-}
-
 func (vp *Viewport) Resize(w, h float64) {
 	vp.renderer.Call("setSize", w, h)
 	// vp.labelRenderer.Call("setSize", w, h)
@@ -158,27 +153,4 @@ func (vp *Viewport) UpdateFromViewportTile(
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
 	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
 	return nil
-}
-
-func (vp *Viewport) FindRayCastingFxFy() (int, int) {
-	// update the picking ray with the camera and mouse position
-	vp.raycaster.Call("setFromCamera", vp.jsMouse, vp.camera)
-
-	// calculate objects intersecting the picking ray
-	intersects := vp.raycaster.Call(
-		"intersectObject", vp.raycastPlane.Mesh)
-
-	for i := 0; i < intersects.Length(); i++ {
-		obj := intersects.Index(i)
-		pos3 := obj.Get("point")
-		x := pos3.Get("x").Float()
-		y := pos3.Get("y").Float()
-		fx := int(x / DstCellSize)
-		fy := int(-y / DstCellSize)
-		return fx, fy
-		_ = fx
-		_ = fy
-		// jslog.Infof("pos fx:%v fy:%v", fx, fy)
-	}
-	return 0, 0
 }
