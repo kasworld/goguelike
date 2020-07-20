@@ -166,10 +166,6 @@ func (app *WasmClient) makePathToMouseClick() {
 		}
 		flX, flY := app.vp.mouseCursorFx, app.vp.mouseCursorFy
 
-		autoPlayButton := autoActs.GetByIDBase("AutoPlay")
-		if autoPlayButton.State == 0 {
-			autoPlayButton.JSFn(js.Null(), nil)
-		}
 		playerX, playerY := app.GetPlayerXY()
 
 		if playerX == flX && playerY == flY {
@@ -184,6 +180,13 @@ func (app *WasmClient) makePathToMouseClick() {
 			app.KeyDir = way9type.Center
 			// fmt.Printf("move2dest [%v %v] to [%v %v] %v", playerX, playerY, floorX, flY, newPath)
 		}
+		if len(app.Path2dst) != 0 {
+			autoPlayButton := autoActs.GetByIDBase("AutoPlay")
+			if autoPlayButton.State == 0 {
+				autoPlayButton.JSFn(js.Null(), nil)
+			}
+		}
+
 	case 1: // floor viewport mode
 	}
 }
