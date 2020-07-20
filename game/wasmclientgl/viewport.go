@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-type Viewport struct {
+type GameScene struct {
 	renderer js.Value
 
 	// from client floor gl
@@ -52,8 +52,8 @@ type Viewport struct {
 
 }
 
-func NewViewport() *Viewport {
-	vp := &Viewport{
+func NewGameScene() *GameScene {
+	vp := &GameScene{
 		jsSceneCOs: make(map[string]*CarryObj3D),
 		jsSceneAOs: make(map[string]*ActiveObj3D),
 		jsSceneFOs: make(map[string]*FieldObj3D),
@@ -123,18 +123,18 @@ func NewViewport() *Viewport {
 	return vp
 }
 
-func (vp *Viewport) Resize(w, h float64) {
+func (vp *GameScene) Resize(w, h float64) {
 	vp.renderer.Call("setSize", w, h)
 	vp.camera.Set("aspect", w/h)
 	vp.camera.Call("updateProjectionMatrix")
 }
 
-func (vp *Viewport) Zoom(zoom int) {
+func (vp *GameScene) Zoom(zoom int) {
 	vp.camera.Set("zoom", 1.0+float64(zoom)/2)
 	vp.camera.Call("updateProjectionMatrix")
 }
 
-func (vp *Viewport) UpdateFromViewportTile(
+func (vp *GameScene) UpdateFromViewportTile(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data,
 	olNoti *c2t_obj.NotiObjectList_data) error {
@@ -150,7 +150,7 @@ func (vp *Viewport) UpdateFromViewportTile(
 	return nil
 }
 
-func (vp *Viewport) FindRayCastingFxFy(jsMouse js.Value) (int, int) {
+func (vp *GameScene) FindRayCastingFxFy(jsMouse js.Value) (int, int) {
 	// update the picking ray with the camera and mouse position
 	vp.raycaster.Call("setFromCamera", jsMouse, vp.camera)
 

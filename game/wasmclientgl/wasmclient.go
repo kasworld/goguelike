@@ -94,7 +94,7 @@ type WasmClient struct {
 	floorVPPosX int
 	floorVPPosY int
 
-	vp         *Viewport
+	vp         *GameScene
 	titlescene *TitleScene
 }
 
@@ -117,7 +117,7 @@ func InitPage() {
 		DoClose:  func() { jslog.Errorf("Too early DoClose call") },
 	}
 	app.titlescene = NewTitleScene()
-	app.vp = NewViewport()
+	app.vp = NewGameScene()
 
 	gFontLoader.Call("load", "three.js/examples/fonts/helvetiker_regular.typeface.json",
 		js.FuncOf(func(this js.Value, args []js.Value) interface{} {

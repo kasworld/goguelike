@@ -48,7 +48,7 @@ func CalcRotateFrameProgress(frameProgress float64) float64 {
 	return math.Sin(frameProgress*math.Pi*2) * math.Pi / 4
 }
 
-func (vp *Viewport) UpdateFrame(
+func (vp *GameScene) UpdateFrame(
 	cf *clientfloor.ClientFloor,
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
@@ -170,7 +170,7 @@ func (vp *Viewport) UpdateFrame(
 }
 
 // add tiles in gXYLenListView
-func (vp *Viewport) makeClientTileView(
+func (vp *GameScene) makeClientTileView(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data) {
 	vpx, vpy := taNoti.VPX, taNoti.VPY
@@ -229,7 +229,7 @@ func (vp *Viewport) makeClientTileView(
 }
 
 // add fo to clientview by vp.FieldObjPosMan
-func (vp *Viewport) updateFieldObjInView(
+func (vp *GameScene) updateFieldObjInView(
 	cf *clientfloor.ClientFloor, vpx, vpy int) {
 	addFOuuid := make(map[string]bool)
 	for _, v := range gXYLenListView {
@@ -269,7 +269,7 @@ func (vp *Viewport) updateFieldObjInView(
 	}
 }
 
-func (vp *Viewport) processNotiObjectList(
+func (vp *GameScene) processNotiObjectList(
 	cf *clientfloor.ClientFloor,
 	olNoti *c2t_obj.NotiObjectList_data,
 	vpx, vpy int, // place obj around
