@@ -270,7 +270,7 @@ func (vp *GameScene) updateFieldObjInView(
 }
 
 func (vp *GameScene) makeMovePathInView(
-	cf *clientfloor.ClientFloor, vpx, vpy int,
+	cf *clientfloor.ClientFloor,
 	path2dst [][2]int) {
 
 	addAr3Duuid := make(map[[2]int]bool)

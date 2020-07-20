@@ -152,7 +152,7 @@ func (vp *GameScene) UpdateFromViewportTile(
 	}
 	vp.makeClientTileInView(cf, taNoti)
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
-	vp.makeMovePathInView(cf, taNoti.VPX, taNoti.VPY, path2dst)
+	vp.makeMovePathInView(cf, path2dst)
 	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
 	return nil
 }
