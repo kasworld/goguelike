@@ -43,7 +43,7 @@ type GameScene struct {
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
-	jsSceneArrows map[string]*FieldObj3D // in clientview fieldobj
+	jsSceneArrows map[[2]int]*Arrow3D // in clientview move path arrow
 
 	// tile 3d instancedmesh
 	// count = gameconst.ClientViewPortW * gameconst.ClientViewPortH
@@ -56,9 +56,10 @@ type GameScene struct {
 
 func NewGameScene() *GameScene {
 	vp := &GameScene{
-		jsSceneCOs: make(map[string]*CarryObj3D),
-		jsSceneAOs: make(map[string]*ActiveObj3D),
-		jsSceneFOs: make(map[string]*FieldObj3D),
+		jsSceneCOs:    make(map[string]*CarryObj3D),
+		jsSceneAOs:    make(map[string]*ActiveObj3D),
+		jsSceneFOs:    make(map[string]*FieldObj3D),
+		jsSceneArrows: make(map[[2]int]*Arrow3D),
 	}
 
 	vp.renderer = ThreeJsNew("WebGLRenderer")
