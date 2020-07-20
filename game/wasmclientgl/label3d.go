@@ -13,10 +13,55 @@ package wasmclientgl
 
 import (
 	"fmt"
+	"sync"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile_flag"
 )
+
+var gPoolLabel3D = NewPoolLabel3D()
+
+type PoolLabel3D struct {
+	mutex    sync.Mutex
+	poolData map[string][]*Label3D
+	newCount int
+	getCount int
+	putCount int
+}
+
+func NewPoolLabel3D() *PoolLabel3D {
+	return &PoolLabel3D{
+		poolData: make(map[string][]*Label3D),
+	}
+}
+
+func (p *PoolLabel3D) String() string {
+	return fmt.Sprintf("PoolLabel3D[%v new:%v get:%v put:%v]",
+		len(p.poolData), p.newCount, p.getCount, p.putCount,
+	)
+}
+
+func (p *PoolLabel3D) Get(str string) *Label3D {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	var rtn *Label3D
+	if l := len(p.poolData[str]); l > 0 {
+		rtn = p.poolData[str][l-1]
+		p.poolData[str] = p.poolData[str][:l-1]
+		p.getCount++
+	} else {
+		rtn = NewLabel3D(str)
+		p.newCount++
+	}
+	return rtn
+}
+
+func (p *PoolLabel3D) Put(pb *Label3D) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	p.poolData[pb.Str] = append(p.poolData[pb.Str], pb)
+	p.putCount++
+}
 
 type Label3D struct {
 	Str     string
