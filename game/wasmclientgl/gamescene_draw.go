@@ -245,6 +245,7 @@ func (vp *GameScene) updateFieldObjInView(
 			gPoolFieldObj3D.Put(fo3d)
 			delete(vp.jsSceneFOs, id)
 			lb3d := fo3d.Label
+			fo3d.Label = nil
 			vp.scene.Call("remove", lb3d.Mesh)
 			gPoolLabel3D.Put(lb3d)
 		}
