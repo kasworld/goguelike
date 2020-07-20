@@ -588,11 +588,13 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	}
 
 	oldComplete := cf.Visited.IsComplete()
-	if err := cf.UpdateFromViewportTile(app.taNotiData, gInitData.ViewportXYLenList); err != nil {
+	if err := cf.UpdateFromViewportTile(
+		app.taNotiData, gInitData.ViewportXYLenList); err != nil {
 		jslog.Warn("%v", err)
 		return nil
 	}
-	app.vp.UpdateFromViewportTile(cf, app.taNotiData, app.olNotiData)
+	app.vp.UpdateFromViewportTile(
+		cf, app.taNotiData, app.olNotiData, app.Path2dst)
 
 	if !oldComplete && cf.Visited.IsComplete() { // just completed
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",

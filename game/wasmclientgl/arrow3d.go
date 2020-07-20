@@ -12,12 +12,57 @@
 package wasmclientgl
 
 import (
+	"fmt"
+	"sync"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile_flag"
-
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
+
+var gPoolArrow3D = NewPoolArrow3D(PoolSizeArrow3D)
+
+type PoolArrow3D struct {
+	mutex    sync.Mutex
+	poolData []*Arrow3D
+	newCount int
+	getCount int
+	putCount int
+}
+
+func NewPoolArrow3D(initCap int) *PoolArrow3D {
+	return &PoolArrow3D{
+		poolData: make([]*Arrow3D, 0, initCap),
+	}
+}
+
+func (p *PoolArrow3D) String() string {
+	return fmt.Sprintf("PoolArrow3D[%v/%v new:%v get:%v put:%v]",
+		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
+	)
+}
+
+func (p *PoolArrow3D) Get() *Arrow3D {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	var rtn *Arrow3D
+	if l := len(p.poolData); l > 0 {
+		rtn = p.poolData[l-1]
+		p.poolData = p.poolData[:l-1]
+		p.getCount++
+	} else {
+		rtn = NewArrow3D()
+		p.newCount++
+	}
+	return rtn
+}
+
+func (p *PoolArrow3D) Put(pb *Arrow3D) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	p.poolData = append(p.poolData, pb)
+	p.putCount++
+}
 
 type Arrow3D struct {
 	Cnv     js.Value

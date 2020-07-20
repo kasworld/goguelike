@@ -170,7 +170,7 @@ func (vp *GameScene) UpdateFrame(
 }
 
 // add tiles in gXYLenListView
-func (vp *GameScene) makeClientTileView(
+func (vp *GameScene) makeClientTileInView(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data) {
 	vpx, vpy := taNoti.VPX, taNoti.VPY
@@ -267,6 +267,12 @@ func (vp *GameScene) updateFieldObjInView(
 			delete(vp.jsSceneFOs, id)
 		}
 	}
+}
+
+func (vp *GameScene) makeMovePathInView(
+	cf *clientfloor.ClientFloor, vpx, vpy int,
+	path2dst [][2]int) {
+
 }
 
 func (vp *GameScene) processNotiObjectList(

@@ -43,6 +43,8 @@ type GameScene struct {
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
+	jsSceneArrows map[string]*FieldObj3D // in clientview fieldobj
+
 	// tile 3d instancedmesh
 	// count = gameconst.ClientViewPortW * gameconst.ClientViewPortH
 	jsTile3DMesh      [tile.Tile_Count]js.Value
@@ -134,18 +136,22 @@ func (vp *GameScene) Zoom(zoom int) {
 	vp.camera.Call("updateProjectionMatrix")
 }
 
+// viewport x,y changed == need scroll
 func (vp *GameScene) UpdateFromViewportTile(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data,
-	olNoti *c2t_obj.NotiObjectList_data) error {
+	olNoti *c2t_obj.NotiObjectList_data,
+	path2dst [][2]int,
+) error {
 
 	if cf.FloorInfo.UUID != taNoti.FloorUUID {
 		return fmt.Errorf("vptile data floor not match %v %v",
 			cf.FloorInfo.UUID, taNoti.FloorUUID)
 
 	}
-	vp.makeClientTileView(cf, taNoti)
+	vp.makeClientTileInView(cf, taNoti)
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
+	vp.makeMovePathInView(cf, taNoti.VPX, taNoti.VPY, path2dst)
 	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
 	return nil
 }
