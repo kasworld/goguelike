@@ -22,32 +22,6 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-// 0~1 -> 1->1.5->1->0.5->1
-func CalcScaleFrameProgress(frameProgress float64, damage int) float64 {
-
-	amplitude := math.Log10(float64(damage)) / 2
-	if amplitude < 0.1 {
-		amplitude = 0.1
-	}
-	if amplitude > 2 {
-		amplitude = 2
-	}
-
-	// 0~1 -> 1->2->1->0->1
-	progress := math.Sin(frameProgress * math.Pi * 2)
-
-	rtn := 1 + progress*amplitude
-	if rtn < 0 {
-		rtn = -rtn
-	}
-	return rtn
-}
-
-// 0~1 -> 0-> -pi -> 0 -> +pi
-func CalcRotateFrameProgress(frameProgress float64) float64 {
-	return math.Sin(frameProgress*math.Pi*2) * math.Pi / 4
-}
-
 func (vp *GameScene) UpdateFrame(
 	cf *clientfloor.ClientFloor,
 	frameProgress float64,
@@ -279,6 +253,7 @@ func (vp *GameScene) ClearMovePath() {
 
 func (vp *GameScene) makeMovePathInView(
 	cf *clientfloor.ClientFloor,
+	vpx, vpy int,
 	path2dst [][2]int) {
 
 	addAr3Duuid := make(map[[2]int]bool)
@@ -303,7 +278,8 @@ func (vp *GameScene) makeMovePathInView(
 			ti := gClientTile.Dir2Tiles[diri]
 			ar3d.ChangeTile(ti)
 			tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
-			ar3d.SetFieldPosition(pos[0], pos[1], tl)
+			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
+			ar3d.SetFieldPosition(x, y, tl)
 		}
 		// add last
 		pos := path2dst[len(path2dst)-1]
@@ -317,7 +293,8 @@ func (vp *GameScene) makeMovePathInView(
 		ti := gClientTile.Dir2Tiles[way9type.Center]
 		ar3d.ChangeTile(ti)
 		tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
-		ar3d.SetFieldPosition(pos[0], pos[1], tl)
+		x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
+		ar3d.SetFieldPosition(x, y, tl)
 	}
 
 	for pos, ar3d := range vp.jsSceneArrows {

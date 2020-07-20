@@ -13,6 +13,7 @@ package wasmclientgl
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"syscall/js"
 	"time"
@@ -156,4 +157,30 @@ func CalcAroundPos(w, h, vpx, vpy, fx, fy int) (int, int) {
 		}
 	}
 	return fx, fy
+}
+
+// 0~1 -> 1->1.5->1->0.5->1
+func CalcScaleFrameProgress(frameProgress float64, damage int) float64 {
+
+	amplitude := math.Log10(float64(damage)) / 2
+	if amplitude < 0.1 {
+		amplitude = 0.1
+	}
+	if amplitude > 2 {
+		amplitude = 2
+	}
+
+	// 0~1 -> 1->2->1->0->1
+	progress := math.Sin(frameProgress * math.Pi * 2)
+
+	rtn := 1 + progress*amplitude
+	if rtn < 0 {
+		rtn = -rtn
+	}
+	return rtn
+}
+
+// 0~1 -> 0-> -pi -> 0 -> +pi
+func CalcRotateFrameProgress(frameProgress float64) float64 {
+	return math.Sin(frameProgress*math.Pi*2) * math.Pi / 4
 }
