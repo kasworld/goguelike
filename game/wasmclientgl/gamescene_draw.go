@@ -269,6 +269,14 @@ func (vp *GameScene) updateFieldObjInView(
 	}
 }
 
+func (vp *GameScene) ClearMovePath() {
+	for pos, ar3d := range vp.jsSceneArrows {
+		vp.scene.Call("remove", ar3d.Mesh)
+		gPoolArrow3D.Put(ar3d)
+		delete(vp.jsSceneArrows, pos)
+	}
+}
+
 func (vp *GameScene) makeMovePathInView(
 	cf *clientfloor.ClientFloor,
 	path2dst [][2]int) {

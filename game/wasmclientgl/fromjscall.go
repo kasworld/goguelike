@@ -230,6 +230,7 @@ func (app *WasmClient) actByMouseRightDown() {
 		app.ClientColtrolMode = clientcontroltype.FollowMouse
 		app.KeyDir = way9type.Center
 		app.Path2dst = nil
+		app.vp.ClearMovePath()
 	} else {
 		app.ClientColtrolMode = clientcontroltype.Keyboard
 	}
@@ -328,6 +329,7 @@ func (app *WasmClient) actByKeyPressMap(kcode string) bool {
 		if app.KeyDir != way9type.Center {
 			app.ClientColtrolMode = clientcontroltype.Keyboard
 			app.Path2dst = nil
+			app.vp.ClearMovePath()
 			autoPlayButton := autoActs.GetByIDBase("AutoPlay")
 			if autoPlayButton.State == 0 {
 				autoPlayButton.JSFn(js.Null(), nil)
@@ -341,6 +343,7 @@ func (app *WasmClient) actByKeyPressMap(kcode string) bool {
 		if app.KeyDir != way9type.Center {
 			app.ClientColtrolMode = clientcontroltype.Keyboard
 			app.Path2dst = nil
+			app.vp.ClearMovePath()
 			dir := app.KeyDir
 			app.floorVPPosX += dir.Dx()
 			app.floorVPPosY += dir.Dy()
