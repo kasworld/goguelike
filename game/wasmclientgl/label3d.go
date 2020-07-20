@@ -15,8 +15,6 @@ import (
 	"fmt"
 	"sync"
 	"syscall/js"
-
-	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
 var gPoolLabel3D = NewPoolLabel3D()
@@ -82,7 +80,7 @@ func NewLabel3D(str string) *Label3D {
 	cnv.Set("height", height)
 	ctx.Set("font", fmt.Sprintf("%dpx sans-serif", height))
 	ctx.Set("fillStyle", "gray")
-	ctx.Call("fillText", str, width/2, height/4)
+	ctx.Call("fillText", str, 0, height-height/4)
 
 	tex := ThreeJsNew("CanvasTexture", cnv)
 	mat := ThreeJsNew("MeshStandardMaterial",
@@ -103,13 +101,12 @@ func NewLabel3D(str string) *Label3D {
 	}
 }
 
-func (aog *Label3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
-	tileHeight := GetTile3DHeightByCache(tl)
+func (aog *Label3D) SetFieldPosition(fx, fy int, shZ float64) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2,
-		aog.GeoInfo.Len[2]/2+1+tileHeight,
+		float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
+		-float64(fy)*DstCellSize,              //-aog.GeoInfo.Len[1]/2,
+		aog.GeoInfo.Len[2]/2+1+shZ,
 	)
 }
 

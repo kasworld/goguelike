@@ -222,10 +222,15 @@ func (vp *GameScene) updateFieldObjInView(
 			fo3d.ChangeTile(ti)
 			vp.jsSceneFOs[obj.GetUUID()] = fo3d
 			vp.scene.Call("add", fo3d.Mesh)
+
+			lb3d := gPoolLabel3D.Get(fo.Message)
+			fo3d.Label = lb3d
+			vp.scene.Call("add", lb3d.Mesh)
 		}
 		if !addFOuuid[obj.GetUUID()] {
 			fo3d.SetFieldPosition(fx, fy)
 			addFOuuid[obj.GetUUID()] = true
+			fo3d.Label.SetFieldPosition(fx, fy, DstCellSize+1)
 		} else {
 			// same fo in gXYLenListView
 			// field too small
@@ -239,6 +244,9 @@ func (vp *GameScene) updateFieldObjInView(
 			vp.scene.Call("remove", fo3d.Mesh)
 			gPoolFieldObj3D.Put(fo3d)
 			delete(vp.jsSceneFOs, id)
+			lb3d := fo3d.Label
+			vp.scene.Call("remove", lb3d.Mesh)
+			gPoolLabel3D.Put(lb3d)
 		}
 	}
 }

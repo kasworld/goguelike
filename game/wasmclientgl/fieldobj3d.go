@@ -67,6 +67,7 @@ func (p *PoolFieldObj3D) Put(pb *FieldObj3D) {
 }
 
 type FieldObj3D struct {
+	Label   *Label3D
 	Cnv     js.Value
 	Ctx     js.Value
 	Tex     js.Value
