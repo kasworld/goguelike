@@ -230,7 +230,7 @@ func (vp *GameScene) updateFieldObjInView(
 		if !addFOuuid[obj.GetUUID()] {
 			fo3d.SetFieldPosition(fx, fy)
 			addFOuuid[obj.GetUUID()] = true
-			fo3d.Label.SetFieldPosition(fx, fy, DstCellSize+1)
+			fo3d.Label.SetFieldPositionUp(fx, fy, DstCellSize+1)
 		} else {
 			// same fo in gXYLenListView
 			// field too small
@@ -347,7 +347,7 @@ func (vp *GameScene) processNotiObjectList(
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		ao3d.SetFieldPosition(fx, fy)
 		addAOuuid[ao.UUID] = true
-		ao3d.Name.SetFieldPosition(fx, fy, DstCellSize+1)
+		ao3d.Name.SetFieldPositionDown(fx, fy, DstCellSize+1)
 
 		for _, eqo := range ao.EquippedPo {
 			cr3d, exist := vp.jsSceneCOs[eqo.UUID]
