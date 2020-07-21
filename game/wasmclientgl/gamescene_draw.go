@@ -333,6 +333,10 @@ func (vp *GameScene) processNotiObjectList(
 			ao3d = gPoolActiveObj3D.Get()
 			vp.scene.Call("add", ao3d.Mesh)
 			vp.jsSceneAOs[ao.UUID] = ao3d
+
+			lb3d := gPoolLabel3D.Get(ao.NickName)
+			ao3d.Name = lb3d
+			vp.scene.Call("add", lb3d.Mesh)
 		}
 		tlList := gClientTile.CharTiles[ao.Faction]
 		if ao.Alive {
@@ -343,6 +347,7 @@ func (vp *GameScene) processNotiObjectList(
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		ao3d.SetFieldPosition(fx, fy)
 		addAOuuid[ao.UUID] = true
+		ao3d.Name.SetFieldPosition(fx, fy, DstCellSize+1)
 
 		for _, eqo := range ao.EquippedPo {
 			cr3d, exist := vp.jsSceneCOs[eqo.UUID]
@@ -364,6 +369,11 @@ func (vp *GameScene) processNotiObjectList(
 			vp.scene.Call("remove", ao3d.Mesh)
 			delete(vp.jsSceneAOs, id)
 			gPoolActiveObj3D.Put(ao3d)
+
+			lb3d := ao3d.Name
+			ao3d.Name = nil
+			vp.scene.Call("remove", lb3d.Mesh)
+			gPoolLabel3D.Put(lb3d)
 		}
 	}
 

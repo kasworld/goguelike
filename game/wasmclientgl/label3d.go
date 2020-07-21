@@ -94,7 +94,7 @@ func NewLabel3D(str string) *Label3D {
 	ctx.Call("fillRect", 0, 0, canvasWidth, height)
 	ctx.Set("font", font)
 	ctx.Set("fillStyle", "white")
-	ctx.Call("fillText", str, (canvasWidth-textWidth)/2, height-height/4)
+	ctx.Call("fillText", str, (canvasWidth-textWidth)/2, height-height/5)
 
 	tex := ThreeJsNew("CanvasTexture", cnv)
 	mat := ThreeJsNew("MeshStandardMaterial",
