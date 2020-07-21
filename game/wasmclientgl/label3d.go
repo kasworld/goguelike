@@ -107,6 +107,7 @@ func NewLabel3D(str string) *Label3D {
 	geo := ThreeJsNew("PlaneGeometry", canvasWidth, height)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &Label3D{
+		Str:     str,
 		Cnv:     cnv,
 		Ctx:     ctx,
 		Tex:     tex,
