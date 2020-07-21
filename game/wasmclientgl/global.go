@@ -30,7 +30,7 @@ import (
 
 const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
-	DstCellSize      = 32
+	DstCellSize      = 64
 	HelperSize       = DstCellSize * 32
 
 	PoolSizeActiveObj3D = 1000
