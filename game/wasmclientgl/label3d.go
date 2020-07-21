@@ -15,6 +15,8 @@ import (
 	"fmt"
 	"sync"
 	"syscall/js"
+
+	"github.com/kasworld/gowasmlib/jslog"
 )
 
 var gPoolLabel3D = NewPoolLabel3D()
@@ -74,13 +76,25 @@ func NewLabel3D(str string) *Label3D {
 	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	ctx := cnv.Call("getContext", "2d")
 	ctx.Set("imageSmoothingEnabled", false)
-	width := len(str) * DstCellSize / 4
-	cnv.Set("width", width)
+
+	cnv.Set("width", len(str)*DstCellSize)
+	cnv.Set("height", DstCellSize)
 	height := DstCellSize / 2
+	font := fmt.Sprintf("%dpx sans-serif", height)
+
+	ctx.Set("font", font)
+	textWidth := ctx.Call("measureText", str).Get("width").Int()
+	canvasWidth := NextPowerOf2(textWidth)
+	jslog.Infof("text %v textwidth %v canvaswidth %v",
+		str, textWidth, canvasWidth)
+	cnv.Set("width", canvasWidth)
 	cnv.Set("height", height)
-	ctx.Set("font", fmt.Sprintf("%dpx sans-serif", height))
-	ctx.Set("fillStyle", "gray")
-	ctx.Call("fillText", str, 0, height-height/4)
+
+	ctx.Set("fillStyle", "#00000080")
+	ctx.Call("fillRect", 0, 0, canvasWidth, height)
+	ctx.Set("font", font)
+	ctx.Set("fillStyle", "white")
+	ctx.Call("fillText", str, (canvasWidth-textWidth)/2, height-height/4)
 
 	tex := ThreeJsNew("CanvasTexture", cnv)
 	mat := ThreeJsNew("MeshStandardMaterial",
@@ -90,7 +104,7 @@ func NewLabel3D(str string) *Label3D {
 	)
 	mat.Set("transparent", true)
 
-	geo := ThreeJsNew("PlaneGeometry", width, height)
+	geo := ThreeJsNew("PlaneGeometry", canvasWidth, height)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &Label3D{
 		Cnv:     cnv,

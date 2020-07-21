@@ -184,3 +184,18 @@ func CalcScaleFrameProgress(frameProgress float64, damage int) float64 {
 func CalcRotateFrameProgress(frameProgress float64) float64 {
 	return math.Sin(frameProgress*math.Pi*2) * math.Pi / 4
 }
+
+func NextPowerOf2(n int) int {
+	if IsPowerOfTwo(n) {
+		return n
+	}
+	rtn := 1
+	for rtn < n {
+		rtn <<= 1
+	}
+	return rtn
+}
+
+func IsPowerOfTwo(i int) bool {
+	return (i & (i - 1)) == 0
+}
