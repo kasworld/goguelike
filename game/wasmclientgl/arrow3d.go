@@ -104,6 +104,10 @@ func (aog *Arrow3D) ChangeTile(ti webtilegroup.TileInfo) {
 		0, 0, DstCellSize, DstCellSize)
 	aog.Tex.Set("needsUpdate", true)
 }
+func (aog *Arrow3D) ClearTile() {
+	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
+	aog.Tex.Set("needsUpdate", true)
+}
 
 func (aog *Arrow3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
 	height := GetTile3DHeightByCache(tl)

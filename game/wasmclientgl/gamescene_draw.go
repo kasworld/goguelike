@@ -134,11 +134,15 @@ func (vp *GameScene) UpdateFrame(
 	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 	vp.cursor.SetFieldPosition(fx, fy, tl)
 
-	fx, fy = taNoti.VPX, taNoti.VPY
-	tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-	dx, dy := scrollDir.DxDy()
-	vp.moveArrow.ChangeTile(gClientTile.DirTiles[scrollDir])
-	vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
+	if scrollDir != way9type.Center {
+		fx, fy = taNoti.VPX, taNoti.VPY
+		tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		dx, dy := scrollDir.DxDy()
+		vp.moveArrow.ChangeTile(gClientTile.DirTiles[scrollDir])
+		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
+	} else {
+		vp.moveArrow.ClearTile()
+	}
 
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
