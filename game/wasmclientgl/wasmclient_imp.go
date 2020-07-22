@@ -137,7 +137,7 @@ func (app *WasmClient) reset2Default() {
 	cmdToggleZoom(app, btn)
 
 	btn = gameOptions.GetByIDBase("Angle")
-	btn.State = 0
+	btn.State = 1
 	btn.UpdateButtonText()
 	cmdToggleAngle(app, btn)
 

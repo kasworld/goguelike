@@ -218,7 +218,6 @@ func (app *WasmClient) enterTower(towerindex int) {
 		app.makeButtons())
 
 	app.reset2Default()
-	// cmdToggleSound(app, gameOptions.GetByIDBase("Sound"))
 
 	ctx, closeCtx := context.WithCancel(context.Background())
 	app.DoClose = closeCtx
