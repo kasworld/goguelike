@@ -65,6 +65,7 @@ func (p *PoolActiveObj3D) Put(pb *ActiveObj3D) {
 
 type ActiveObj3D struct {
 	Name    *Label3D
+	Chat    *Label3D
 	Cnv     js.Value
 	Ctx     js.Value
 	Tex     js.Value

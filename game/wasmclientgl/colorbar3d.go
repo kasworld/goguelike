@@ -13,8 +13,11 @@ package wasmclientgl
 
 import (
 	"fmt"
+	"math"
 	"sync"
 	"syscall/js"
+
+	"github.com/kasworld/goguelike/config/gameconst"
 )
 
 var gPoolColorBar3D = NewPoolColorBar3D()
@@ -77,6 +80,7 @@ func NewColorBar3D(colorstr string) *ColorBar3D {
 	mat.Set("transparent", true)
 
 	geo := ThreeJsNew("CylinderGeometry", 1, 1, DstCellSize)
+	geo.Call("rotateZ", math.Pi/2)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &ColorBar3D{
 		ColorStr: colorstr,
@@ -85,22 +89,29 @@ func NewColorBar3D(colorstr string) *ColorBar3D {
 	}
 }
 
-func (aog *ColorBar3D) SetFieldPositionUp(fx, fy int, shZ float64) {
+func (aog *ColorBar3D) SetFieldPositionUp(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize+aog.GeoInfo.Len[1]/2,
-		aog.GeoInfo.Len[2]/2+1+shZ,
+		shX+float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
+		-shY-float64(fy)*DstCellSize+aog.GeoInfo.Len[1]/2,
+		shZ+aog.GeoInfo.Len[2]/2+1,
 	)
 }
 
-func (aog *ColorBar3D) SetFieldPositionDown(fx, fy int, shZ float64) {
+func (aog *ColorBar3D) SetFieldPositionDown(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-DstCellSize,
-		aog.GeoInfo.Len[2]/2+1+shZ,
+		shX+float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
+		-shY-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-DstCellSize,
+		shZ+aog.GeoInfo.Len[2]/2+1,
 	)
+}
+
+func (aog *ColorBar3D) SetWH(v, maxv int) {
+	barw := float64(maxv)/gameconst.ActiveObjBaseBiasLen + 1
+	barlen := float64(v) / float64(maxv)
+	aog.ScaleX(barlen)
+	aog.ScaleY(barw)
 }
 
 func (aog *ColorBar3D) ResetMatrix() {

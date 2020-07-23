@@ -39,6 +39,11 @@ type GameScene struct {
 	mouseCursorFx int
 	mouseCursorFy int
 
+	// player ao bars
+	HP *ColorBar3D
+	SP *ColorBar3D
+	AP *ColorBar3D
+
 	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
@@ -60,6 +65,10 @@ func NewGameScene() *GameScene {
 		jsSceneAOs:    make(map[string]*ActiveObj3D),
 		jsSceneFOs:    make(map[string]*FieldObj3D),
 		jsSceneArrows: make(map[[2]int]*Arrow3D),
+
+		HP: NewColorBar3D("red"),
+		SP: NewColorBar3D("yellow"),
+		AP: NewColorBar3D("lime"),
 	}
 
 	vp.renderer = ThreeJsNew("WebGLRenderer")
@@ -82,6 +91,10 @@ func NewGameScene() *GameScene {
 	vp.moveArrow = NewArrow3D()
 	vp.moveArrow.ChangeTile(gClientTile.Dir2Tiles[0])
 	vp.scene.Call("add", vp.moveArrow.Mesh)
+
+	vp.scene.Call("add", vp.HP.Mesh)
+	vp.scene.Call("add", vp.SP.Mesh)
+	vp.scene.Call("add", vp.AP.Mesh)
 
 	lightAm := ThreeJsNew("AmbientLight", 0x808080)
 	vp.scene.Call("add", lightAm)

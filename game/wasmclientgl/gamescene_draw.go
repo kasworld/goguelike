@@ -54,6 +54,11 @@ func (vp *GameScene) UpdateFrame(
 			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
 				aod.RotateY(CalcRotateFrameProgress(frameProgress))
 			}
+			aop := olNoti.ActiveObj
+			if aop.RemainTurn2Act > 0 {
+				// no action
+				vp.AP.ScaleX(frameProgress)
+			}
 		}
 		if ao.DamageTake > 0 {
 			if i%2 == 0 {
@@ -329,6 +334,7 @@ func (vp *GameScene) processNotiObjectList(
 
 	addAOuuid := make(map[string]bool)
 	addCOuuid := make(map[string]bool)
+	playerUUID := gInitData.AccountInfo.ActiveObjUUID
 
 	// make activeobj
 	for _, ao := range olNoti.ActiveObjList {
@@ -352,6 +358,19 @@ func (vp *GameScene) processNotiObjectList(
 		ao3d.SetFieldPosition(fx, fy)
 		addAOuuid[ao.UUID] = true
 		ao3d.Name.SetFieldPositionDown(fx, fy, DstCellSize+1)
+
+		if ao.UUID == playerUUID { // player ao
+			vp.HP.SetFieldPositionUp(fx, fy, 0, -10, DstCellSize+1)
+			vp.SP.SetFieldPositionUp(fx, fy, 0, -5, DstCellSize+1)
+			vp.AP.SetFieldPositionUp(fx, fy, 0, -0, DstCellSize+1)
+			aop := olNoti.ActiveObj
+			vp.HP.SetWH(aop.HP, aop.HPMax)
+			vp.SP.SetWH(aop.SP, aop.SPMax)
+			if aop.RemainTurn2Act > 0 {
+			} else {
+				vp.AP.ScaleX(-aop.RemainTurn2Act)
+			}
+		}
 
 		for _, eqo := range ao.EquippedPo {
 			cr3d, exist := vp.jsSceneCOs[eqo.UUID]
