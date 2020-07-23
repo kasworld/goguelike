@@ -116,7 +116,7 @@ func (aog *Label3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
 		shX+float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
-		-shY-float64(fy)*DstCellSize+aog.GeoInfo.Len[1]/2,
+		-shY-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2,
 		shZ+aog.GeoInfo.Len[2]/2,
 	)
 }

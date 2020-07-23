@@ -235,7 +235,8 @@ func (vp *GameScene) updateFieldObjInView(
 		if !addFOuuid[obj.GetUUID()] {
 			fo3d.SetFieldPosition(fx, fy)
 			addFOuuid[obj.GetUUID()] = true
-			fo3d.Label.SetFieldPosition(fx, fy, 0, DstCellSize/2, DstCellSize+3)
+			fo3d.Label.SetFieldPosition(fx, fy,
+				0, 0, DstCellSize+3)
 		} else {
 			// same fo in gXYLenListView
 			// field too small
