@@ -112,21 +112,12 @@ func NewLabel3D(str string) *Label3D {
 	}
 }
 
-func (aog *Label3D) SetFieldPositionUp(fx, fy int, shZ float64) {
+func (aog *Label3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize+aog.GeoInfo.Len[1]/2,
-		aog.GeoInfo.Len[2]/2+1+shZ,
-	)
-}
-
-func (aog *Label3D) SetFieldPositionDown(fx, fy int, shZ float64) {
-	SetPosition(
-		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-DstCellSize,
-		aog.GeoInfo.Len[2]/2+1+shZ,
+		shX+float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
+		-shY-float64(fy)*DstCellSize+aog.GeoInfo.Len[1]/2,
+		shZ+aog.GeoInfo.Len[2]/2,
 	)
 }
 

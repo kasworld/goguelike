@@ -89,7 +89,7 @@ func NewFieldObj3D() *FieldObj3D {
 	)
 	mat.Set("transparent", true)
 	geo := ThreeJsNew("CylinderGeometry",
-		DstCellSize/2, DstCellSize/4, DstCellSize)
+		DstCellSize/2, DstCellSize/3, DstCellSize)
 	geo.Call("rotateX", math.Pi/2)
 	// geo := ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
 	mesh := ThreeJsNew("Mesh", geo, mat)

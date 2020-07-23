@@ -235,7 +235,7 @@ func (vp *GameScene) updateFieldObjInView(
 		if !addFOuuid[obj.GetUUID()] {
 			fo3d.SetFieldPosition(fx, fy)
 			addFOuuid[obj.GetUUID()] = true
-			fo3d.Label.SetFieldPositionUp(fx, fy, DstCellSize+1)
+			fo3d.Label.SetFieldPosition(fx, fy, 0, DstCellSize/2, DstCellSize+3)
 		} else {
 			// same fo in gXYLenListView
 			// field too small
@@ -253,69 +253,6 @@ func (vp *GameScene) updateFieldObjInView(
 			fo3d.Label = nil
 			vp.scene.Call("remove", lb3d.Mesh)
 			gPoolLabel3D.Put(lb3d)
-		}
-	}
-}
-
-func (vp *GameScene) ClearMovePath() {
-	for pos, ar3d := range vp.jsSceneArrows {
-		vp.scene.Call("remove", ar3d.Mesh)
-		gPoolArrow3D.Put(ar3d)
-		delete(vp.jsSceneArrows, pos)
-	}
-}
-
-func (vp *GameScene) makeMovePathInView(
-	cf *clientfloor.ClientFloor,
-	vpx, vpy int,
-	path2dst [][2]int) {
-
-	addAr3Duuid := make(map[[2]int]bool)
-	if len(path2dst) > 0 {
-		w, h := cf.XWrapper.GetWidth(), cf.YWrapper.GetWidth()
-		for i, pos := range path2dst[:len(path2dst)-1] {
-			ar3d, exist := vp.jsSceneArrows[pos]
-			if !exist {
-				ar3d = gPoolArrow3D.Get()
-				vp.jsSceneArrows[pos] = ar3d
-				vp.scene.Call("add", ar3d.Mesh)
-			}
-			addAr3Duuid[pos] = true
-
-			// change tile for dir
-			pos2 := path2dst[i+1]
-			dx, dy := way9type.CalcDxDyWrapped(
-				pos2[0]-pos[0], pos2[1]-pos[1],
-				w, h,
-			)
-			diri := way9type.RemoteDxDy2Way9(dx, dy)
-			ti := gClientTile.Dir2Tiles[diri]
-			ar3d.ChangeTile(ti)
-			tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
-			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
-			ar3d.SetFieldPosition(x, y, tl)
-		}
-		// add last
-		pos := path2dst[len(path2dst)-1]
-		ar3d, exist := vp.jsSceneArrows[pos]
-		if !exist {
-			ar3d = gPoolArrow3D.Get()
-			vp.jsSceneArrows[pos] = ar3d
-			vp.scene.Call("add", ar3d.Mesh)
-		}
-		addAr3Duuid[pos] = true
-		ti := gClientTile.Dir2Tiles[way9type.Center]
-		ar3d.ChangeTile(ti)
-		tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
-		x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
-		ar3d.SetFieldPosition(x, y, tl)
-	}
-
-	for pos, ar3d := range vp.jsSceneArrows {
-		if !addAr3Duuid[pos] {
-			vp.scene.Call("remove", ar3d.Mesh)
-			gPoolArrow3D.Put(ar3d)
-			delete(vp.jsSceneArrows, pos)
 		}
 	}
 }
@@ -353,7 +290,7 @@ func (vp *GameScene) processNotiObjectList(
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		ao3d.SetFieldPosition(fx, fy)
 		addAOuuid[ao.UUID] = true
-		ao3d.Name.SetFieldPositionDown(fx, fy, DstCellSize+1)
+		ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+3)
 		if len(ao.Chat) == 0 {
 			if ao3d.Chat != nil {
 				vp.scene.Call("remove", ao3d.Chat.Mesh)
@@ -376,7 +313,8 @@ func (vp *GameScene) processNotiObjectList(
 			}
 		}
 		if ao3d.Chat != nil {
-			ao3d.Chat.SetFieldPositionUp(fx, fy, DstCellSize+1)
+			ao3d.Chat.SetFieldPosition(fx, fy,
+				0, -DstCellSize/2, DstCellSize+3)
 		}
 
 		if ao.UUID == playerUUID { // player ao
@@ -445,6 +383,69 @@ func (vp *GameScene) processNotiObjectList(
 			vp.scene.Call("remove", cr3d.Mesh)
 			delete(vp.jsSceneCOs, id)
 			gPoolCarryObj3D.Put(cr3d)
+		}
+	}
+}
+
+func (vp *GameScene) ClearMovePath() {
+	for pos, ar3d := range vp.jsSceneArrows {
+		vp.scene.Call("remove", ar3d.Mesh)
+		gPoolArrow3D.Put(ar3d)
+		delete(vp.jsSceneArrows, pos)
+	}
+}
+
+func (vp *GameScene) makeMovePathInView(
+	cf *clientfloor.ClientFloor,
+	vpx, vpy int,
+	path2dst [][2]int) {
+
+	addAr3Duuid := make(map[[2]int]bool)
+	if len(path2dst) > 0 {
+		w, h := cf.XWrapper.GetWidth(), cf.YWrapper.GetWidth()
+		for i, pos := range path2dst[:len(path2dst)-1] {
+			ar3d, exist := vp.jsSceneArrows[pos]
+			if !exist {
+				ar3d = gPoolArrow3D.Get()
+				vp.jsSceneArrows[pos] = ar3d
+				vp.scene.Call("add", ar3d.Mesh)
+			}
+			addAr3Duuid[pos] = true
+
+			// change tile for dir
+			pos2 := path2dst[i+1]
+			dx, dy := way9type.CalcDxDyWrapped(
+				pos2[0]-pos[0], pos2[1]-pos[1],
+				w, h,
+			)
+			diri := way9type.RemoteDxDy2Way9(dx, dy)
+			ti := gClientTile.Dir2Tiles[diri]
+			ar3d.ChangeTile(ti)
+			tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
+			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
+			ar3d.SetFieldPosition(x, y, tl)
+		}
+		// add last
+		pos := path2dst[len(path2dst)-1]
+		ar3d, exist := vp.jsSceneArrows[pos]
+		if !exist {
+			ar3d = gPoolArrow3D.Get()
+			vp.jsSceneArrows[pos] = ar3d
+			vp.scene.Call("add", ar3d.Mesh)
+		}
+		addAr3Duuid[pos] = true
+		ti := gClientTile.Dir2Tiles[way9type.Center]
+		ar3d.ChangeTile(ti)
+		tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
+		x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
+		ar3d.SetFieldPosition(x, y, tl)
+	}
+
+	for pos, ar3d := range vp.jsSceneArrows {
+		if !addAr3Duuid[pos] {
+			vp.scene.Call("remove", ar3d.Mesh)
+			gPoolArrow3D.Put(ar3d)
+			delete(vp.jsSceneArrows, pos)
 		}
 	}
 }
