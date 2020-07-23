@@ -25,13 +25,13 @@ type TitleScene struct {
 
 func NewTitleScene() *TitleScene {
 	ts := &TitleScene{}
-	ts.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize*2)
+	ts.camera = ThreeJsNew("PerspectiveCamera", 60, 1, 1, HelperSize)
 	ts.scene = ThreeJsNew("Scene")
 	ts.light = ThreeJsNew("PointLight", 0xffffff, 1)
 	SetPosition(ts.light,
-		HelperSize,
-		HelperSize,
-		HelperSize,
+		0,
+		0,
+		HelperSize/2,
 	)
 	ts.scene.Call("add", ts.light)
 
@@ -40,13 +40,14 @@ func NewTitleScene() *TitleScene {
 
 	// set title camera pos
 	SetPosition(ts.camera,
-		HelperSize/2, HelperSize/2, HelperSize,
+		0, 0, HelperSize/2,
 	)
 	ts.camera.Call("lookAt",
 		ThreeJsNew("Vector3",
-			HelperSize/2, HelperSize/2, 0,
+			0, 0, 0,
 		),
 	)
+	ts.camera.Set("zoom", 3.0)
 	ts.camera.Call("updateProjectionMatrix")
 	return ts
 }
@@ -64,9 +65,9 @@ func (ts *TitleScene) addTitle() {
 	ftMat := GetColorMaterialByCache(fmt.Sprintf("#%06x", co))
 	ts.jsoTitle = ThreeJsNew("Mesh", ftGeo, ftMat)
 	SetPosition(ts.jsoTitle,
-		HelperSize/2-geoInfo.Len[0]/2,
-		HelperSize/2,
-		HelperSize/2,
+		0-geoInfo.Len[0]/2,
+		0,
+		0,
 	)
 	ts.scene.Call("add", ts.jsoTitle)
 }
