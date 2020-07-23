@@ -413,10 +413,11 @@ func (vp *GameScene) processNotiObjectList(
 			delete(vp.jsSceneAOs, id)
 			gPoolActiveObj3D.Put(ao3d)
 
-			lb3d := ao3d.Name
+			vp.scene.Call("remove", ao3d.Name.Mesh)
+			gPoolLabel3D.Put(ao3d.Name)
 			ao3d.Name = nil
-			vp.scene.Call("remove", lb3d.Mesh)
-			gPoolLabel3D.Put(lb3d)
+			vp.scene.Call("remove", ao3d.Chat.Mesh)
+			ao3d.Chat = nil
 		}
 	}
 
