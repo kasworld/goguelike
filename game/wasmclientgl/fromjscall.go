@@ -145,11 +145,11 @@ func (app *WasmClient) jsHandleMouseWheel(this js.Value, args []js.Value) interf
 	deltaY := evt.Get("deltaY").Int()
 	deltaZ := evt.Get("deltaZ").Int()
 
-	jslog.Infof("mode %v x %v y %v z %v", deltaMode, deltaX, deltaY, deltaZ)
+	// jslog.Infof("mode %v x %v y %v z %v", deltaMode, deltaX, deltaY, deltaZ)
 	switch deltaMode {
 	case 0: // pixels
 	case 1: // lines
-	case 2: // ripagesght
+	case 2: // pages
 	}
 	return nil
 }
