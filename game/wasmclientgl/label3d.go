@@ -77,7 +77,7 @@ func NewLabel3D(str string) *Label3D {
 
 	cnv.Set("width", len(str)*DstCellSize)
 	cnv.Set("height", DstCellSize)
-	height := DstCellSize / 2
+	height := DstCellSize / 3
 	font := fmt.Sprintf("%dpx sans-serif", height)
 
 	ctx.Set("font", font)
