@@ -108,7 +108,10 @@ func (aog *ColorBar3D) SetFieldPositionDown(fx, fy int, shX, shY, shZ float64) {
 }
 
 func (aog *ColorBar3D) SetWH(v, maxv int) {
-	barw := float64(maxv)/gameconst.ActiveObjBaseBiasLen + 1
+	barw := float64(maxv) / gameconst.ActiveObjBaseBiasLen
+	if barw < 1 {
+		barw = 1
+	}
 	barlen := float64(v) / float64(maxv)
 	aog.ScaleX(barlen)
 	aog.ScaleY(barw)

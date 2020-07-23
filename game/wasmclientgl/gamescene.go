@@ -95,6 +95,7 @@ func NewGameScene() *GameScene {
 	vp.scene.Call("add", vp.HP.Mesh)
 	vp.scene.Call("add", vp.SP.Mesh)
 	vp.scene.Call("add", vp.AP.Mesh)
+	vp.AP.ScaleY(2)
 
 	lightAm := ThreeJsNew("AmbientLight", 0x808080)
 	vp.scene.Call("add", lightAm)
