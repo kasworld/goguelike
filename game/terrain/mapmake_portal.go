@@ -46,9 +46,20 @@ func (tr *Terrain) isBlockWay(x, y int) bool {
 	return contactSum > 2
 }
 
+// forbid fieldobj contact
 func (tr *Terrain) canPlaceFieldObjAt(x, y int) bool {
-	iao := tr.foPosMan.Get1stObjAt(x, y)
-	return iao == nil && tr.tileArea[x][y].CharPlaceable()
+	for _, v := range [][2]int{
+		{0, 0},
+		{-1, 0},
+		{1, 0},
+		{0, -1},
+		{0, 1},
+	} {
+		if tr.foPosMan.Get1stObjAt(x+v[0], y+v[1]) != nil {
+			return false
+		}
+	}
+	return tr.tileArea[x][y].CharPlaceable()
 }
 
 func (tr *Terrain) addPortal(portalID string, dstPortalID string,
