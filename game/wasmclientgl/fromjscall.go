@@ -123,17 +123,38 @@ func AddEventListener(
 
 func (app *WasmClient) registerKeyboardMouseEvent() {
 	dst := js.Global().Get("window")
-	AddEventListener(dst, "click", app.jsHandleMouseClickVP)
-	AddEventListener(dst, "mousemove", app.jsHandleMouseMoveVP)
-	AddEventListener(dst, "mousedown", app.jsHandleMouseDownVP)
-	AddEventListener(dst, "mouseup", app.jsHandleMouseUpVP)
+	AddEventListener(dst, "click", app.jsHandleMouseClick)
+	AddEventListener(dst, "wheel", app.jsHandleMouseWheel)
+	AddEventListener(dst, "mousemove", app.jsHandleMouseMove)
+	AddEventListener(dst, "mousedown", app.jsHandleMouseDown)
+	AddEventListener(dst, "mouseup", app.jsHandleMouseUp)
 	AddEventListener(dst, "contextmenu", app.jsHandleContextMenu)
-	AddEventListener(dst, "keydown", app.jsHandleKeyDownVP)
-	AddEventListener(dst, "keypress", app.jsHandleKeyPressVP)
-	AddEventListener(dst, "keyup", app.jsHandleKeyUpVP)
+	AddEventListener(dst, "keydown", app.jsHandleKeyDown)
+	AddEventListener(dst, "keypress", app.jsHandleKeyPress)
+	AddEventListener(dst, "keyup", app.jsHandleKeyUp)
 }
 
-func (app *WasmClient) jsHandleMouseClickVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleMouseWheel(this js.Value, args []js.Value) interface{} {
+	evt := args[0]
+	evt.Call("stopPropagation")
+	// evt.Call("preventDefault")
+
+	deltaMode := evt.Get("deltaMode").Int()
+	// deltaX deltaY deltaZ
+	deltaX := evt.Get("deltaX").Int()
+	deltaY := evt.Get("deltaY").Int()
+	deltaZ := evt.Get("deltaZ").Int()
+
+	jslog.Infof("mode %v x %v y %v z %v", deltaMode, deltaX, deltaY, deltaZ)
+	switch deltaMode {
+	case 0: // pixels
+	case 1: // lines
+	case 2: // ripagesght
+	}
+	return nil
+}
+
+func (app *WasmClient) jsHandleMouseClick(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	evt.Call("stopPropagation")
 	evt.Call("preventDefault")
@@ -203,7 +224,7 @@ func (app *WasmClient) tryEnterPortal(x, y int) {
 	}
 }
 
-func (app *WasmClient) jsHandleMouseDownVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleMouseDown(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	// Never call,  relate focus , prevent key event listen
 	// evt.Call("stopPropagation")
@@ -236,7 +257,7 @@ func (app *WasmClient) actByMouseRightDown() {
 	}
 }
 
-func (app *WasmClient) jsHandleMouseUpVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleMouseUp(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	evt.Call("stopPropagation")
 	evt.Call("preventDefault")
@@ -249,7 +270,7 @@ func (app *WasmClient) jsHandleContextMenu(this js.Value, args []js.Value) inter
 	return nil
 }
 
-func (app *WasmClient) jsHandleMouseMoveVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleMouseMove(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	evt.Call("stopPropagation")
 	evt.Call("preventDefault")
@@ -293,7 +314,7 @@ func (app *WasmClient) actByMouseMove() {
 
 var jsInputTarget = js.Global().Get("body")
 
-func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleKeyDown(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
@@ -307,7 +328,7 @@ func (app *WasmClient) jsHandleKeyDownVP(this js.Value, args []js.Value) interfa
 	}
 	return nil
 }
-func (app *WasmClient) jsHandleKeyPressVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleKeyPress(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
@@ -353,7 +374,7 @@ func (app *WasmClient) actByKeyPressMap(kcode string) bool {
 	return false
 }
 
-func (app *WasmClient) jsHandleKeyUpVP(this js.Value, args []js.Value) interface{} {
+func (app *WasmClient) jsHandleKeyUp(this js.Value, args []js.Value) interface{} {
 	evt := args[0]
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
