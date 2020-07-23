@@ -416,8 +416,10 @@ func (vp *GameScene) processNotiObjectList(
 			vp.scene.Call("remove", ao3d.Name.Mesh)
 			gPoolLabel3D.Put(ao3d.Name)
 			ao3d.Name = nil
-			vp.scene.Call("remove", ao3d.Chat.Mesh)
-			ao3d.Chat = nil
+			if ao3d.Chat != nil {
+				vp.scene.Call("remove", ao3d.Chat.Mesh)
+				ao3d.Chat = nil
+			}
 		}
 	}
 

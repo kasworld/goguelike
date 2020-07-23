@@ -15,8 +15,6 @@ import (
 	"fmt"
 	"sync"
 	"syscall/js"
-
-	"github.com/kasworld/gowasmlib/jslog"
 )
 
 var gPoolLabel3D = NewPoolLabel3D()
@@ -85,8 +83,6 @@ func NewLabel3D(str string) *Label3D {
 	ctx.Set("font", font)
 	textWidth := ctx.Call("measureText", str).Get("width").Int()
 	canvasWidth := NextPowerOf2(textWidth)
-	jslog.Infof("text %v textwidth %v canvaswidth %v",
-		str, textWidth, canvasWidth)
 	cnv.Set("width", canvasWidth)
 	cnv.Set("height", height)
 
