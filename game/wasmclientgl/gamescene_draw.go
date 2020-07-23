@@ -354,6 +354,30 @@ func (vp *GameScene) processNotiObjectList(
 		ao3d.SetFieldPosition(fx, fy)
 		addAOuuid[ao.UUID] = true
 		ao3d.Name.SetFieldPositionDown(fx, fy, DstCellSize+1)
+		if len(ao.Chat) == 0 {
+			if ao3d.Chat != nil {
+				vp.scene.Call("remove", ao3d.Chat.Mesh)
+				ao3d.Chat.Dispose()
+				ao3d.Chat = nil
+			}
+		} else {
+			if ao3d.Chat == nil {
+				// add new chat
+				ao3d.Chat = NewLabel3D(ao.Chat)
+				vp.scene.Call("add", ao3d.Chat.Mesh)
+			} else {
+				if ao.Chat != ao3d.Chat.Str {
+					// remove old chat , add new chat
+					vp.scene.Call("remove", ao3d.Chat.Mesh)
+					ao3d.Chat.Dispose()
+					ao3d.Chat = NewLabel3D(ao.Chat)
+					vp.scene.Call("add", ao3d.Chat.Mesh)
+				}
+			}
+		}
+		if ao3d.Chat != nil {
+			ao3d.Chat.SetFieldPositionUp(fx, fy, DstCellSize+1)
+		}
 
 		if ao.UUID == playerUUID { // player ao
 			vp.HP.SetFieldPositionUp(fx, fy, 0, -8, DstCellSize+1)
