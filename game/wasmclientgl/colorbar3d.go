@@ -89,21 +89,12 @@ func NewColorBar3D(colorstr string) *ColorBar3D {
 	}
 }
 
-func (aog *ColorBar3D) SetFieldPositionUp(fx, fy int, shX, shY, shZ float64) {
+func (aog *ColorBar3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
 		shX+float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
 		-shY-float64(fy)*DstCellSize+aog.GeoInfo.Len[1]/2,
-		shZ+aog.GeoInfo.Len[2]/2+1,
-	)
-}
-
-func (aog *ColorBar3D) SetFieldPositionDown(fx, fy int, shX, shY, shZ float64) {
-	SetPosition(
-		aog.Mesh,
-		shX+float64(fx)*DstCellSize+DstCellSize/2, //+aog.GeoInfo.Len[0]/2,
-		-shY-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-DstCellSize,
-		shZ+aog.GeoInfo.Len[2]/2+1,
+		shZ+aog.GeoInfo.Len[2]/2,
 	)
 }
 

@@ -318,9 +318,9 @@ func (vp *GameScene) processNotiObjectList(
 		}
 
 		if ao.UUID == playerUUID { // player ao
-			vp.HP.SetFieldPositionUp(fx, fy, 0, -8, DstCellSize+1)
-			vp.AP.SetFieldPositionUp(fx, fy, 0, -4, DstCellSize+3)
-			vp.SP.SetFieldPositionUp(fx, fy, 0, -0, DstCellSize+1)
+			vp.HP.SetFieldPosition(fx, fy, 0, -8, DstCellSize+3)
+			vp.AP.SetFieldPosition(fx, fy, 0, -4, DstCellSize+5)
+			vp.SP.SetFieldPosition(fx, fy, 0, -0, DstCellSize+2)
 			aop := olNoti.ActiveObj
 			vp.HP.SetWH(aop.HP, aop.HPMax)
 			vp.SP.SetWH(aop.SP, aop.SPMax)
