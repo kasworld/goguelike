@@ -149,7 +149,13 @@ func (app *WasmClient) jsHandleMouseWheel(this js.Value, args []js.Value) interf
 	switch deltaMode {
 	case 0: // pixels
 	case 1: // lines
+		deltaX *= DstCellSize
+		deltaY *= DstCellSize
+		deltaZ *= DstCellSize
 	case 2: // pages
+		deltaX *= HelperSize
+		deltaY *= HelperSize
+		deltaZ *= HelperSize
 	}
 	return nil
 }
