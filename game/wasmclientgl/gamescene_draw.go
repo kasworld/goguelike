@@ -22,6 +22,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
+// playview frame update
 func (vp *GameScene) UpdatePlayViewFrame(
 	cf *clientfloor.ClientFloor,
 	frameProgress float64,
@@ -83,6 +84,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
+// floorview frame update
 func (vp *GameScene) UpdateFloorViewFrame(
 	cf *clientfloor.ClientFloor,
 	vpx, vpy int,
@@ -478,10 +480,10 @@ func (vp *GameScene) processNotiObjectList(
 }
 
 func (vp *GameScene) ClearMovePath() {
-	for pos, ar3d := range vp.jsSceneArrows {
+	for pos, ar3d := range vp.jsSceneMovePathArrows {
 		vp.scene.Call("remove", ar3d.Mesh)
 		gPoolArrow3D.Put(ar3d)
-		delete(vp.jsSceneArrows, pos)
+		delete(vp.jsSceneMovePathArrows, pos)
 	}
 }
 
@@ -494,10 +496,10 @@ func (vp *GameScene) makeMovePathInView(
 	if len(path2dst) > 0 {
 		w, h := cf.XWrapper.GetWidth(), cf.YWrapper.GetWidth()
 		for i, pos := range path2dst[:len(path2dst)-1] {
-			ar3d, exist := vp.jsSceneArrows[pos]
+			ar3d, exist := vp.jsSceneMovePathArrows[pos]
 			if !exist {
 				ar3d = gPoolArrow3D.Get()
-				vp.jsSceneArrows[pos] = ar3d
+				vp.jsSceneMovePathArrows[pos] = ar3d
 				vp.scene.Call("add", ar3d.Mesh)
 			}
 			addAr3Duuid[pos] = true
@@ -517,10 +519,10 @@ func (vp *GameScene) makeMovePathInView(
 		}
 		// add last
 		pos := path2dst[len(path2dst)-1]
-		ar3d, exist := vp.jsSceneArrows[pos]
+		ar3d, exist := vp.jsSceneMovePathArrows[pos]
 		if !exist {
 			ar3d = gPoolArrow3D.Get()
-			vp.jsSceneArrows[pos] = ar3d
+			vp.jsSceneMovePathArrows[pos] = ar3d
 			vp.scene.Call("add", ar3d.Mesh)
 		}
 		addAr3Duuid[pos] = true
@@ -531,11 +533,11 @@ func (vp *GameScene) makeMovePathInView(
 		ar3d.SetFieldPosition(x, y, tl)
 	}
 
-	for pos, ar3d := range vp.jsSceneArrows {
+	for pos, ar3d := range vp.jsSceneMovePathArrows {
 		if !addAr3Duuid[pos] {
 			vp.scene.Call("remove", ar3d.Mesh)
 			gPoolArrow3D.Put(ar3d)
-			delete(vp.jsSceneArrows, pos)
+			delete(vp.jsSceneMovePathArrows, pos)
 		}
 	}
 }
