@@ -156,6 +156,9 @@ func (vp *GameScene) moveCameraLight(
 	cameraY := float64(-vpy*DstCellSize + scrollDy)
 	cameraR := float64(HelperSize)
 
+	carmeraDy := float64(
+		(2-gameOptions.GetByIDBase("Zoom").State)*gameOptions.GetByIDBase("Angle").State) * DstCellSize
+
 	cameraRad := []float64{
 		math.Pi / 2,
 		math.Pi / 3,
@@ -183,11 +186,15 @@ func (vp *GameScene) moveCameraLight(
 	)
 
 	SetPosition(vp.camera,
-		cameraX, cameraY-cameraR*math.Cos(cameraRad), cameraR*math.Sin(cameraRad),
+		cameraX,
+		cameraY-cameraR*math.Cos(cameraRad)-carmeraDy,
+		cameraR*math.Sin(cameraRad),
 	)
 	vp.camera.Call("lookAt",
 		ThreeJsNew("Vector3",
-			cameraX, cameraY, 0,
+			cameraX,
+			cameraY-carmeraDy,
+			0,
 		),
 	)
 }
