@@ -148,8 +148,8 @@ func (vp *GameScene) UpdateFrame(
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
-// add tiles in gXYLenListView
-func (vp *GameScene) makeClientTileInView(
+// add tiles in gXYLenListView for playview
+func (vp *GameScene) makeClientTile4PlayView(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data) {
 	vpx, vpy := taNoti.VPX, taNoti.VPY
@@ -205,6 +205,11 @@ func (vp *GameScene) makeClientTileInView(
 		vp.jsTile3DDarkMesh[i].Set("count", vp.jsTile3DDarkCount[i])
 		vp.jsTile3DDarkMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
 	}
+}
+
+// make floor tiles for floorview
+func (vp *GameScene) makeClientTile4FloorView(
+	cf *clientfloor.ClientFloor, vpx, vpy int) {
 }
 
 // add fo to clientview by vp.FieldObjPosMan

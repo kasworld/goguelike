@@ -479,7 +479,7 @@ func (app *WasmClient) actByControlMode() {
 		return
 	}
 
-	switch gameOptions.GetByIDBase("Viewport").State {
+	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
 		if app.moveByUserInput() {
 			return

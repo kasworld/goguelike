@@ -179,7 +179,7 @@ func (app *WasmClient) jsHandleMouseClick(this js.Value, args []js.Value) interf
 }
 
 func (app *WasmClient) makePathToMouseClick() {
-	switch gameOptions.GetByIDBase("Viewport").State {
+	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
 		cf := app.currentFloor()
 		if cf == nil {
@@ -245,7 +245,7 @@ func (app *WasmClient) jsHandleMouseDown(this js.Value, args []js.Value) interfa
 }
 func (app *WasmClient) actByMouseRightDown() {
 	// follow mouse mode
-	switch gameOptions.GetByIDBase("Viewport").State {
+	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
 		autoPlayButton := autoActs.GetByIDBase("AutoPlay")
 		if autoPlayButton.State == 0 {
@@ -301,7 +301,7 @@ func (app *WasmClient) actByMouseMove() {
 		app.vp.mouseCursorFx-plx,
 		app.vp.mouseCursorFy-ply,
 	)
-	switch gameOptions.GetByIDBase("Viewport").State {
+	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
 		if app.ClientColtrolMode == clientcontroltype.FollowMouse {
 			if oldDir != app.MouseDir {
@@ -351,7 +351,7 @@ func (app *WasmClient) actByKeyPressMap(kcode string) bool {
 	dx, dy := app.KeyboardPressedMap.SumMoveDxDy(Key2Dir)
 	app.KeyDir = way9type.RemoteDxDy2Way9(dx, dy)
 
-	switch gameOptions.GetByIDBase("Viewport").State {
+	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
 		if app.KeyDir != way9type.Center {
 			app.ClientColtrolMode = clientcontroltype.Keyboard

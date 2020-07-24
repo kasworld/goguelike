@@ -127,7 +127,7 @@ func (app *WasmClient) reset2Default() {
 	btn.State = 1
 	btn.UpdateButtonText()
 
-	btn = gameOptions.GetByIDBase("Viewport")
+	btn = gameOptions.GetByIDBase("ViewMode")
 	btn.State = 0
 	btn.UpdateButtonText()
 

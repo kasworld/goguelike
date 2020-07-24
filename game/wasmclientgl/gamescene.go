@@ -165,7 +165,7 @@ func (vp *GameScene) UpdateFromViewportTile(
 			cf.FloorInfo.UUID, taNoti.FloorUUID)
 
 	}
-	vp.makeClientTileInView(cf, taNoti)
+	vp.makeClientTile4PlayView(cf, taNoti)
 	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
 	vp.makeMovePathInView(cf, taNoti.VPX, taNoti.VPY, path2dst)
 	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)

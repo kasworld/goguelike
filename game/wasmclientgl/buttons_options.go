@@ -32,13 +32,12 @@ var _gameopt = htmlbutton.NewButtonGroup("Options",
 		htmlbutton.New("e", "RightInfo", []string{
 			"RightInfoOff", "Message", "DebugInfo", "InvenList", "FieldObjList", "FloorList"},
 			"Rotate right info", cmdRotateRightInfo, 1),
-		htmlbutton.New("r", "Viewport", []string{"PlayVP", "FloorVP"},
+		htmlbutton.New("r", "ViewMode", []string{"PlayVP", "FloorVP"},
 			"play view / floor view", cmdToggleVPFloorPlay, 0),
 		htmlbutton.New("t", "Zoom", []string{"Zoom0", "Zoom1", "Zoom2"},
 			"Zoom viewport", cmdToggleZoom, 0),
 		htmlbutton.New("y", "Angle", []string{"Angle0", "Angle1", "Angle2"},
 			"Angle viewport", cmdToggleAngle, 0),
-
 		htmlbutton.New("u", "Sound", []string{"SoundOn", "SoundOff"},
 			"Sound on/off", cmdToggleSound, 1),
 	})
