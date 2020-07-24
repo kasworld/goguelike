@@ -153,26 +153,26 @@ func (vp *GameScene) makeClientTile4PlayView(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data) {
 	vpx, vpy := taNoti.VPX, taNoti.VPY
-	for i := 0; i < tile.Tile_Count; i++ {
-		vp.jsTile3DCount[i] = 0     // clear use count
-		vp.jsTile3DDarkCount[i] = 0 // clear use count
+	for ti := 0; ti < tile.Tile_Count; ti++ {
+		vp.jsTile3DCount[ti] = 0     // clear use count
+		vp.jsTile3DDarkCount[ti] = 0 // clear use count
 	}
 	matrix := ThreeJsNew("Matrix4")
-	for i, v := range gXYLenListView {
+	for vpi, v := range gXYLenListView {
 		fx := v.X + vpx
 		fy := v.Y + vpy
 		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		dark := false
-		if i >= len(taNoti.VPTiles) || taNoti.VPTiles[i] == 0 {
+		if vpi >= len(taNoti.VPTiles) || taNoti.VPTiles[vpi] == 0 {
 			dark = true
 		}
-		for i := 0; i < tile.Tile_Count; i++ {
-			if !newTile.TestByTile(tile.Tile(i)) {
+		for ti := 0; ti < tile.Tile_Count; ti++ {
+			if !newTile.TestByTile(tile.Tile(ti)) {
 				continue
 			}
 			if dark {
-				geolen := gTile3DDark[i].GeoInfo.Len
-				sh := gTile3DDark[i].Shift
+				geolen := gTile3DDark[ti].GeoInfo.Len
+				sh := gTile3DDark[ti].Shift
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
 						sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
@@ -180,12 +180,12 @@ func (vp *GameScene) makeClientTile4PlayView(
 						sh[2]+geolen[2]/2,
 					),
 				)
-				vp.jsTile3DDarkMesh[i].Call("setMatrixAt",
-					vp.jsTile3DDarkCount[i], matrix)
-				vp.jsTile3DDarkCount[i]++
+				vp.jsTile3DDarkMesh[ti].Call("setMatrixAt",
+					vp.jsTile3DDarkCount[ti], matrix)
+				vp.jsTile3DDarkCount[ti]++
 			} else {
-				geolen := gTile3D[i].GeoInfo.Len
-				sh := gTile3D[i].Shift
+				geolen := gTile3D[ti].GeoInfo.Len
+				sh := gTile3D[ti].Shift
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
 						sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
@@ -193,23 +193,56 @@ func (vp *GameScene) makeClientTile4PlayView(
 						sh[2]+geolen[2]/2,
 					),
 				)
-				vp.jsTile3DMesh[i].Call("setMatrixAt",
-					vp.jsTile3DCount[i], matrix)
-				vp.jsTile3DCount[i]++
+				vp.jsTile3DMesh[ti].Call("setMatrixAt",
+					vp.jsTile3DCount[ti], matrix)
+				vp.jsTile3DCount[ti]++
 			}
 		}
 	}
-	for i := 0; i < tile.Tile_Count; i++ {
-		vp.jsTile3DMesh[i].Set("count", vp.jsTile3DCount[i])
-		vp.jsTile3DMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
-		vp.jsTile3DDarkMesh[i].Set("count", vp.jsTile3DDarkCount[i])
-		vp.jsTile3DDarkMesh[i].Get("instanceMatrix").Set("needsUpdate", true)
+	for ti := 0; ti < tile.Tile_Count; ti++ {
+		vp.jsTile3DMesh[ti].Set("count", vp.jsTile3DCount[ti])
+		vp.jsTile3DMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
+		vp.jsTile3DDarkMesh[ti].Set("count", vp.jsTile3DDarkCount[ti])
+		vp.jsTile3DDarkMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
 	}
 }
 
 // make floor tiles for floorview
 func (vp *GameScene) makeClientTile4FloorView(
 	cf *clientfloor.ClientFloor, vpx, vpy int) {
+	for i := 0; i < tile.Tile_Count; i++ {
+		vp.jsTile3DCount[i] = 0     // clear use count
+		vp.jsTile3DDarkCount[i] = 0 // clear use count
+	}
+	matrix := ThreeJsNew("Matrix4")
+	for _, v := range gXYLenListView {
+		fx := v.X + vpx
+		fy := v.Y + vpy
+		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		for ti := 0; ti < tile.Tile_Count; ti++ {
+			if !newTile.TestByTile(tile.Tile(ti)) {
+				continue
+			}
+			geolen := gTile3D[ti].GeoInfo.Len
+			sh := gTile3D[ti].Shift
+			matrix.Call("setPosition",
+				ThreeJsNew("Vector3",
+					sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
+					-sh[1]+-float64(fy)*DstCellSize-geolen[1]/2,
+					sh[2]+geolen[2]/2,
+				),
+			)
+			vp.jsTile3DMesh[ti].Call("setMatrixAt",
+				vp.jsTile3DCount[ti], matrix)
+			vp.jsTile3DCount[ti]++
+		}
+	}
+	for ti := 0; ti < tile.Tile_Count; ti++ {
+		vp.jsTile3DMesh[ti].Set("count", vp.jsTile3DCount[ti])
+		vp.jsTile3DMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
+		vp.jsTile3DDarkMesh[ti].Set("count", vp.jsTile3DDarkCount[ti])
+		vp.jsTile3DDarkMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
+	}
 }
 
 // add fo to clientview by vp.FieldObjPosMan
