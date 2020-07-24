@@ -5,6 +5,8 @@ package terrain
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/tile"
+
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
@@ -59,7 +61,8 @@ func (tr *Terrain) canPlaceFieldObjAt(x, y int) bool {
 			return false
 		}
 	}
-	return tr.tileArea[x][y].CharPlaceable()
+	tl := tr.tileArea[x][y]
+	return tl.CharPlaceable() && !tl.TestByTile(tile.Door)
 }
 
 func (tr *Terrain) addPortal(portalID string, dstPortalID string,
