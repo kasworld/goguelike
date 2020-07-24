@@ -153,7 +153,7 @@ func (vp *GameScene) Zoom(zoom int) {
 }
 
 // viewport x,y changed == need scroll
-func (vp *GameScene) UpdateFromViewportTile(
+func (vp *GameScene) UpdateByViewportTile(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data,
 	olNoti *c2t_obj.NotiObjectList_data,

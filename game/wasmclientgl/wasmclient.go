@@ -305,12 +305,20 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 	envBias := app.GetEnvBias()
 	cf := app.currentFloor()
 	if cf != nil {
-		app.vp.UpdatePlayViewFrame(
-			cf, frameProgress, scrollDir,
-			app.taNotiData,
-			app.olNotiData,
-			app.lastOLNotiData,
-			envBias)
+		switch gameOptions.GetByIDBase("ViewMode").State {
+		case 0: // play view
+			app.vp.UpdatePlayViewFrame(
+				cf, frameProgress, scrollDir,
+				app.taNotiData,
+				app.olNotiData,
+				app.lastOLNotiData,
+				envBias)
+		case 1: // floor view
+			app.vp.UpdateFloorViewFrame(cf,
+				app.floorVPPosX, app.floorVPPosY,
+				envBias,
+			)
+		}
 	}
 	return nil
 }

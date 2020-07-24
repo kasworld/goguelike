@@ -83,6 +83,24 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
+func (vp *GameScene) UpdateFloorViewFrame(
+	cf *clientfloor.ClientFloor,
+	vpx, vpy int,
+	envBias bias.Bias,
+) {
+
+	vp.makeClientTile4FloorView(cf, vpx, vpy)
+	vp.updateFieldObjInView(cf, vpx, vpy)
+	vp.animateFieldObj()
+	vp.animateTile(envBias)
+	vp.moveCameraLight(
+		cf, vpx, vpy,
+		0, 0,
+		envBias,
+	)
+	vp.renderer.Call("render", vp.scene, vp.camera)
+}
+
 // fieldobj animate
 // common to playview, floorview
 func (vp *GameScene) animateFieldObj() {
