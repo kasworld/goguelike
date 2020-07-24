@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-func (vp *GameScene) UpdateFrame(
+func (vp *GameScene) UpdatePlayViewFrame(
 	cf *clientfloor.ClientFloor,
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
@@ -32,15 +32,6 @@ func (vp *GameScene) UpdateFrame(
 	envBias bias.Bias,
 ) {
 	playerUUID := gInitData.AccountInfo.ActiveObjUUID
-	sx, sy := CalcShiftDxDy(frameProgress)
-	scrollDx := -scrollDir.Dx() * sx
-	scrollDy := scrollDir.Dy() * sy
-
-	// fieldobj animate
-	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
-	for _, fo := range vp.jsSceneFOs {
-		fo.RotateZ(rad)
-	}
 
 	// activeobj animate
 	for i, ao := range olNoti.ActiveObjList {
@@ -63,6 +54,47 @@ func (vp *GameScene) UpdateFrame(
 				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
 			}
 		}
+	}
+
+	vp.moveCameraLightTileAnimate(
+		cf, taNoti.VPX, taNoti.VPY,
+		frameProgress, scrollDir,
+		envBias,
+	)
+
+	fx, fy := vp.mouseCursorFx, vp.mouseCursorFy
+	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+	vp.cursor.SetFieldPosition(fx, fy, tl)
+
+	if scrollDir != way9type.Center {
+		fx, fy = taNoti.VPX, taNoti.VPY
+		tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		dx, dy := scrollDir.DxDy()
+		vp.moveArrow.ChangeTile(gClientTile.DirTiles[scrollDir])
+		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
+	} else {
+		vp.moveArrow.ClearTile()
+	}
+
+	vp.renderer.Call("render", vp.scene, vp.camera)
+}
+
+// common to playview, floorview
+func (vp *GameScene) moveCameraLightTileAnimate(
+	cf *clientfloor.ClientFloor,
+	vpx, vpy int,
+	frameProgress float64,
+	scrollDir way9type.Way9Type,
+	envBias bias.Bias,
+) {
+	sx, sy := CalcShiftDxDy(frameProgress)
+	scrollDx := -scrollDir.Dx() * sx
+	scrollDy := scrollDir.Dy() * sy
+
+	// fieldobj animate
+	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
+	for _, fo := range vp.jsSceneFOs {
+		fo.RotateZ(rad)
 	}
 
 	// tile scroll list of animate
@@ -92,8 +124,8 @@ func (vp *GameScene) UpdateFrame(
 	}
 
 	// move camera, light
-	cameraX := float64(taNoti.VPX*DstCellSize + scrollDx)
-	cameraY := float64(-taNoti.VPY*DstCellSize + scrollDy)
+	cameraX := float64(vpx*DstCellSize + scrollDx)
+	cameraY := float64(-vpy*DstCellSize + scrollDy)
 	cameraR := float64(HelperSize)
 
 	cameraRad := []float64{
@@ -130,22 +162,6 @@ func (vp *GameScene) UpdateFrame(
 			cameraX, cameraY, 0,
 		),
 	)
-
-	fx, fy := vp.mouseCursorFx, vp.mouseCursorFy
-	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-	vp.cursor.SetFieldPosition(fx, fy, tl)
-
-	if scrollDir != way9type.Center {
-		fx, fy = taNoti.VPX, taNoti.VPY
-		tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		dx, dy := scrollDir.DxDy()
-		vp.moveArrow.ChangeTile(gClientTile.DirTiles[scrollDir])
-		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
-	} else {
-		vp.moveArrow.ClearTile()
-	}
-
-	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
 // add tiles in gXYLenListView for playview

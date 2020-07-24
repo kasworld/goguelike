@@ -305,7 +305,7 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 	envBias := app.GetEnvBias()
 	cf := app.currentFloor()
 	if cf != nil {
-		app.vp.UpdateFrame(
+		app.vp.UpdatePlayViewFrame(
 			cf, frameProgress, scrollDir,
 			app.taNotiData,
 			app.olNotiData,
