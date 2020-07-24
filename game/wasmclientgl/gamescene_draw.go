@@ -56,16 +56,20 @@ func (vp *GameScene) UpdatePlayViewFrame(
 		}
 	}
 
-	vp.moveCameraLightTileAnimate(
+	vp.animateFieldObj()
+	vp.animateTile(envBias)
+	vp.moveCameraLight(
 		cf, taNoti.VPX, taNoti.VPY,
 		frameProgress, scrollDir,
 		envBias,
 	)
 
+	// move cursor
 	fx, fy := vp.mouseCursorFx, vp.mouseCursorFy
 	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 	vp.cursor.SetFieldPosition(fx, fy, tl)
 
+	// update move arrow
 	if scrollDir != way9type.Center {
 		fx, fy = taNoti.VPX, taNoti.VPY
 		tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
@@ -79,25 +83,18 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
+// fieldobj animate
 // common to playview, floorview
-func (vp *GameScene) moveCameraLightTileAnimate(
-	cf *clientfloor.ClientFloor,
-	vpx, vpy int,
-	frameProgress float64,
-	scrollDir way9type.Way9Type,
-	envBias bias.Bias,
-) {
-	sx, sy := CalcShiftDxDy(frameProgress)
-	scrollDx := -scrollDir.Dx() * sx
-	scrollDy := scrollDir.Dy() * sy
-
-	// fieldobj animate
+func (vp *GameScene) animateFieldObj() {
 	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
 	for _, fo := range vp.jsSceneFOs {
 		fo.RotateZ(rad)
 	}
+}
 
-	// tile scroll list of animate
+// tile scroll list of animate
+// common to playview, floorview
+func (vp *GameScene) animateTile(envBias bias.Bias) {
 	for _, i := range []tile.Tile{
 		tile.Swamp,
 		tile.Soil,
@@ -122,6 +119,19 @@ func (vp *GameScene) moveCameraLightTileAnimate(
 		gTile3D[i].DrawTexture(shX, shY)
 		gTile3DDark[i].DrawTexture(shX, shY)
 	}
+}
+
+// common to playview, floorview
+func (vp *GameScene) moveCameraLight(
+	cf *clientfloor.ClientFloor,
+	vpx, vpy int,
+	frameProgress float64,
+	scrollDir way9type.Way9Type,
+	envBias bias.Bias,
+) {
+	sx, sy := CalcShiftDxDy(frameProgress)
+	scrollDx := -scrollDir.Dx() * sx
+	scrollDy := scrollDir.Dy() * sy
 
 	// move camera, light
 	cameraX := float64(vpx*DstCellSize + scrollDx)
