@@ -97,9 +97,10 @@ func NewGameScene() *GameScene {
 	vp.scene.Call("add", vp.AP.Mesh)
 	vp.AP.ScaleY(2)
 
-	vp.scene.Set("fog", ThreeJsNew("FogExp2", 0x808080, 0.00025*2))
-	vp.scene.Set("background", ThreeJsNew("Color", 0x808080))
-	lightAm := ThreeJsNew("AmbientLight", 0x000000, 0x808080)
+	fogco := 0x404040
+	vp.scene.Set("fog", ThreeJsNew("FogExp2", fogco, 0.00025*1.8))
+	vp.scene.Set("background", ThreeJsNew("Color", fogco))
+	lightAm := ThreeJsNew("AmbientLight", 0x000000, fogco)
 	vp.scene.Call("add", lightAm)
 
 	hemisphereLight := ThreeJsNew("HemisphereLight", 0xffffff, 0x000000)
