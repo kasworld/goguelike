@@ -88,10 +88,10 @@ func NewArrow3D() *Arrow3D {
 
 func MakeArrowGeo() js.Value {
 	matrix := ThreeJsNew("Matrix4")
-	geoLine := ThreeJsNew("CylinderGeometry", 1, 3, DstCellSize)
-	geoCone := ThreeJsNew("ConeGeometry", DstCellSize/4, DstCellSize/2)
+	geoLine := ThreeJsNew("CylinderGeometry", 1, 3, DstCellSize-2)
+	geoCone := ThreeJsNew("ConeGeometry", DstCellSize/4, DstCellSize/2-1)
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, DstCellSize/2, 0,
+		0, DstCellSize/2-1, 0,
 	))
 	geoLine.Call("merge", geoCone, matrix)
 	geoCone.Call("dispose")
