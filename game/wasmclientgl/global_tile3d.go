@@ -66,10 +66,6 @@ func preMakeTileMatGeo() {
 	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 4)
 	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 4).MakeSrcDark()
 
-	tlt = tile.Wall
-	gTile3D[tlt] = NewTile3D_Wall(2)
-	gTile3DDark[tlt] = NewTile3D_Wall(2).MakeSrcDark()
-
 	tlt = tile.Grass
 	gTile3D[tlt] = NewTile3D_Grass(2)
 	gTile3DDark[tlt] = NewTile3D_Grass(2).MakeSrcDark()
@@ -78,9 +74,13 @@ func preMakeTileMatGeo() {
 	gTile3D[tlt] = NewTile3D_Tree(2)
 	gTile3DDark[tlt] = NewTile3D_Tree(2).MakeSrcDark()
 
+	tlt = tile.Wall
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 2)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 2).MakeSrcDark()
+
 	tlt = tile.Window
-	gTile3D[tlt] = NewTile3D_Window(2)
-	gTile3DDark[tlt] = NewTile3D_Window(2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 2)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 2).MakeSrcDark()
 
 	tlt = tile.Door
 	gTile3D[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0], 2)

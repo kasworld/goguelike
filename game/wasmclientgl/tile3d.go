@@ -147,18 +147,7 @@ func MakeTreeGeo() js.Value {
 	return geo
 }
 
-func NewTile3D_Wall(shiftZ float64) *Tile3D {
-	tl := tile.Stone
-	t3d := newTile3D().initSrc(tl)
-	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize)
-	t3d.Shift = [3]float64{0, 0, shiftZ}
-	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
-	t3d.DrawTexture(0, 0)
-	return t3d
-}
-
-func NewTile3D_Window(shiftZ float64) *Tile3D {
-	tl := tile.Window
+func NewTile3D_BoxTexture(tl tile.Tile, shiftZ float64) *Tile3D {
 	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize)
 	t3d.Shift = [3]float64{0, 0, shiftZ}
