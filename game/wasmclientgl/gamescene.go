@@ -89,7 +89,6 @@ func NewGameScene() *GameScene {
 	vp.scene.Call("add", vp.cursor.Mesh)
 
 	vp.moveArrow = NewArrow3D()
-	vp.moveArrow.ChangeTile(gClientTile.Dir2Tiles[0])
 	vp.scene.Call("add", vp.moveArrow.Mesh)
 
 	vp.scene.Call("add", vp.HP.Mesh)

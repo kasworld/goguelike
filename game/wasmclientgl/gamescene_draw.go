@@ -72,13 +72,14 @@ func (vp *GameScene) UpdatePlayViewFrame(
 
 	// update move arrow
 	if scrollDir != way9type.Center {
+		vp.moveArrow.Visible(true)
 		fx, fy = taNoti.VPX, taNoti.VPY
-		tl = cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		vp.moveArrow.SetDir(scrollDir)
 		dx, dy := scrollDir.DxDy()
-		vp.moveArrow.ChangeTile(gClientTile.DirTiles[scrollDir])
+		tl = cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
 		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
 	} else {
-		vp.moveArrow.ClearTile()
+		vp.moveArrow.Visible(false)
 	}
 
 	vp.renderer.Call("render", vp.scene, vp.camera)
@@ -511,26 +512,25 @@ func (vp *GameScene) makeMovePathInView(
 				w, h,
 			)
 			diri := way9type.RemoteDxDy2Way9(dx, dy)
-			ti := gClientTile.Dir2Tiles[diri]
-			ar3d.ChangeTile(ti)
+			ar3d.SetDir(diri)
 			tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
 			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
 			ar3d.SetFieldPosition(x, y, tl)
 		}
 		// add last
-		pos := path2dst[len(path2dst)-1]
-		ar3d, exist := vp.jsSceneMovePathArrows[pos]
-		if !exist {
-			ar3d = gPoolArrow3D.Get()
-			vp.jsSceneMovePathArrows[pos] = ar3d
-			vp.scene.Call("add", ar3d.Mesh)
-		}
-		addAr3Duuid[pos] = true
-		ti := gClientTile.Dir2Tiles[way9type.Center]
-		ar3d.ChangeTile(ti)
-		tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
-		x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
-		ar3d.SetFieldPosition(x, y, tl)
+		// pos := path2dst[len(path2dst)-1]
+		// ar3d, exist := vp.jsSceneMovePathArrows[pos]
+		// if !exist {
+		// 	ar3d = gPoolArrow3D.Get()
+		// 	vp.jsSceneMovePathArrows[pos] = ar3d
+		// 	vp.scene.Call("add", ar3d.Mesh)
+		// }
+		// addAr3Duuid[pos] = true
+		// ti := gClientTile.Dir2Tiles[way9type.Center]
+		// ar3d.SetDir(diri)
+		// tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
+		// x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
+		// ar3d.SetFieldPosition(x, y, tl)
 	}
 
 	for pos, ar3d := range vp.jsSceneMovePathArrows {

@@ -13,11 +13,13 @@ package wasmclientgl
 
 import (
 	"fmt"
+	"math"
 	"sync"
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/way9type"
+
 	"github.com/kasworld/goguelike/enum/tile_flag"
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
 var gPoolArrow3D = NewPoolArrow3D(PoolSizeArrow3D)
@@ -65,48 +67,41 @@ func (p *PoolArrow3D) Put(pb *Arrow3D) {
 }
 
 type Arrow3D struct {
-	Cnv     js.Value
-	Ctx     js.Value
-	Tex     js.Value
 	GeoInfo GeoInfo
 	Mesh    js.Value
 }
 
 func NewArrow3D() *Arrow3D {
-	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-	ctx := cnv.Call("getContext", "2d")
-	ctx.Set("imageSmoothingEnabled", false)
-	cnv.Set("width", DstCellSize)
-	cnv.Set("height", DstCellSize)
-	tex := ThreeJsNew("CanvasTexture", cnv)
+	colorstr := "#ffffff"
 	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
-			"map": tex,
+			"color": colorstr,
 		},
 	)
 	mat.Set("transparent", true)
 
-	geo := ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	geo := MakeArrowGeo()
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &Arrow3D{
-		Cnv:     cnv,
-		Ctx:     ctx,
-		Tex:     tex,
 		GeoInfo: GetGeoInfo(geo),
 		Mesh:    mesh,
 	}
 }
 
-func (aog *Arrow3D) ChangeTile(ti webtilegroup.TileInfo) {
-	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-	aog.Tex.Set("needsUpdate", true)
+func MakeArrowGeo() js.Value {
+	matrix := ThreeJsNew("Matrix4")
+	geoLine := ThreeJsNew("CylinderGeometry", 1, 3, DstCellSize)
+	geoCone := ThreeJsNew("ConeGeometry", DstCellSize/4, DstCellSize/2)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, DstCellSize/2, 0,
+	))
+	geoLine.Call("merge", geoCone, matrix)
+	geoCone.Call("dispose")
+	return geoLine
 }
-func (aog *Arrow3D) ClearTile() {
-	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	aog.Tex.Set("needsUpdate", true)
+
+func (aog *Arrow3D) Visible(b bool) {
+	aog.Mesh.Set("visible", b)
 }
 
 func (aog *Arrow3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
@@ -117,6 +112,10 @@ func (aog *Arrow3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
 		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2,
 		aog.GeoInfo.Len[2]/2+1+height,
 	)
+}
+
+func (aog *Arrow3D) SetDir(dir way9type.Way9Type) {
+	aog.RotateZ(-float64(dir-1) * math.Pi / 4)
 }
 
 func (aog *Arrow3D) RotateX(rad float64) {
@@ -133,11 +132,6 @@ func (aog *Arrow3D) Dispose() {
 	// mesh do not need dispose
 	aog.Mesh.Get("geometry").Call("dispose")
 	aog.Mesh.Get("material").Call("dispose")
-	aog.Tex.Call("dispose")
-
-	aog.Cnv = js.Undefined()
-	aog.Ctx = js.Undefined()
 	aog.Mesh = js.Undefined()
-	aog.Tex = js.Undefined()
 	// no need createElement canvas dom obj
 }
