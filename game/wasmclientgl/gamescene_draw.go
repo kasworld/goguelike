@@ -228,8 +228,8 @@ func (vp *GameScene) makeClientTile4PlayView(
 				sh := gTile3DDark[ti].Shift
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
-						sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
-						-sh[1]+-float64(fy)*DstCellSize-geolen[1]/2,
+						sh[0]+float64(fx)*DstCellSize+DstCellSize/2,
+						-sh[1]-float64(fy)*DstCellSize-DstCellSize/2,
 						sh[2]+geolen[2]/2,
 					),
 				)
@@ -241,8 +241,8 @@ func (vp *GameScene) makeClientTile4PlayView(
 				sh := gTile3D[ti].Shift
 				matrix.Call("setPosition",
 					ThreeJsNew("Vector3",
-						sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
-						-sh[1]+-float64(fy)*DstCellSize-geolen[1]/2,
+						sh[0]+float64(fx)*DstCellSize+DstCellSize/2,
+						-sh[1]-float64(fy)*DstCellSize-DstCellSize/2,
 						sh[2]+geolen[2]/2,
 					),
 				)
@@ -280,8 +280,8 @@ func (vp *GameScene) makeClientTile4FloorView(
 			sh := gTile3D[ti].Shift
 			matrix.Call("setPosition",
 				ThreeJsNew("Vector3",
-					sh[0]+float64(fx)*DstCellSize+geolen[0]/2,
-					-sh[1]+-float64(fy)*DstCellSize-geolen[1]/2,
+					sh[0]+float64(fx)*DstCellSize+DstCellSize/2,
+					-sh[1]-float64(fy)*DstCellSize-DstCellSize/2,
 					sh[2]+geolen[2]/2,
 				),
 			)
