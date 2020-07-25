@@ -18,8 +18,6 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/way9type"
-
-	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
 var gPoolArrow3D = NewPoolArrow3D(PoolSizeArrow3D)
@@ -104,13 +102,12 @@ func (aog *Arrow3D) Visible(b bool) {
 	aog.Mesh.Set("visible", b)
 }
 
-func (aog *Arrow3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
-	height := GetTile3DHeightByCache(tl)
+func (aog *Arrow3D) SetFieldPosition(fx, fy int) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2,
-		aog.GeoInfo.Len[2]/2+1+height,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
+		DstCellSize/2,
 	)
 }
 

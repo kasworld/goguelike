@@ -76,8 +76,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 		fx, fy = taNoti.VPX, taNoti.VPY
 		vp.moveArrow.SetDir(scrollDir)
 		dx, dy := scrollDir.DxDy()
-		tl = cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
-		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, tl)
+		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy)
 	} else {
 		vp.moveArrow.Visible(false)
 	}
@@ -513,9 +512,8 @@ func (vp *GameScene) makeMovePathInView(
 			)
 			diri := way9type.RemoteDxDy2Way9(dx, dy)
 			ar3d.SetDir(diri)
-			tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
 			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
-			ar3d.SetFieldPosition(x, y, tl)
+			ar3d.SetFieldPosition(x, y)
 		}
 		// add last
 		// pos := path2dst[len(path2dst)-1]
