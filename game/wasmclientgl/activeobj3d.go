@@ -108,8 +108,8 @@ func (aog *ActiveObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 func (aog *ActiveObj3D) SetFieldPosition(fx, fy int) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
 		aog.GeoInfo.Len[2]/2+2,
 	)
 }
