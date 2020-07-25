@@ -88,31 +88,39 @@ func makeRoguelikeFloor(floorCount, i, w, h int) []string {
 			i, roomCount/2),
 	}
 
-	for trapMade := 0; ; {
+	fl = append(fl, AddTeleportTrapOut("InRoom", floorCount, roomCount/2)...)
+	fl = append(fl, AddEffectTrap("InRoom", floorCount, roomCount/2)...)
+
+	return fl
+}
+
+// suffix "InRoom" or "Rand"
+func AddTeleportTrapOut(suffix string, floorCount int, trapCount int) []string {
+	fl := make([]string, 0)
+	for trapMade := 0; trapMade < trapCount; {
 		dstFloor := rnd.Intn(floorCount)
-		cmd := fmt.Sprintf("AddTrapTeleportsInRoom DstFloor=Floor%v count=%v message=ToFloor%v",
-			dstFloor, 1, dstFloor)
+		cmd := fmt.Sprintf("AddTrapTeleports%[1]v DstFloor=Floor%[2]v count=1 message=ToFloor%[2]v",
+			suffix, dstFloor)
 
 		fl = append(fl, cmd)
 		trapMade++
-		if trapMade > roomCount/2 {
-			break
-		}
 	}
+	return fl
+}
 
-	for trapMade := 0; ; {
+// suffix "InRoom" or "Rand"
+func AddEffectTrap(suffix string, floorCount int, trapCount int) []string {
+	fl := make([]string, 0)
+	for trapMade := 0; trapMade < trapCount; {
 		j := rnd.Intn(fieldobjacttype.FieldObjActType_Count)
 		ft := fieldobjacttype.FieldObjActType(j)
 		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {
 			continue
 		}
-		cmd := fmt.Sprintf("AddTrapsInRoom display=None acttype=%v count=1 message=%v",
-			ft, ft)
+		cmd := fmt.Sprintf("AddTraps%[1]v display=None acttype=%[2]v count=1 message=%[2]v",
+			suffix, ft)
 		fl = append(fl, cmd)
 		trapMade++
-		if trapMade > roomCount {
-			break
-		}
 	}
 	return fl
 }
