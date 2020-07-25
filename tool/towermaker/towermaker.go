@@ -46,83 +46,40 @@ var rnd = g2rand.New()
 
 func makeRogueTower(towerName string, floorCount int) {
 
-	tw := make(towerscript.TowerScript, 0)
-
-	for i := 0; i < floorCount; i++ {
+	floorList := make([]*FloorMake, floorCount)
+	for i := range floorList {
 		w := whList[rnd.Intn(len(whList))]
 		h := whList[rnd.Intn(len(whList))]
-		fl := makeRoguelikeFloor(floorCount, i, w, h)
-		tw = append(tw, fl)
+		roomCount := w * h / 512
+		if roomCount < 2 {
+			roomCount = 2
+		}
+		floorList[i] = NewFloorMake(
+			i,
+			fmt.Sprintf("Floor%v", i),
+			w, h,
+			roomCount/2, 0,
+			1.0,
+		)
 	}
 
+	for _, fm := range floorList {
+		roomCount := fm.W * fm.H / 512
+		fm.MakeRoguelike(floorList)
+		fm.AddRecycler("InRoom", roomCount/2)
+		fm.AddTeleportIn("InRoom", roomCount/2)
+		fm.AddTeleportTrapOut("InRoom", floorList, roomCount/2)
+		fm.AddEffectTrap("InRoom", roomCount/2)
+	}
+
+	tw := make(towerscript.TowerScript, 0)
+	for i := 0; i < floorCount; i++ {
+		tw = append(tw, floorList[i].Script)
+	}
 	err := tw.SaveJSON(towerName + ".tower")
 	if err != nil {
 		g2log.Error("%v", err)
 	}
-}
-
-func makeRoguelikeFloor(floorCount, i, w, h int) []string {
-	roomCount := w * h / 512
-	if roomCount < 2 {
-		roomCount = 2
-	}
-	roomTile := allRoomTile[rnd.Intn(len(allRoomTile))]
-	roadTile := allRoadTile[rnd.Intn(len(allRoadTile))]
-	fl := []string{
-		fmt.Sprintf(
-			"NewTerrain w=%v h=%v name=Floor%v ao=%v po=%v actturnboost=1.0",
-			w, h, i, roomCount/2, 0),
-		fmt.Sprintf("AddRoomsRand bgtile=%v walltile=Wall terrace=false align=1 count=%v mean=8 stddev=2 min=6",
-			roomTile, roomCount),
-		fmt.Sprintf("ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
-			roadTile),
-		"FinalizeTerrain",
-		fmt.Sprintf(
-			"AddPortalsInRoom display=StairDn acttype=PortalInOut PortalID=Floor%v-0 DstPortalID=Floor%v-1 message=Floor%v",
-			i, wrapInt(i-1, floorCount), wrapInt(i-1, floorCount)),
-		fmt.Sprintf(
-			"AddPortalsInRoom display=StairUp acttype=PortalInOut PortalID=Floor%v-1 DstPortalID=Floor%v-0 message=Floor%v",
-			i, wrapInt(i+1, floorCount), wrapInt(i+1, floorCount)),
-		fmt.Sprintf("AddRecyclerInRoom display=Recycler count=%v message=Recycle", roomCount/2),
-		fmt.Sprintf("AddTrapTeleportsInRoom DstFloor=Floor%v count=%v message=Teleport",
-			i, roomCount/2),
-	}
-
-	fl = append(fl, AddTeleportTrapOut("InRoom", floorCount, roomCount/2)...)
-	fl = append(fl, AddEffectTrap("InRoom", floorCount, roomCount/2)...)
-
-	return fl
-}
-
-// suffix "InRoom" or "Rand"
-func AddTeleportTrapOut(suffix string, floorCount int, trapCount int) []string {
-	fl := make([]string, 0)
-	for trapMade := 0; trapMade < trapCount; {
-		dstFloor := rnd.Intn(floorCount)
-		cmd := fmt.Sprintf("AddTrapTeleports%[1]v DstFloor=Floor%[2]v count=1 message=ToFloor%[2]v",
-			suffix, dstFloor)
-
-		fl = append(fl, cmd)
-		trapMade++
-	}
-	return fl
-}
-
-// suffix "InRoom" or "Rand"
-func AddEffectTrap(suffix string, floorCount int, trapCount int) []string {
-	fl := make([]string, 0)
-	for trapMade := 0; trapMade < trapCount; {
-		j := rnd.Intn(fieldobjacttype.FieldObjActType_Count)
-		ft := fieldobjacttype.FieldObjActType(j)
-		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {
-			continue
-		}
-		cmd := fmt.Sprintf("AddTraps%[1]v display=None acttype=%[2]v count=1 message=%[2]v",
-			suffix, ft)
-		fl = append(fl, cmd)
-		trapMade++
-	}
-	return fl
 }
 
 func wrapInt(v, l int) int {
@@ -131,4 +88,97 @@ func wrapInt(v, l int) int {
 
 func makePowerOf2(v int) int {
 	return 1 << uint(bits.Len(uint(v-1)))
+}
+
+type FloorMake struct {
+	Num           int
+	Name          string
+	W, H          int
+	PortalIDToUse int
+	Script        []string
+}
+
+func NewFloorMake(num int, name string, w, h int, ao, po int, turnBoost float64) *FloorMake {
+	fm := &FloorMake{
+		Num:    num,
+		Name:   name,
+		W:      w,
+		H:      h,
+		Script: make([]string, 0),
+	}
+	fm.Appendf(
+		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
+		w, h, name, ao, po, turnBoost)
+	return fm
+}
+
+func (fm *FloorMake) Appendf(format string, arg ...interface{}) {
+	fm.Script = append(fm.Script,
+		fmt.Sprintf(format, arg...),
+	)
+}
+
+func (fm *FloorMake) MakeRoguelike(floorList []*FloorMake) {
+	floorCount := len(floorList)
+	roomCount := fm.W * fm.H / 512
+	if roomCount < 2 {
+		roomCount = 2
+	}
+	roomTile := allRoomTile[rnd.Intn(len(allRoomTile))]
+	roadTile := allRoadTile[rnd.Intn(len(allRoadTile))]
+	fm.Appendf(
+		"AddRoomsRand bgtile=%v walltile=Wall terrace=false align=1 count=%v mean=8 stddev=2 min=6",
+		roomTile, roomCount)
+	fm.Appendf(
+		"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
+		roadTile)
+	fm.Appendf("FinalizeTerrain")
+
+	fm.Appendf(
+		"AddPortalsInRoom display=StairDn acttype=PortalInOut PortalID=%[1]v-0 DstPortalID=%[2]v-1 message=%[2]v",
+		fm.Name, floorList[wrapInt(fm.Num-1, floorCount)].Name)
+	fm.Appendf(
+		"AddPortalsInRoom display=StairUp acttype=PortalInOut PortalID=%[1]v-1 DstPortalID=%[2]v-0 message=%[2]v",
+		fm.Name, floorList[wrapInt(fm.Num+1, floorCount)].Name)
+
+}
+
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) AddTeleportIn(suffix string, count int) {
+	fm.Appendf(
+		"AddTrapTeleports%[1]v DstFloor=%[2]v count=%[3]v message=Teleport",
+		suffix, fm.Name, count)
+}
+
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) AddRecycler(suffix string, count int) {
+	fm.Appendf(
+		"AddRecycler%[1]v display=Recycler count=%[2]v message=Recycle",
+		suffix, count)
+}
+
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) AddTeleportTrapOut(
+	suffix string, floorList []*FloorMake, trapCount int) {
+	for trapMade := 0; trapMade < trapCount; {
+		dstFloor := floorList[rnd.Intn(len(floorList))]
+		fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=ToFloor%[2]v",
+			suffix, dstFloor.Name)
+
+		trapMade++
+	}
+}
+
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) {
+	for trapMade := 0; trapMade < trapCount; {
+		j := rnd.Intn(fieldobjacttype.FieldObjActType_Count)
+		ft := fieldobjacttype.FieldObjActType(j)
+		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {
+			continue
+		}
+		fm.Appendf("AddTraps%[1]v display=None acttype=%[2]v count=1 message=%[2]v",
+			suffix, ft)
+		trapMade++
+	}
 }
