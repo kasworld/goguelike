@@ -482,7 +482,7 @@ func (vp *GameScene) processNotiObjectList(
 func (vp *GameScene) ClearMovePath() {
 	for pos, ar3d := range vp.jsSceneMovePathArrows {
 		vp.scene.Call("remove", ar3d.Mesh)
-		gPoolArrow3D.Put(ar3d)
+		gPoolColorArrow3D.Put(ar3d)
 		delete(vp.jsSceneMovePathArrows, pos)
 	}
 }
@@ -498,7 +498,7 @@ func (vp *GameScene) makeMovePathInView(
 		for i, pos := range path2dst[:len(path2dst)-1] {
 			ar3d, exist := vp.jsSceneMovePathArrows[pos]
 			if !exist {
-				ar3d = gPoolArrow3D.Get()
+				ar3d = gPoolColorArrow3D.Get("#808080")
 				vp.jsSceneMovePathArrows[pos] = ar3d
 				vp.scene.Call("add", ar3d.Mesh)
 			}
@@ -519,7 +519,7 @@ func (vp *GameScene) makeMovePathInView(
 		// pos := path2dst[len(path2dst)-1]
 		// ar3d, exist := vp.jsSceneMovePathArrows[pos]
 		// if !exist {
-		// 	ar3d = gPoolArrow3D.Get()
+		// 	ar3d = gPoolColorArrow3D.Get()
 		// 	vp.jsSceneMovePathArrows[pos] = ar3d
 		// 	vp.scene.Call("add", ar3d.Mesh)
 		// }
@@ -534,7 +534,7 @@ func (vp *GameScene) makeMovePathInView(
 	for pos, ar3d := range vp.jsSceneMovePathArrows {
 		if !addAr3Duuid[pos] {
 			vp.scene.Call("remove", ar3d.Mesh)
-			gPoolArrow3D.Put(ar3d)
+			gPoolColorArrow3D.Put(ar3d)
 			delete(vp.jsSceneMovePathArrows, pos)
 		}
 	}

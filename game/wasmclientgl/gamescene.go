@@ -34,7 +34,7 @@ type GameScene struct {
 
 	raycastPlane *RaycastPlane
 	cursor       *Cursor3D
-	moveArrow    *Arrow3D
+	moveArrow    *ColorArrow3D
 
 	mouseCursorFx int
 	mouseCursorFy int
@@ -48,7 +48,7 @@ type GameScene struct {
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
-	jsSceneMovePathArrows map[[2]int]*Arrow3D // in clientview move path arrow
+	jsSceneMovePathArrows map[[2]int]*ColorArrow3D // in clientview move path arrow
 
 	// tile 3d instancedmesh
 	// count = gameconst.ClientViewPortW * gameconst.ClientViewPortH
@@ -64,7 +64,7 @@ func NewGameScene() *GameScene {
 		jsSceneCOs:            make(map[string]*CarryObj3D),
 		jsSceneAOs:            make(map[string]*ActiveObj3D),
 		jsSceneFOs:            make(map[string]*FieldObj3D),
-		jsSceneMovePathArrows: make(map[[2]int]*Arrow3D),
+		jsSceneMovePathArrows: make(map[[2]int]*ColorArrow3D),
 
 		HP: NewColorBar3D("red"),
 		SP: NewColorBar3D("yellow"),
@@ -88,7 +88,7 @@ func NewGameScene() *GameScene {
 	vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
 	vp.scene.Call("add", vp.cursor.Mesh)
 
-	vp.moveArrow = NewArrow3D()
+	vp.moveArrow = NewColorArrow3D("#ffffff")
 	vp.scene.Call("add", vp.moveArrow.Mesh)
 
 	vp.scene.Call("add", vp.HP.Mesh)

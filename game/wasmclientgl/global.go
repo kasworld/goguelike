@@ -36,7 +36,6 @@ const (
 	PoolSizeActiveObj3D = 1000
 	PoolSizeCarryObj3D  = 1000
 	PoolSizeFieldObj3D  = 1000
-	PoolSizeArrow3D     = 100
 
 	// invalid value
 	Tile3DHeightMin = -1000.0

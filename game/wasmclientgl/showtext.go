@@ -439,7 +439,7 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 	fmt.Fprintf(&buf, "%v<br/>", gPoolActiveObj3D)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolCarryObj3D)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolFieldObj3D)
-	fmt.Fprintf(&buf, "%v<br/>", gPoolArrow3D)
+	fmt.Fprintf(&buf, "%v<br/>", gPoolColorArrow3D)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolLabel3D)
 	return buf.String()
 }

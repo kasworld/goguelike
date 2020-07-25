@@ -20,57 +20,57 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 )
 
-var gPoolArrow3D = NewPoolArrow3D(PoolSizeArrow3D)
+var gPoolColorArrow3D = NewPoolColorArrow3D()
 
-type PoolArrow3D struct {
+type PoolColorArrow3D struct {
 	mutex    sync.Mutex
-	poolData []*Arrow3D
+	poolData map[string][]*ColorArrow3D
 	newCount int
 	getCount int
 	putCount int
 }
 
-func NewPoolArrow3D(initCap int) *PoolArrow3D {
-	return &PoolArrow3D{
-		poolData: make([]*Arrow3D, 0, initCap),
+func NewPoolColorArrow3D() *PoolColorArrow3D {
+	return &PoolColorArrow3D{
+		poolData: make(map[string][]*ColorArrow3D),
 	}
 }
 
-func (p *PoolArrow3D) String() string {
-	return fmt.Sprintf("PoolArrow3D[%v/%v new:%v get:%v put:%v]",
-		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
+func (p *PoolColorArrow3D) String() string {
+	return fmt.Sprintf("PoolColorArrow3D[%v new:%v get:%v put:%v]",
+		len(p.poolData), p.newCount, p.getCount, p.putCount,
 	)
 }
 
-func (p *PoolArrow3D) Get() *Arrow3D {
+func (p *PoolColorArrow3D) Get(colorstr string) *ColorArrow3D {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	var rtn *Arrow3D
-	if l := len(p.poolData); l > 0 {
-		rtn = p.poolData[l-1]
-		p.poolData = p.poolData[:l-1]
+	var rtn *ColorArrow3D
+	if l := len(p.poolData[colorstr]); l > 0 {
+		rtn = p.poolData[colorstr][l-1]
+		p.poolData[colorstr] = p.poolData[colorstr][:l-1]
 		p.getCount++
 	} else {
-		rtn = NewArrow3D()
+		rtn = NewColorArrow3D(colorstr)
 		p.newCount++
 	}
 	return rtn
 }
 
-func (p *PoolArrow3D) Put(pb *Arrow3D) {
+func (p *PoolColorArrow3D) Put(pb *ColorArrow3D) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.poolData = append(p.poolData, pb)
+	p.poolData[pb.ColorStr] = append(p.poolData[pb.ColorStr], pb)
 	p.putCount++
 }
 
-type Arrow3D struct {
-	GeoInfo GeoInfo
-	Mesh    js.Value
+type ColorArrow3D struct {
+	ColorStr string
+	GeoInfo  GeoInfo
+	Mesh     js.Value
 }
 
-func NewArrow3D() *Arrow3D {
-	colorstr := "#ffffff"
+func NewColorArrow3D(colorstr string) *ColorArrow3D {
 	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"color": colorstr,
@@ -80,9 +80,10 @@ func NewArrow3D() *Arrow3D {
 
 	geo := MakeArrowGeo()
 	mesh := ThreeJsNew("Mesh", geo, mat)
-	return &Arrow3D{
-		GeoInfo: GetGeoInfo(geo),
-		Mesh:    mesh,
+	return &ColorArrow3D{
+		ColorStr: colorstr,
+		GeoInfo:  GetGeoInfo(geo),
+		Mesh:     mesh,
 	}
 }
 
@@ -98,11 +99,11 @@ func MakeArrowGeo() js.Value {
 	return geoLine
 }
 
-func (aog *Arrow3D) Visible(b bool) {
+func (aog *ColorArrow3D) Visible(b bool) {
 	aog.Mesh.Set("visible", b)
 }
 
-func (aog *Arrow3D) SetFieldPosition(fx, fy int) {
+func (aog *ColorArrow3D) SetFieldPosition(fx, fy int) {
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+DstCellSize/2,
@@ -111,21 +112,21 @@ func (aog *Arrow3D) SetFieldPosition(fx, fy int) {
 	)
 }
 
-func (aog *Arrow3D) SetDir(dir way9type.Way9Type) {
+func (aog *ColorArrow3D) SetDir(dir way9type.Way9Type) {
 	aog.RotateZ(-float64(dir-1) * math.Pi / 4)
 }
 
-func (aog *Arrow3D) RotateX(rad float64) {
+func (aog *ColorArrow3D) RotateX(rad float64) {
 	aog.Mesh.Get("rotation").Set("x", rad)
 }
-func (aog *Arrow3D) RotateY(rad float64) {
+func (aog *ColorArrow3D) RotateY(rad float64) {
 	aog.Mesh.Get("rotation").Set("y", rad)
 }
-func (aog *Arrow3D) RotateZ(rad float64) {
+func (aog *ColorArrow3D) RotateZ(rad float64) {
 	aog.Mesh.Get("rotation").Set("z", rad)
 }
 
-func (aog *Arrow3D) Dispose() {
+func (aog *ColorArrow3D) Dispose() {
 	// mesh do not need dispose
 	aog.Mesh.Get("geometry").Call("dispose")
 	aog.Mesh.Get("material").Call("dispose")
