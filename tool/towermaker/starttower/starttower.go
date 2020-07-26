@@ -200,89 +200,38 @@ func MakeStartTower() floormake.FloorList {
 		fm.Appends("FinalizeTerrain")
 	}
 
-	floorList.GetByName("Practice").Appends(
-		"AddPortalInRoom display=PortalIn acttype=PortalIn PortalID=Practice-0 DstPortalID=SoilPlant-3 message=ToSoilPlant",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut PortalID=Practice-1 DstPortalID=MazeWalk-1 message=FromMazeWalk",
-	)
-	floorList.GetByName("SoilPlant").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=SoilPlant-1 DstPortalID=FreeForAll-2 message=DownToFreeForAll",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=SoilPlant-2 DstPortalID=ManyPortals-1 message=UpToManyPortals",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=SoilPlant-3 DstPortalID=ManyPortals-102 message=FromManyPortals",
-	)
+	floorList.GetByName("Practice").ConnectPortalTo("InRoom", floorList.GetByName("SoilPlant"))
+	floorList.GetByName("SoilPlant").ConnectStairUp("InRoom", floorList.GetByName("ManyPortals"))
+
 	floorList.GetByName("ManyPortals").Appends(
-		"AddPortalInRoom display=StairDn      acttype=PortalInOut  PortalID=ManyPortals-1   DstPortalID=SoilPlant-2 message=DownToSoilPlant",
-		"AddPortalInRoom display=StairUp      acttype=PortalInOut  PortalID=ManyPortals-2   DstPortalID=SoilWater-1 message=UpToSoilWater",
 		"AddPortal x=63 y=63 display=PortalIn acttype=PortalIn     PortalID=ManyPortals-101 DstPortalID=TileRooms-0 message=ToTileRooms",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-102 DstPortalID=SoilPlant-3 message=ToSoilPlant",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-104 DstPortalID=SoilWater-3 message=ToSoilWater",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-105 DstPortalID=SoilMagma-3 message=ToSoilMagma",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-106 DstPortalID=SoilIce-3 message=ToSoilIce",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-107 DstPortalID=MadeByImage-3 message=ToMadeByImage",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-108 DstPortalID=AgeingCity-3 message=ToAgeingCity",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-109 DstPortalID=AgeingField-3 message=ToAgeingField",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-110 DstPortalID=AgeingMaze-3 message=ToAgeingMaze",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-111 DstPortalID=RogueLike-3 message=ToRogueLike",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-112 DstPortalID=FreeForAll-3 message=ToFreeForAll",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-113 DstPortalID=GogueLike-3 message=ToGogueLike",
-		"AddPortalInRoom display=PortalIn     acttype=PortalIn     PortalID=ManyPortals-114 DstPortalID=Ghost-3 message=ToGhost",
-	)
-	floorList.GetByName("SoilWater").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=SoilWater-1 DstPortalID=ManyPortals-2 message=DownToManyPortals",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=SoilWater-2 DstPortalID=SoilMagma-1 message=UpToSoilMagma",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=SoilWater-3 DstPortalID=ManyPortals-104 message=FromManyPortals",
-	)
-	floorList.GetByName("SoilMagma").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=SoilMagma-1 DstPortalID=SoilWater-2 message=DownToSoilWater",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=SoilMagma-2 DstPortalID=SoilIce-1 message=UpToSoilIce",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=SoilMagma-3 DstPortalID=ManyPortals-105 message=FromManyPortals",
-	)
-	floorList.GetByName("SoilIce").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=SoilIce-1 DstPortalID=SoilMagma-2 message=DownToSoilMagma",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=SoilIce-2 DstPortalID=MadeByImage-1 message=UpToMadeByImage",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=SoilIce-3 DstPortalID=ManyPortals-106 message=FromManyPortals",
-	)
-	floorList.GetByName("MadeByImage").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=MadeByImage-1 DstPortalID=SoilIce-2 message=DownToSoilIce",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=MadeByImage-2 DstPortalID=AgeingCity-1 message=UpToAgeingCity",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=MadeByImage-3 DstPortalID=ManyPortals-107 message=FromManyPortals",
-	)
-	floorList.GetByName("AgeingCity").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=AgeingCity-1 DstPortalID=MadeByImage-2 message=DownToMadeByImage",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=AgeingCity-2 DstPortalID=AgeingField-1 message=UpToAgeingField",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=AgeingCity-3 DstPortalID=ManyPortals-108 message=FromManyPortals",
-	)
-	floorList.GetByName("AgeingField").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=AgeingField-1 DstPortalID=AgeingCity-2 message=DownToAgeingCity",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=AgeingField-2 DstPortalID=AgeingMaze-1 message=UpToAgeingMaze",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=AgeingField-3 DstPortalID=ManyPortals-109 message=FromManyPortals",
-	)
-	floorList.GetByName("AgeingMaze").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=AgeingMaze-1 DstPortalID=AgeingField-2 message=DownToAgeingField",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=AgeingMaze-2 DstPortalID=RogueLike-1 message=UpToRogueLike",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=AgeingMaze-3 DstPortalID=ManyPortals-110 message=FromManyPortals",
-	)
-	floorList.GetByName("RogueLike").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=RogueLike-1 DstPortalID=AgeingMaze-2 message=DownToAgeingMaze",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=RogueLike-2 DstPortalID=GogueLike-1 message=UpToGogueLike",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=RogueLike-3 DstPortalID=ManyPortals-111 message=FromManyPortals",
-	)
-	floorList.GetByName("GogueLike").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=GogueLike-1 DstPortalID=RogueLike-2 message=DownToRogueLike",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=GogueLike-2 DstPortalID=Ghost-1 message=UpToGhost",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=GogueLike-3 DstPortalID=ManyPortals-113 message=FromManyPortals",
-	)
-	floorList.GetByName("Ghost").Appends(
-		"AddPortalInRoom display=StairDn acttype=PortalInOut   PortalID=Ghost-1 DstPortalID=GogueLike-2 message=DownToGogueLike",
-		"AddPortalInRoom display=StairUp acttype=PortalInOut   PortalID=Ghost-2 DstPortalID=FreeForAll-1 message=UpToFreeForAll",
-		"AddPortalInRoom display=PortalOut acttype=PortalOut   PortalID=Ghost-3 DstPortalID=ManyPortals-114 message=FromManyPortals",
-	)
-	floorList.GetByName("FreeForAll").Appends(
-		"AddPortalRand display=StairDn acttype=PortalInOut       PortalID=FreeForAll-1 DstPortalID=Ghost-2 message=DownToGhost",
-		"AddPortalRand display=StairUp acttype=PortalInOut       PortalID=FreeForAll-2 DstPortalID=SoilPlant-1 message=UpToSoilPlant",
-		"AddPortalRand display=PortalOut acttype=PortalOut       PortalID=FreeForAll-3 DstPortalID=ManyPortals-112 message=FromManyPortals",
-	)
+	).ConnectStairUp("InRoom", floorList.GetByName("SoilWater"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilPlant"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilWater"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilMagma"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilIce"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("MadeByImage"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("AgeingCity"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("AgeingField"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("AgeingMaze"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("RogueLike"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("GogueLike"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("Ghost"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("FreeForAll"))
+
+	floorList.GetByName("SoilWater").ConnectStairUp("InRoom", floorList.GetByName("SoilMagma"))
+	floorList.GetByName("SoilMagma").ConnectStairUp("InRoom", floorList.GetByName("SoilIce"))
+	floorList.GetByName("SoilIce").ConnectStairUp("InRoom", floorList.GetByName("MadeByImage"))
+	floorList.GetByName("MadeByImage").ConnectStairUp("InRoom", floorList.GetByName("AgeingCity"))
+	floorList.GetByName("AgeingCity").ConnectStairUp("InRoom", floorList.GetByName("AgeingField"))
+	floorList.GetByName("AgeingField").ConnectStairUp("InRoom", floorList.GetByName("AgeingMaze"))
+	floorList.GetByName("AgeingMaze").ConnectStairUp("InRoom", floorList.GetByName("RogueLike"))
+	floorList.GetByName("RogueLike").ConnectStairUp("InRoom", floorList.GetByName("GogueLike"))
+	floorList.GetByName("GogueLike").ConnectStairUp("InRoom", floorList.GetByName("Ghost"))
+	floorList.GetByName("Ghost").ConnectStairUp("InRoom", floorList.GetByName("FreeForAll"))
+	floorList.GetByName("FreeForAll").ConnectStairUp("InRoom", floorList.GetByName("SoilPlant"))
+
 	floorList.GetByName("TileRooms").Appends(
-		"AddPortalRand display=PortalOut acttype=PortalOut PortalID=TileRooms-0 DstPortalID=ManyPortals-101 message=FromManyPortals",
 		"AddPortalRand display=PortalIn acttype=PortalIn PortalID=TileRooms-1 DstPortalID=PortalMaze-0 message=ToPortalMaze",
 	)
 	floorList.GetByName("PortalMaze").Appends(
