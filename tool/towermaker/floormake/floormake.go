@@ -132,15 +132,9 @@ func (fm *FloorMake) AddRecycler(suffix string, count int) *FloorMake {
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddTeleportTrapOut(
-	suffix string, floorList []*FloorMake, trapCount int) *FloorMake {
-	for trapMade := 0; trapMade < trapCount; {
-		dstFloor := floorList[fm.rnd.Intn(len(floorList))]
-		fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=ToFloor%[2]v",
-			suffix, dstFloor.Name)
-
-		trapMade++
-	}
+func (fm *FloorMake) AddTrapTeleportTo(suffix string, dstFloor *FloorMake) *FloorMake {
+	fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=ToFloor%[2]v",
+		suffix, dstFloor.Name)
 	return fm
 }
 

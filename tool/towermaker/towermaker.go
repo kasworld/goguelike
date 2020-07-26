@@ -88,7 +88,11 @@ func makeRogueTower(towerName string, floorCount int) {
 		fm.ConnectStairUp("InRoom", floorList[wrapInt(i+1, floorCount)])
 		fm.AddRecycler("InRoom", roomCount/2)
 		fm.AddTeleportIn("InRoom", roomCount/2)
-		fm.AddTeleportTrapOut("InRoom", floorList, roomCount/2)
+
+		for trapMade := 0; trapMade < roomCount/2; trapMade++ {
+			dstFloor := floorList[rnd.Intn(len(floorList))]
+			fm.AddTrapTeleportTo("InRoom", dstFloor)
+		}
 		fm.AddEffectTrap("InRoom", roomCount/2)
 	}
 
@@ -301,7 +305,8 @@ func makeStartTower(towerName string) {
 			suffix = "Rand"
 		}
 		fm.AddRecycler(suffix, 4)
-		fm.AddTeleportIn(suffix, 1)
+		fm.ConnectAutoInPortalTo(suffix, fm)
+		fm.AddTrapTeleportTo(suffix, fm)
 		fm.AddAllEffectTrap(suffix, 1)
 	}
 
