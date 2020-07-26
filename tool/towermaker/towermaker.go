@@ -61,8 +61,26 @@ func makeRogueTower(towerName string, floorCount int) {
 		)
 	}
 
+	var allRoomTile = []string{
+		"Room", "Soil", "Sand", "Stone", "Grass", "Tree", "Ice", "Magma", "Swamp", "Sea", "Smoke",
+	}
+	var allRoadTile = []string{
+		"Road", "Soil", "Sand", "Stone", "Grass", "Tree", "Fog",
+	}
 	for _, fm := range floorList {
-		fm.MakeRoguelike()
+		roomCount := fm.W * fm.H / 512
+		if roomCount < 2 {
+			roomCount = 2
+		}
+		roomTile := allRoomTile[rnd.Intn(len(allRoomTile))]
+		roadTile := allRoadTile[rnd.Intn(len(allRoadTile))]
+		fm.Appendf(
+			"AddRoomsRand bgtile=%v walltile=Wall terrace=false align=1 count=%v mean=8 stddev=2 min=6",
+			roomTile, roomCount)
+		fm.Appendf(
+			"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
+			roadTile)
+		fm.Appendf("FinalizeTerrain")
 	}
 
 	for _, fm := range floorList {
