@@ -83,11 +83,11 @@ func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
-		"AddPortals%[1]v display=StairUp acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=StairUp acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, srcID, dstID, dstFloor.Name,
 	)
 	dstFloor.Appendf(
-		"AddPortals%[1]v display=StairDn acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=StairDn acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, dstID, srcID, dstFloor.Name)
 }
 
@@ -97,11 +97,11 @@ func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
-		"AddPortals%[1]v display=PortalIn acttype=PortalIn PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=PortalIn acttype=PortalIn PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, srcID, dstID, dstFloor.Name,
 	)
 	dstFloor.Appendf(
-		"AddPortals%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, dstID, srcID, dstFloor.Name)
 }
 
@@ -111,11 +111,11 @@ func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
-		"AddPortals%[1]v display=PortalAutoIn acttype=PortalAutoIn PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=PortalAutoIn acttype=PortalAutoIn PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, srcID, dstID, dstFloor.Name,
 	)
 	dstFloor.Appendf(
-		"AddPortals%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, dstID, srcID, dstFloor.Name)
 }
 

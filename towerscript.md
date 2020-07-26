@@ -23,8 +23,8 @@
 	ConnectRooms :           tile:Tile_Type connect:int allconnect:bool diagonal:bool
 	FinalizeTerrain :        
 	AddPortal :              x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
-	AddPortalsRand :         display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
-	AddPortalsInRoom :       display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
+	AddPortalRand :         display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
+	AddPortalInRoom :       display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
 	AddRecycler :            x:int y:int display:FieldObjDisplay_Type message:string
 	AddRecyclerRand :        display:FieldObjDisplay_Type count:int message:string
 	AddRecyclerInRoom :      display:FieldObjDisplay_Type count:int message:string
