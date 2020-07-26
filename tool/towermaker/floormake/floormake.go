@@ -136,3 +136,15 @@ func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) {
 		trapMade++
 	}
 }
+
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) AddAllEffectTrap(suffix string, countPerEffectTrapType int) {
+	for j := 0; j < fieldobjacttype.FieldObjActType_Count; {
+		ft := fieldobjacttype.FieldObjActType(j)
+		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {
+			continue
+		}
+		fm.Appendf("AddTraps%[1]v display=None acttype=%[2]v count=%[3]v message=%[2]v",
+			suffix, ft, countPerEffectTrapType)
+	}
+}
