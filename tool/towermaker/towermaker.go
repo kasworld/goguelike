@@ -32,6 +32,14 @@ func main() {
 	makeRogueTower(*towername, *floorcount)
 }
 
+func wrapInt(v, l int) int {
+	return (v%l + l) % l
+}
+
+func makePowerOf2(v int) int {
+	return 1 << uint(bits.Len(uint(v-1)))
+}
+
 var whList = []int{
 	32, 64, 128,
 }
@@ -64,8 +72,12 @@ func makeRogueTower(towerName string, floorCount int) {
 	}
 
 	for _, fm := range floorList {
+		fm.MakeRoguelike()
+	}
+
+	for _, fm := range floorList {
 		roomCount := fm.W * fm.H / 512
-		fm.MakeRoguelike(floorList)
+		fm.ConnectStairUp("InRoom", floorList[wrapInt(fm.Num+1, floorCount)])
 		fm.AddRecycler("InRoom", roomCount/2)
 		fm.AddTeleportIn("InRoom", roomCount/2)
 		fm.AddTeleportTrapOut("InRoom", floorList, roomCount/2)
@@ -80,14 +92,6 @@ func makeRogueTower(towerName string, floorCount int) {
 	if err != nil {
 		g2log.Error("%v", err)
 	}
-}
-
-func wrapInt(v, l int) int {
-	return (v%l + l) % l
-}
-
-func makePowerOf2(v int) int {
-	return 1 << uint(bits.Len(uint(v-1)))
 }
 
 type FloorMake struct {
@@ -118,8 +122,7 @@ func (fm *FloorMake) Appendf(format string, arg ...interface{}) {
 	)
 }
 
-func (fm *FloorMake) MakeRoguelike(floorList []*FloorMake) {
-	floorCount := len(floorList)
+func (fm *FloorMake) MakeRoguelike() {
 	roomCount := fm.W * fm.H / 512
 	if roomCount < 2 {
 		roomCount = 2
@@ -133,14 +136,55 @@ func (fm *FloorMake) MakeRoguelike(floorList []*FloorMake) {
 		"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
 		roadTile)
 	fm.Appendf("FinalizeTerrain")
+}
 
-	fm.Appendf(
-		"AddPortalsInRoom display=StairDn acttype=PortalInOut PortalID=%[1]v-0 DstPortalID=%[2]v-1 message=%[2]v",
-		fm.Name, floorList[wrapInt(fm.Num-1, floorCount)].Name)
-	fm.Appendf(
-		"AddPortalsInRoom display=StairUp acttype=PortalInOut PortalID=%[1]v-1 DstPortalID=%[2]v-0 message=%[2]v",
-		fm.Name, floorList[wrapInt(fm.Num+1, floorCount)].Name)
+func (fm *FloorMake) MakePortalIDStringInc() string {
+	rtn := fmt.Sprintf("%v-%v", fm.Name, fm.PortalIDToUse)
+	// inc portal id to use
+	fm.PortalIDToUse++
+	return rtn
+}
 
+// bidirection (in and out) portal
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) {
+	srcID := fm.MakePortalIDStringInc()
+	dstID := dstFloor.MakePortalIDStringInc()
+	fm.Appendf(
+		"AddPortals%[1]v display=StairUp acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		suffix, srcID, dstID, dstFloor.Name,
+	)
+	dstFloor.Appendf(
+		"AddPortals%[1]v display=StairDn acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		suffix, dstID, srcID, dstFloor.Name)
+}
+
+// one way portal
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) {
+	srcID := fm.MakePortalIDStringInc()
+	dstID := dstFloor.MakePortalIDStringInc()
+	fm.Appendf(
+		"AddPortals%[1]v display=PortalIn acttype=PortalIn PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		suffix, srcID, dstID, dstFloor.Name,
+	)
+	dstFloor.Appendf(
+		"AddPortals%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		suffix, dstID, srcID, dstFloor.Name)
+}
+
+// one way auto activate portal
+// suffix "InRoom" or "Rand"
+func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) {
+	srcID := fm.MakePortalIDStringInc()
+	dstID := dstFloor.MakePortalIDStringInc()
+	fm.Appendf(
+		"AddPortals%[1]v display=PortalAutoIn acttype=PortalAutoIn PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		suffix, srcID, dstID, dstFloor.Name,
+	)
+	dstFloor.Appendf(
+		"AddPortals%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		suffix, dstID, srcID, dstFloor.Name)
 }
 
 // suffix "InRoom" or "Rand"
