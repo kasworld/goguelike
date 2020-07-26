@@ -211,8 +211,8 @@ func MakeStartTower() floormake.FloorList {
 	floorList.GetByName("AgeingMaze").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("RogueLike"))
 	floorList.GetByName("RogueLike").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("GogueLike"))
 	floorList.GetByName("GogueLike").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("Ghost"))
-	floorList.GetByName("Ghost").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("FreeForAll"))
-	floorList.GetByName("FreeForAll").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("SoilPlant"))
+	floorList.GetByName("Ghost").ConnectStairUp("InRoom", "Rand", floorList.GetByName("FreeForAll"))
+	floorList.GetByName("FreeForAll").ConnectStairUp("Rand", "InRoom", floorList.GetByName("SoilPlant"))
 
 	floorList.GetByName("Practice").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("SoilPlant"))
 	floorList.GetByName("TileRooms").ConnectPortalTo("Rand", " x=07 y=07", floorList.GetByName("PortalMaze"))
@@ -234,7 +234,7 @@ func MakeStartTower() floormake.FloorList {
 	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("RogueLike"))
 	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("GogueLike"))
 	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("Ghost"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("FreeForAll"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "Rand", floorList.GetByName("FreeForAll"))
 
 	floorList.GetByName("PortalMaze").Appends(
 		"AddPortal x=04 y=04 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-00-0 DstPortalID=PortalMaze-00-1 message=From",

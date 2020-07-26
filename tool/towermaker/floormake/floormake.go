@@ -81,7 +81,7 @@ func (fm *FloorMake) ConnectStairUp(suffix, suffix2 string, dstFloor *FloorMake)
 	)
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=StairDn acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
-		suffix2, dstID, srcID, dstFloor.Name)
+		suffix2, dstID, srcID, fm.Name)
 	return fm
 }
 
@@ -96,7 +96,7 @@ func (fm *FloorMake) ConnectPortalTo(suffix, suffix2 string, dstFloor *FloorMake
 	)
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
-		suffix2, dstID, srcID, dstFloor.Name)
+		suffix2, dstID, srcID, fm.Name)
 	return fm
 }
 
@@ -111,7 +111,7 @@ func (fm *FloorMake) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *Flo
 	)
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
-		suffix2, dstID, srcID, dstFloor.Name)
+		suffix2, dstID, srcID, fm.Name)
 	return fm
 }
 
