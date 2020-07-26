@@ -16,8 +16,6 @@ import (
 	"math/bits"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/game/towerscript"
-	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/tool/towermaker/floormake"
 )
 
@@ -29,7 +27,7 @@ func makePowerOf2(v int) int {
 	return 1 << uint(bits.Len(uint(v-1)))
 }
 
-func MakeRogueTower(towerName string, floorCount int) {
+func MakeRogueTower(floorCount int) floormake.FloorList {
 	var rnd = g2rand.New()
 	var whList = []int{
 		32, 64, 128,
@@ -84,13 +82,5 @@ func MakeRogueTower(towerName string, floorCount int) {
 		}
 		fm.AddEffectTrap("InRoom", roomCount/2)
 	}
-
-	tw := make(towerscript.TowerScript, 0)
-	for _, fm := range floorList {
-		tw = append(tw, fm.Script)
-	}
-	err := tw.SaveJSON(towerName + ".tower")
-	if err != nil {
-		g2log.Error("%v", err)
-	}
+	return floorList
 }

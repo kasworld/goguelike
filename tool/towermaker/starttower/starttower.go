@@ -12,12 +12,10 @@
 package starttower
 
 import (
-	"github.com/kasworld/goguelike/game/towerscript"
-	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/tool/towermaker/floormake"
 )
 
-func MakeStartTower(towerName string) {
+func MakeStartTower() floormake.FloorList {
 	floorList := floormake.FloorList{
 		floormake.New("Practice", 32, 32, 0, 0, 0.7).Appends(
 			"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
@@ -221,12 +219,5 @@ func MakeStartTower(towerName string) {
 		fm.AddAllEffectTrap(suffix, 1)
 	}
 
-	tw := make(towerscript.TowerScript, 0)
-	for _, fm := range floorList {
-		tw = append(tw, fm.Script)
-	}
-	err := tw.SaveJSON(towerName + ".tower")
-	if err != nil {
-		g2log.Error("%v", err)
-	}
+	return floorList
 }

@@ -15,6 +15,8 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/kasworld/goguelike/game/towerscript"
+	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/tool/towermaker/starttower"
 )
 
@@ -24,6 +26,16 @@ func main() {
 	flag.Parse()
 
 	fmt.Printf("make tower with towername:%v floorcount:%v\n", *towername, *floorcount)
-	// roguetower.MakeRogueTower(*towername, *floorcount)
-	starttower.MakeStartTower(*towername)
+	// floorList := roguetower.MakeRogueTower( *floorcount)
+	floorList := starttower.MakeStartTower()
+
+	tw := make(towerscript.TowerScript, 0)
+	for _, fm := range floorList {
+		tw = append(tw, fm.Script)
+	}
+	err := tw.SaveJSON(*towername + ".tower")
+	if err != nil {
+		g2log.Error("%v", err)
+	}
+
 }
