@@ -56,10 +56,11 @@ func (fm *FloorMake) Appends(arg ...string) *FloorMake {
 	return fm
 }
 
-func (fm *FloorMake) Appendf(format string, arg ...interface{}) {
+func (fm *FloorMake) Appendf(format string, arg ...interface{}) *FloorMake {
 	fm.Script = append(fm.Script,
 		fmt.Sprintf(format, arg...),
 	)
+	return fm
 }
 
 func (fm *FloorMake) MakePortalIDStringInc() string {
@@ -71,7 +72,7 @@ func (fm *FloorMake) MakePortalIDStringInc() string {
 
 // bidirection (in and out) portal
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) {
+func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) *FloorMake {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -81,11 +82,12 @@ func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) {
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=StairDn acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, dstID, srcID, dstFloor.Name)
+	return fm
 }
 
 // one way portal
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) {
+func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) *FloorMake {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -95,11 +97,12 @@ func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) {
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, dstID, srcID, dstFloor.Name)
+	return fm
 }
 
 // one way auto activate portal
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) {
+func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) *FloorMake {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -109,25 +112,28 @@ func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) {
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
 		suffix, dstID, srcID, dstFloor.Name)
+	return fm
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddTeleportIn(suffix string, count int) {
+func (fm *FloorMake) AddTeleportIn(suffix string, count int) *FloorMake {
 	fm.Appendf(
 		"AddTrapTeleports%[1]v DstFloor=%[2]v count=%[3]v message=Teleport",
 		suffix, fm.Name, count)
+	return fm
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddRecycler(suffix string, count int) {
+func (fm *FloorMake) AddRecycler(suffix string, count int) *FloorMake {
 	fm.Appendf(
 		"AddRecycler%[1]v display=Recycler count=%[2]v message=Recycle",
 		suffix, count)
+	return fm
 }
 
 // suffix "InRoom" or "Rand"
 func (fm *FloorMake) AddTeleportTrapOut(
-	suffix string, floorList []*FloorMake, trapCount int) {
+	suffix string, floorList []*FloorMake, trapCount int) *FloorMake {
 	for trapMade := 0; trapMade < trapCount; {
 		dstFloor := floorList[fm.rnd.Intn(len(floorList))]
 		fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=ToFloor%[2]v",
@@ -135,10 +141,11 @@ func (fm *FloorMake) AddTeleportTrapOut(
 
 		trapMade++
 	}
+	return fm
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) {
+func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) *FloorMake {
 	for trapMade := 0; trapMade < trapCount; {
 		j := fm.rnd.Intn(fieldobjacttype.FieldObjActType_Count)
 		ft := fieldobjacttype.FieldObjActType(j)
@@ -149,11 +156,12 @@ func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) {
 			suffix, ft)
 		trapMade++
 	}
+	return fm
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddAllEffectTrap(suffix string, countPerEffectTrapType int) {
-	for j := 0; j < fieldobjacttype.FieldObjActType_Count; {
+func (fm *FloorMake) AddAllEffectTrap(suffix string, countPerEffectTrapType int) *FloorMake {
+	for j := 0; j < fieldobjacttype.FieldObjActType_Count; j++ {
 		ft := fieldobjacttype.FieldObjActType(j)
 		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {
 			continue
@@ -161,4 +169,5 @@ func (fm *FloorMake) AddAllEffectTrap(suffix string, countPerEffectTrapType int)
 		fm.Appendf("AddTraps%[1]v display=None acttype=%[2]v count=%[3]v message=%[2]v",
 			suffix, ft, countPerEffectTrapType)
 	}
+	return fm
 }

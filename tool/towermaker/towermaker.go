@@ -287,6 +287,24 @@ func makeStartTower(towerName string) {
 		fm.Appends("FinalizeTerrain")
 	}
 
+	for _, fm := range floorList {
+		randList := map[string]bool{
+			"FreeForAll": true,
+			"PortalMaze": true,
+			"MazeRooms1": true,
+			"MazeRooms2": true,
+			"MazeRooms3": true,
+			"MazeWalk":   true,
+		}
+		suffix := "InRoom"
+		if randList[fm.Name] {
+			suffix = "Rand"
+		}
+		fm.AddRecycler(suffix, 4)
+		fm.AddTeleportIn(suffix, 1)
+		fm.AddAllEffectTrap(suffix, 1)
+	}
+
 	tw := make(towerscript.TowerScript, 0)
 	for _, fm := range floorList {
 		tw = append(tw, fm.Script)
