@@ -200,36 +200,36 @@ func MakeStartTower() floormake.FloorList {
 		fm.Appends("FinalizeTerrain")
 	}
 
-	floorList.GetByName("Practice").ConnectPortalTo("InRoom", floorList.GetByName("SoilPlant"))
-	floorList.GetByName("SoilPlant").ConnectStairUp("InRoom", floorList.GetByName("ManyPortals"))
+	floorList.GetByName("Practice").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("SoilPlant"))
+	floorList.GetByName("SoilPlant").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("ManyPortals"))
 
 	floorList.GetByName("ManyPortals").Appends(
 		"AddPortal x=63 y=63 display=PortalIn acttype=PortalIn     PortalID=ManyPortals-101 DstPortalID=TileRooms-0 message=ToTileRooms",
-	).ConnectStairUp("InRoom", floorList.GetByName("SoilWater"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilPlant"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilWater"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilMagma"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("SoilIce"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("MadeByImage"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("AgeingCity"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("AgeingField"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("AgeingMaze"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("RogueLike"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("GogueLike"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("Ghost"))
-	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", floorList.GetByName("FreeForAll"))
+	).ConnectStairUp("InRoom", "InRoom", floorList.GetByName("SoilWater"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("SoilPlant"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("SoilWater"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("SoilMagma"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("SoilIce"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("MadeByImage"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("AgeingCity"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("AgeingField"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("AgeingMaze"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("RogueLike"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("GogueLike"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("Ghost"))
+	floorList.GetByName("ManyPortals").ConnectPortalTo("InRoom", "InRoom", floorList.GetByName("FreeForAll"))
 
-	floorList.GetByName("SoilWater").ConnectStairUp("InRoom", floorList.GetByName("SoilMagma"))
-	floorList.GetByName("SoilMagma").ConnectStairUp("InRoom", floorList.GetByName("SoilIce"))
-	floorList.GetByName("SoilIce").ConnectStairUp("InRoom", floorList.GetByName("MadeByImage"))
-	floorList.GetByName("MadeByImage").ConnectStairUp("InRoom", floorList.GetByName("AgeingCity"))
-	floorList.GetByName("AgeingCity").ConnectStairUp("InRoom", floorList.GetByName("AgeingField"))
-	floorList.GetByName("AgeingField").ConnectStairUp("InRoom", floorList.GetByName("AgeingMaze"))
-	floorList.GetByName("AgeingMaze").ConnectStairUp("InRoom", floorList.GetByName("RogueLike"))
-	floorList.GetByName("RogueLike").ConnectStairUp("InRoom", floorList.GetByName("GogueLike"))
-	floorList.GetByName("GogueLike").ConnectStairUp("InRoom", floorList.GetByName("Ghost"))
-	floorList.GetByName("Ghost").ConnectStairUp("InRoom", floorList.GetByName("FreeForAll"))
-	floorList.GetByName("FreeForAll").ConnectStairUp("InRoom", floorList.GetByName("SoilPlant"))
+	floorList.GetByName("SoilWater").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("SoilMagma"))
+	floorList.GetByName("SoilMagma").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("SoilIce"))
+	floorList.GetByName("SoilIce").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("MadeByImage"))
+	floorList.GetByName("MadeByImage").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("AgeingCity"))
+	floorList.GetByName("AgeingCity").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("AgeingField"))
+	floorList.GetByName("AgeingField").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("AgeingMaze"))
+	floorList.GetByName("AgeingMaze").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("RogueLike"))
+	floorList.GetByName("RogueLike").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("GogueLike"))
+	floorList.GetByName("GogueLike").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("Ghost"))
+	floorList.GetByName("Ghost").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("FreeForAll"))
+	floorList.GetByName("FreeForAll").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("SoilPlant"))
 
 	floorList.GetByName("TileRooms").Appends(
 		"AddPortalRand display=PortalIn acttype=PortalIn PortalID=TileRooms-1 DstPortalID=PortalMaze-0 message=ToPortalMaze",
@@ -284,16 +284,9 @@ func MakeStartTower() floormake.FloorList {
 	)
 	floorList.GetByName("MazeRooms2").Appends(
 		"AddPortalInRoom display=PortalOut acttype=PortalOut PortalID=MazeRooms2-0 DstPortalID=MazeRooms1-1 message=FromMazeRooms1",
-		"AddPortalInRoom display=PortalIn  acttype=PortalIn  PortalID=MazeRooms2-1 DstPortalID=MazeRooms3-0 message=ToMazeRooms3",
-	)
-	floorList.GetByName("MazeRooms3").Appends(
-		"AddPortalInRoom display=PortalOut acttype=PortalOut PortalID=MazeRooms3-0 DstPortalID=MazeRooms2-1 message=FromMazeRooms2",
-		"AddPortalInRoom display=PortalIn  acttype=PortalIn  PortalID=MazeRooms3-1 DstPortalID=MazeWalk-0 message=ToMazeWalk",
-	)
-	floorList.GetByName("MazeWalk").Appends(
-		"AddPortalRand display=PortalOut acttype=PortalOut PortalID=MazeWalk-0 DstPortalID=MazeRooms3-1 message=FromMazeRooms3",
-		"AddPortalRand display=PortalIn  acttype=PortalIn  PortalID=MazeWalk-1 DstPortalID=Practice-1 message=ToPractice",
-	)
+	).ConnectPortalTo("Rand", "Rand", floorList.GetByName("MazeRooms3"))
+	floorList.GetByName("MazeRooms3").ConnectPortalTo("Rand", "Rand", floorList.GetByName("MazeWalk"))
+	floorList.GetByName("MazeWalk").ConnectPortalTo("Rand", "InRoom", floorList.GetByName("Practice"))
 
 	for _, fm := range floorList {
 		randList := map[string]bool{
@@ -309,7 +302,7 @@ func MakeStartTower() floormake.FloorList {
 			suffix = "Rand"
 		}
 		fm.AddRecycler(suffix, 4)
-		fm.ConnectAutoInPortalTo(suffix, fm)
+		fm.ConnectAutoInPortalTo(suffix, suffix, fm)
 		fm.AddTrapTeleportTo(suffix, fm)
 		fm.AddAllEffectTrap(suffix, 1)
 	}

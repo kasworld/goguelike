@@ -72,7 +72,7 @@ func MakeRogueTower(floorCount int) floormake.FloorList {
 
 	for i, fm := range floorList {
 		roomCount := fm.W * fm.H / 512
-		fm.ConnectStairUp("InRoom", floorList[wrapInt(i+1, floorCount)])
+		fm.ConnectStairUp("InRoom", "InRoom", floorList[wrapInt(i+1, floorCount)])
 		fm.AddRecycler("InRoom", roomCount/2)
 		fm.AddTeleportIn("InRoom", roomCount/2)
 

@@ -71,8 +71,8 @@ func (fm *FloorMake) MakePortalIDStringInc() string {
 }
 
 // bidirection (in and out) portal
-// suffix "InRoom" or "Rand"
-func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) *FloorMake {
+// suffix "InRoom" or "Rand" or " x=47 y=15"
+func (fm *FloorMake) ConnectStairUp(suffix, suffix2 string, dstFloor *FloorMake) *FloorMake {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -81,13 +81,13 @@ func (fm *FloorMake) ConnectStairUp(suffix string, dstFloor *FloorMake) *FloorMa
 	)
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=StairDn acttype=PortalInOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
-		suffix, dstID, srcID, dstFloor.Name)
+		suffix2, dstID, srcID, dstFloor.Name)
 	return fm
 }
 
 // one way portal
-// suffix "InRoom" or "Rand"
-func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) *FloorMake {
+// suffix "InRoom" or "Rand" or " x=47 y=15"
+func (fm *FloorMake) ConnectPortalTo(suffix, suffix2 string, dstFloor *FloorMake) *FloorMake {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -96,13 +96,13 @@ func (fm *FloorMake) ConnectPortalTo(suffix string, dstFloor *FloorMake) *FloorM
 	)
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
-		suffix, dstID, srcID, dstFloor.Name)
+		suffix2, dstID, srcID, dstFloor.Name)
 	return fm
 }
 
 // one way auto activate portal
-// suffix "InRoom" or "Rand"
-func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) *FloorMake {
+// suffix "InRoom" or "Rand" or " x=47 y=15"
+func (fm *FloorMake) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *FloorMake) *FloorMake {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -111,7 +111,7 @@ func (fm *FloorMake) ConnectAutoInPortalTo(suffix string, dstFloor *FloorMake) *
 	)
 	dstFloor.Appendf(
 		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
-		suffix, dstID, srcID, dstFloor.Name)
+		suffix2, dstID, srcID, dstFloor.Name)
 	return fm
 }
 
