@@ -86,6 +86,9 @@ func preMakeTileMatGeo() {
 	gTile3D[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0], 2)
 	gTile3DDark[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0], 2)
 
+	// for i, tl := range gTile3D {
+	// 	jslog.Infof("%v %v", tile.Tile(i), tl.GeoInfo)
+	// }
 }
 
 var tileHeightCache [1 << uint(tile.Tile_Count)]float64

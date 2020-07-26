@@ -39,6 +39,14 @@ type Tile3D struct {
 	GeoInfo GeoInfo
 }
 
+func (aog *Tile3D) MakePosVector3(fx, fy int) js.Value {
+	return ThreeJsNew("Vector3",
+		aog.Shift[0]+float64(fx)*DstCellSize+DstCellSize/2,
+		-aog.Shift[1]-float64(fy)*DstCellSize-DstCellSize/2,
+		aog.Shift[2]+aog.GeoInfo.Len[2]/2,
+	)
+}
+
 func newTile3D() *Tile3D {
 	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	ctx := cnv.Call("getContext", "2d")
