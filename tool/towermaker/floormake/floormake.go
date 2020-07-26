@@ -18,19 +18,28 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 )
 
+type FloorList []*FloorMake
+
+func (fl FloorList) GetByName(name string) *FloorMake {
+	for _, fm := range fl {
+		if fm.Name == name {
+			return fm
+		}
+	}
+	return nil
+}
+
 type FloorMake struct {
 	rnd           *g2rand.G2Rand
-	Num           int
 	Name          string
 	W, H          int
 	PortalIDToUse int
 	Script        []string
 }
 
-func New(num int, name string, w, h int, ao, po int, turnBoost float64) *FloorMake {
+func New(name string, w, h int, ao, po int, turnBoost float64) *FloorMake {
 	fm := &FloorMake{
 		rnd:    g2rand.New(),
-		Num:    num,
 		Name:   name,
 		W:      w,
 		H:      h,
@@ -39,6 +48,11 @@ func New(num int, name string, w, h int, ao, po int, turnBoost float64) *FloorMa
 	fm.Appendf(
 		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
 		w, h, name, ao, po, turnBoost)
+	return fm
+}
+
+func (fm *FloorMake) Appends(arg ...string) *FloorMake {
+	fm.Script = append(fm.Script, arg...)
 	return fm
 }
 
