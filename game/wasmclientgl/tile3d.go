@@ -136,21 +136,24 @@ func NewTile3D_Tree(shiftZ float64) *Tile3D {
 }
 func MakeTreeGeo() js.Value {
 	matrix := ThreeJsNew("Matrix4")
+
 	geo := ThreeJsNew("CylinderGeometry", 1, 3, DstCellSize-1)
 	geo.Call("rotateX", math.Pi/2)
-	geo1 := ThreeJsNew("ConeGeometry", DstCellSize/3, DstCellSize/2-2)
-	geo1.Call("rotateX", math.Pi/2)
-	geo2 := ThreeJsNew("ConeGeometry", DstCellSize/2-2, DstCellSize/2-2)
-	geo2.Call("rotateX", math.Pi/2)
+
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, 0, DstCellSize/2-2,
+		0, 0, DstCellSize/3-2,
 	))
+	geo1 := ThreeJsNew("ConeGeometry", DstCellSize/4, DstCellSize/3)
+	geo1.Call("rotateX", math.Pi/2)
 	geo.Call("merge", geo1, matrix)
+	geo1.Call("dispose")
+
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
 		0, 0, 2,
 	))
+	geo2 := ThreeJsNew("ConeGeometry", DstCellSize/3, DstCellSize/3)
+	geo2.Call("rotateX", math.Pi/2)
 	geo.Call("merge", geo2, matrix)
-	geo1.Call("dispose")
 	geo2.Call("dispose")
 	return geo
 }
