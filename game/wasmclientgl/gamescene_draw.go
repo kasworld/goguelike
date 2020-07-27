@@ -86,10 +86,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 
 // floorview frame update
 func (vp *GameScene) UpdateFloorViewFrame(
-	cf *clientfloor.ClientFloor,
-	vpx, vpy int,
-	envBias bias.Bias,
-) {
+	cf *clientfloor.ClientFloor, vpx, vpy int, envBias bias.Bias) {
 
 	vp.makeClientTile4FloorView(cf, vpx, vpy)
 	vp.updateFieldObjInView(cf, vpx, vpy)
@@ -143,12 +140,9 @@ func (vp *GameScene) animateTile(envBias bias.Bias) {
 
 // common to playview, floorview
 func (vp *GameScene) moveCameraLight(
-	cf *clientfloor.ClientFloor,
-	vpx, vpy int,
-	frameProgress float64,
-	scrollDir way9type.Way9Type,
-	envBias bias.Bias,
-) {
+	cf *clientfloor.ClientFloor, vpx, vpy int, frameProgress float64,
+	scrollDir way9type.Way9Type, envBias bias.Bias) {
+
 	sx, sy := CalcShiftDxDy(frameProgress)
 	scrollDx := -scrollDir.Dx() * sx
 	scrollDy := scrollDir.Dy() * sy
@@ -337,11 +331,10 @@ func (vp *GameScene) updateFieldObjInView(
 	}
 }
 
+// place obj around vpx, vpy
 func (vp *GameScene) processNotiObjectList(
-	cf *clientfloor.ClientFloor,
-	olNoti *c2t_obj.NotiObjectList_data,
-	vpx, vpy int, // place obj around
-) {
+	cf *clientfloor.ClientFloor, olNoti *c2t_obj.NotiObjectList_data, vpx, vpy int) {
+
 	floorW := cf.XWrapper.GetWidth()
 	floorH := cf.YWrapper.GetWidth()
 
