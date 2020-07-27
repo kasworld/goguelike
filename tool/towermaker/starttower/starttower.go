@@ -131,11 +131,11 @@ func MakeStartTower(name string) *towermake.Tower {
 		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
 		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
 	)
-	tw.Add("FreeForAll", 256, 256, 16, 0, 1.0).Appends(
-		"ResourceFillRect     resource=Soil amount=256 x=0  y=0  w=256 h=256",
-		"ResourceFillEllipses resource=Plant amount=256 x=0  y=0  w=256 h=256",
-		"ResourceFillEllipses resource=Water amount=256 x=32  y=32  w=192 h=192",
-		"ResourceFillEllipses resource=Ice amount=256 x=64  y=64  w=128 h=128",
+	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
+		"ResourceFillRect     resource=Soil amount=256 x=0  y=0  w=64 h=64",
+		"ResourceFillEllipses resource=Plant amount=256 x=0  y=0  w=64 h=64",
+		"ResourceFillEllipses resource=Water amount=256 x=8  y=8  w=48 h=48",
+		"ResourceFillEllipses resource=Ice amount=256 x=16  y=16  w=32 h=32",
 	)
 	tw.Add("TileRooms", 64, 32, 0, 0, 1.5).Appends(
 		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16",
