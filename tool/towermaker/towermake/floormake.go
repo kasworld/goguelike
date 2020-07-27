@@ -84,7 +84,7 @@ func (fm *Floor) ConnectPortalTo(suffix, suffix2 string, dstFloor *Floor) *Floor
 		suffix, srcID, dstID, dstFloor.Name,
 	)
 	dstFloor.Appendf(
-		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=From%[4]v",
 		suffix2, dstID, srcID, fm.Name)
 	return fm
 }
@@ -99,7 +99,7 @@ func (fm *Floor) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *Floor) 
 		suffix, srcID, dstID, dstFloor.Name,
 	)
 	dstFloor.Appendf(
-		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=To%[4]v",
+		"AddPortal%[1]v display=PortalOut acttype=PortalOut PortalID=%[2]v DstPortalID=%[3]v message=From%[4]v",
 		suffix2, dstID, srcID, fm.Name)
 	return fm
 }
@@ -122,7 +122,7 @@ func (fm *Floor) AddRecycler(suffix string, count int) *Floor {
 
 // suffix "InRoom" or "Rand"
 func (fm *Floor) AddTrapTeleportTo(suffix string, dstFloor *Floor) *Floor {
-	fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=ToFloor%[2]v",
+	fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=To%[2]v",
 		suffix, dstFloor.Name)
 	return fm
 }
