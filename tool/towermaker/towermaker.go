@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	towername := flag.String("towername", "roguegen", "tower filename w/o .tower")
+	towername := flag.String("towername", "towermaker", "tower filename w/o .tower")
 	floorcount := flag.Int("floorcount", 100, "floor count in tower")
 	flag.Parse()
 
