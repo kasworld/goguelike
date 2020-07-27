@@ -1,6 +1,6 @@
 [
     [
-        "#made by tower maker"
+        "#tower roguegen, made by tower maker"
     ],
     [
         "NewTerrain w=32 h=32 name=Practice ao=0 po=0 actturnboost=0.7",
