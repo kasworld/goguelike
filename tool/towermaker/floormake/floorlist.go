@@ -30,6 +30,9 @@ func (fl FloorList) GetByName(name string) *FloorMake {
 
 func (fl FloorList) Save(towername string) error {
 	tw := make(towerscript.TowerScript, 0)
+	tw = append(tw, []string{
+		fmt.Sprintf("#tower %v, made by tower maker", towername),
+	})
 	for _, fm := range fl {
 		tw = append(tw, fm.Script)
 	}

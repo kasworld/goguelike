@@ -1,5 +1,8 @@
 [
     [
+        "#tower towermaker, made by tower maker"
+    ],
+    [
         "NewTerrain w=32 h=32 name=Practice ao=0 po=0 actturnboost=0.7",
         "AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
         "ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",

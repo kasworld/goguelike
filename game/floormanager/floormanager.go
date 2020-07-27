@@ -78,20 +78,17 @@ func (fm *FloorManager) Init() error {
 				fm.log.Fatal("floor init fail, %v", err)
 			}
 			tmpFloorList[i] = f
-			if i == 0 {
-				fm.startFloor = f
-			}
 		}(i, v)
 	}
 	wg.Wait()
 
-	if !fm.startFloor.Initialized() {
-		return fmt.Errorf("fail to init startfloor %v", fm.startFloor)
-	}
 	for i, f := range tmpFloorList {
 		if !f.Initialized() {
 			fm.log.Warn("skip not initialized floor %v", fm.terrainScript[i])
 			continue
+		}
+		if fm.startFloor == nil {
+			fm.startFloor = f
 		}
 		fm.log.TraceService("Floor generated %v", f)
 
