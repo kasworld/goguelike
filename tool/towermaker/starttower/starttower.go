@@ -34,7 +34,7 @@ func MakeStartTower() floormake.FloorList {
 			"ResourceRect resource=Plant  amount=1000001 x=0  y=0  w=128 h=128",
 			"ResourceLine resource=Stone amount=1000001 x1=30 y1=30 x2=96 y2=96",
 			"ResourceLine resource=Stone amount=1000001 x1=31 y1=97 x2=97 y2=31",
-
+			"",
 			"AddRoom bgtile=Ice walltile=Wall terrace=false    x=8  y=8  w=24 h=24",
 			"AddRoom bgtile=Sand walltile=Wall terrace=false   x=8  y=96 w=24 h=24",
 			"AddRoom bgtile=Magma walltile=Wall terrace=false  x=96 y=8  w=24 h=24",
@@ -151,12 +151,12 @@ func MakeStartTower() floormake.FloorList {
 			"ResourceFillRect  resource=Plant amount=1024 x=00 y=16 w=16 h=16",
 			"ResourceFillRect  resource=Stone amount=1024 x=16 y=00 w=16 h=16",
 			"ResourceFillRect  resource=Ice   amount=1024 x=16 y=16 w=16 h=16",
-
+			"",
 			"ResourceFillRect  resource=Soil  amount=1024 x=32 y=00 w=16 h=16",
 			"ResourceFillRect  resource=Water amount=1024 x=32 y=16 w=16 h=16",
 			"ResourceFillRect  resource=Stone amount=1024 x=48 y=00 w=16 h=16",
 			"ResourceFillRect  resource=Fire  amount=2000 x=48 y=16 w=16 h=16",
-
+			"",
 			"ResourceHLine resource=Stone amount=1000001 x=0  y=15 w=64",
 			"ResourceHLine resource=Stone amount=1000001 x=0  y=31 w=64",
 			"ResourceVLine resource=Stone amount=1000001 x=15 y=0  h=32",
@@ -197,7 +197,7 @@ func MakeStartTower() floormake.FloorList {
 	}
 
 	for _, fm := range floorList {
-		fm.Appends("FinalizeTerrain")
+		fm.Appends("FinalizeTerrain", "")
 	}
 
 	floorList.GetByName("SoilPlant").ConnectStairUp("InRoom", "InRoom", floorList.GetByName("ManyPortals"))

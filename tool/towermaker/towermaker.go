@@ -30,6 +30,9 @@ func main() {
 	floorList := starttower.MakeStartTower()
 
 	tw := make(towerscript.TowerScript, 0)
+	tw = append(tw, []string{
+		"#made by tower maker",
+	})
 	for _, fm := range floorList {
 		tw = append(tw, fm.Script)
 	}

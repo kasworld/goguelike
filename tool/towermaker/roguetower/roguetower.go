@@ -67,7 +67,7 @@ func MakeRogueTower(floorCount int) floormake.FloorList {
 		fm.Appendf(
 			"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
 			roadTile)
-		fm.Appendf("FinalizeTerrain")
+		fm.Appends("FinalizeTerrain", "")
 	}
 
 	for i, fm := range floorList {
