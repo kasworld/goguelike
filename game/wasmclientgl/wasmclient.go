@@ -100,10 +100,15 @@ type WasmClient struct {
 
 // call after pageload
 func InitPage() {
-	// hide loading message
-	GetElementById("loadmsg").Get("style").Set("display", "none")
 	preMakeTileMatGeo()
 	gameOptions = _gameopt // prevent compiler initialize loop
+	gFontLoader.Call("load", "three.js/examples/fonts/droid/droid_sans_mono_regular.typeface.json",
+		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			gFont_droid_sans_mono_regular = args[0]
+			return nil
+		}),
+	)
+
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
 		UUID2ClientFloor: make(map[string]*clientfloor.ClientFloor),
@@ -123,13 +128,8 @@ func InitPage() {
 		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			gFont_helvetiker_regular = args[0]
 			app.titlescene.addTitle()
-			return nil
-		}),
-	)
-
-	gFontLoader.Call("load", "three.js/examples/fonts/droid/droid_sans_mono_regular.typeface.json",
-		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			gFont_droid_sans_mono_regular = args[0]
+			// hide loading message
+			GetElementById("loadmsg").Get("style").Set("display", "none")
 			return nil
 		}),
 	)

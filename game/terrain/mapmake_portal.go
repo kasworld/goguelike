@@ -91,7 +91,7 @@ func (tr *Terrain) addPortalRand(portalID string, dstPortalID string,
 	dispType fieldobjdisplaytype.FieldObjDisplayType,
 	acttype fieldobjacttype.FieldObjActType, message string) error {
 
-	for try := 10; try > 0; try-- {
+	for try := 100; try > 0; try-- {
 		x, y := tr.rnd.Intn(tr.Xlen), tr.rnd.Intn(tr.Ylen)
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
@@ -101,7 +101,7 @@ func (tr *Terrain) addPortalRand(portalID string, dstPortalID string,
 		}
 		return tr.addPortal(portalID, dstPortalID, x, y, dispType, acttype, message)
 	}
-	return fmt.Errorf("fail to addPortalRand at NonCharPlaceable tile")
+	return fmt.Errorf("fail to addPortalRand")
 }
 
 func (tr *Terrain) addPortalRandInRoom(portalID string, dstPortalID string,
@@ -129,5 +129,5 @@ func (tr *Terrain) addPortalRandInRoom(portalID string, dstPortalID string,
 		}
 		return tr.addPortal(portalID, dstPortalID, x, y, dispType, acttype, message)
 	}
-	return fmt.Errorf("cannot find pos in room")
+	return fmt.Errorf("fail to addPortalRandInRoom")
 }
