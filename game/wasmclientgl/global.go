@@ -12,7 +12,6 @@
 package wasmclientgl
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"syscall/js"
@@ -22,10 +21,8 @@ import (
 	"github.com/kasworld/go-abs"
 
 	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/lib/clienttile"
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
 const (
@@ -50,50 +47,7 @@ var gClientTile *clienttile.ClientTile = clienttile.New()
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 var gFontLoader js.Value = ThreeJsNew("FontLoader")
 var gFont_helvetiker_regular js.Value
-
-func NewTileMaterial(ti webtilegroup.TileInfo) js.Value {
-	Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-	Ctx := Cnv.Call("getContext", "2d")
-	Ctx.Set("imageSmoothingEnabled", false)
-	Cnv.Set("width", DstCellSize)
-	Cnv.Set("height", DstCellSize)
-	Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-
-	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	mat := ThreeJsNew("MeshStandardMaterial",
-		map[string]interface{}{
-			"map": Tex,
-		},
-	)
-	mat.Set("transparent", true)
-	// mat.Set("side", ThreeJs().Get("DoubleSide"))
-	return mat
-}
-
-func NewTextureTileMaterial(ti tile.Tile) js.Value {
-	Cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-	Ctx := Cnv.Call("getContext", "2d")
-	Ctx.Set("imageSmoothingEnabled", false)
-	Cnv.Set("width", DstCellSize)
-	Cnv.Set("height", DstCellSize)
-
-	img := GetElementById(fmt.Sprintf("%vPng", ti))
-	Ctx.Call("drawImage", img,
-		0, 0, DstCellSize, DstCellSize,
-		0, 0, DstCellSize, DstCellSize)
-
-	Tex := ThreeJsNew("CanvasTexture", Cnv)
-	mat := ThreeJsNew("MeshStandardMaterial",
-		map[string]interface{}{
-			"map": Tex,
-		},
-	)
-	mat.Set("transparent", true)
-	// mat.Set("side", ThreeJs().Get("DoubleSide"))
-	return mat
-}
+var gFont_droid_sans_mono_regular js.Value
 
 func CalcCurrentFrame(difftick int64, fps float64) int {
 	diffsec := float64(difftick) / float64(time.Second)

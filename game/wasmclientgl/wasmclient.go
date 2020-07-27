@@ -127,6 +127,14 @@ func InitPage() {
 		}),
 	)
 
+	gFontLoader.Call("load", "three.js/examples/fonts/droid/droid_sans_mono_regular.typeface.json",
+		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			gFont_droid_sans_mono_regular = args[0]
+			app.titlescene.addTitle()
+			return nil
+		}),
+	)
+
 	js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 
 	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
