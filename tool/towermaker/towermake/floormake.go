@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package floormake
+package towermake
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 )
 
-type FloorMake struct {
+type Floor struct {
 	rnd           *g2rand.G2Rand
 	Name          string
 	W, H          int
@@ -26,33 +26,33 @@ type FloorMake struct {
 	Script        []string
 }
 
-func New(name string, w, h int, ao, po int, turnBoost float64) *FloorMake {
-	fm := &FloorMake{
-		rnd:    g2rand.New(),
-		Name:   name,
-		W:      w,
-		H:      h,
-		Script: make([]string, 0),
-	}
-	fm.Appendf(
-		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
-		w, h, name, ao, po, turnBoost)
-	return fm
-}
+// func New(name string, w, h int, ao, po int, turnBoost float64) *Floor {
+// 	fm := &Floor{
+// 		rnd:    g2rand.New(),
+// 		Name:   name,
+// 		W:      w,
+// 		H:      h,
+// 		Script: make([]string, 0),
+// 	}
+// 	fm.Appendf(
+// 		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
+// 		w, h, name, ao, po, turnBoost)
+// 	return fm
+// }
 
-func (fm *FloorMake) Appends(arg ...string) *FloorMake {
+func (fm *Floor) Appends(arg ...string) *Floor {
 	fm.Script = append(fm.Script, arg...)
 	return fm
 }
 
-func (fm *FloorMake) Appendf(format string, arg ...interface{}) *FloorMake {
+func (fm *Floor) Appendf(format string, arg ...interface{}) *Floor {
 	fm.Script = append(fm.Script,
 		fmt.Sprintf(format, arg...),
 	)
 	return fm
 }
 
-func (fm *FloorMake) MakePortalIDStringInc() string {
+func (fm *Floor) MakePortalIDStringInc() string {
 	rtn := fmt.Sprintf("%v-%v", fm.Name, fm.PortalIDToUse)
 	// inc portal id to use
 	fm.PortalIDToUse++
@@ -61,7 +61,7 @@ func (fm *FloorMake) MakePortalIDStringInc() string {
 
 // bidirection (in and out) portal
 // suffix "InRoom" or "Rand" or " x=47 y=15"
-func (fm *FloorMake) ConnectStairUp(suffix, suffix2 string, dstFloor *FloorMake) *FloorMake {
+func (fm *Floor) ConnectStairUp(suffix, suffix2 string, dstFloor *Floor) *Floor {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -76,7 +76,7 @@ func (fm *FloorMake) ConnectStairUp(suffix, suffix2 string, dstFloor *FloorMake)
 
 // one way portal
 // suffix "InRoom" or "Rand" or " x=47 y=15"
-func (fm *FloorMake) ConnectPortalTo(suffix, suffix2 string, dstFloor *FloorMake) *FloorMake {
+func (fm *Floor) ConnectPortalTo(suffix, suffix2 string, dstFloor *Floor) *Floor {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -91,7 +91,7 @@ func (fm *FloorMake) ConnectPortalTo(suffix, suffix2 string, dstFloor *FloorMake
 
 // one way auto activate portal
 // suffix "InRoom" or "Rand" or " x=47 y=15"
-func (fm *FloorMake) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *FloorMake) *FloorMake {
+func (fm *Floor) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *Floor) *Floor {
 	srcID := fm.MakePortalIDStringInc()
 	dstID := dstFloor.MakePortalIDStringInc()
 	fm.Appendf(
@@ -105,7 +105,7 @@ func (fm *FloorMake) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *Flo
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddTeleportIn(suffix string, count int) *FloorMake {
+func (fm *Floor) AddTeleportIn(suffix string, count int) *Floor {
 	fm.Appendf(
 		"AddTrapTeleports%[1]v DstFloor=%[2]v count=%[3]v message=Teleport",
 		suffix, fm.Name, count)
@@ -113,7 +113,7 @@ func (fm *FloorMake) AddTeleportIn(suffix string, count int) *FloorMake {
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddRecycler(suffix string, count int) *FloorMake {
+func (fm *Floor) AddRecycler(suffix string, count int) *Floor {
 	fm.Appendf(
 		"AddRecycler%[1]v display=Recycler count=%[2]v message=Recycle",
 		suffix, count)
@@ -121,14 +121,14 @@ func (fm *FloorMake) AddRecycler(suffix string, count int) *FloorMake {
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddTrapTeleportTo(suffix string, dstFloor *FloorMake) *FloorMake {
+func (fm *Floor) AddTrapTeleportTo(suffix string, dstFloor *Floor) *Floor {
 	fm.Appendf("AddTrapTeleports%[1]v DstFloor=%[2]v count=1 message=ToFloor%[2]v",
 		suffix, dstFloor.Name)
 	return fm
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) *FloorMake {
+func (fm *Floor) AddEffectTrap(suffix string, trapCount int) *Floor {
 	for trapMade := 0; trapMade < trapCount; {
 		j := fm.rnd.Intn(fieldobjacttype.FieldObjActType_Count)
 		ft := fieldobjacttype.FieldObjActType(j)
@@ -143,7 +143,7 @@ func (fm *FloorMake) AddEffectTrap(suffix string, trapCount int) *FloorMake {
 }
 
 // suffix "InRoom" or "Rand"
-func (fm *FloorMake) AddAllEffectTrap(suffix string, countPerEffectTrapType int) *FloorMake {
+func (fm *Floor) AddAllEffectTrap(suffix string, countPerEffectTrapType int) *Floor {
 	for j := 0; j < fieldobjacttype.FieldObjActType_Count; j++ {
 		ft := fieldobjacttype.FieldObjActType(j)
 		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {

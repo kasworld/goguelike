@@ -24,8 +24,8 @@ func main() {
 	flag.Parse()
 
 	fmt.Printf("try make tower with towername:%v floorcount:%v\n", *towername, *floorcount)
-	// floorList := roguetower.MakeRogueTower( *floorcount)
-	floorList := starttower.MakeStartTower()
+	// tower := roguetower.MakeRogueTower(*towername, *floorcount)
+	tower := starttower.MakeStartTower(*towername)
 
-	floorList.Save(*towername)
+	tower.Save()
 }

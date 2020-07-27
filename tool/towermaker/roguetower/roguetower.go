@@ -16,7 +16,7 @@ import (
 	"math/bits"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/tool/towermaker/floormake"
+	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
 
 func wrapInt(v, l int) int {
@@ -27,20 +27,20 @@ func makePowerOf2(v int) int {
 	return 1 << uint(bits.Len(uint(v-1)))
 }
 
-func MakeRogueTower(floorCount int) floormake.FloorList {
+func MakeRogueTower(name string, floorCount int) *towermake.Tower {
 	var rnd = g2rand.New()
 	var whList = []int{
 		32, 64, 128,
 	}
-	floorList := make(floormake.FloorList, floorCount)
-	for i := range floorList {
+	tw := towermake.New(name)
+	for i := 0; i < floorCount; i++ {
 		w := whList[rnd.Intn(len(whList))]
 		h := whList[rnd.Intn(len(whList))]
 		roomCount := w * h / 512
 		if roomCount < 2 {
 			roomCount = 2
 		}
-		floorList[i] = floormake.New(
+		tw.Add(
 			fmt.Sprintf("Floor%v", i),
 			w, h,
 			roomCount/2, 0,
@@ -54,7 +54,7 @@ func MakeRogueTower(floorCount int) floormake.FloorList {
 	var allRoadTile = []string{
 		"Road", "Soil", "Sand", "Stone", "Grass", "Tree", "Fog",
 	}
-	for _, fm := range floorList {
+	for _, fm := range tw.GetList() {
 		roomCount := fm.W * fm.H / 512
 		if roomCount < 2 {
 			roomCount = 2
@@ -70,17 +70,17 @@ func MakeRogueTower(floorCount int) floormake.FloorList {
 		fm.Appends("FinalizeTerrain", "")
 	}
 
-	for i, fm := range floorList {
+	for i, fm := range tw.GetList() {
 		roomCount := fm.W * fm.H / 512
-		fm.ConnectStairUp("InRoom", "InRoom", floorList[wrapInt(i+1, floorCount)])
+		fm.ConnectStairUp("InRoom", "InRoom", tw.GetList()[wrapInt(i+1, floorCount)])
 		fm.AddRecycler("InRoom", roomCount/2)
 		fm.AddTeleportIn("InRoom", roomCount/2)
 
 		for trapMade := 0; trapMade < roomCount/2; trapMade++ {
-			dstFloor := floorList[rnd.Intn(len(floorList))]
+			dstFloor := tw.GetList()[rnd.Intn(tw.GetCount())]
 			fm.AddTrapTeleportTo("InRoom", dstFloor)
 		}
 		fm.AddEffectTrap("InRoom", roomCount/2)
 	}
-	return floorList
+	return tw
 }
