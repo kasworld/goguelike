@@ -18,17 +18,6 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 )
 
-type FloorList []*FloorMake
-
-func (fl FloorList) GetByName(name string) *FloorMake {
-	for _, fm := range fl {
-		if fm.Name == name {
-			return fm
-		}
-	}
-	return nil
-}
-
 type FloorMake struct {
 	rnd           *g2rand.G2Rand
 	Name          string
