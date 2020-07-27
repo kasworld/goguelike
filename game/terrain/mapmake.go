@@ -104,9 +104,9 @@ func (tr *Terrain) Execute1Cmdline(cmdline string) error {
 
 func (tr *Terrain) execNewTerrain(
 	name string, w, h int, aocount, pocount int, actturnboost float64) error {
-	if !isPowerOfTwo(w) || !isPowerOfTwo(h) {
-		return fmt.Errorf("w,h must power of 2, %v %v", w, h)
-	}
+	// if !isPowerOfTwo(w) || !isPowerOfTwo(h) {
+	// 	return fmt.Errorf("w,h must power of 2, %v %v", w, h)
+	// }
 	tr.Xlen, tr.Ylen = w, h
 	tr.ActiveObjCount = aocount
 	tr.CarryObjCount = pocount

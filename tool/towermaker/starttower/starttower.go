@@ -17,8 +17,8 @@ import (
 
 func MakeStartTower(name string) *towermake.Tower {
 	tw := towermake.New(name)
-	tw.Add("Practice", 32, 32, 0, 0, 0.7).Appends(
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
+	tw.Add("Practice", 64, 32, 0, 0, 0.7).Appends(
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
 		"ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
 	)
 	tw.Add("SoilPlant", 64, 64, 16, 0, 1.0).Appends(
@@ -107,34 +107,35 @@ func MakeStartTower(name string) *towermake.Tower {
 		"ResourceAgeing initrun=10 msper=67000 resetaftern=1440",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=10 stddev=4 min=4",
 	)
-	tw.Add("RogueLike", 64, 32, 16, 0, 1.0).Appends(
-		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
+	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
+		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
 		"ConnectRooms tile=Soil connect=2 allconnect=true diagonal=false",
 	)
-	tw.Add("GogueLike", 64, 32, 32, 0, 1.0).Appends(
-		"AddRoomsRand bgtile=Swamp walltile=Wall terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Soil walltile=Wall  terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Stone walltile=Wall terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Sand walltile=Wall  terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Sea walltile=Wall   terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Magma walltile=Wall terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Ice walltile=Wall   terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Grass walltile=Wall terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Tree walltile=Wall  terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Room walltile=Wall  terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Road walltile=Wall  terrace=false align=1 count=1 mean=6 stddev=4 min=4",
-		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=1 mean=6 stddev=4 min=4",
+	tw.Add("GogueLike", 80, 43, 32, 0, 1.0).Appends(
+		"AddRoomsRand bgtile=Swamp walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Soil walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Stone walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Sand walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Sea walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Magma walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Ice walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Grass walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Tree walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Room walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Road walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
 		"ConnectRooms tile=Fog connect=1 allconnect=true diagonal=false",
 		"ConnectRooms tile=Sand connect=1 allconnect=true diagonal=false",
 	)
-	tw.Add("Ghost", 64, 32, 16, 0, 1.0).Appends(
-		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
+	tw.Add("Ghost", 80, 43, 16, 0, 1.0).Appends(
+		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
 		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
 	)
-	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
-		"ResourceFillRect     resource=Soil amount=256 x=0  y=0  w=64 h=64",
-		"ResourceFillEllipses resource=Plant amount=256 x=0  y=0  w=64 h=64",
-		"ResourceFillEllipses resource=Water amount=256 x=16  y=16  w=32 h=32",
+	tw.Add("FreeForAll", 256, 256, 16, 0, 1.0).Appends(
+		"ResourceFillRect     resource=Soil amount=256 x=0  y=0  w=256 h=256",
+		"ResourceFillEllipses resource=Plant amount=256 x=0  y=0  w=256 h=256",
+		"ResourceFillEllipses resource=Water amount=256 x=32  y=32  w=192 h=192",
+		"ResourceFillEllipses resource=Ice amount=256 x=64  y=64  w=128 h=128",
 	)
 	tw.Add("TileRooms", 64, 32, 0, 0, 1.5).Appends(
 		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16",
