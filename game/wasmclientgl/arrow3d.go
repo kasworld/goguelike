@@ -103,12 +103,12 @@ func (aog *ColorArrow3D) Visible(b bool) {
 	aog.Mesh.Set("visible", b)
 }
 
-func (aog *ColorArrow3D) SetFieldPosition(fx, fy int) {
+func (aog *ColorArrow3D) SetFieldPosition(fx, fy int, shZ float64) {
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+DstCellSize/2,
 		-float64(fy)*DstCellSize-DstCellSize/2,
-		DstCellSize/2,
+		DstCellSize/2+shZ,
 	)
 }
 
