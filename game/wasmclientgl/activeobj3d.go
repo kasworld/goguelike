@@ -158,22 +158,25 @@ func (aog *ActiveObj3D) Dispose() {
 	// no need createElement canvas dom obj
 }
 
-func MakeActiveObj3dGeometry(ft factiontype.FactionType) js.Value {
-	ftlList := [factiontype.FactionType_Count]string{
+var gActiveObj3DGeo [factiontype.FactionType_Count]js.Value
+
+func preMakeActiveObj3DGeo() {
+	ftList := [factiontype.FactionType_Count]string{
 		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
 	}
-	geo := ThreeJsNew("TextGeometry", ftlList[ft],
-		map[string]interface{}{
-			"font":           gFont_droid_sans_mono_regular,
-			"size":           DstCellSize,
-			"height":         DstCellSize,
-			"curveSegments":  DstCellSize / 3,
-			"bevelEnabled":   true,
-			"bevelThickness": DstCellSize / 8,
-			"bevelSize":      DstCellSize / 16,
-			"bevelOffset":    0,
-			"bevelSegments":  DstCellSize / 8,
-		})
-	return geo
+	for i, str := range ftList {
+		gActiveObj3DGeo[i] = ThreeJsNew("TextGeometry", str,
+			map[string]interface{}{
+				"font":           gFont_droid_sans_mono_regular,
+				"size":           DstCellSize,
+				"height":         DstCellSize,
+				"curveSegments":  DstCellSize / 3,
+				"bevelEnabled":   true,
+				"bevelThickness": DstCellSize / 8,
+				"bevelSize":      DstCellSize / 16,
+				"bevelOffset":    0,
+				"bevelSegments":  DstCellSize / 8,
+			})
+	}
 }
