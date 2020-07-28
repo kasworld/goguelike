@@ -163,6 +163,8 @@ func MakeTreeGeo() js.Value {
 	geo2.Call("rotateX", math.Pi/2)
 	geo.Call("merge", geo2, matrix)
 	geo2.Call("dispose")
+
+	geo.Call("center")
 	return geo
 }
 

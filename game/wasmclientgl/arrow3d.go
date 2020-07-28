@@ -96,6 +96,7 @@ func MakeArrowGeo() js.Value {
 	))
 	geoLine.Call("merge", geoCone, matrix)
 	geoCone.Call("dispose")
+	geoLine.Call("center")
 	return geoLine
 }
 
