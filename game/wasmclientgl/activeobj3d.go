@@ -17,49 +17,33 @@ import (
 	"github.com/kasworld/goguelike/enum/factiontype"
 )
 
-// var gPoolActiveObj3D = NewPoolActiveObj3D(PoolSizeActiveObj3D)
+var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
+	Geo     js.Value
+	GeoInfo GeoInfo
+}
 
-// type PoolActiveObj3D struct {
-// 	mutex    sync.Mutex
-// 	poolData []*ActiveObj3D
-// 	newCount int
-// 	getCount int
-// 	putCount int
-// }
-
-// func NewPoolActiveObj3D(initCap int) *PoolActiveObj3D {
-// 	return &PoolActiveObj3D{
-// 		poolData: make([]*ActiveObj3D, 0, initCap),
-// 	}
-// }
-
-// func (p *PoolActiveObj3D) String() string {
-// 	return fmt.Sprintf("PoolActiveObj3D[%v/%v new:%v get:%v put:%v]",
-// 		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
-// 	)
-// }
-
-// func (p *PoolActiveObj3D) Get() *ActiveObj3D {
-// 	p.mutex.Lock()
-// 	defer p.mutex.Unlock()
-// 	var rtn *ActiveObj3D
-// 	if l := len(p.poolData); l > 0 {
-// 		rtn = p.poolData[l-1]
-// 		p.poolData = p.poolData[:l-1]
-// 		p.getCount++
-// 	} else {
-// 		rtn = NewActiveObj3D()
-// 		p.newCount++
-// 	}
-// 	return rtn
-// }
-
-// func (p *PoolActiveObj3D) Put(pb *ActiveObj3D) {
-// 	p.mutex.Lock()
-// 	defer p.mutex.Unlock()
-// 	p.poolData = append(p.poolData, pb)
-// 	p.putCount++
-// }
+func preMakeActiveObj3DGeo() {
+	ftList := [factiontype.FactionType_Count]string{
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+	}
+	for i, str := range ftList {
+		geo := ThreeJsNew("TextGeometry", str,
+			map[string]interface{}{
+				"font":           gFont_droid_sans_mono_regular,
+				"size":           DstCellSize / 2,
+				"height":         DstCellSize / 3,
+				"curveSegments":  DstCellSize / 3,
+				"bevelEnabled":   true,
+				"bevelThickness": DstCellSize / 8,
+				"bevelSize":      DstCellSize / 16,
+				"bevelOffset":    0,
+				"bevelSegments":  DstCellSize / 8,
+			})
+		gActiveObj3DGeo[i].Geo = geo
+		gActiveObj3DGeo[i].GeoInfo = GetGeoInfo(geo)
+	}
+}
 
 type ActiveObj3D struct {
 	Faction factiontype.FactionType
@@ -95,11 +79,12 @@ func (aog *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, boo
 }
 
 func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
+	geoinfo := gActiveObj3DGeo[aog.Faction].GeoInfo
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		gActiveObj3DGeo[aog.Faction].GeoInfo.Len[2]/2+1+shZ,
+		float64(fx)*DstCellSize+DstCellSize/2-geoinfo.Len[0]/2,
+		-float64(fy)*DstCellSize-DstCellSize/2-geoinfo.Len[1]/2,
+		geoinfo.Len[2]/2+1+shZ,
 	)
 }
 
@@ -138,32 +123,4 @@ func (aog *ActiveObj3D) Dispose() {
 	aog.Mesh.Get("material").Call("dispose")
 	aog.Mesh = js.Undefined()
 	// no need createElement canvas dom obj
-}
-
-var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
-	Geo     js.Value
-	GeoInfo GeoInfo
-}
-
-func preMakeActiveObj3DGeo() {
-	ftList := [factiontype.FactionType_Count]string{
-		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-	}
-	for i, str := range ftList {
-		geo := ThreeJsNew("TextGeometry", str,
-			map[string]interface{}{
-				"font":           gFont_droid_sans_mono_regular,
-				"size":           DstCellSize,
-				"height":         DstCellSize / 2,
-				"curveSegments":  DstCellSize / 3,
-				"bevelEnabled":   true,
-				"bevelThickness": DstCellSize / 8,
-				"bevelSize":      DstCellSize / 16,
-				"bevelOffset":    0,
-				"bevelSegments":  DstCellSize / 8,
-			})
-		gActiveObj3DGeo[i].Geo = geo
-		gActiveObj3DGeo[i].GeoInfo = GetGeoInfo(geo)
-	}
 }

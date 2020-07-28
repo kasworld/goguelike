@@ -358,12 +358,6 @@ func (vp *GameScene) processNotiObjectList(
 			ao3d.Name = lb3d
 			vp.scene.Call("add", lb3d.Mesh)
 		}
-		// tlList := gClientTile.CharTiles[ao.Faction]
-		// if ao.Alive {
-		// 	ao3d.ChangeTile(tlList[0])
-		// } else {
-		// 	ao3d.ChangeTile(tlList[1])
-		// }
 		if oldmesh, changed := ao3d.ChangeFaction(ao.Faction); changed {
 			vp.scene.Call("remove", oldmesh)
 			vp.scene.Call("add", ao3d.Mesh)
@@ -434,7 +428,6 @@ func (vp *GameScene) processNotiObjectList(
 			vp.scene.Call("remove", ao3d.Mesh)
 			delete(vp.jsSceneAOs, id)
 			ao3d.Dispose()
-			// gPoolActiveObj3D.Put(ao3d)
 
 			vp.scene.Call("remove", ao3d.Name.Mesh)
 			gPoolLabel3D.Put(ao3d.Name)
