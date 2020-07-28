@@ -307,10 +307,11 @@ func (vp *GameScene) updateFieldObjInView(
 		}
 		if !addFOuuid[obj.GetUUID()] {
 			tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-			fo3d.SetFieldPosition(fx, fy, tl)
+			shZ := GetTile3DHeightByCache(tl)
+			fo3d.SetFieldPosition(fx, fy, shZ)
 			addFOuuid[obj.GetUUID()] = true
 			fo3d.Label.SetFieldPosition(fx, fy,
-				0, 0, DstCellSize+3)
+				0, 0, DstCellSize+2+shZ)
 		} else {
 			// same fo in gXYLenListView
 			// field too small
@@ -363,9 +364,10 @@ func (vp *GameScene) processNotiObjectList(
 		}
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		ao3d.SetFieldPosition(fx, fy, tl)
+		shZ := GetTile3DHeightByCache(tl)
+		ao3d.SetFieldPosition(fx, fy, shZ)
 		addAOuuid[ao.UUID] = true
-		ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+3)
+		ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
 		if len(ao.Chat) == 0 {
 			if ao3d.Chat != nil {
 				vp.scene.Call("remove", ao3d.Chat.Mesh)
@@ -389,7 +391,7 @@ func (vp *GameScene) processNotiObjectList(
 		}
 		if ao3d.Chat != nil {
 			ao3d.Chat.SetFieldPosition(fx, fy,
-				0, -DstCellSize/2, DstCellSize+3)
+				0, -DstCellSize/2, DstCellSize+2+shZ)
 		}
 
 		if ao.UUID == playerUUID { // player ao

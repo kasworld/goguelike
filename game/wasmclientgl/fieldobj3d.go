@@ -18,7 +18,6 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
-	"github.com/kasworld/goguelike/enum/tile_flag"
 
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
@@ -111,13 +110,12 @@ func (aog *FieldObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Tex.Set("needsUpdate", true)
 }
 
-func (aog *FieldObj3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
-	height := GetTile3DHeightByCache(tl)
+func (aog *FieldObj3D) SetFieldPosition(fx, fy int, shZ float64) {
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+DstCellSize/2,
 		-float64(fy)*DstCellSize-DstCellSize/2,
-		aog.GeoInfo.Len[2]/2+1+height,
+		aog.GeoInfo.Len[2]/2+1+shZ,
 	)
 }
 
