@@ -378,7 +378,7 @@ func (f *Floor) canMove2Dir(aox, aoy int, dir way9type.Way9Type) (int, int, c2t_
 	if !tl.CharPlaceable() {
 		return aox, aoy, c2t_error.MoveBlockedByTile
 	}
-	if !tl.NoBattle() {
+	if !tl.CanPlaceMultiObj() {
 		for _, vv := range f.aoPosMan.GetObjListAt(newX, newY) {
 			v := vv.(gamei.ActiveObjectI)
 			if v.IsAlive() {

@@ -32,7 +32,7 @@ var autoActs = htmlbutton.NewButtonGroup("AutoActs",
 		htmlbutton.New("z", "AutoPlay", []string{"AutoPlay", "NoAutoPlay"}, "ServerAI on/off", cmdToggleServerAI, 0),
 		htmlbutton.New("x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"}, "auto rebirth on/off", btnFocus2Canvas, 0),
 		// client ai
-		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoBattle"}, "Auto Battle on/off", btnFocus2Canvas, 0),
+		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoAutoBattle"}, "Auto Battle on/off", btnFocus2Canvas, 0),
 		htmlbutton.New("v", "AutoPickup", []string{"AutoPickup", "NoAutoPickup"}, "Auto Pickup on/off", btnFocus2Canvas, 0),
 		htmlbutton.New("b", "AutoEquip", []string{"AutoEquip", "NoAutoEquip"}, "Auto Equip/Unequip on/off", btnFocus2Canvas, 0),
 		htmlbutton.New("n", "AutoUsePotionScroll", []string{"AutoUsePotionScroll", "NoAutoUsePotionScroll"}, "Auto Use Potion and Scroll on/off", btnFocus2Canvas, 0),

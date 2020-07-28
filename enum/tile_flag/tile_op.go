@@ -90,8 +90,8 @@ var overrideList = []TileFlag{
 	tile.Smoke: Layer_3,
 	tile.Fog:   Layer_3,
 
-	tile.Road: Layer_1 | Layer_2 | Layer_4,
-	tile.Room: Layer_1 | Layer_2 | Layer_4,
+	// tile.Road: Layer_1 | Layer_2 | Layer_4,
+	// tile.Room: Layer_1 | Layer_2 | Layer_4,
 	// Wall:   Layer_1 | Layer_2 | Layer_4,
 	// Window: Layer_1 | Layer_2 | Layer_4,
 	// Door:   Layer_1 | Layer_2 | Layer_4,

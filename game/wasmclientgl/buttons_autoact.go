@@ -34,7 +34,7 @@ var autoActs = htmlbutton.NewButtonGroup("AutoActs",
 		htmlbutton.New("x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"},
 			"auto rebirth on/off", cmdToggleAutoRebirth, 0),
 		// client ai
-		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoBattle"},
+		htmlbutton.New("c", "AutoBattle", []string{"AutoBattle", "NoAutoBattle"},
 			"Auto Battle on/off", cmdToggleAutoBattle, 0),
 		htmlbutton.New("v", "AutoPickup", []string{"AutoPickup", "NoAutoPickup"},
 			"Auto Pickup on/off", cmdToggleAutoPickup, 0),
