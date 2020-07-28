@@ -59,7 +59,7 @@ func (ts *TitleScene) Resize(w, h float64) {
 
 func (ts *TitleScene) addTitle() {
 	str := "Goguelike-GL"
-	ftGeo := GetTextGeometryByCache(str, 80)
+	ftGeo := MakeTitleTextGeometry(str, 80)
 	geoInfo := GetGeoInfo(ftGeo)
 	co := gRnd.Uint32() & 0x00ffffff
 	ftMat := GetColorMaterialByCache(fmt.Sprintf("#%06x", co))
@@ -72,70 +72,18 @@ func (ts *TitleScene) addTitle() {
 	ts.scene.Call("add", ts.jsoTitle)
 }
 
-type textGeoKey struct {
-	Str  string
-	Size float64
-}
-
-var gTextGeometryCache map[textGeoKey]js.Value = make(map[textGeoKey]js.Value)
-
-func GetTextGeometryByCache(str string, size float64) js.Value {
-	geo, exist := gTextGeometryCache[textGeoKey{str, size}]
-	if !exist {
-		geo = GetTitleTextGeometry(str, size)
-		gTextGeometryCache[textGeoKey{str, size}] = geo
-	}
-	return geo
-}
-
-func GetTitleTextGeometry(str string, size float64) js.Value {
-	curveSegments := size / 3
-	if curveSegments < 1 {
-		curveSegments = 1
-	}
-	bevelEnabled := true
-	if size < 16 {
-		bevelEnabled = false
-	}
-	bevelThickness := size / 8
-	if bevelThickness < 1 {
-		bevelThickness = 1
-	}
-	bevelSize := size / 16
-	if bevelSize < 1 {
-		bevelSize = 1
-	}
-	bevelSegments := size / 8
-	if bevelSegments < 1 {
-		bevelSegments = 1
-	}
+func MakeTitleTextGeometry(str string, size float64) js.Value {
 	geo := ThreeJsNew("TextGeometry", str,
 		map[string]interface{}{
 			"font":           gFont_helvetiker_regular,
 			"size":           size,
 			"height":         5,
-			"curveSegments":  curveSegments,
-			"bevelEnabled":   bevelEnabled,
-			"bevelThickness": bevelThickness,
-			"bevelSize":      bevelSize,
+			"curveSegments":  size / 3,
+			"bevelEnabled":   true,
+			"bevelThickness": size / 8,
+			"bevelSize":      size / 16,
 			"bevelOffset":    0,
-			"bevelSegments":  bevelSegments,
+			"bevelSegments":  size / 8,
 		})
 	return geo
-}
-
-var gColorMaterialCache map[string]js.Value = make(map[string]js.Value)
-
-func GetColorMaterialByCache(co string) js.Value {
-	mat, exist := gColorMaterialCache[co]
-	if !exist {
-		mat = ThreeJsNew("MeshStandardMaterial",
-			map[string]interface{}{
-				"color": co,
-			},
-		)
-		mat.Set("transparent", true)
-		gColorMaterialCache[co] = mat
-	}
-	return mat
 }

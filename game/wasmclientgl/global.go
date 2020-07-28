@@ -49,6 +49,22 @@ var gFontLoader js.Value = ThreeJsNew("FontLoader")
 var gFont_helvetiker_regular js.Value
 var gFont_droid_sans_mono_regular js.Value
 
+var gColorMaterialCache map[string]js.Value = make(map[string]js.Value)
+
+func GetColorMaterialByCache(co string) js.Value {
+	mat, exist := gColorMaterialCache[co]
+	if !exist {
+		mat = ThreeJsNew("MeshStandardMaterial",
+			map[string]interface{}{
+				"color": co,
+			},
+		)
+		mat.Set("transparent", true)
+		gColorMaterialCache[co] = mat
+	}
+	return mat
+}
+
 func CalcCurrentFrame(difftick int64, fps float64) int {
 	diffsec := float64(difftick) / float64(time.Second)
 	frame := fps * diffsec

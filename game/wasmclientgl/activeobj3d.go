@@ -16,6 +16,8 @@ import (
 	"sync"
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/factiontype"
+
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
@@ -154,4 +156,24 @@ func (aog *ActiveObj3D) Dispose() {
 	aog.Mesh = js.Undefined()
 	aog.Tex = js.Undefined()
 	// no need createElement canvas dom obj
+}
+
+func MakeActiveObj3dGeometry(ft factiontype.FactionType) js.Value {
+	ftlList := [factiontype.FactionType_Count]string{
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+	}
+	geo := ThreeJsNew("TextGeometry", ftlList[ft],
+		map[string]interface{}{
+			"font":           gFont_droid_sans_mono_regular,
+			"size":           DstCellSize,
+			"height":         DstCellSize,
+			"curveSegments":  DstCellSize / 3,
+			"bevelEnabled":   true,
+			"bevelThickness": DstCellSize / 8,
+			"bevelSize":      DstCellSize / 16,
+			"bevelOffset":    0,
+			"bevelSegments":  DstCellSize / 8,
+		})
+	return geo
 }
