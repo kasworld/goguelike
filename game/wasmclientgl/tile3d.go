@@ -123,6 +123,17 @@ func NewTile3D_BoxTexture(tl tile.Tile) *Tile3D {
 	return t3d
 }
 
+func NewTile3D_OctCylinderTexture(tl tile.Tile) *Tile3D {
+	t3d := newTile3D().initSrc(tl)
+	t3d.Geo = ThreeJsNew("CylinderGeometry",
+		DstCellSize/2, DstCellSize/2, gTileZInfo[tl].Size, 8)
+	t3d.Geo.Call("rotateX", math.Pi/2)
+	t3d.Geo.Call("rotateZ", math.Pi*2/8/2)
+	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+	t3d.DrawTexture(0, 0)
+	return t3d
+}
+
 func NewTile3D_Tree() *Tile3D {
 	tl := tile.Grass
 	t3d := newTile3D().initSrc(tl)

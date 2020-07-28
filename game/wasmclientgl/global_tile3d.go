@@ -33,7 +33,7 @@ var gTileZInfo = [tile.Tile_Count]struct {
 	tile.Grass:  {DstCellSize / 16 * 5.0, DstCellSize / 16 * 0.0},
 	tile.Tree:   {DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
 	tile.Road:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
-	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
+	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 1.0},
 	tile.Wall:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
 	tile.Window: {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
 	tile.Door:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
@@ -73,12 +73,12 @@ func preMakeTileMatGeo() {
 	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Road
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_OctCylinderTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_OctCylinderTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Room
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_OctCylinderTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_OctCylinderTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Fog
 	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
