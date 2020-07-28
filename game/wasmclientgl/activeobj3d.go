@@ -158,7 +158,10 @@ func (aog *ActiveObj3D) Dispose() {
 	// no need createElement canvas dom obj
 }
 
-var gActiveObj3DGeo [factiontype.FactionType_Count]js.Value
+var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
+	Geo     js.Value
+	GeoInfo GeoInfo
+}
 
 func preMakeActiveObj3DGeo() {
 	ftList := [factiontype.FactionType_Count]string{
@@ -166,7 +169,7 @@ func preMakeActiveObj3DGeo() {
 		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
 	}
 	for i, str := range ftList {
-		gActiveObj3DGeo[i] = ThreeJsNew("TextGeometry", str,
+		geo := ThreeJsNew("TextGeometry", str,
 			map[string]interface{}{
 				"font":           gFont_droid_sans_mono_regular,
 				"size":           DstCellSize,
@@ -178,5 +181,7 @@ func preMakeActiveObj3DGeo() {
 				"bevelOffset":    0,
 				"bevelSegments":  DstCellSize / 8,
 			})
+		gActiveObj3DGeo[i].Geo = geo
+		gActiveObj3DGeo[i].GeoInfo = GetGeoInfo(geo)
 	}
 }
