@@ -106,30 +106,28 @@ func (aog *Tile3D) MakeSrcDark() *Tile3D {
 	return aog
 }
 
-func NewTile3D_PlaneGeo(tl tile.Tile, shiftZ float64) *Tile3D {
+func NewTile3D_PlaneGeo(tl tile.Tile) *Tile3D {
 	t3d := newTile3D().initSrc(tl)
-	t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	t3d.Shift = [3]float64{0, 0, shiftZ}
+	// t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/16)
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
 	return t3d
 }
 
-func NewTile3D_Grass(shiftZ float64) *Tile3D {
+func NewTile3D_Grass() *Tile3D {
 	tl := tile.Grass
 	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8)
-	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
 	return t3d
 }
 
-func NewTile3D_Tree(shiftZ float64) *Tile3D {
+func NewTile3D_Tree() *Tile3D {
 	tl := tile.Grass
 	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = MakeTreeGeo()
-	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
 	return t3d
@@ -158,19 +156,17 @@ func MakeTreeGeo() js.Value {
 	return geo
 }
 
-func NewTile3D_BoxTexture(tl tile.Tile, shiftZ float64) *Tile3D {
+func NewTile3D_BoxTexture(tl tile.Tile) *Tile3D {
 	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize)
-	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
 	return t3d
 }
 
-func NewTile3D_BoxTile(ti webtilegroup.TileInfo, shiftZ float64) *Tile3D {
+func NewTile3D_BoxTile(ti webtilegroup.TileInfo) *Tile3D {
 	t3d := newTile3D()
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1)
-	t3d.Shift = [3]float64{0, 0, shiftZ}
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.ChangeTile(ti)
 	return t3d

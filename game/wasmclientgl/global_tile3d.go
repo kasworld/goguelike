@@ -19,73 +19,96 @@ import (
 var gTile3D [tile.Tile_Count]*Tile3D
 var gTile3DDark [tile.Tile_Count]*Tile3D
 
+var gTileZShift = [tile.Tile_Count]float64{
+	tile.Swamp:  1,
+	tile.Soil:   2,
+	tile.Stone:  2,
+	tile.Sand:   2,
+	tile.Sea:    0,
+	tile.Magma:  0,
+	tile.Ice:    3,
+	tile.Grass:  2,
+	tile.Tree:   2,
+	tile.Road:   3,
+	tile.Room:   2,
+	tile.Wall:   2,
+	tile.Window: 2,
+	tile.Door:   2,
+	tile.Fog:    4,
+	tile.Smoke:  4,
+}
+
 func preMakeTileMatGeo() {
 	var tlt tile.Tile
 
 	tlt = tile.Swamp
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 1)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 1).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Soil
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 2)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Stone
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 2)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Sand
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 2)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Sea
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 0)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 0).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Magma
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 0)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 0).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Ice
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 3)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 3).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Road
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 3)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 3).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Room
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 2)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Fog
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 4)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 4).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Smoke
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt, 4)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt, 4).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
+	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
 
 	tlt = tile.Grass
-	gTile3D[tlt] = NewTile3D_Grass(2)
-	gTile3DDark[tlt] = NewTile3D_Grass(2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_Grass()
+	gTile3DDark[tlt] = NewTile3D_Grass().MakeSrcDark()
 
 	tlt = tile.Tree
-	gTile3D[tlt] = NewTile3D_Tree(2)
-	gTile3DDark[tlt] = NewTile3D_Tree(2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_Tree()
+	gTile3DDark[tlt] = NewTile3D_Tree().MakeSrcDark()
 
 	tlt = tile.Wall
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 2)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Window
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 2)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 2).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Door
-	gTile3D[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0], 2)
-	gTile3DDark[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0], 2)
+	gTile3D[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0])
+	gTile3DDark[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0])
 
+	for i := 0; i < tile.Tile_Count; i++ {
+		gTile3D[i].Shift[2] = gTileZShift[i]
+		gTile3DDark[i].Shift[2] = gTileZShift[i]
+	}
 	// for i, tl := range gTile3D {
 	// 	jslog.Infof("%v %v", tile.Tile(i), tl.GeoInfo)
 	// }
