@@ -106,19 +106,18 @@ func (aog *Tile3D) MakeSrcDark() *Tile3D {
 	return aog
 }
 
-func NewTile3D_PlaneGeo(tl tile.Tile) *Tile3D {
-	t3d := newTile3D().initSrc(tl)
-	// t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/16)
-	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
-	t3d.DrawTexture(0, 0)
-	return t3d
-}
+// func NewTile3D_PlaneGeo(tl tile.Tile) *Tile3D {
+// 	t3d := newTile3D().initSrc(tl)
+// 	// t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+// 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/16)
+// 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
+// 	t3d.DrawTexture(0, 0)
+// 	return t3d
+// }
 
-func NewTile3D_Grass() *Tile3D {
-	tl := tile.Grass
+func NewTile3D_BoxTexture(tl tile.Tile) *Tile3D {
 	t3d := newTile3D().initSrc(tl)
-	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/8)
+	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, gTileZInfo[tl].Size)
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
 	return t3d
@@ -154,14 +153,6 @@ func MakeTreeGeo() js.Value {
 	geo.Call("merge", geo2, matrix)
 	geo2.Call("dispose")
 	return geo
-}
-
-func NewTile3D_BoxTexture(tl tile.Tile) *Tile3D {
-	t3d := newTile3D().initSrc(tl)
-	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize)
-	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
-	t3d.DrawTexture(0, 0)
-	return t3d
 }
 
 func NewTile3D_BoxTile(ti webtilegroup.TileInfo) *Tile3D {

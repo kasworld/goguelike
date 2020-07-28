@@ -19,75 +19,78 @@ import (
 var gTile3D [tile.Tile_Count]*Tile3D
 var gTile3DDark [tile.Tile_Count]*Tile3D
 
-var gTileZShift = [tile.Tile_Count]float64{
-	tile.Swamp:  1,
-	tile.Soil:   2,
-	tile.Stone:  2,
-	tile.Sand:   2,
-	tile.Sea:    0,
-	tile.Magma:  0,
-	tile.Ice:    3,
-	tile.Grass:  2,
-	tile.Tree:   2,
-	tile.Road:   3,
-	tile.Room:   2,
-	tile.Wall:   2,
-	tile.Window: 2,
-	tile.Door:   2,
-	tile.Fog:    4,
-	tile.Smoke:  4,
+var gTileZInfo = [tile.Tile_Count]struct {
+	Size  float64
+	Shift float64
+}{
+	tile.Swamp:  {DstCellSize / 16 * 2.0, DstCellSize / 16 * 0.0},
+	tile.Soil:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
+	tile.Stone:  {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
+	tile.Sand:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
+	tile.Sea:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0},
+	tile.Magma:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0},
+	tile.Ice:    {DstCellSize / 16 * 4.0, DstCellSize / 16 * 0.0},
+	tile.Grass:  {DstCellSize / 16 * 5.0, DstCellSize / 16 * 0.0},
+	tile.Tree:   {DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
+	tile.Road:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
+	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
+	tile.Wall:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
+	tile.Window: {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
+	tile.Door:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
+	tile.Fog:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 5.0},
+	tile.Smoke:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 5.0},
 }
 
 func preMakeTileMatGeo() {
 	var tlt tile.Tile
 
 	tlt = tile.Swamp
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Soil
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Stone
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Sand
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Sea
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Magma
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Ice
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Road
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Room
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Fog
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Smoke
-	gTile3D[tlt] = NewTile3D_PlaneGeo(tlt)
-	gTile3DDark[tlt] = NewTile3D_PlaneGeo(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Grass
-	gTile3D[tlt] = NewTile3D_Grass()
-	gTile3DDark[tlt] = NewTile3D_Grass().MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Tree
 	gTile3D[tlt] = NewTile3D_Tree()
@@ -106,8 +109,8 @@ func preMakeTileMatGeo() {
 	gTile3DDark[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0])
 
 	for i := 0; i < tile.Tile_Count; i++ {
-		gTile3D[i].Shift[2] = gTileZShift[i]
-		gTile3DDark[i].Shift[2] = gTileZShift[i]
+		gTile3D[i].Shift[2] = gTileZInfo[i].Shift
+		gTile3DDark[i].Shift[2] = gTileZInfo[i].Shift
 	}
 	// for i, tl := range gTile3D {
 	// 	jslog.Infof("%v %v", tile.Tile(i), tl.GeoInfo)
@@ -128,7 +131,7 @@ func calcTile3DHeight(tl tile_flag.TileFlag) float64 {
 		if !tl.TestByTile(tile.Tile(i)) {
 			continue
 		}
-		z := gTile3D[i].GeoInfo.Len[2] + gTile3D[i].Shift[2]
+		z := gTileZInfo[i].Size + gTileZInfo[i].Shift
 		if z > rtn {
 			rtn = z
 		}
