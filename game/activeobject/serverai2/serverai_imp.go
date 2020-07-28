@@ -116,7 +116,7 @@ func (sai *ServerAI) canAttackTo(x1, y1, x2, y2 int) (way9type.Way9Type, bool) {
 	w, h := ter.GetXYLen()
 	contact, dir := way9type.CalcContactDirWrappedXY(x1, y1, x2, y2, w, h)
 	return dir, contact &&
-		!ter.GetTiles()[x1][y1].Safe() && !ter.GetTiles()[x2][y2].Safe()
+		!ter.GetTiles()[x1][y1].NoBattle() && !ter.GetTiles()[x2][y2].NoBattle()
 }
 
 func (sai *ServerAI) findMovableDir5(x, y int, dir way9type.Way9Type) way9type.Way9Type {

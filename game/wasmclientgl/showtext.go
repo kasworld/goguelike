@@ -95,7 +95,7 @@ func (app *WasmClient) makeBaseInfoHTML() string {
 	if cf != nil && cf.IsValidPos(playerX, playerY) {
 		tl := cf.Tiles[playerX][playerY]
 		co := "white"
-		if tl.Safe() {
+		if tl.NoBattle() {
 			co = "LightGreen"
 		}
 		act := c2t_idcmd.Meditate

@@ -279,7 +279,7 @@ func initPlanRechargeSafe(sai *ServerAI) int {
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
 		func(t *tile_flag.TileFlag) bool {
-			return t.Meditateable() && t.Safe()
+			return t.Meditateable() && t.NoBattle()
 		},
 	)
 	if !find {
@@ -296,7 +296,7 @@ func actPlanRechargeSafe(sai *ServerAI) bool {
 		return false
 	}
 	tl := sai.currentFloor.GetTerrain().GetTiles()[sai.aox][sai.aoy]
-	if tl.Safe() && tl.Meditateable() {
+	if tl.NoBattle() && tl.Meditateable() {
 		if sai.ao.GetHPRate() > 0.9 && sai.ao.GetSPRate() > 0.9 {
 			// plan change to other
 			return false
@@ -315,7 +315,7 @@ func actPlanRechargeSafe(sai *ServerAI) bool {
 	}
 
 	// dest arrived
-	if !tl.Safe() || !tl.Meditateable() {
+	if !tl.NoBattle() || !tl.Meditateable() {
 		return false
 	}
 

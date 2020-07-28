@@ -33,8 +33,8 @@ func TestCharPlaceable(t *testing.T) {
 
 func TestTile_Safe(t *testing.T) {
 	ti := new(TileFlag)
-	t.Logf("safe %v %v", ti.Safe(), ti)
+	t.Logf("safe %v %v", ti.NoBattle(), ti)
 	ti.SetByTile(tile.Room)
 	ti.SetByTile(tile.Ice)
-	t.Logf("safe %v %v", ti.Safe(), ti)
+	t.Logf("safe %v %v", ti.NoBattle(), ti)
 }

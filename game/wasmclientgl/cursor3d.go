@@ -65,7 +65,7 @@ func (aog *Cursor3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
 	if !tl.CharPlaceable() {
 		aog.ChangeTile(gClientTile.CursorTiles[2])
 	} else {
-		if tl.Safe() {
+		if tl.NoBattle() {
 			aog.ChangeTile(gClientTile.CursorTiles[0])
 
 		} else {

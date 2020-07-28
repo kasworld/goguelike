@@ -138,7 +138,7 @@ func (t TileFlag) CanPlaceMultiObj() bool {
 	return t.getTileValuesByCached().ObjOnTile == tile.ObjOnTile_N
 }
 
-func (t TileFlag) Safe() bool {
+func (t TileFlag) NoBattle() bool {
 	return t.getTileValuesByCached().ObjOnTile == tile.ObjOnTile_N
 }
 

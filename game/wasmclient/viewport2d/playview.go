@@ -269,7 +269,7 @@ func (vp *Viewport2d) drawMouseCursorViewport(
 	ti := vp.clientTile.CursorTiles[1]
 	if !tl.CharPlaceable() {
 		ti = vp.clientTile.CursorTiles[2]
-	} else if tl.Safe() {
+	} else if tl.NoBattle() {
 		ti = vp.clientTile.CursorTiles[0]
 	}
 	dstRect := vp.calcDstRect(canvasX, canvasY, scrollDx, scrollDy)
