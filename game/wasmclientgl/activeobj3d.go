@@ -12,99 +12,86 @@
 package wasmclientgl
 
 import (
-	"fmt"
-	"sync"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/factiontype"
-
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
-var gPoolActiveObj3D = NewPoolActiveObj3D(PoolSizeActiveObj3D)
+// var gPoolActiveObj3D = NewPoolActiveObj3D(PoolSizeActiveObj3D)
 
-type PoolActiveObj3D struct {
-	mutex    sync.Mutex
-	poolData []*ActiveObj3D
-	newCount int
-	getCount int
-	putCount int
-}
+// type PoolActiveObj3D struct {
+// 	mutex    sync.Mutex
+// 	poolData []*ActiveObj3D
+// 	newCount int
+// 	getCount int
+// 	putCount int
+// }
 
-func NewPoolActiveObj3D(initCap int) *PoolActiveObj3D {
-	return &PoolActiveObj3D{
-		poolData: make([]*ActiveObj3D, 0, initCap),
-	}
-}
+// func NewPoolActiveObj3D(initCap int) *PoolActiveObj3D {
+// 	return &PoolActiveObj3D{
+// 		poolData: make([]*ActiveObj3D, 0, initCap),
+// 	}
+// }
 
-func (p *PoolActiveObj3D) String() string {
-	return fmt.Sprintf("PoolActiveObj3D[%v/%v new:%v get:%v put:%v]",
-		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
-	)
-}
+// func (p *PoolActiveObj3D) String() string {
+// 	return fmt.Sprintf("PoolActiveObj3D[%v/%v new:%v get:%v put:%v]",
+// 		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
+// 	)
+// }
 
-func (p *PoolActiveObj3D) Get() *ActiveObj3D {
-	p.mutex.Lock()
-	defer p.mutex.Unlock()
-	var rtn *ActiveObj3D
-	if l := len(p.poolData); l > 0 {
-		rtn = p.poolData[l-1]
-		p.poolData = p.poolData[:l-1]
-		p.getCount++
-	} else {
-		rtn = NewActiveObj3D()
-		p.newCount++
-	}
-	return rtn
-}
+// func (p *PoolActiveObj3D) Get() *ActiveObj3D {
+// 	p.mutex.Lock()
+// 	defer p.mutex.Unlock()
+// 	var rtn *ActiveObj3D
+// 	if l := len(p.poolData); l > 0 {
+// 		rtn = p.poolData[l-1]
+// 		p.poolData = p.poolData[:l-1]
+// 		p.getCount++
+// 	} else {
+// 		rtn = NewActiveObj3D()
+// 		p.newCount++
+// 	}
+// 	return rtn
+// }
 
-func (p *PoolActiveObj3D) Put(pb *ActiveObj3D) {
-	p.mutex.Lock()
-	defer p.mutex.Unlock()
-	p.poolData = append(p.poolData, pb)
-	p.putCount++
-}
+// func (p *PoolActiveObj3D) Put(pb *ActiveObj3D) {
+// 	p.mutex.Lock()
+// 	defer p.mutex.Unlock()
+// 	p.poolData = append(p.poolData, pb)
+// 	p.putCount++
+// }
 
 type ActiveObj3D struct {
+	Faction factiontype.FactionType
 	Name    *Label3D
 	Chat    *Label3D
-	Cnv     js.Value
-	Ctx     js.Value
-	Tex     js.Value
-	GeoInfo GeoInfo
 	Mesh    js.Value
 }
 
-func NewActiveObj3D() *ActiveObj3D {
-	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-	ctx := cnv.Call("getContext", "2d")
-	ctx.Set("imageSmoothingEnabled", false)
-	cnv.Set("width", DstCellSize)
-	cnv.Set("height", DstCellSize)
-	tex := ThreeJsNew("CanvasTexture", cnv)
-	mat := ThreeJsNew("MeshStandardMaterial",
-		map[string]interface{}{
-			"map": tex,
-		},
-	)
-	mat.Set("transparent", true)
-	geo := ThreeJsNew("BoxGeometry", DstCellSize, DstCellSize, DstCellSize)
+func NewActiveObj3D(ft factiontype.FactionType) *ActiveObj3D {
+	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
+	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &ActiveObj3D{
-		Cnv:     cnv,
-		Ctx:     ctx,
-		Tex:     tex,
-		GeoInfo: GetGeoInfo(geo),
+		Faction: ft,
 		Mesh:    mesh,
 	}
 }
 
-func (aog *ActiveObj3D) ChangeTile(ti webtilegroup.TileInfo) {
-	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-	aog.Tex.Set("needsUpdate", true)
+// return changed
+func (aog *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bool) {
+	if ft == aog.Faction {
+		return aog.Mesh, false
+	}
+	oldmesh := aog.Mesh
+	aog.Mesh.Get("geometry").Call("dispose")
+	aog.Mesh.Get("material").Call("dispose")
+	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
+	geo := gActiveObj3DGeo[ft].Geo
+	mesh := ThreeJsNew("Mesh", geo, mat)
+	aog.Faction = ft
+	aog.Mesh = mesh
+	return oldmesh, true
 }
 
 func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
@@ -112,7 +99,7 @@ func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
 		aog.Mesh,
 		float64(fx)*DstCellSize+DstCellSize/2,
 		-float64(fy)*DstCellSize-DstCellSize/2,
-		aog.GeoInfo.Len[2]/2+1+shZ,
+		gActiveObj3DGeo[aog.Faction].GeoInfo.Len[2]/2+1+shZ,
 	)
 }
 
@@ -149,12 +136,7 @@ func (aog *ActiveObj3D) Dispose() {
 	// mesh do not need dispose
 	aog.Mesh.Get("geometry").Call("dispose")
 	aog.Mesh.Get("material").Call("dispose")
-	aog.Tex.Call("dispose")
-
-	aog.Cnv = js.Undefined()
-	aog.Ctx = js.Undefined()
 	aog.Mesh = js.Undefined()
-	aog.Tex = js.Undefined()
 	// no need createElement canvas dom obj
 }
 
@@ -173,7 +155,7 @@ func preMakeActiveObj3DGeo() {
 			map[string]interface{}{
 				"font":           gFont_droid_sans_mono_regular,
 				"size":           DstCellSize,
-				"height":         DstCellSize,
+				"height":         DstCellSize / 2,
 				"curveSegments":  DstCellSize / 3,
 				"bevelEnabled":   true,
 				"bevelThickness": DstCellSize / 8,

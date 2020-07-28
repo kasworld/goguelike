@@ -350,7 +350,7 @@ func (vp *GameScene) processNotiObjectList(
 	for _, ao := range olNoti.ActiveObjList {
 		ao3d, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
-			ao3d = gPoolActiveObj3D.Get()
+			ao3d = NewActiveObj3D(ao.Faction)
 			vp.scene.Call("add", ao3d.Mesh)
 			vp.jsSceneAOs[ao.UUID] = ao3d
 
@@ -358,12 +358,17 @@ func (vp *GameScene) processNotiObjectList(
 			ao3d.Name = lb3d
 			vp.scene.Call("add", lb3d.Mesh)
 		}
-		tlList := gClientTile.CharTiles[ao.Faction]
-		if ao.Alive {
-			ao3d.ChangeTile(tlList[0])
-		} else {
-			ao3d.ChangeTile(tlList[1])
+		// tlList := gClientTile.CharTiles[ao.Faction]
+		// if ao.Alive {
+		// 	ao3d.ChangeTile(tlList[0])
+		// } else {
+		// 	ao3d.ChangeTile(tlList[1])
+		// }
+		if oldmesh, changed := ao3d.ChangeFaction(ao.Faction); changed {
+			vp.scene.Call("remove", oldmesh)
+			vp.scene.Call("add", ao3d.Mesh)
 		}
+
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shZ := GetTile3DHeightByCache(tl)
@@ -428,7 +433,8 @@ func (vp *GameScene) processNotiObjectList(
 		if !addAOuuid[id] {
 			vp.scene.Call("remove", ao3d.Mesh)
 			delete(vp.jsSceneAOs, id)
-			gPoolActiveObj3D.Put(ao3d)
+			ao3d.Dispose()
+			// gPoolActiveObj3D.Put(ao3d)
 
 			vp.scene.Call("remove", ao3d.Name.Mesh)
 			gPoolLabel3D.Put(ao3d.Name)
