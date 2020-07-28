@@ -40,6 +40,7 @@ func preMakeActiveObj3DGeo() {
 				"bevelOffset":    0,
 				"bevelSegments":  DstCellSize / 8,
 			})
+		geo.Call("center")
 		gActiveObj3DGeo[i].Geo = geo
 		gActiveObj3DGeo[i].GeoInfo = GetGeoInfo(geo)
 	}
@@ -82,8 +83,8 @@ func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
 	geoinfo := gActiveObj3DGeo[aog.Faction].GeoInfo
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2-geoinfo.Len[0]/2,
-		-float64(fy)*DstCellSize-DstCellSize/2-geoinfo.Len[1]/2,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
 		geoinfo.Len[2]/2+1+shZ,
 	)
 }
