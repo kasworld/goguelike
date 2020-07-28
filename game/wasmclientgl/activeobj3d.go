@@ -16,6 +16,7 @@ import (
 	"sync"
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
@@ -105,12 +106,13 @@ func (aog *ActiveObj3D) ChangeTile(ti webtilegroup.TileInfo) {
 	aog.Tex.Set("needsUpdate", true)
 }
 
-func (aog *ActiveObj3D) SetFieldPosition(fx, fy int) {
+func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
+	height := GetTile3DHeightByCache(tl)
 	SetPosition(
 		aog.Mesh,
 		float64(fx)*DstCellSize+DstCellSize/2,
 		-float64(fy)*DstCellSize-DstCellSize/2,
-		aog.GeoInfo.Len[2]/2+2,
+		aog.GeoInfo.Len[2]/2+1+height,
 	)
 }
 

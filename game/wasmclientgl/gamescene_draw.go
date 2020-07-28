@@ -306,7 +306,8 @@ func (vp *GameScene) updateFieldObjInView(
 			vp.scene.Call("add", lb3d.Mesh)
 		}
 		if !addFOuuid[obj.GetUUID()] {
-			fo3d.SetFieldPosition(fx, fy)
+			tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+			fo3d.SetFieldPosition(fx, fy, tl)
 			addFOuuid[obj.GetUUID()] = true
 			fo3d.Label.SetFieldPosition(fx, fy,
 				0, 0, DstCellSize+3)
@@ -361,7 +362,8 @@ func (vp *GameScene) processNotiObjectList(
 			ao3d.ChangeTile(tlList[1])
 		}
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
-		ao3d.SetFieldPosition(fx, fy)
+		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		ao3d.SetFieldPosition(fx, fy, tl)
 		addAOuuid[ao.UUID] = true
 		ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+3)
 		if len(ao.Chat) == 0 {
