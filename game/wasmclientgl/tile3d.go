@@ -135,7 +135,7 @@ func NewTile3D_OctCylinderTexture(tl tile.Tile) *Tile3D {
 }
 
 func NewTile3D_Tree() *Tile3D {
-	tl := tile.Grass
+	tl := tile.Tree
 	t3d := newTile3D().initSrc(tl)
 	t3d.Geo = MakeTreeGeo()
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
