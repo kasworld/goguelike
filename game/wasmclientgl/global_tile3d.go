@@ -106,8 +106,8 @@ func preMakeTileMatGeo() {
 	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
 
 	tlt = tile.Door
-	gTile3D[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0])
-	gTile3DDark[tlt] = NewTile3D_BoxTile(gClientTile.FloorTiles[tile.Door][0])
+	gTile3D[tlt] = NewTile3D_Door()
+	gTile3DDark[tlt] = NewTile3D_Door()
 
 	for i := 0; i < tile.Tile_Count; i++ {
 		gTile3D[i].Shift[2] = gTileZInfo[i].Shift

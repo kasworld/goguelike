@@ -168,9 +168,21 @@ func MakeTreeGeo() js.Value {
 	return geo
 }
 
-func NewTile3D_BoxTile(ti webtilegroup.TileInfo) *Tile3D {
+func NewTile3D_Door() *Tile3D {
+	ti := gClientTile.FloorTiles[tile.Door][0]
 	t3d := newTile3D()
-	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1)
+	t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	t3d.Geo.Call("rotateX", math.Pi/2)
+
+	geo2 := ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
+	geo2.Call("rotateY", math.Pi/2)
+	matrix := ThreeJsNew("Matrix4")
+	t3d.Geo.Call("merge", geo2, matrix)
+	t3d.Geo.Call("center")
+
+	// t3d.Geo.Call("rotateZ", math.Pi/4)
+
+	// t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1)
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.ChangeTile(ti)
 	return t3d
