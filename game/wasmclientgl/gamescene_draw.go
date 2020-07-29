@@ -138,39 +138,6 @@ func (vp *GameScene) animateTile(envBias bias.Bias) {
 		gTile3D[i].DrawTexture(shX, shY)
 		gTile3DDark[i].DrawTexture(shX, shY)
 	}
-	// rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
-	// matrix := ThreeJsNew("Matrix4")
-	// for _, tl := range []tile.Tile{
-	// 	// tile.Swamp,
-	// 	// tile.Soil,
-	// 	// tile.Stone,
-	// 	// tile.Sand,
-	// 	// tile.Sea,
-	// 	// tile.Magma,
-	// 	// tile.Ice,
-	// 	// tile.Grass,
-	// 	tile.Tree,
-	// 	// tile.Road,
-	// 	// tile.Room,
-	// 	// tile.Wall,
-	// 	// tile.Window,
-	// 	tile.Door,
-	// 	// tile.Fog,
-	// 	// tile.Smoke,
-	// } {
-	// 	for i := 0; i < vp.jsTile3DCount[tl]; i++ {
-	// 		vp.jsTile3DMesh[tl].Call("getMatrixAt", i, matrix)
-	// 		matrix.Call("makeRotationZ", rad)
-	// 		vp.jsTile3DMesh[tl].Call("setMatrixAt", i, matrix)
-	// 	}
-	// 	vp.jsTile3DMesh[tl].Get("instanceMatrix").Set("needsUpdate", true)
-	// 	for i := 0; i < vp.jsTile3DDarkCount[tl]; i++ {
-	// 		vp.jsTile3DDarkMesh[tl].Call("getMatrixAt", i, matrix)
-	// 		matrix.Call("makeRotationZ", rad)
-	// 		vp.jsTile3DDarkMesh[tl].Call("setMatrixAt", i, matrix)
-	// 	}
-	// 	vp.jsTile3DDarkMesh[tl].Get("instanceMatrix").Set("needsUpdate", true)
-	// }
 }
 
 // common to playview, floorview
@@ -239,7 +206,8 @@ func (vp *GameScene) makeClientTile4PlayView(
 		vp.jsTile3DCount[ti] = 0     // clear use count
 		vp.jsTile3DDarkCount[ti] = 0 // clear use count
 	}
-	matrix := ThreeJsNew("Matrix4")
+	// matrix := ThreeJsNew("Matrix4")
+	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
 	for vpi, v := range gXYLenListView {
 		fx := v.X + vpx
 		fy := v.Y + vpy
@@ -252,7 +220,11 @@ func (vp *GameScene) makeClientTile4PlayView(
 			if !newTile.TestByTile(tile.Tile(ti)) {
 				continue
 			}
+			matrix := ThreeJsNew("Matrix4")
 			if dark {
+				if tile.Tile(ti) == tile.Door {
+					matrix.Call("makeRotationZ", rad)
+				}
 				matrix.Call("setPosition",
 					gTile3DDark[ti].MakePosVector3(fx, fy),
 				)
@@ -260,6 +232,9 @@ func (vp *GameScene) makeClientTile4PlayView(
 					vp.jsTile3DDarkCount[ti], matrix)
 				vp.jsTile3DDarkCount[ti]++
 			} else {
+				if tile.Tile(ti) == tile.Door {
+					matrix.Call("makeRotationZ", rad)
+				}
 				matrix.Call("setPosition",
 					gTile3D[ti].MakePosVector3(fx, fy),
 				)
