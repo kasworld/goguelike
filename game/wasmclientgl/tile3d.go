@@ -168,7 +168,11 @@ func MakeTreeGeo() js.Value {
 }
 
 func NewTile3D_Door() *Tile3D {
-	t3d := newTile3D().initSrc(tile.Window)
+	t3d := newTile3D().initSrc(tile.Door)
+
+	t3d.Mat.Set("side", ThreeJs().Get("DoubleSide"))
+	t3d.Mat.Set("opacity", 0.5)
+
 	t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
 	t3d.Geo.Call("rotateX", math.Pi/2)
 
