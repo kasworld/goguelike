@@ -40,6 +40,9 @@ func (vp *GameScene) UpdatePlayViewFrame(
 		if !exist {
 			continue // ??
 		}
+		if !ao.Alive {
+			continue
+		}
 		aod.ResetMatrix()
 		if ao.UUID == playerUUID {
 			// player
@@ -402,12 +405,21 @@ func (vp *GameScene) processNotiObjectList(
 			vp.AP.SetFieldPosition(fx, fy, 0, -4, DstCellSize+5)
 			vp.SP.SetFieldPosition(fx, fy, 0, -0, DstCellSize+2)
 			aop := olNoti.ActiveObj
-			vp.HP.SetWH(aop.HP, aop.HPMax)
-			vp.SP.SetWH(aop.SP, aop.SPMax)
-			if aop.RemainTurn2Act > 0 {
+			if ao.Alive {
+				vp.HP.SetWH(aop.HP, aop.HPMax)
+				vp.SP.SetWH(aop.SP, aop.SPMax)
+				if aop.RemainTurn2Act > 0 {
+				} else {
+					vp.AP.ScaleX(-aop.RemainTurn2Act)
+				}
 			} else {
-				vp.AP.ScaleX(-aop.RemainTurn2Act)
+				vp.HP.SetWH(0, aop.HPMax)
+				vp.SP.SetWH(0, aop.SPMax)
+				vp.AP.ScaleX(0)
 			}
+		}
+		if !ao.Alive {
+			ao3d.RotateX(-math.Pi / 2)
 		}
 
 		for _, eqo := range ao.EquippedPo {

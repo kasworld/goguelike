@@ -31,8 +31,8 @@ func preMakeActiveObj3DGeo() {
 		geo := ThreeJsNew("TextGeometry", str,
 			map[string]interface{}{
 				"font":           gFont_droid_sans_mono_regular,
-				"size":           DstCellSize / 2,
-				"height":         DstCellSize / 3,
+				"size":           DstCellSize * 0.7,
+				"height":         DstCellSize * 0.3,
 				"curveSegments":  DstCellSize / 3,
 				"bevelEnabled":   true,
 				"bevelThickness": DstCellSize / 8,
