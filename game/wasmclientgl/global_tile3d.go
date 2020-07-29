@@ -34,7 +34,7 @@ var gTileZInfo = [tile.Tile_Count]struct {
 	tile.Grass:  {DstCellSize / 16 * 6.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
 	tile.Tree:   {DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
 	tile.Road:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 6.0},
-	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 2.0, DstCellSize / 16 * 4.0},
+	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 2.0, DstCellSize / 16 * 5.0},
 	tile.Wall:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 18.0},
 	tile.Window: {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 18.0},
 	tile.Door:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
