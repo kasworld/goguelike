@@ -268,14 +268,8 @@ func (vp *GameScene) makeClientTile4FloorView(
 			if !newTile.TestByTile(tile.Tile(ti)) {
 				continue
 			}
-			geolen := gTile3D[ti].GeoInfo.Len
-			sh := gTile3D[ti].Shift
 			matrix.Call("setPosition",
-				ThreeJsNew("Vector3",
-					sh[0]+float64(fx)*DstCellSize+DstCellSize/2,
-					-sh[1]-float64(fy)*DstCellSize-DstCellSize/2,
-					sh[2]+geolen[2]/2,
-				),
+				gTile3D[ti].MakePosVector3(fx, fy),
 			)
 			vp.jsTile3DMesh[ti].Call("setMatrixAt",
 				vp.jsTile3DCount[ti], matrix)
