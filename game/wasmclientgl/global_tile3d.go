@@ -24,22 +24,22 @@ var gTileZInfo = [tile.Tile_Count]struct {
 	Shift    float64
 	OnHeight float64 // for step on can be not visible
 }{
-	tile.Swamp:  {DstCellSize / 16 * 2.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 2.0},
-	tile.Soil:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
-	tile.Stone:  {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
-	tile.Sand:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
-	tile.Sea:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 1.0},
-	tile.Magma:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 1.0},
-	tile.Ice:    {DstCellSize / 16 * 4.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 4.0},
-	tile.Grass:  {DstCellSize / 16 * 5.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
-	tile.Tree:   {DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
-	tile.Road:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 6.0},
-	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 6.0},
-	tile.Wall:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 18.0},
-	tile.Window: {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 18.0},
-	tile.Door:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
-	tile.Fog:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 6.0, DstCellSize / 16 * 3.0},
-	tile.Smoke:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 6.0, DstCellSize / 16 * 3.0},
+	tile.Swamp:  {UnitTileZ * 2.0, UnitTileZ * 0.0, UnitTileZ * 2.0},
+	tile.Soil:   {UnitTileZ * 3.0, UnitTileZ * 0.0, UnitTileZ * 3.0},
+	tile.Stone:  {UnitTileZ * 3.0, UnitTileZ * 0.0, UnitTileZ * 3.0},
+	tile.Sand:   {UnitTileZ * 3.0, UnitTileZ * 0.0, UnitTileZ * 3.0},
+	tile.Sea:    {UnitTileZ * 1.0, UnitTileZ * 0.0, UnitTileZ * 1.0},
+	tile.Magma:  {UnitTileZ * 1.0, UnitTileZ * 0.0, UnitTileZ * 1.0},
+	tile.Ice:    {UnitTileZ * 4.0, UnitTileZ * 0.0, UnitTileZ * 4.0},
+	tile.Grass:  {UnitTileZ * 5.0, UnitTileZ * 0.0, UnitTileZ * 3.0},
+	tile.Tree:   {UnitTileZ * 0.0, UnitTileZ * 3.0, UnitTileZ * 3.0},
+	tile.Road:   {UnitTileZ * 3.0, UnitTileZ * 3.0, UnitTileZ * 6.0},
+	tile.Room:   {UnitTileZ * 3.0, UnitTileZ * 3.0, UnitTileZ * 6.0},
+	tile.Wall:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 18.0},
+	tile.Window: {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 18.0},
+	tile.Door:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 3.0},
+	tile.Fog:    {UnitTileZ * 1.0, UnitTileZ * 6.0, UnitTileZ * 3.0},
+	tile.Smoke:  {UnitTileZ * 1.0, UnitTileZ * 6.0, UnitTileZ * 3.0},
 }
 
 func preMakeTileMatGeo() {

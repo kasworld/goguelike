@@ -29,6 +29,7 @@ const (
 	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
 	DstCellSize      = 64
 	HelperSize       = DstCellSize * 32
+	UnitTileZ        = DstCellSize / 16
 
 	PoolSizeActiveObj3D = 1000
 	PoolSizeCarryObj3D  = 1000
