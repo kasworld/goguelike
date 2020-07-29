@@ -420,6 +420,9 @@ func (vp *GameScene) processNotiObjectList(
 		}
 		if !ao.Alive {
 			ao3d.RotateX(-math.Pi / 2)
+			ao3d.ScaleX(0.5)
+			ao3d.ScaleY(0.5)
+			ao3d.ScaleZ(0.5)
 		}
 
 		for _, eqo := range ao.EquippedPo {
