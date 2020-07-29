@@ -17,7 +17,6 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/gowasmlib/jslog"
 	"github.com/kasworld/wrapper"
 )
@@ -169,8 +168,7 @@ func MakeTreeGeo() js.Value {
 }
 
 func NewTile3D_Door() *Tile3D {
-	ti := gClientTile.FloorTiles[tile.Door][0]
-	t3d := newTile3D()
+	t3d := newTile3D().initSrc(tile.Window)
 	t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
 	t3d.Geo.Call("rotateX", math.Pi/2)
 
@@ -178,13 +176,12 @@ func NewTile3D_Door() *Tile3D {
 	geo2.Call("rotateY", math.Pi/2)
 	matrix := ThreeJsNew("Matrix4")
 	t3d.Geo.Call("merge", geo2, matrix)
-	t3d.Geo.Call("center")
+	geo2.Call("dispose")
 
 	// t3d.Geo.Call("rotateZ", math.Pi/4)
-
-	// t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize-1)
+	t3d.Geo.Call("center")
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
-	t3d.ChangeTile(ti)
+	t3d.DrawTexture(0, 0)
 	return t3d
 }
 
@@ -200,13 +197,13 @@ func (aog *Tile3D) Dispose() {
 	// no need createElement canvas dom obj
 }
 
-func (t3d *Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
-	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	t3d.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-	t3d.Tex.Set("needsUpdate", true)
-}
+// func (t3d *Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
+// 	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
+// 	t3d.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
+// 		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
+// 		0, 0, DstCellSize, DstCellSize)
+// 	t3d.Tex.Set("needsUpdate", true)
+// }
 
 func (t3d *Tile3D) DrawTexture(srcx, srcy int) {
 	srcx = t3d.SrcWrapX(srcx)
