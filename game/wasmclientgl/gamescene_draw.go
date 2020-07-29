@@ -123,12 +123,12 @@ func (vp *GameScene) animateTile(envBias bias.Bias) {
 		tile.Magma,
 		tile.Ice,
 		tile.Grass,
-		// tile.Tree,
+		tile.Tree,
 		// tile.Road,
 		// tile.Room,
 		// tile.Wall,
-		// tile.Window,
-		// tile.Door,
+		tile.Window,
+		tile.Door,
 		tile.Fog,
 		tile.Smoke,
 	} {
@@ -138,6 +138,39 @@ func (vp *GameScene) animateTile(envBias bias.Bias) {
 		gTile3D[i].DrawTexture(shX, shY)
 		gTile3DDark[i].DrawTexture(shX, shY)
 	}
+	// rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
+	// matrix := ThreeJsNew("Matrix4")
+	// for _, tl := range []tile.Tile{
+	// 	// tile.Swamp,
+	// 	// tile.Soil,
+	// 	// tile.Stone,
+	// 	// tile.Sand,
+	// 	// tile.Sea,
+	// 	// tile.Magma,
+	// 	// tile.Ice,
+	// 	// tile.Grass,
+	// 	tile.Tree,
+	// 	// tile.Road,
+	// 	// tile.Room,
+	// 	// tile.Wall,
+	// 	// tile.Window,
+	// 	tile.Door,
+	// 	// tile.Fog,
+	// 	// tile.Smoke,
+	// } {
+	// 	for i := 0; i < vp.jsTile3DCount[tl]; i++ {
+	// 		vp.jsTile3DMesh[tl].Call("getMatrixAt", i, matrix)
+	// 		matrix.Call("makeRotationZ", rad)
+	// 		vp.jsTile3DMesh[tl].Call("setMatrixAt", i, matrix)
+	// 	}
+	// 	vp.jsTile3DMesh[tl].Get("instanceMatrix").Set("needsUpdate", true)
+	// 	for i := 0; i < vp.jsTile3DDarkCount[tl]; i++ {
+	// 		vp.jsTile3DDarkMesh[tl].Call("getMatrixAt", i, matrix)
+	// 		matrix.Call("makeRotationZ", rad)
+	// 		vp.jsTile3DDarkMesh[tl].Call("setMatrixAt", i, matrix)
+	// 	}
+	// 	vp.jsTile3DDarkMesh[tl].Get("instanceMatrix").Set("needsUpdate", true)
+	// }
 }
 
 // common to playview, floorview
