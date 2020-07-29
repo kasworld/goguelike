@@ -20,25 +20,26 @@ var gTile3D [tile.Tile_Count]*Tile3D
 var gTile3DDark [tile.Tile_Count]*Tile3D
 
 var gTileZInfo = [tile.Tile_Count]struct {
-	Size  float64
-	Shift float64
+	Size     float64
+	Shift    float64
+	OnHeight float64 // for step on can be not visible
 }{
-	tile.Swamp:  {DstCellSize / 16 * 2.0, DstCellSize / 16 * 0.0},
-	tile.Soil:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
-	tile.Stone:  {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
-	tile.Sand:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0},
-	tile.Sea:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0},
-	tile.Magma:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0},
-	tile.Ice:    {DstCellSize / 16 * 4.0, DstCellSize / 16 * 0.0},
-	tile.Grass:  {DstCellSize / 16 * 5.0, DstCellSize / 16 * 0.0},
-	tile.Tree:   {DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
-	tile.Road:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
-	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 1.0},
-	tile.Wall:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
-	tile.Window: {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
-	tile.Door:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0},
-	tile.Fog:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 5.0},
-	tile.Smoke:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 5.0},
+	tile.Swamp:  {DstCellSize / 16 * 2.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 2.0},
+	tile.Soil:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
+	tile.Stone:  {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
+	tile.Sand:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
+	tile.Sea:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 1.0},
+	tile.Magma:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 1.0},
+	tile.Ice:    {DstCellSize / 16 * 4.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 4.0},
+	tile.Grass:  {DstCellSize / 16 * 5.0, DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0},
+	tile.Tree:   {DstCellSize / 16 * 0.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
+	tile.Road:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 6.0},
+	tile.Room:   {DstCellSize / 16 * 3.0, DstCellSize / 16 * 1.0, DstCellSize / 16 * 4.0},
+	tile.Wall:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 18.0},
+	tile.Window: {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 18.0},
+	tile.Door:   {DstCellSize / 16 * 16.0, DstCellSize / 16 * 3.0, DstCellSize / 16 * 3.0},
+	tile.Fog:    {DstCellSize / 16 * 1.0, DstCellSize / 16 * 5.0, DstCellSize / 16 * 3.0},
+	tile.Smoke:  {DstCellSize / 16 * 1.0, DstCellSize / 16 * 5.0, DstCellSize / 16 * 3.0},
 }
 
 func preMakeTileMatGeo() {
@@ -117,15 +118,22 @@ func preMakeTileMatGeo() {
 	// }
 }
 
-var tileHeightCache [1 << uint(tile.Tile_Count)]float64
+// for view
+var tileflagTopCache [1 << uint(tile.Tile_Count)]float64
+
+// for place obj step
+var tileflagOnCache [1 << uint(tile.Tile_Count)]float64
 
 func init() {
-	for i := range tileHeightCache {
-		tileHeightCache[i] = Tile3DHeightMin
+	for i := range tileflagTopCache {
+		tileflagTopCache[i] = Tile3DHeightMin
+	}
+	for i := range tileflagOnCache {
+		tileflagOnCache[i] = Tile3DHeightMin
 	}
 }
 
-func calcTile3DHeight(tl tile_flag.TileFlag) float64 {
+func calcTile3DTop(tl tile_flag.TileFlag) float64 {
 	rtn := Tile3DHeightMin
 	for i := 0; i < tile.Tile_Count; i++ {
 		if !tl.TestByTile(tile.Tile(i)) {
@@ -139,14 +147,42 @@ func calcTile3DHeight(tl tile_flag.TileFlag) float64 {
 	return rtn
 }
 
-func GetTile3DHeightByCache(tl tile_flag.TileFlag) float64 {
-	z := tileHeightCache[tl]
+// top height for view, use for cursor
+func GetTile3DTopByCache(tl tile_flag.TileFlag) float64 {
+	z := tileflagTopCache[tl]
 	if z == Tile3DHeightMin {
-		z = calcTile3DHeight(tl)
+		z = calcTile3DTop(tl)
 		if z == Tile3DHeightMin { // empty tile
 			z = 0 // prevent recalc empty tile
 		}
-		tileHeightCache[tl] = z
+		tileflagTopCache[tl] = z
+	}
+	return z
+}
+
+func calcTile3DOn(tl tile_flag.TileFlag) float64 {
+	rtn := Tile3DHeightMin
+	for i := 0; i < tile.Tile_Count; i++ {
+		if !tl.TestByTile(tile.Tile(i)) {
+			continue
+		}
+		z := gTileZInfo[i].OnHeight
+		if z > rtn {
+			rtn = z
+		}
+	}
+	return rtn
+}
+
+// height for step on
+func GetTile3DOnByCache(tl tile_flag.TileFlag) float64 {
+	z := tileflagTopCache[tl]
+	if z == Tile3DHeightMin {
+		z = calcTile3DOn(tl)
+		if z == Tile3DHeightMin { // empty tile
+			z = 0 // prevent recalc empty tile
+		}
+		tileflagTopCache[tl] = z
 	}
 	return z
 }

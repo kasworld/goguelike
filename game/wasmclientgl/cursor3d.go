@@ -61,7 +61,7 @@ func (aog *Cursor3D) ChangeTile(ti webtilegroup.TileInfo) {
 }
 
 func (aog *Cursor3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
-	height := GetTile3DHeightByCache(tl)
+	height := GetTile3DTopByCache(tl)
 	if !tl.CharPlaceable() {
 		aog.ChangeTile(gClientTile.CursorTiles[2])
 	} else {

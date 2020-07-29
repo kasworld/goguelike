@@ -77,7 +77,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 		vp.moveArrow.SetDir(scrollDir)
 		dx, dy := scrollDir.DxDy()
 		tl := cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
-		shZ := GetTile3DHeightByCache(tl)
+		shZ := GetTile3DOnByCache(tl)
 		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, shZ)
 	} else {
 		vp.moveArrow.Visible(false)
@@ -309,7 +309,7 @@ func (vp *GameScene) updateFieldObjInView(
 		}
 		if !addFOuuid[obj.GetUUID()] {
 			tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-			shZ := GetTile3DHeightByCache(tl)
+			shZ := GetTile3DOnByCache(tl)
 			fo3d.SetFieldPosition(fx, fy, shZ)
 			addFOuuid[obj.GetUUID()] = true
 			fo3d.Label.SetFieldPosition(fx, fy,
@@ -365,7 +365,7 @@ func (vp *GameScene) processNotiObjectList(
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		shZ := GetTile3DHeightByCache(tl)
+		shZ := GetTile3DOnByCache(tl)
 		ao3d.SetFieldPosition(fx, fy, shZ)
 		addAOuuid[ao.UUID] = true
 		ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
@@ -500,7 +500,7 @@ func (vp *GameScene) makeMovePathInView(
 			ar3d.SetDir(diri)
 			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
 			tl := cf.Tiles[cf.XWrapSafe(x)][cf.YWrapSafe(y)]
-			shZ := GetTile3DHeightByCache(tl)
+			shZ := GetTile3DOnByCache(tl)
 			ar3d.SetFieldPosition(x, y, shZ)
 		}
 		// add last
