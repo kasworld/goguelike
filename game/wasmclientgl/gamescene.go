@@ -100,6 +100,7 @@ func NewGameScene() *GameScene {
 	vp.scene.Call("add", vp.lightW)
 	fogco := 0x404040
 	// vp.scene.Set("fog", ThreeJsNew("FogExp2", fogco, 0.00025*1.5))
+	vp.scene.Set("fog", ThreeJsNew("Fog", fogco, HelperSize*1.1, HelperSize*2))
 	vp.scene.Set("background", ThreeJsNew("Color", fogco))
 	vp.scene.Call("add", ThreeJsNew("AmbientLight", 0x808080))
 
