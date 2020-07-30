@@ -475,7 +475,7 @@ func (app *WasmClient) DisplayTextInfo() {
 
 func MakeHelpInfoHTML() string {
 	var buf bytes.Buffer
-
+	buf.WriteString(`<table style="text-align: left;" border=2><tr><td>`)
 	fmt.Fprintf(&buf, `Environment = Tower + Floor<br/>
 			Atk = Env + Bias + attack equip + lv<br/>
 			Def = Env + Bias + defence equip + lv<br/>
@@ -517,8 +517,11 @@ func MakeHelpInfoHTML() string {
 	fmt.Fprintf(&buf, "%v can set by url arg<br/>", gameOptions.Name)
 	for _, v := range gameOptions.ButtonList {
 		fmt.Fprintf(&buf, "%v=", v.IDBase)
-		for _, w := range v.ButtonText {
+		for i, w := range v.ButtonText {
 			fmt.Fprintf(&buf, "%v ", w)
+			if i%4 == 3 {
+				buf.WriteString("<br/>")
+			}
 		}
 		buf.WriteString("<br/>")
 	}
@@ -532,6 +535,7 @@ func MakeHelpInfoHTML() string {
 			buf.WriteString("<br/>")
 		}
 	}
+	buf.WriteString(`</td></tr></table>`)
 	return buf.String()
 }
 

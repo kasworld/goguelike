@@ -36,12 +36,14 @@ var MsgCopyright = `Copyright 2014,2015,2016,2017,2018,2019,2020 SeukWon Kang
 
 func MakeClientInfoHTML() string {
 	var buf bytes.Buffer
+	buf.WriteString(`<table style="text-align: left;" border=2><tr><td>`)
 	fmt.Fprintf(&buf, "Goguelike webclient<br/>")
 	fmt.Fprintf(&buf, "Protocol %v<br/>", c2t_version.ProtocolVersion)
 	fmt.Fprintf(&buf, "Data %v<br/>", gameconst.DataVersion)
 	fmt.Fprintf(&buf, "Build %v<br/>", version.GetVersion())
 	fmt.Fprintf(&buf, "Build %v<br/>", version.GetBuildDate())
 	fmt.Fprintf(&buf, "%v<br/>", MsgCopyright)
+	buf.WriteString(`</td></tr></table>`)
 	return buf.String()
 }
 
@@ -49,7 +51,7 @@ func MakeHelpFactionHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`Faction Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr ><th>Faction</th><th>Rune</th><th>Value</th></tr>`)
 	for i := 0; i < factiontype.FactionType_Count; i++ {
 		ft := factiontype.FactionType(i)
@@ -70,7 +72,7 @@ func MakeHelpCarryObjectHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`CarryObject Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr><th>Rune</th><th>Name</th><th>Battle</th></tr>`)
 	for i := 0; i < equipslottype.EquipSlotType_Count; i++ {
 		eqt := equipslottype.EquipSlotType(i)
@@ -91,7 +93,7 @@ func MakeHelpPotionHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`Potion Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr ><th>Name</th><th>Rune</th><th>description</th></tr>`)
 	for i := 0; i < potiontype.PotionType_Count; i++ {
 		pt := potiontype.PotionType(i)
@@ -111,7 +113,7 @@ func MakeHelpScrollHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`Scroll Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr><th>Name</th><th>Rune</th><th>description</th></tr>`)
 	for i := 0; i < scrolltype.ScrollType_Count; i++ {
 		pt := scrolltype.ScrollType(i)
@@ -130,7 +132,7 @@ func MakeHelpScrollHTML() string {
 func MakeHelpMoneyColorHTML() string {
 	var buf bytes.Buffer
 	buf.WriteString(`Money color Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr><th>Range</th><th>Color</th></tr>`)
 	for _, v := range moneycolor.Attrib {
 		fmt.Fprintf(&buf, `<tr><td>~$%v</td><td style="background-color:%v"></td> </tr>`,
@@ -146,7 +148,7 @@ func MakeHelpTileHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`Floor Tile Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr ><th>Tile</th><th>Attack mod %</th><th>Defence mod %</th></tr>`)
 	for i := 0; i < tile.Tile_Count; i++ {
 		ti := tile.Tile(i)
@@ -174,7 +176,7 @@ func MakeHelpConditionHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`Condition Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr><th>Condition</th><th>description</th></tr>`)
 	for i := 0; i < condition.Condition_Count; i++ {
 		ti := condition.Condition(i)
@@ -191,7 +193,7 @@ func MakeHelpFieldObjHTML() string {
 	var buf bytes.Buffer
 
 	buf.WriteString(`FieldObject Info<br/>`)
-	buf.WriteString(`<table border=2>`)
+	buf.WriteString(`<table style="text-align: left;" border=2>`)
 	buf.WriteString(`<tr><th>Field object</th><th>Auto trigger</th><th>description</th></tr>`)
 	for i := 0; i < fieldobjacttype.FieldObjActType_Count; i++ {
 		if fieldobjacttype.ClientData[i].Text == "" {
