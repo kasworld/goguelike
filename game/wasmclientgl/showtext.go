@@ -603,7 +603,7 @@ func (app *WasmClient) MakeNotiMessage() string {
 	var buf bytes.Buffer
 
 	app.NotiMessage = app.NotiMessage.Compact()
-	for i := len(app.NotiMessage) - 1; i >= 0; i-- {
+	for i := 0; i < len(app.NotiMessage); i++ {
 		v := app.NotiMessage[i]
 		if v.IsEnded() {
 			continue
