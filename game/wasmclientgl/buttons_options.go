@@ -160,7 +160,7 @@ func cmdToggleZoom(obj interface{}, v *htmlbutton.HTMLButton) {
 	}
 
 	app.vp.Zoom(v.State)
-	app.systemMessage.Appendf("Zoom%v", v.State)
+	app.NotiMessage.AppendTf(tcsInfo, "Zoom%v", v.State)
 	v.Blur()
 }
 
@@ -188,11 +188,11 @@ func cmdToggleSound(obj interface{}, v *htmlbutton.HTMLButton) {
 	if v.State == 0 {
 		soundmap.SoundOn = true
 		app.systemMessage.Append("SoundOn")
-		// app.vp.NotiMessage.AppendTf(tcsInfo, "SoundOn")
+		app.NotiMessage.AppendTf(tcsInfo, "SoundOn")
 	} else {
 		soundmap.SoundOn = false
 		app.systemMessage.Append("SoundOff")
-		// app.vp.NotiMessage.AppendTf(tcsInfo, "SoundOff")
+		app.NotiMessage.AppendTf(tcsInfo, "SoundOff")
 	}
 	v.Blur()
 }

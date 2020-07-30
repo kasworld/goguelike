@@ -99,11 +99,11 @@ func cmdToggleServerAI(obj interface{}, v *htmlbutton.HTMLButton) {
 	case 0: // Auto
 		go app.reqAIPlay(true)
 		app.systemMessage.Append("AutoPlayOn")
-		// app.vp.NotiMessage.AppendTf(tcsInfo, "AutoPlayOn")
+		app.NotiMessage.AppendTf(tcsInfo, "AutoPlayOn")
 	case 1: // NoAuto
 		go app.reqAIPlay(false)
 		app.systemMessage.Append("AutoPlayOff")
-		// app.vp.NotiMessage.AppendTf(tcsInfo, "AutoPlayOff")
+		app.NotiMessage.AppendTf(tcsInfo, "AutoPlayOff")
 	}
 	v.Blur()
 }

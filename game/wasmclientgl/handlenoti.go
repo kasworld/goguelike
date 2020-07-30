@@ -67,6 +67,8 @@ func objRecvNotiFn_EnterTower(recvobj interface{}, header c2t_packet.Header, obj
 	gInitData.TowerInfo = robj.TowerInfo
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Enter tower %v", robj.TowerInfo.Name))
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Enter tower %v", robj.TowerInfo.Name)
 	return nil
 }
 func objRecvNotiFn_LeaveTower(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
@@ -82,6 +84,8 @@ func objRecvNotiFn_LeaveTower(recvobj interface{}, header c2t_packet.Header, obj
 	soundmap.Play("enterfloorsound")
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Leave tower %v", robj.TowerInfo.Name))
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Leave tower %v", robj.TowerInfo.Name)
 	return nil
 }
 
@@ -104,8 +108,12 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Found floor %v", cf.FloorInfo.Name)
 	}
 	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Enter floor %v", cf.FloorInfo.Name)
 	cf.EnterFloor()
 	return nil
 }
@@ -121,6 +129,8 @@ func objRecvNotiFn_LeaveFloor(recvobj interface{}, header c2t_packet.Header, obj
 
 	soundmap.Play("enterfloorsound")
 	app.systemMessage.Appendf("Leave floor %v", robj.FI.Name)
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Leave floor %v", robj.FI.Name)
 	return nil
 }
 
@@ -138,6 +148,8 @@ func objRecvNotiFn_Ageing(recvobj interface{}, header c2t_packet.Header, obj int
 
 	soundmap.Play("ageingsound")
 	app.systemMessage.Append("Floor aged")
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Floor aged")
 	return nil
 }
 
@@ -154,6 +166,8 @@ func objRecvNotiFn_Death(recvobj interface{}, header c2t_packet.Header, obj inte
 
 	soundmap.Play("diesound")
 	app.systemMessage.Append("You died.")
+	app.NotiMessage.AppendTf(tcsWarn,
+		"You died.")
 	app.remainTurn2Rebirth = gameconst.ActiveObjRebirthWaitTurn
 
 	return nil
@@ -172,6 +186,8 @@ func objRecvNotiFn_ReadyToRebirth(recvobj interface{}, header c2t_packet.Header,
 	_ = robj
 
 	app.systemMessage.Append("Ready to rebirth")
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Ready to rebirth")
 	if autoActs.GetByIDBase("AutoRebirth").State == 0 {
 		go app.sendPacket(c2t_idcmd.Rebirth,
 			&c2t_obj.ReqRebirth_data{},
@@ -200,6 +216,8 @@ func objRecvNotiFn_Rebirthed(recvobj interface{}, header c2t_packet.Header, obj 
 
 	soundmap.Play("rebirthsound")
 	app.systemMessage.Append("Back to life!")
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Back to life!")
 	commandButtons.GetByIDBase("Rebirth").Disable()
 	return nil
 }
@@ -218,6 +236,8 @@ func objRecvNotiFn_Broadcast(recvobj interface{}, header c2t_packet.Header, obj 
 
 	soundmap.Play("broadcastsound")
 	app.systemMessage.Appendf("Broadcast %v", robj.Msg)
+	app.NotiMessage.AppendTf(tcsInfo,
+		"Broadcast %v", robj.Msg)
 	return nil
 }
 
@@ -270,6 +290,8 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	if app.lastOLNotiData.ActiveObj.Bias.NearFaction() != robj.ActiveObj.Bias.NearFaction() {
 		app.systemMessage.Appendf(
 			"Faction changed to %v", robj.ActiveObj.Bias.NearFaction().String())
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Faction changed to %v", robj.ActiveObj.Bias.NearFaction().String())
 	}
 	if app.lastOLNotiData.ActiveObj.Bias != robj.ActiveObj.Bias {
 		app.systemMessage.Append("Bias changed")
@@ -280,29 +302,33 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		soundmap.Play("levelupsound")
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Level Up to %v", newLevel))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Level Up to %v", newLevel)
 	} else if oldLevel > newLevel {
 		soundmap.Play("leveldownsound")
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Level Down to %v", newLevel))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Level Down to %v", newLevel)
 	}
 	if exp != 0 {
-		// app.vp.ActiveObjMessage.Appendf("yellow", calcSizeRateByValue(exp), time.Second, "Exp %+d", exp)
+		app.NotiMessage.Appendf("yellow", calcSizeRateByValue(exp), time.Second, "Exp %+d", exp)
 	}
 	if app.HPdiff > 0 {
-		// app.vp.ActiveObjMessage.Appendf("LimeGreen", calcSizeRateByValue(app.HPdiff), time.Second, "HP %+d", app.HPdiff)
+		app.NotiMessage.Appendf("LimeGreen", calcSizeRateByValue(app.HPdiff), time.Second, "HP %+d", app.HPdiff)
 	} else if app.HPdiff < 0 {
-		// app.vp.ActiveObjMessage.Appendf("Red", calcSizeRateByValue(-app.HPdiff), time.Second, "HP %+d", app.HPdiff)
+		app.NotiMessage.Appendf("Red", calcSizeRateByValue(-app.HPdiff), time.Second, "HP %+d", app.HPdiff)
 	}
 	if app.SPdiff > 0 {
-		// app.vp.ActiveObjMessage.Appendf("LimeGreen", calcSizeRateByValue(app.SPdiff), time.Second, "SP %+d", app.SPdiff)
+		app.NotiMessage.Appendf("LimeGreen", calcSizeRateByValue(app.SPdiff), time.Second, "SP %+d", app.SPdiff)
 	} else if app.SPdiff < 0 {
-		// app.vp.ActiveObjMessage.Appendf("Red", calcSizeRateByValue(-app.SPdiff), time.Second, "SP %+d", app.SPdiff)
+		app.NotiMessage.Appendf("Red", calcSizeRateByValue(-app.SPdiff), time.Second, "SP %+d", app.SPdiff)
 	}
 
 	for i := 0; i < condition.Condition_Count; i++ {
 		ci := condition.Condition(i)
 		if newOLNotiData.ActiveObj.Conditions.TestByCondition(ci) {
-			// app.vp.ActiveObjMessage.Appendf("OrangeRed", 1.0, time.Second, "%s", ci)
+			app.NotiMessage.Appendf("OrangeRed", 1.0, time.Second, "%s", ci)
 		}
 	}
 
@@ -370,12 +396,13 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		case turnresulttype.Kill:
 			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
-			// nickname := ""
+			nickname := ""
 			if exist {
 				aostr = obj2ColorStr(dstao)
-				// nickname = dstao.NickName
+				nickname = dstao.NickName
 			}
 			app.systemMessage.Appendf("Kill %v", aostr)
+			app.NotiMessage.AppendTf(tcsInfo, "You kill %v", nickname)
 		case turnresulttype.AttackedFrom:
 			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
@@ -388,12 +415,13 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		case turnresulttype.KilledBy:
 			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 			aostr := ""
-			// nickname := ""
+			nickname := ""
 			if exist {
 				aostr = obj2ColorStr(dstao)
-				// nickname = dstao.NickName
+				nickname = dstao.NickName
 			}
 			app.systemMessage.Appendf("Killed by %v", aostr)
+			app.NotiMessage.AppendTf(tcsInfo, "You are killed by %v", nickname)
 
 		case turnresulttype.HPDamageFromTrap:
 			app.systemMessage.Appendf("HP Damage from Trap %4.1f", v.Arg)
@@ -405,6 +433,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 
 		case turnresulttype.DeadByTile:
 			app.systemMessage.Append("Die by Tile damage")
+			app.NotiMessage.AppendTf(tcsInfo, "Die by Tile damage")
 		}
 	}
 
@@ -416,7 +445,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	app.OverLoadRate = newOLNotiData.ActiveObj.CalcWeight() / wLimit
 	if app.OverLoadRate > 1 {
 		soundmap.Play("overloadsound")
-		// app.vp.ActiveObjMessage.Appendf("red", app.OverLoadRate, time.Second, "Overloaded")
+		app.NotiMessage.Appendf("red", app.OverLoadRate, time.Second, "Overloaded")
 	}
 	if pao := app.GetPlayerActiveObjClient(); pao != nil && pao.DamageTake > 1 {
 		soundmap.Play("damagesound")
@@ -424,9 +453,9 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 
 	if newOLNotiData.ActiveObj.HP <= 0 {
 		if app.remainTurn2Rebirth > 0 {
-			// app.vp.NotiMessage.AppendTf(tcsRebirth, "Remain to rebirth %v", app.remainTurn2Rebirth)
+			app.NotiMessage.AppendTf(tcsRebirth, "Remain to rebirth %v", app.remainTurn2Rebirth)
 		} else {
-			// app.vp.NotiMessage.AppendTf(tcsRebirth, "Ready to rebirth %v", -app.remainTurn2Rebirth)
+			app.NotiMessage.AppendTf(tcsRebirth, "Ready to rebirth %v", -app.remainTurn2Rebirth)
 		}
 		app.remainTurn2Rebirth--
 	}
@@ -602,6 +631,8 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	if !oldComplete && cf.Visited.IsComplete() { // just completed
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Discover floor complete %v", cf.FloorInfo.Name))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Discover floor complete %v", cf.FloorInfo.Name)
 	}
 	return nil
 }
@@ -622,6 +653,8 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 		app.UUID2ClientFloor[robj.FI.UUID] = cf
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Found floor %v", cf.FloorInfo.Name))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Found floor %v", cf.FloorInfo.Name)
 	}
 
 	oldComplete := cf.Visited.IsComplete()
@@ -629,6 +662,8 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	if !oldComplete && cf.Visited.IsComplete() {
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 			"Discover floor %v complete", cf.FloorInfo.Name))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Discover floor %v complete", cf.FloorInfo.Name)
 	}
 	return nil
 }
@@ -655,6 +690,8 @@ func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, 
 		notiString := "Found Hidden FieldObj"
 		app.systemMessage.Append(wrapspan.ColorText("yellow",
 			notiString))
+		app.NotiMessage.AppendTf(tcsInfo,
+			notiString)
 	}
 	return nil
 }
@@ -695,9 +732,13 @@ func objRecvNotiFn_ActivateTrap(recvobj interface{}, header c2t_packet.Header, o
 	if robj.Triggered {
 		app.systemMessage.Append(wrapspan.ColorTextf("OrangeRed",
 			"Activate %v", robj.FieldObjAct.String()))
+		app.NotiMessage.AppendTf(tcsWarn,
+			"Activate %v", robj.FieldObjAct.String())
 	} else {
 		app.systemMessage.Append(wrapspan.ColorTextf("Yellow",
 			"Evade %v", robj.FieldObjAct.String()))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Evade %v", robj.FieldObjAct.String())
 	}
 	return nil
 }

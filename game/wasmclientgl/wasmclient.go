@@ -27,6 +27,7 @@ import (
 	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
+	"github.com/kasworld/goguelike/lib/canvastext"
 	"github.com/kasworld/goguelike/lib/jskeypressmap"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connwasm"
@@ -44,8 +45,11 @@ import (
 
 type WasmClient struct {
 	// app info
-	DoClose            func()
-	systemMessage      textncount.TextNCountList
+	DoClose func()
+
+	systemMessage textncount.TextNCountList
+	NotiMessage   canvastext.CanvasTextList
+
 	KeyboardPressedMap *jskeypressmap.KeyPressMap
 	Path2dst           [][2]int
 	ClientColtrolMode  clientcontroltype.ClientControlType
