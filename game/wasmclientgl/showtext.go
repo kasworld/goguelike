@@ -600,15 +600,16 @@ func makeMoneyColor(mo int) string {
 }
 
 func (app *WasmClient) MakeNotiMessage() string {
+	win := js.Global().Get("window")
+	winH := win.Get("innerHeight").Float()
 	var buf bytes.Buffer
-
 	app.NotiMessage = app.NotiMessage.Compact()
 	for i := 0; i < len(app.NotiMessage); i++ {
 		v := app.NotiMessage[i]
 		if v.IsEnded() {
 			continue
 		}
-		fontH := int(DstCellSize / 2 * v.SizeRate)
+		fontH := int(winH / 50 * v.SizeRate)
 		fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
 			fontH, v.Color, 1-v.ProgressRate(), v.Text,
 		)
