@@ -73,7 +73,7 @@ func (app *WasmClient) updateCenterInfo() {
 	infoobj := GetElementById("centerinfo")
 	switch v.State {
 	case 0: // Hide
-		infoobj.Set("innerHTML", "")
+		infoobj.Set("innerHTML", app.MakeNotiMessage())
 	case 1: // highscore
 		go func() {
 			infoobj.Set("innerHTML", clientinitdata.LoadHighScoreHTML())

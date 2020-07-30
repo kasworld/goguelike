@@ -594,3 +594,21 @@ func makeMoneyColor(mo int) string {
 	v := moneycolor.Attrib[len(moneycolor.Attrib)-1]
 	return wrapspan.ColorTextf(v.Color.String(), "$%v", mo)
 }
+
+func (app *WasmClient) MakeNotiMessage() string {
+	var buf bytes.Buffer
+
+	app.NotiMessage = app.NotiMessage.Compact()
+	for i := len(app.NotiMessage) - 1; i >= 0; i-- {
+		v := app.NotiMessage[i]
+		if v.IsEnded() {
+			continue
+		}
+		fontH := int(DstCellSize / 2 * v.SizeRate)
+		fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s">%s</div>`,
+			fontH, v.Color, v.Text,
+		)
+	}
+
+	return buf.String()
+}
