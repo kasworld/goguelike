@@ -218,6 +218,8 @@ func (app *WasmClient) enterTower(towerindex int) {
 		"color: white; position: fixed; top: 0; right: 0; overflow: hidden; text-align: right;")
 	GetElementById("centerinfo").Set("style",
 		"color: white; position: fixed; top: 0%; left: 25%; overflow: hidden; text-align: center;")
+	GetElementById("notiinfo").Set("style",
+		"color: white; position: absolute; margin: auto; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden; text-align: center;")
 
 	commandButtons.RegisterJSFn(app)
 	autoActs.RegisterJSFn(app)
