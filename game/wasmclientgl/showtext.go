@@ -609,8 +609,8 @@ func (app *WasmClient) MakeNotiMessage() string {
 			continue
 		}
 		fontH := int(DstCellSize / 2 * v.SizeRate)
-		fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s">%s</div>`,
-			fontH, v.Color, v.Text,
+		fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
+			fontH, v.Color, 1-v.ProgressRate(), v.Text,
 		)
 	}
 
