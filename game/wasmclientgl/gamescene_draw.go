@@ -451,6 +451,7 @@ func (vp *GameScene) processNotiObjectList(
 			ao3d.Name = nil
 			if ao3d.Chat != nil {
 				vp.scene.Call("remove", ao3d.Chat.Mesh)
+				ao3d.Chat.Dispose()
 				ao3d.Chat = nil
 			}
 		}
