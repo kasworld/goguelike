@@ -295,10 +295,20 @@ func MakeStartTower(name string) *towermake.Tower {
 		if randList[fm.Name] {
 			suffix = "Rand"
 		}
-		fm.AddRecycler(suffix, 4)
 		fm.ConnectAutoInPortalTo(suffix, suffix, fm)
 		fm.AddTrapTeleportTo(suffix, fm)
 		fm.AddAllEffectTrap(suffix, 1)
+
+		recycleCount := fm.W * fm.H / 512
+		if recycleCount < 2 {
+			recycleCount = 2
+		}
+		if recycleCount > 32 {
+			fm.AddRecycler(suffix, 32)
+			fm.AddRecycler("Rand", recycleCount-32)
+		} else {
+			fm.AddRecycler(suffix, recycleCount)
+		}
 	}
 
 	return tw
