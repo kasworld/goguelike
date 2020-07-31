@@ -132,7 +132,6 @@ func (tr *Terrain) Ageing() error {
 func (tr *Terrain) AgeingNoCheck() error {
 	if atomic.CompareAndSwapInt32(&tr.inAgeing, 0, 1) {
 		defer atomic.AddInt32(&tr.inAgeing, -1)
-		// rnd := g2rand.New()
 		rta := tr.GetRcsTiles().Dup().Ageing(tr.rnd.Intn, 1)
 		tr.resourceTileArea = rta
 		tr.finalize()
