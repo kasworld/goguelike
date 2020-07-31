@@ -26,19 +26,19 @@ type Floor struct {
 	Script        []string
 }
 
-// func New(name string, w, h int, ao, po int, turnBoost float64) *Floor {
-// 	fm := &Floor{
-// 		rnd:    g2rand.New(),
-// 		Name:   name,
-// 		W:      w,
-// 		H:      h,
-// 		Script: make([]string, 0),
-// 	}
-// 	fm.Appendf(
-// 		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
-// 		w, h, name, ao, po, turnBoost)
-// 	return fm
-// }
+func NewFloor(name string, w, h int, ao, po int, turnBoost float64) *Floor {
+	fm := &Floor{
+		rnd:    g2rand.New(),
+		Name:   name,
+		W:      w,
+		H:      h,
+		Script: make([]string, 0),
+	}
+	fm.Appendf(
+		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
+		w, h, name, ao, po, turnBoost)
+	return fm
+}
 
 func (fm *Floor) Appends(arg ...string) *Floor {
 	fm.Script = append(fm.Script, arg...)

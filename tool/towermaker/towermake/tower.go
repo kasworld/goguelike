@@ -14,7 +14,6 @@ package towermake
 import (
 	"fmt"
 
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/game/towerscript"
 )
 
@@ -34,16 +33,11 @@ func New(name string) *Tower {
 }
 
 func (tw *Tower) Add(name string, w, h int, ao, po int, turnBoost float64) *Floor {
-	fm := &Floor{
-		rnd:    g2rand.New(),
-		Name:   name,
-		W:      w,
-		H:      h,
-		Script: make([]string, 0),
-	}
-	fm.Appendf(
-		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
-		w, h, name, ao, po, turnBoost)
+	fm := NewFloor(name, w, h, ao, po, turnBoost)
+	return tw.AddFloor(name, fm)
+}
+
+func (tw *Tower) AddFloor(name string, fm *Floor) *Floor {
 	tw.byList = append(tw.byList, fm)
 	tw.byName[name] = fm
 	return fm
