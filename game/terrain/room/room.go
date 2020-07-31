@@ -26,12 +26,7 @@ func (r Room) String() string {
 	return fmt.Sprintf("Room[%v Area:%v]", r.UUID, r.Area)
 }
 
-func (r *Room) IntRange(n1, n2 int) int {
-	return r.rnd.Intn(n2-n1) + n1
-}
-
 type Room struct {
-	rnd        *g2rand.G2Rand `prettystring:"hide"`
 	UUID       string
 	BgTile     tile.Tile
 	Area       rect.Rect
@@ -45,7 +40,6 @@ type Room struct {
 
 func New(rt rect.Rect, bgTile tile.Tile) *Room {
 	r := &Room{
-		rnd:        g2rand.New(),
 		UUID:       uuidstr.New(),
 		BgTile:     bgTile,
 		Area:       rt,
@@ -61,8 +55,8 @@ func New(rt rect.Rect, bgTile tile.Tile) *Room {
 	return r
 }
 
-func (r *Room) DrawMaze(xn, yn int, walltile tile.Tile, connerFill bool) error {
-	m := maze2.New(xn, yn)
+func (r *Room) DrawMaze(rnd *g2rand.G2Rand, xn, yn int, walltile tile.Tile, connerFill bool) error {
+	m := maze2.New(rnd, xn, yn)
 	ma, err := m.ToMazeArea(r.Area.W-1, r.Area.H-1, connerFill)
 	if err != nil {
 		return fmt.Errorf("room %v %v", r, err)
@@ -77,7 +71,7 @@ func (r *Room) DrawMaze(xn, yn int, walltile tile.Tile, connerFill bool) error {
 	return nil
 }
 
-func (r *Room) DrawRectWall(walltile tile.Tile, terrace bool) error {
+func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile.Tile, terrace bool) error {
 	wallrect := r.Area
 	shiftConnetPos := 1
 	if terrace {
@@ -88,14 +82,14 @@ func (r *Room) DrawRectWall(walltile tile.Tile, terrace bool) error {
 	r.DrawWall_S(wallrect, walltile)
 	r.DrawWall_W(wallrect, walltile)
 	r.DrawWall_E(wallrect, walltile)
-	r.AddWindowRand_N(wallrect, tile.Window)
-	r.AddWindowRand_S(wallrect, tile.Window)
-	r.AddWindowRand_W(wallrect, tile.Window)
-	r.AddWindowRand_E(wallrect, tile.Window)
-	r.AddDoorRand_N(wallrect, tile.Door, shiftConnetPos)
-	r.AddDoorRand_S(wallrect, tile.Door, shiftConnetPos)
-	r.AddDoorRand_W(wallrect, tile.Door, shiftConnetPos)
-	r.AddDoorRand_E(wallrect, tile.Door, shiftConnetPos)
+	r.AddWindowRand_N(rnd, wallrect, tile.Window)
+	r.AddWindowRand_S(rnd, wallrect, tile.Window)
+	r.AddWindowRand_W(rnd, wallrect, tile.Window)
+	r.AddWindowRand_E(rnd, wallrect, tile.Window)
+	r.AddDoorRand_N(rnd, wallrect, tile.Door, shiftConnetPos)
+	r.AddDoorRand_S(rnd, wallrect, tile.Door, shiftConnetPos)
+	r.AddDoorRand_W(rnd, wallrect, tile.Door, shiftConnetPos)
+	r.AddDoorRand_E(rnd, wallrect, tile.Door, shiftConnetPos)
 	return nil
 }
 
@@ -124,78 +118,62 @@ func (r *Room) DrawWall_E(wallrect rect.Rect, walltile tile.Tile) {
 	}
 }
 
-func (r *Room) AddWindowRand_N(wallrect rect.Rect, wintile tile.Tile) {
-	x := r.IntRange(1, wallrect.W-1)
+func (r *Room) AddWindowRand_N(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
+	x := rnd.IntRange(1, wallrect.W-1)
 	y := 0
 	r.Tiles[x][y] = wintile
 }
-func (r *Room) AddWindowRand_S(wallrect rect.Rect, wintile tile.Tile) {
-	x := r.IntRange(1, wallrect.W-1)
+func (r *Room) AddWindowRand_S(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
+	x := rnd.IntRange(1, wallrect.W-1)
 	y := wallrect.H - 1
 	r.Tiles[x][y] = wintile
 }
-func (r *Room) AddWindowRand_W(wallrect rect.Rect, wintile tile.Tile) {
+func (r *Room) AddWindowRand_W(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
 	x := 0
-	y := r.IntRange(1, wallrect.H-1)
+	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = wintile
 }
-func (r *Room) AddWindowRand_E(wallrect rect.Rect, wintile tile.Tile) {
+func (r *Room) AddWindowRand_E(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
 	x := wallrect.W - 1
-	y := r.IntRange(1, wallrect.H-1)
+	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = wintile
 }
 
-func (r *Room) AddDoorRand_N(wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
-	x := r.IntRange(1, wallrect.W-1)
+func (r *Room) AddDoorRand_N(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+	x := rnd.IntRange(1, wallrect.W-1)
 	y := 0
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x, wallrect.Y + y - shiftConnectPos})
 }
-func (r *Room) AddDoorRand_S(wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
-	x := r.IntRange(1, wallrect.W-1)
+func (r *Room) AddDoorRand_S(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+	x := rnd.IntRange(1, wallrect.W-1)
 	y := wallrect.H - 1
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x, wallrect.Y + y + shiftConnectPos})
 }
-func (r *Room) AddDoorRand_W(wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+func (r *Room) AddDoorRand_W(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
 	x := 0
-	y := r.IntRange(1, wallrect.H-1)
+	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x - shiftConnectPos, wallrect.Y + y})
 }
-func (r *Room) AddDoorRand_E(wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+func (r *Room) AddDoorRand_E(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
 	x := wallrect.W - 1
-	y := r.IntRange(1, wallrect.H-1)
+	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x + shiftConnectPos, wallrect.Y + y})
 }
-
-// quadtree interface fn
-// func (r *Room) GetRect() rect.Rect {
-// 	return r.Area
-// }
 
 func (r *Room) GetUUID() string {
 	return r.UUID
 }
 
-// // for draw2d
-// func (r *Room) GetXYLen() (int, int) {
-// 	return r.Area.W, r.Area.H
-// }
-
-// // for draw2d
-// func (r *Room) OpXY(x, y int, v interface{}) {
-// 	rv := v.(tile.Tile)
-// 	r.Tiles[x-r.Area.X][y-r.Area.Y] = rv
-// }
-
-func (r *Room) RndDoorOuter() [2]int {
-	return r.ConnectPos[r.rnd.Intn(len(r.ConnectPos))]
+func (r *Room) RndDoorOuter(rnd *g2rand.G2Rand) [2]int {
+	return r.ConnectPos[rnd.Intn(len(r.ConnectPos))]
 }
 
-func (r *Room) RndPos() (int, int) {
-	return r.Area.X + r.rnd.Intn(r.Area.W), r.Area.Y + r.rnd.Intn(r.Area.H)
+func (r *Room) RndPos(rnd *g2rand.G2Rand) (int, int) {
+	return r.Area.X + rnd.Intn(r.Area.W), r.Area.Y + rnd.Intn(r.Area.H)
 }
 
 func (info *Room) StringForm() string {

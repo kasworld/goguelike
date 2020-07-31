@@ -133,8 +133,8 @@ func traverseRoom(startroom string, roomGraph map[string]map[string]bool, visite
 }
 
 func (tr *Terrain) makeCorridor(r1, r2 *room.Room, ttile tile.Tile, way8 bool) error {
-	p1 := r1.RndDoorOuter()
-	p2 := r2.RndDoorOuter()
+	p1 := r1.RndDoorOuter(tr.rnd)
+	p2 := r2.RndDoorOuter(tr.rnd)
 
 	plist := tr.findCorridor(p1[0], p1[1], p2[0], p2[1], (tr.Xlen * tr.Ylen), way8)
 	if plist == nil {

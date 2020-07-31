@@ -149,7 +149,7 @@ func cmdResourceMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	m := maze2.New(xn, yn)
+	m := maze2.New(tr.rnd, xn, yn)
 	ma, err := m.ToMazeArea(tr.GetXLen(), tr.GetYLen(), conerFill)
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
@@ -173,7 +173,7 @@ func cmdResourceMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	m := maze2.New(xn, yn)
+	m := maze2.New(tr.rnd, xn, yn)
 	ma, err := m.ToMazeArea(tr.GetXLen(), tr.GetYLen(), conerFill)
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)

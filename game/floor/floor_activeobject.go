@@ -80,7 +80,7 @@ func (f *Floor) searchRandomActiveObjPosInRoom() (int, int, error) {
 			rn = 0
 		}
 		r := rooms[rn]
-		x, y := r.RndPos()
+		x, y := r.RndPos(f.rnd)
 		if tiles[x][y].CharPlaceable() {
 			return x, y, nil
 		}

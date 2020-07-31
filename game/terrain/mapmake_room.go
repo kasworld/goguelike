@@ -36,7 +36,7 @@ func (tr *Terrain) randRoomRect2(RoomGrid, RoomMeanSize, Stddev, Min int) rect.R
 }
 func (tr *Terrain) addRoomManual(rt rect.Rect, bgtile, walltile tile.Tile, terrace bool) error {
 	r := room.New(rt, bgtile)
-	r.DrawRectWall(walltile, terrace)
+	r.DrawRectWall(tr.rnd, walltile, terrace)
 	return tr.roomManager.AddRoom(r)
 }
 
@@ -45,9 +45,9 @@ func (tr *Terrain) addMazeRoomManual(rt rect.Rect, bgtile, walltile tile.Tile, t
 ) error {
 
 	r := room.New(rt, bgtile)
-	if err := r.DrawMaze(xn, yn, walltile, connerFill); err != nil {
+	if err := r.DrawMaze(tr.rnd, xn, yn, walltile, connerFill); err != nil {
 		return err
 	}
-	r.DrawRectWall(walltile, false)
+	r.DrawRectWall(tr.rnd, walltile, false)
 	return tr.roomManager.AddRoom(r)
 }

@@ -52,40 +52,38 @@ type Maze struct {
 	H       int
 	PosList [][2]int
 	Cells   [][]Dir
-	rnd     *g2rand.G2Rand `prettystring:"hide"`
 }
 
-func New(w, h int) *Maze {
+func New(rnd *g2rand.G2Rand, w, h int) *Maze {
 	m := Maze{
 		W:     w,
 		H:     h,
 		Cells: make([][]Dir, w),
-		rnd:   g2rand.New(),
 	}
 	for i := range m.Cells {
 		m.Cells[i] = make([]Dir, h)
 	}
-	m.make()
+	m.make(rnd)
 	return &m
 }
 
-func (m *Maze) selectVisit() int {
-	if m.rnd.Intn(2) == 0 {
+func (m *Maze) selectVisit(rnd *g2rand.G2Rand) int {
+	if rnd.Intn(2) == 0 {
 		return len(m.PosList) - 1
 	}
-	return m.rnd.Intn(len(m.PosList))
+	return rnd.Intn(len(m.PosList))
 }
 
-func (m *Maze) make() {
-	x, y := m.rnd.Intn(m.W), m.rnd.Intn(m.H)
+func (m *Maze) make(rnd *g2rand.G2Rand) {
+	x, y := rnd.Intn(m.W), rnd.Intn(m.H)
 	m.PosList = append(m.PosList, [2]int{x, y})
 	for len(m.PosList) != 0 {
-		curVisitI := m.selectVisit()
+		curVisitI := m.selectVisit(rnd)
 		x, y := m.PosList[curVisitI][0], m.PosList[curVisitI][1]
 		delCur := true
 
 		dirList := []Dir{N, S, E, W}
-		for _, dirIndex := range m.rnd.Perm(4) {
+		for _, dirIndex := range rnd.Perm(4) {
 			dir := dirList[dirIndex]
 			nx, ny := x+DX[dir], y+DY[dir]
 			if nx >= 0 && ny >= 0 && nx < m.W && ny < m.H && m.Cells[nx][ny] == 0 {
