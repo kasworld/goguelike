@@ -14,6 +14,8 @@ package terrain
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/terraincmd"
+
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/game/terrain/corridor"
 	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
@@ -24,50 +26,48 @@ import (
 	"github.com/kasworld/wrapper"
 )
 
-var cmdFnArgs = map[string]struct {
-	fn     func(tr *Terrain, ca *scriptparse.CmdArgs) error
-	format string
-}{
-	"NewTerrain":             {cmdNewTerrain, "name:string w:int h:int ao:int po:int actturnboost:float"},
-	"ResourceMazeWall":       {cmdResourceMazeWall, "resource:TileRsc_Type amount:int xn:int yn:int connerfill:bool"},
-	"ResourceMazeWalk":       {cmdResourceMazeWalk, "resource:TileRsc_Type amount:int xn:int yn:int connerfill:bool"},
-	"ResourceRand":           {cmdResourceRand, "resource:TileRsc_Type mean:int stddev:int repeat:int"},
-	"Resource":               {cmdResource, "resource:TileRsc_Type amount:int x:int y:int"},
-	"ResourceHLine":          {cmdResourceHLine, "resource:TileRsc_Type amount:int x:int w:int y:int"},
-	"ResourceVLine":          {cmdResourceVLine, "resource:TileRsc_Type amount:int x:int y:int h:int"},
-	"ResourceLine":           {cmdResourceLine, "resource:TileRsc_Type amount:int x1:int y1:int x2:int y2:int"},
-	"ResourceRect":           {cmdResourceRect, "resource:TileRsc_Type amount:int x:int w:int y:int h:int"},
-	"ResourceFillRect":       {cmdResourceFillRect, "resource:TileRsc_Type amount:int x:int w:int y:int h:int"},
-	"ResourceFillEllipses":   {cmdResourceFillEllipses, "resource:TileRsc_Type amount:int x:int w:int y:int h:int"},
-	"ResourceFromPNG":        {cmdResourceFromPNG, "name:string"},
-	"ResourceAgeing":         {cmdAgeing, "initrun:int msper:int resetaftern:int"},
-	"AddRoom":                {cmdAddRoom, "bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y:int w:int h:int"},
-	"AddRoomMaze":            {cmdAddMazeRoom, "bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool"},
-	"AddRoomsRand":           {cmdAddRandRooms, "bgtile:Tile_Type walltile:Tile_Type terrace:bool align:int count:int mean:int stddev:int min:int"},
-	"ConnectRooms":           {cmdConnectRooms, "tile:Tile_Type connect:int allconnect:bool diagonal:bool"},
-	"FinalizeTerrain":        {cmdFinalizeTerrain, ""},
-	"AddPortal":              {cmdAddPortal, "x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string"},
-	"AddPortalRand":          {cmdAddPortalRand, "display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string"},
-	"AddPortalInRoom":        {cmdAddPortalRandInRoom, "display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string"},
-	"AddRecycler":            {cmdAddRecycler, "x:int y:int display:FieldObjDisplay_Type message:string"},
-	"AddRecyclerRand":        {cmdAddRecyclerRand, "display:FieldObjDisplay_Type count:int message:string"},
-	"AddRecyclerInRoom":      {cmdAddRecyclerRandInRoom, "display:FieldObjDisplay_Type count:int message:string"},
-	"AddTrapTeleport":        {cmdAddTrapTeleport, "x:int y:int DstFloor:string message:string "},
-	"AddTrapTeleportsRand":   {cmdAddTrapTeleportRand, "DstFloor:string count:int message:string"},
-	"AddTrapTeleportsInRoom": {cmdAddTrapTeleportRandInRoom, "DstFloor:string count:int message:string"},
-	"AddTrap":                {cmdAddTrap, "x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type message:string"},
-	"AddTrapsRand":           {cmdAddTrapRand, "display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string"},
-	"AddTrapsInRoom":         {cmdAddTrapRandInRoom, "display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string"},
+var TerrainScriptFn = map[terraincmd.TerrainCmd]func(tr *Terrain, ca *scriptparse.CmdArgs) error{
+	terraincmd.NewTerrain:             cmdNewTerrain,
+	terraincmd.ResourceMazeWall:       cmdResourceMazeWall,
+	terraincmd.ResourceMazeWalk:       cmdResourceMazeWalk,
+	terraincmd.ResourceRand:           cmdResourceRand,
+	terraincmd.Resource:               cmdResource,
+	terraincmd.ResourceHLine:          cmdResourceHLine,
+	terraincmd.ResourceVLine:          cmdResourceVLine,
+	terraincmd.ResourceLine:           cmdResourceLine,
+	terraincmd.ResourceRect:           cmdResourceRect,
+	terraincmd.ResourceFillRect:       cmdResourceFillRect,
+	terraincmd.ResourceFillEllipses:   cmdResourceFillEllipses,
+	terraincmd.ResourceFromPNG:        cmdResourceFromPNG,
+	terraincmd.ResourceAgeing:         cmdAgeing,
+	terraincmd.AddRoom:                cmdAddRoom,
+	terraincmd.AddRoomMaze:            cmdAddMazeRoom,
+	terraincmd.AddRoomsRand:           cmdAddRandRooms,
+	terraincmd.ConnectRooms:           cmdConnectRooms,
+	terraincmd.FinalizeTerrain:        cmdFinalizeTerrain,
+	terraincmd.AddPortal:              cmdAddPortal,
+	terraincmd.AddPortalRand:          cmdAddPortalRand,
+	terraincmd.AddPortalInRoom:        cmdAddPortalRandInRoom,
+	terraincmd.AddRecycler:            cmdAddRecycler,
+	terraincmd.AddRecyclerRand:        cmdAddRecyclerRand,
+	terraincmd.AddRecyclerInRoom:      cmdAddRecyclerRandInRoom,
+	terraincmd.AddTrapTeleport:        cmdAddTrapTeleport,
+	terraincmd.AddTrapTeleportsRand:   cmdAddTrapTeleportRand,
+	terraincmd.AddTrapTeleportsInRoom: cmdAddTrapTeleportRandInRoom,
+	terraincmd.AddTrap:                cmdAddTrap,
+	terraincmd.AddTrapsRand:           cmdAddTrapRand,
+	terraincmd.AddTrapsInRoom:         cmdAddTrapRandInRoom,
 }
 
 func init() {
 	// verify format
-	for _, v := range cmdFnArgs {
-		_, n2v, err := scriptparse.Split2ListMap(v.format, " ", ":")
+	for i := 0; i < terraincmd.TerrainCmd_Count; i++ {
+		format := terraincmd.TerrainCmd(i).CommentString()
+		_, n2v, err := scriptparse.Split2ListMap(format, " ", ":")
 		for _, t := range n2v {
 			_, exist := scriptparse.Type2ConvFn[t]
 			if !exist {
-				panic(fmt.Sprintf("unknown type %v %v", t, v.format))
+				panic(fmt.Sprintf("unknown type %v %v", t, format))
 			}
 		}
 		if err != nil {
@@ -77,11 +77,15 @@ func init() {
 }
 
 func (tr *Terrain) Execute1Cmdline(cmdline string) error {
-	cmd, argLine := scriptparse.SplitCmdArgstr(cmdline, " ")
-	if len(cmd) == 0 || cmd[0] == '#' {
+	cmdstr, argLine := scriptparse.SplitCmdArgstr(cmdline, " ")
+	if len(cmdstr) == 0 || cmdstr[0] == '#' {
 		return nil
 	}
-	fnarg, exist := cmdFnArgs[cmd]
+	cmd, exist := terraincmd.String2TerrainCmd(cmdstr)
+	if !exist {
+		return fmt.Errorf("unknown cmd %v", cmd)
+	}
+	fn, exist := TerrainScriptFn[cmd]
 	if !exist {
 		return fmt.Errorf("unknown cmd %v", cmd)
 	}
@@ -89,17 +93,17 @@ func (tr *Terrain) Execute1Cmdline(cmdline string) error {
 	if err != nil {
 		return err
 	}
-	nameList, name2type, err := scriptparse.Split2ListMap(fnarg.format, " ", ":")
+	nameList, name2type, err := scriptparse.Split2ListMap(cmd.CommentString(), " ", ":")
 	if err != nil {
 		return err
 	}
 	ca := &scriptparse.CmdArgs{
-		Cmd:        cmd,
+		Cmd:        cmdstr,
 		Name2Value: name2value,
 		NameList:   nameList,
 		Name2Type:  name2type,
 	}
-	return fnarg.fn(tr, ca)
+	return fn(tr, ca)
 }
 
 func (tr *Terrain) execNewTerrain(
