@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike/enum/resourcetype"
 	"github.com/kasworld/goguelike/game/terrain/maze2"
 	"github.com/kasworld/goguelike/game/terrain/resourcetile"
-	"github.com/kasworld/goguelike/game/terrain/scriptparse"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/walk2d"
 )
 

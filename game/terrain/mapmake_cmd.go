@@ -17,7 +17,7 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/game/terrain/scriptparse"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/rect"
 )
 

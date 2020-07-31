@@ -15,7 +15,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/game/terrain/scriptparse"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 )
 

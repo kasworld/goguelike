@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/goguelike/game/terrain/paramconv"
 	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
 	"github.com/kasworld/goguelike/game/terrain/roommanager"
-	"github.com/kasworld/goguelike/game/terrain/scriptparse"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/wrapper"

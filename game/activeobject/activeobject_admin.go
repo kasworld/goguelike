@@ -15,15 +15,14 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/statusoptype"
-
-	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/game/carryingobject"
-	"github.com/kasworld/goguelike/game/terrain/scriptparse"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 )
 
