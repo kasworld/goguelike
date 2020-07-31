@@ -312,7 +312,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 			"Level Down to %v", newLevel)
 	}
 	if exp != 0 {
-		app.NotiMessage.Appendf("yellow", calcSizeRateByValue(exp), time.Second, "Exp %+d", exp)
+		app.NotiMessage.Appendf("yellow", calcSizeRateByValue(exp/10), time.Second, "Exp %+d", exp)
 	}
 	if app.HPdiff > 0 {
 		app.NotiMessage.Appendf("LimeGreen", calcSizeRateByValue(app.HPdiff), time.Second, "HP %+d", app.HPdiff)
