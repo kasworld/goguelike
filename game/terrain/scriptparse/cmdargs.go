@@ -13,7 +13,6 @@ package scriptparse
 
 import (
 	"fmt"
-	"strings"
 )
 
 func (ca CmdArgs) String() string {
@@ -52,51 +51,6 @@ func (ca *CmdArgs) SetArgByName(argName string, v interface{}) error {
 	err := convFn(argValue, v)
 	if err != nil {
 		return err
-	}
-	return nil
-}
-
-func SplitCmdArgstr(cmdline string, sep string) (string, string) {
-	cmdline = strings.TrimSpace(cmdline)
-	splited := strings.SplitN(cmdline, sep, 2)
-	switch len(splited) {
-	case 1:
-		return strings.TrimSpace(splited[0]), ""
-	case 2:
-		return strings.TrimSpace(splited[0]), strings.TrimSpace(splited[1])
-	default:
-		return "", ""
-	}
-}
-
-func SetArgsByFormat(
-	argStr string, argSep1, argSep2 string,
-	format string, fmtSep1, fmtSep2 string,
-	varList ...interface{}) error {
-
-	_, name2Value, err := Split2ListMap(argStr, argSep1, argSep2)
-	if err != nil {
-		return err
-	}
-
-	nameList2, name2Type, err := Split2ListMap(format, fmtSep1, fmtSep2)
-	if err != nil {
-		return err
-	}
-
-	for argPos, argName := range nameList2 {
-		argValue, exist := name2Value[argName]
-		if !exist {
-			return fmt.Errorf("arg %v not found %v", argName, name2Value)
-		}
-		convFn, exist := Type2ConvFn[name2Type[argName]]
-		if !exist {
-			return fmt.Errorf("not supported type %v %v", name2Type[argName], argValue)
-		}
-		err := convFn(argValue, varList[argPos])
-		if err != nil {
-			return err
-		}
 	}
 	return nil
 }
