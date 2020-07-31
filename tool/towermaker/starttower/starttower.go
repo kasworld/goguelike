@@ -299,13 +299,15 @@ func MakeStartTower(name string) *towermake.Tower {
 		fm.AddTrapTeleportTo(suffix, fm)
 		fm.AddAllEffectTrap(suffix, 1)
 
+		roomCount := fm.CalcRoomCount()
+		// fmt.Printf("%v Room %v\n", fm, roomCount)
 		recycleCount := fm.W * fm.H / 512
 		if recycleCount < 2 {
 			recycleCount = 2
 		}
-		if recycleCount > 32 {
-			fm.AddRecycler(suffix, 32)
-			fm.AddRecycler("Rand", recycleCount-32)
+		if recycleCount > roomCount {
+			fm.AddRecycler(suffix, roomCount)
+			fm.AddRecycler("Rand", recycleCount-roomCount)
 		} else {
 			fm.AddRecycler(suffix, recycleCount)
 		}

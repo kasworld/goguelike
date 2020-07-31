@@ -58,7 +58,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=8 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=4 message=Recycle",
+        "AddRecyclerRand display=Recycler count=4 message=Recycle"
     ],
     [
         "NewTerrain w=128 h=128 name=ManyPortals ao=64 po=0 actturnboost=1",
@@ -109,7 +110,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=9 message=Recycle",
+        "AddRecyclerRand display=Recycler count=23 message=Recycle"
     ],
     [
         "NewTerrain w=128 h=128 name=SoilWater ao=64 po=0 actturnboost=1",
@@ -139,7 +141,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
+        "AddRecyclerRand display=Recycler count=24 message=Recycle"
     ],
     [
         "NewTerrain w=128 h=128 name=SoilMagma ao=64 po=0 actturnboost=1",
@@ -170,7 +173,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
+        "AddRecyclerRand display=Recycler count=24 message=Recycle"
     ],
     [
         "NewTerrain w=128 h=128 name=SoilIce ao=64 po=0 actturnboost=1",
@@ -200,7 +204,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=16 message=Recycle",
+        "AddRecyclerRand display=Recycler count=16 message=Recycle"
     ],
     [
         "NewTerrain w=256 h=256 name=MadeByImage ao=256 po=0 actturnboost=1",
@@ -265,8 +270,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle",
-        "AddRecyclerRand display=Recycler count=96 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=64 message=Recycle",
+        "AddRecyclerRand display=Recycler count=64 message=Recycle"
     ],
     [
         "NewTerrain w=256 h=256 name=AgeingField ao=256 po=0 actturnboost=1",
@@ -300,8 +305,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle",
-        "AddRecyclerRand display=Recycler count=96 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
+        "AddRecyclerRand display=Recycler count=120 message=Recycle"
     ],
     [
         "NewTerrain w=256 h=256 name=AgeingMaze ao=256 po=0 actturnboost=1",
@@ -335,8 +340,8 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerInRoom display=Recycler count=32 message=Recycle",
-        "AddRecyclerRand display=Recycler count=96 message=Recycle"
+        "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
+        "AddRecyclerRand display=Recycler count=120 message=Recycle"
     ],
     [
         "NewTerrain w=80 h=43 name=RogueLike ao=16 po=0 actturnboost=1",
@@ -458,6 +463,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddRecyclerRand display=Recycler count=0 message=Recycle",
         "AddRecyclerRand display=Recycler count=8 message=Recycle"
     ],
     [
@@ -562,6 +568,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddRecyclerRand display=Recycler count=0 message=Recycle",
         "AddRecyclerRand display=Recycler count=4 message=Recycle"
     ],
     [
@@ -589,7 +596,8 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
-        "AddRecyclerRand display=Recycler count=4 message=Recycle"
+        "AddRecyclerRand display=Recycler count=2 message=Recycle",
+        "AddRecyclerRand display=Recycler count=2 message=Recycle"
     ],
     [
         "NewTerrain w=64 h=32 name=MazeRooms2 ao=0 po=0 actturnboost=1.5",
@@ -680,6 +688,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddRecyclerRand display=Recycler count=0 message=Recycle",
         "AddRecyclerRand display=Recycler count=8 message=Recycle"
     ],
     [

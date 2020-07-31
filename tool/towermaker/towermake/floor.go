@@ -22,6 +22,10 @@ import (
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
+func (fm *Floor) String() string {
+	return fmt.Sprintf("%s[%vx%v]", fm.Name, fm.W, fm.H)
+}
+
 type Floor struct {
 	rnd           *g2rand.G2Rand
 	Name          string
