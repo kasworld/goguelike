@@ -15,13 +15,11 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/game/terrain/room"
 )
 
 type RoomManager struct {
-	mutex sync.RWMutex   `prettystring:"hide"`
-	rnd   *g2rand.G2Rand `prettystring:"hide"`
+	mutex sync.RWMutex `prettystring:"hide"`
 
 	roomList []*room.Room   `prettystring:"simple"`
 	roomArea [][]*room.Room `prettystring:"simple"`
@@ -30,7 +28,6 @@ type RoomManager struct {
 func New(w, h int) *RoomManager {
 	rm := &RoomManager{
 		roomList: make([]*room.Room, 0),
-		rnd:      g2rand.New(),
 		roomArea: make([][]*room.Room, w),
 	}
 	for x := range rm.roomArea {
