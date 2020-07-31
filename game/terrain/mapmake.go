@@ -18,6 +18,7 @@ import (
 
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/game/terrain/corridor"
+	"github.com/kasworld/goguelike/game/terrain/paramconv"
 	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
 	"github.com/kasworld/goguelike/game/terrain/roommanager"
 	"github.com/kasworld/goguelike/game/terrain/scriptparse"
@@ -65,7 +66,7 @@ func init() {
 		format := terraincmd.TerrainCmd(i).CommentString()
 		_, n2v, err := scriptparse.Split2ListMap(format, " ", ":")
 		for _, t := range n2v {
-			_, exist := Type2ConvFn[t]
+			_, exist := paramconv.Type2ConvFn[t]
 			if !exist {
 				panic(fmt.Sprintf("unknown type %v %v", t, format))
 			}
@@ -98,7 +99,7 @@ func (tr *Terrain) Execute1Cmdline(cmdline string) error {
 		return err
 	}
 	ca := &scriptparse.CmdArgs{
-		Type2ConvFn: Type2ConvFn,
+		Type2ConvFn: paramconv.Type2ConvFn,
 		Cmd:         cmdstr,
 		Name2Value:  name2value,
 		NameList:    nameList,
