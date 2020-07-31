@@ -14,12 +14,10 @@ package towermake
 import (
 	"fmt"
 
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 )
 
 type Floor struct {
-	rnd           *g2rand.G2Rand
 	Name          string
 	W, H          int
 	PortalIDToUse int
@@ -28,7 +26,6 @@ type Floor struct {
 
 func NewFloor(name string, w, h int, ao, po int, turnBoost float64) *Floor {
 	fm := &Floor{
-		rnd:    g2rand.New(),
 		Name:   name,
 		W:      w,
 		H:      h,

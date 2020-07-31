@@ -16,7 +16,6 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/game/fieldobject"
@@ -37,7 +36,6 @@ func (fm *FloorManager) String() string {
 type FloorManager struct {
 	mutex         sync.RWMutex   `prettystring:"hide"`
 	log           *g2log.LogBase `prettystring:"hide"`
-	rnd           *g2rand.G2Rand
 	tower         gamei.TowerI
 	terrainScript towerscript.TowerScript
 
@@ -50,7 +48,6 @@ type FloorManager struct {
 
 func New(terrainScript towerscript.TowerScript, tw gamei.TowerI) *FloorManager {
 	fm := &FloorManager{
-		rnd:             g2rand.New(),
 		log:             tw.Log(),
 		tower:           tw,
 		terrainScript:   terrainScript,

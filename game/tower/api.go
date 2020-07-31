@@ -107,7 +107,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		// new ao
 		var homeFloor gamei.FloorI
 		if strings.HasPrefix(robj.NickName, "MC_") {
-			homeFloor = tw.GetFloorManager().GetRandomFloor()
+			homeFloor = tw.GetFloorManager().GetFloorByIndex(tw.rnd.Intn(tw.GetFloorManager().GetFloorCount()))
 		} else {
 			homeFloor = tw.GetFloorManager().GetStartFloor()
 		}

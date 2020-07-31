@@ -36,11 +36,6 @@ func (fm *FloorManager) GetStartFloor() gamei.FloorI {
 	return fm.startFloor
 }
 
-func (fm *FloorManager) GetRandomFloor() gamei.FloorI {
-	n := fm.rnd.Intn(len(fm.floorList))
-	return fm.floorList[n]
-}
-
 func (fm *FloorManager) GetFloorCount() int {
 	return len(fm.floorList)
 }

@@ -16,7 +16,6 @@ import "github.com/kasworld/goguelike/game/fieldobject"
 type FloorManagerI interface {
 	GetFloorByIndex(i int) FloorI
 	GetStartFloor() FloorI
-	GetRandomFloor() FloorI
 	GetFloorCount() int
 	GetFloorList() []FloorI
 	GetFloorByUUID(id string) FloorI
