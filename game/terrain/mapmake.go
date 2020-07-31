@@ -65,7 +65,7 @@ func init() {
 		format := terraincmd.TerrainCmd(i).CommentString()
 		_, n2v, err := scriptparse.Split2ListMap(format, " ", ":")
 		for _, t := range n2v {
-			_, exist := scriptparse.Type2ConvFn[t]
+			_, exist := Type2ConvFn[t]
 			if !exist {
 				panic(fmt.Sprintf("unknown type %v %v", t, format))
 			}
@@ -98,10 +98,11 @@ func (tr *Terrain) Execute1Cmdline(cmdline string) error {
 		return err
 	}
 	ca := &scriptparse.CmdArgs{
-		Cmd:        cmdstr,
-		Name2Value: name2value,
-		NameList:   nameList,
-		Name2Type:  name2type,
+		Type2ConvFn: Type2ConvFn,
+		Cmd:         cmdstr,
+		Name2Value:  name2value,
+		NameList:    nameList,
+		Name2Type:   name2type,
 	}
 	return fn(tr, ca)
 }

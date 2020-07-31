@@ -20,10 +20,11 @@ func (ca CmdArgs) String() string {
 }
 
 type CmdArgs struct {
-	Cmd        string
-	Name2Value map[string]string
-	NameList   []string
-	Name2Type  map[string]string
+	Type2ConvFn map[string]func(valStr string, dstValue interface{}) error
+	Cmd         string
+	Name2Value  map[string]string
+	NameList    []string
+	Name2Type   map[string]string
 }
 
 func (ca *CmdArgs) GetArgs(varList ...interface{}) error {
@@ -44,7 +45,7 @@ func (ca *CmdArgs) SetArgByName(argName string, v interface{}) error {
 	if !exist {
 		return fmt.Errorf("arg %v not found %v", argName, ca.Name2Value)
 	}
-	convFn, exist := Type2ConvFn[ca.Name2Type[argName]]
+	convFn, exist := ca.Type2ConvFn[ca.Name2Type[argName]]
 	if !exist {
 		return fmt.Errorf("not supported type %v %v", ca.Name2Type[argName], argValue)
 	}
