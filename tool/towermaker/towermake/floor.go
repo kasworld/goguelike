@@ -14,10 +14,16 @@ package towermake
 import (
 	"fmt"
 
+	"github.com/kasworld/g2rand"
+
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
+	"github.com/kasworld/goguelike/enum/terraincmd"
+	"github.com/kasworld/goguelike/game/terrain/paramconv"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
 type Floor struct {
+	rnd           *g2rand.G2Rand
 	Name          string
 	W, H          int
 	PortalIDToUse int
@@ -26,6 +32,7 @@ type Floor struct {
 
 func NewFloor(name string, w, h int, ao, po int, turnBoost float64) *Floor {
 	fm := &Floor{
+		rnd:    g2rand.New(),
 		Name:   name,
 		W:      w,
 		H:      h,
@@ -150,4 +157,48 @@ func (fm *Floor) AddAllEffectTrap(suffix string, countPerEffectTrapType int) *Fl
 			suffix, ft, countPerEffectTrapType)
 	}
 	return fm
+}
+
+func (fm *Floor) CalcRoomCount() int {
+	roomCount := 0
+	for _, cmdline := range fm.Script {
+		cmdstr, argLine := scriptparse.SplitCmdArgstr(cmdline, " ")
+		if len(cmdstr) == 0 || cmdstr[0] == '#' {
+			continue
+		}
+		cmd, exist := terraincmd.String2TerrainCmd(cmdstr)
+		if !exist {
+			fmt.Printf("unknown cmd %v", cmdstr)
+			continue
+		}
+		_, name2value, err := scriptparse.Split2ListMap(argLine, " ", "=")
+		if err != nil {
+			fmt.Printf("Split2ListMap %v", err)
+			continue
+		}
+		nameList, name2type, err := scriptparse.Split2ListMap(cmd.CommentString(), " ", ":")
+		if err != nil {
+			fmt.Printf("Split2ListMap %v", err)
+			continue
+		}
+		ca := &scriptparse.CmdArgs{
+			Type2ConvFn: paramconv.Type2ConvFn,
+			Cmd:         cmdstr,
+			Name2Value:  name2value,
+			NameList:    nameList,
+			Name2Type:   name2type,
+		}
+		switch cmd {
+		case terraincmd.AddRoom, terraincmd.AddRoomMaze:
+			roomCount++
+		case terraincmd.AddRoomsRand:
+			rc := 0
+			if err := ca.SetArgByName("count", &rc); err == nil {
+				roomCount += rc
+			} else {
+				fmt.Printf("SetArgByName %v", err)
+			}
+		}
+	}
+	return roomCount
 }
