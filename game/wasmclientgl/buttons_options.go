@@ -71,11 +71,9 @@ func cmdRotateCenterInfo(obj interface{}, v *htmlbutton.HTMLButton) {
 func (app *WasmClient) updateCenterInfo() {
 	v := gameOptions.GetByIDBase("CenterInfo")
 	infoobj := GetElementById("centerinfo")
-	GetElementById("notiinfo").Set("innerHTML", "")
 	switch v.State {
 	case 0: // Hide
-		GetElementById("notiinfo").Set("innerHTML", app.MakeNotiMessage())
-		infoobj.Set("innerHTML", "")
+		infoobj.Set("innerHTML", app.MakeNotiMessage())
 	case 1: // highscore
 		go func() {
 			infoobj.Set("innerHTML", clientinitdata.LoadHighScoreHTML())

@@ -123,6 +123,7 @@ func AddEventListener(
 
 func (app *WasmClient) registerKeyboardMouseEvent() {
 	dst := js.Global().Get("window")
+	_ = dst
 	AddEventListener(dst, "click", app.jsHandleMouseClick)
 	AddEventListener(dst, "wheel", app.jsHandleMouseWheel)
 	AddEventListener(dst, "mousemove", app.jsHandleMouseMove)
