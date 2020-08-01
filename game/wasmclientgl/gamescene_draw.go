@@ -389,27 +389,7 @@ func (vp *GameScene) processNotiObjectList(
 		}
 
 		if ao.UUID == playerUUID { // player ao
-			aop := olNoti.ActiveObj
-			var spw, hpw float64
-			apw := math.Sqrt(leveldata.CalcLevelFromExp(float64(aop.Exp))) + 1
-			vp.AP.ScaleY(apw)
-			vp.AP.ScaleZ(apw)
-			if ao.Alive {
-				_, hpw = vp.HP.SetWH(aop.HP, aop.HPMax)
-				_, spw = vp.SP.SetWH(aop.SP, aop.SPMax)
-				if aop.RemainTurn2Act > 0 {
-				} else {
-					vp.AP.ScaleX(-aop.RemainTurn2Act)
-				}
-			} else {
-				_, hpw = vp.HP.SetWH(0, aop.HPMax)
-				_, spw = vp.SP.SetWH(0, aop.SPMax)
-				vp.AP.ScaleX(0)
-			}
-			vp.HP.SetFieldPosition(fx, fy, 0, -(spw+apw+hpw)*2, DstCellSize+6+shZ)
-			vp.AP.SetFieldPosition(fx, fy, 0, -(spw+apw)*2, DstCellSize+4+shZ)
-			vp.SP.SetFieldPosition(fx, fy, 0, -(spw)*2, DstCellSize+2+shZ)
-			vp.UpdateMoveArrow(cf, fx, fy, ao.Dir)
+			vp.UpdatePlayerAO(cf, ao, olNoti.ActiveObj)
 		}
 		if !ao.Alive {
 			// ao3d.RotateX(-math.Pi / 2)
@@ -474,6 +454,34 @@ func (vp *GameScene) processNotiObjectList(
 			gPoolCarryObj3D.Put(cr3d)
 		}
 	}
+}
+
+// update hp,ap,sp bar movearrow for player ao
+func (vp *GameScene) UpdatePlayerAO(
+	cf *clientfloor.ClientFloor, ao *c2t_obj.ActiveObjClient, aop *c2t_obj.PlayerActiveObjInfo) {
+
+	fx, fy := ao.X, ao.Y
+	shZ := GetTile3DOnByCache(cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)])
+	var spw, hpw float64
+	apw := math.Sqrt(leveldata.CalcLevelFromExp(float64(aop.Exp))) + 1
+	vp.AP.ScaleY(apw)
+	vp.AP.ScaleZ(apw)
+	if ao.Alive {
+		_, hpw = vp.HP.SetWH(aop.HP, aop.HPMax)
+		_, spw = vp.SP.SetWH(aop.SP, aop.SPMax)
+		if aop.RemainTurn2Act > 0 {
+		} else {
+			vp.AP.ScaleX(-aop.RemainTurn2Act)
+		}
+	} else {
+		_, hpw = vp.HP.SetWH(0, aop.HPMax)
+		_, spw = vp.SP.SetWH(0, aop.SPMax)
+		vp.AP.ScaleX(0)
+	}
+	vp.HP.SetFieldPosition(fx, fy, 0, -(spw+apw+hpw)*2, DstCellSize+6+shZ)
+	vp.AP.SetFieldPosition(fx, fy, 0, -(spw+apw)*2, DstCellSize+4+shZ)
+	vp.SP.SetFieldPosition(fx, fy, 0, -(spw)*2, DstCellSize+2+shZ)
+	vp.UpdateMoveArrow(cf, fx, fy, ao.Dir)
 }
 
 // update move arrow
