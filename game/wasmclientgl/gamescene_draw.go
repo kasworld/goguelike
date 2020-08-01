@@ -74,19 +74,6 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 	vp.cursor.SetFieldPosition(fx, fy, tl)
 
-	// update move arrow
-	if scrollDir != way9type.Center {
-		vp.moveArrow.Visible(true)
-		fx, fy = taNoti.VPX, taNoti.VPY
-		vp.moveArrow.SetDir(scrollDir)
-		dx, dy := scrollDir.DxDy()
-		tl := cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
-		shZ := GetTile3DOnByCache(tl)
-		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, shZ)
-	} else {
-		vp.moveArrow.Visible(false)
-	}
-
 	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
@@ -422,6 +409,7 @@ func (vp *GameScene) processNotiObjectList(
 			vp.HP.SetFieldPosition(fx, fy, 0, -(spw+apw+hpw)*2, DstCellSize+6+shZ)
 			vp.AP.SetFieldPosition(fx, fy, 0, -(spw+apw)*2, DstCellSize+4+shZ)
 			vp.SP.SetFieldPosition(fx, fy, 0, -(spw)*2, DstCellSize+2+shZ)
+			vp.UpdateMoveArrow(cf, fx, fy, ao.Dir)
 		}
 		if !ao.Alive {
 			// ao3d.RotateX(-math.Pi / 2)
@@ -485,6 +473,21 @@ func (vp *GameScene) processNotiObjectList(
 			delete(vp.jsSceneCOs, id)
 			gPoolCarryObj3D.Put(cr3d)
 		}
+	}
+}
+
+// update move arrow
+func (vp *GameScene) UpdateMoveArrow(
+	cf *clientfloor.ClientFloor, fx, fy int, dir way9type.Way9Type) {
+	if dir != way9type.Center {
+		vp.moveArrow.Visible(true)
+		vp.moveArrow.SetDir(dir)
+		dx, dy := dir.DxDy()
+		tl := cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
+		shZ := GetTile3DOnByCache(tl)
+		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, shZ)
+	} else {
+		vp.moveArrow.Visible(false)
 	}
 }
 
