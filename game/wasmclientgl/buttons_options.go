@@ -12,6 +12,9 @@
 package wasmclientgl
 
 import (
+	"fmt"
+	"syscall/js"
+
 	"github.com/kasworld/goguelike/game/clientinitdata"
 	"github.com/kasworld/goguelike/game/soundmap"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
@@ -99,6 +102,10 @@ func (app *WasmClient) updateCenterInfo() {
 	case 11: // fieldobj
 		infoobj.Set("innerHTML", clientinitdata.MakeHelpFieldObjHTML())
 	}
+	winW := js.Global().Get("window").Get("innerWidth").Float()
+	infoobjW := infoobj.Get("offsetWidth").Float()
+	GetElementById("centerinfo").Get("style").Set("left", fmt.Sprintf("%vpx", winW/2-infoobjW/2))
+
 }
 
 func cmdRotateRightInfo(obj interface{}, v *htmlbutton.HTMLButton) {
