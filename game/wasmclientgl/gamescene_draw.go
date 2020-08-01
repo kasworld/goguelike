@@ -419,9 +419,9 @@ func (vp *GameScene) processNotiObjectList(
 				_, spw = vp.SP.SetWH(0, aop.SPMax)
 				vp.AP.ScaleX(0)
 			}
-			vp.HP.SetFieldPosition(fx, fy, 0, -spw-apw-hpw, DstCellSize+6+shZ)
-			vp.AP.SetFieldPosition(fx, fy, 0, -spw-apw, DstCellSize+4+shZ)
-			vp.SP.SetFieldPosition(fx, fy, 0, -spw, DstCellSize+2+shZ)
+			vp.HP.SetFieldPosition(fx, fy, 0, -(spw+apw+hpw)*2, DstCellSize+6+shZ)
+			vp.AP.SetFieldPosition(fx, fy, 0, -(spw+apw)*2, DstCellSize+4+shZ)
+			vp.SP.SetFieldPosition(fx, fy, 0, -(spw)*2, DstCellSize+2+shZ)
 		}
 		if !ao.Alive {
 			// ao3d.RotateX(-math.Pi / 2)
