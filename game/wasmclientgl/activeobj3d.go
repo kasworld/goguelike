@@ -89,6 +89,10 @@ func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
 	)
 }
 
+func (aog *ActiveObj3D) Visible(b bool) {
+	aog.Mesh.Set("visible", b)
+}
+
 func (aog *ActiveObj3D) ResetMatrix() {
 	aog.ScaleX(1.0)
 	aog.ScaleY(1.0)

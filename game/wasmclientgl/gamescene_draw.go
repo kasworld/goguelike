@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/config/leveldata"
+	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -389,7 +390,16 @@ func (vp *GameScene) processNotiObjectList(
 		}
 
 		if ao.UUID == playerUUID { // player ao
-			vp.UpdatePlayerAO(cf, ao, olNoti.ActiveObj)
+			aop := olNoti.ActiveObj
+			if aop.Conditions.TestByCondition(condition.Invisible) {
+				ao3d.Visible(false)
+			} else {
+				ao3d.Visible(true)
+			}
+			if aop.Conditions.TestByCondition(condition.Float) {
+				ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize)
+			}
+			vp.UpdatePlayerAO(cf, ao, aop)
 		}
 		if !ao.Alive {
 			// ao3d.RotateX(-math.Pi / 2)
