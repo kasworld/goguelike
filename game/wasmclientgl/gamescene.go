@@ -94,7 +94,6 @@ func NewGameScene() *GameScene {
 	vp.scene.Call("add", vp.HP.Mesh)
 	vp.scene.Call("add", vp.SP.Mesh)
 	vp.scene.Call("add", vp.AP.Mesh)
-	vp.AP.ScaleY(2)
 
 	vp.lightW = ThreeJsNew("PointLight", 0xffffff, 0.5)
 	vp.scene.Call("add", vp.lightW)

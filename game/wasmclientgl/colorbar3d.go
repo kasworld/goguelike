@@ -98,7 +98,7 @@ func (aog *ColorBar3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	)
 }
 
-func (aog *ColorBar3D) SetWH(v, maxv int) {
+func (aog *ColorBar3D) SetWH(v, maxv int) (float64, float64) {
 	barw := float64(maxv) / gameconst.ActiveObjBaseBiasLen
 	if barw < 1 {
 		barw = 1
@@ -106,6 +106,8 @@ func (aog *ColorBar3D) SetWH(v, maxv int) {
 	barlen := float64(v) / float64(maxv)
 	aog.ScaleX(barlen)
 	aog.ScaleY(barw)
+	aog.ScaleZ(barw)
+	return barlen, barw
 }
 
 func (aog *ColorBar3D) ResetMatrix() {
