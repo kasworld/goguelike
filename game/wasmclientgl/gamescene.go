@@ -34,7 +34,6 @@ type GameScene struct {
 
 	raycastPlane *RaycastPlane
 	cursor       *Cursor3D
-	moveArrow    *ColorArrow3D
 
 	mouseCursorFx int
 	mouseCursorFy int
@@ -87,9 +86,6 @@ func NewGameScene() *GameScene {
 	vp.cursor = NewCursor3D()
 	vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
 	vp.scene.Call("add", vp.cursor.Mesh)
-
-	vp.moveArrow = NewColorArrow3D("#ffffff")
-	vp.scene.Call("add", vp.moveArrow.Mesh)
 
 	vp.scene.Call("add", vp.HP.Mesh)
 	vp.scene.Call("add", vp.SP.Mesh)

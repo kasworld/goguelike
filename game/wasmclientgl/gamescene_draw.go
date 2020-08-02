@@ -344,13 +344,11 @@ func (vp *GameScene) processNotiObjectList(
 	for _, ao := range olNoti.ActiveObjList {
 		ao3d, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
-			ao3d = NewActiveObj3D(ao.Faction)
+			ao3d = NewActiveObj3D(ao.Faction, ao.NickName)
 			vp.scene.Call("add", ao3d.Mesh)
 			vp.jsSceneAOs[ao.UUID] = ao3d
-
-			lb3d := gPoolLabel3D.Get(ao.NickName)
-			ao3d.Name = lb3d
-			vp.scene.Call("add", lb3d.Mesh)
+			vp.scene.Call("add", ao3d.Name.Mesh)
+			vp.scene.Call("add", ao3d.MoveArrow.Mesh)
 		}
 		if oldmesh, changed := ao3d.ChangeFaction(ao.Faction); changed {
 			vp.scene.Call("remove", oldmesh)
@@ -361,8 +359,9 @@ func (vp *GameScene) processNotiObjectList(
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shZ := GetTile3DOnByCache(tl)
 		ao3d.SetFieldPosition(fx, fy, shZ)
+		vp.UpdateMoveArrow(cf, ao3d, fx, fy, ao.Dir)
+
 		addAOuuid[ao.UUID] = true
-		ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
 		if len(ao.Chat) == 0 {
 			if ao3d.Chat != nil {
 				vp.scene.Call("remove", ao3d.Chat.Mesh)
@@ -425,13 +424,11 @@ func (vp *GameScene) processNotiObjectList(
 
 	for id, ao3d := range vp.jsSceneAOs {
 		if !addAOuuid[id] {
+			vp.scene.Call("remove", ao3d.Name.Mesh)
+			vp.scene.Call("remove", ao3d.MoveArrow.Mesh)
 			vp.scene.Call("remove", ao3d.Mesh)
 			delete(vp.jsSceneAOs, id)
 			ao3d.Dispose()
-
-			vp.scene.Call("remove", ao3d.Name.Mesh)
-			gPoolLabel3D.Put(ao3d.Name)
-			ao3d.Name = nil
 			if ao3d.Chat != nil {
 				vp.scene.Call("remove", ao3d.Chat.Mesh)
 				ao3d.Chat.Dispose()
@@ -491,21 +488,20 @@ func (vp *GameScene) UpdatePlayerAO(
 	vp.HP.SetFieldPosition(fx, fy, 0, -(spw+apw+hpw)*2, DstCellSize+6+shZ)
 	vp.AP.SetFieldPosition(fx, fy, 0, -(spw+apw)*2, DstCellSize+4+shZ)
 	vp.SP.SetFieldPosition(fx, fy, 0, -(spw)*2, DstCellSize+2+shZ)
-	vp.UpdateMoveArrow(cf, fx, fy, ao.Dir)
 }
 
 // update move arrow
 func (vp *GameScene) UpdateMoveArrow(
-	cf *clientfloor.ClientFloor, fx, fy int, dir way9type.Way9Type) {
+	cf *clientfloor.ClientFloor, ao3d *ActiveObj3D, fx, fy int, dir way9type.Way9Type) {
 	if dir != way9type.Center {
-		vp.moveArrow.Visible(true)
-		vp.moveArrow.SetDir(dir)
+		ao3d.MoveArrow.Visible(true)
+		ao3d.MoveArrow.SetDir(dir)
 		dx, dy := dir.DxDy()
 		tl := cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
 		shZ := GetTile3DOnByCache(tl)
-		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, 0, 0, shZ)
+		ao3d.MoveArrow.SetFieldPosition(fx+dx, fy+dy, 0, 0, shZ)
 	} else {
-		vp.moveArrow.Visible(false)
+		ao3d.MoveArrow.Visible(false)
 	}
 }
 

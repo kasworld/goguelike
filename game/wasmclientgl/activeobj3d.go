@@ -47,85 +47,94 @@ func preMakeActiveObj3DGeo() {
 }
 
 type ActiveObj3D struct {
-	Faction factiontype.FactionType
-	Name    *Label3D
-	Chat    *Label3D
-	Mesh    js.Value
+	Faction   factiontype.FactionType
+	MoveArrow *ColorArrow3D
+	Name      *Label3D
+	Chat      *Label3D
+	Mesh      js.Value
 }
 
-func NewActiveObj3D(ft factiontype.FactionType) *ActiveObj3D {
+func NewActiveObj3D(ft factiontype.FactionType, name string) *ActiveObj3D {
 	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
 	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &ActiveObj3D{
-		Faction: ft,
-		Mesh:    mesh,
+		MoveArrow: gPoolColorArrow3D.Get("#ffffff"),
+		Name:      gPoolLabel3D.Get(name),
+		Faction:   ft,
+		Mesh:      mesh,
 	}
 }
 
 // return changed
-func (aog *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bool) {
-	if ft == aog.Faction {
-		return aog.Mesh, false
+func (ao3d *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bool) {
+	if ft == ao3d.Faction {
+		return ao3d.Mesh, false
 	}
-	oldmesh := aog.Mesh
-	aog.Mesh.Get("geometry").Call("dispose")
-	aog.Mesh.Get("material").Call("dispose")
+	oldmesh := ao3d.Mesh
+	ao3d.Mesh.Get("geometry").Call("dispose")
+	ao3d.Mesh.Get("material").Call("dispose")
 	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
 	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
-	aog.Faction = ft
-	aog.Mesh = mesh
+	ao3d.Faction = ft
+	ao3d.Mesh = mesh
 	return oldmesh, true
 }
 
-func (aog *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
-	geoinfo := gActiveObj3DGeo[aog.Faction].GeoInfo
+func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
+	geoinfo := gActiveObj3DGeo[ao3d.Faction].GeoInfo
 	SetPosition(
-		aog.Mesh,
+		ao3d.Mesh,
 		float64(fx)*DstCellSize+DstCellSize/2,
 		-float64(fy)*DstCellSize-DstCellSize/2,
 		geoinfo.Len[2]/2+1+shZ,
 	)
+	ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
 }
 
-func (aog *ActiveObj3D) Visible(b bool) {
-	aog.Mesh.Set("visible", b)
+func (ao3d *ActiveObj3D) Visible(b bool) {
+	ao3d.Mesh.Set("visible", b)
 }
 
-func (aog *ActiveObj3D) ResetMatrix() {
-	aog.ScaleX(1.0)
-	aog.ScaleY(1.0)
-	aog.ScaleZ(1.0)
-	aog.RotateX(0.0)
-	aog.RotateY(0.0)
-	aog.RotateZ(0.0)
+func (ao3d *ActiveObj3D) ResetMatrix() {
+	ao3d.ScaleX(1.0)
+	ao3d.ScaleY(1.0)
+	ao3d.ScaleZ(1.0)
+	ao3d.RotateX(0.0)
+	ao3d.RotateY(0.0)
+	ao3d.RotateZ(0.0)
 }
 
-func (aog *ActiveObj3D) RotateX(rad float64) {
-	aog.Mesh.Get("rotation").Set("x", rad)
+func (ao3d *ActiveObj3D) RotateX(rad float64) {
+	ao3d.Mesh.Get("rotation").Set("x", rad)
 }
-func (aog *ActiveObj3D) RotateY(rad float64) {
-	aog.Mesh.Get("rotation").Set("y", rad)
+func (ao3d *ActiveObj3D) RotateY(rad float64) {
+	ao3d.Mesh.Get("rotation").Set("y", rad)
 }
-func (aog *ActiveObj3D) RotateZ(rad float64) {
-	aog.Mesh.Get("rotation").Set("z", rad)
-}
-
-func (aog *ActiveObj3D) ScaleX(x float64) {
-	aog.Mesh.Get("scale").Set("x", x)
-}
-func (aog *ActiveObj3D) ScaleY(y float64) {
-	aog.Mesh.Get("scale").Set("y", y)
-}
-func (aog *ActiveObj3D) ScaleZ(z float64) {
-	aog.Mesh.Get("scale").Set("z", z)
+func (ao3d *ActiveObj3D) RotateZ(rad float64) {
+	ao3d.Mesh.Get("rotation").Set("z", rad)
 }
 
-func (aog *ActiveObj3D) Dispose() {
+func (ao3d *ActiveObj3D) ScaleX(x float64) {
+	ao3d.Mesh.Get("scale").Set("x", x)
+}
+func (ao3d *ActiveObj3D) ScaleY(y float64) {
+	ao3d.Mesh.Get("scale").Set("y", y)
+}
+func (ao3d *ActiveObj3D) ScaleZ(z float64) {
+	ao3d.Mesh.Get("scale").Set("z", z)
+}
+
+func (ao3d *ActiveObj3D) Dispose() {
 	// mesh do not need dispose
-	aog.Mesh.Get("geometry").Call("dispose")
-	aog.Mesh.Get("material").Call("dispose")
-	aog.Mesh = js.Undefined()
+	ao3d.Mesh.Get("geometry").Call("dispose")
+	ao3d.Mesh.Get("material").Call("dispose")
+	ao3d.Mesh = js.Undefined()
+
+	gPoolColorArrow3D.Put(ao3d.MoveArrow)
+	ao3d.MoveArrow = nil
+	gPoolLabel3D.Put(ao3d.Name)
+	ao3d.Name = nil
 	// no need createElement canvas dom obj
 }
