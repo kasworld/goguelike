@@ -86,7 +86,7 @@ func (vp *GameScene) animateMoveArrow(
 
 	if dir != way9type.Center {
 		dx, dy := dir.DxDy()
-		tl := cf.Tiles[fx][fy]
+		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shX := DstCellSize * frameProgress * float64(dx)
 		shY := DstCellSize * frameProgress * float64(dy)
 		shZ := GetTile3DOnByCache(tl)
