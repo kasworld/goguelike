@@ -503,7 +503,7 @@ func (vp *GameScene) UpdateMoveArrow(
 		dx, dy := dir.DxDy()
 		tl := cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
 		shZ := GetTile3DOnByCache(tl)
-		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, shZ)
+		vp.moveArrow.SetFieldPosition(fx+dx, fy+dy, 0, 0, shZ)
 	} else {
 		vp.moveArrow.Visible(false)
 	}
@@ -545,7 +545,7 @@ func (vp *GameScene) makeMovePathInView(
 			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
 			tl := cf.Tiles[cf.XWrapSafe(x)][cf.YWrapSafe(y)]
 			shZ := GetTile3DOnByCache(tl)
-			ar3d.SetFieldPosition(x, y, shZ)
+			ar3d.SetFieldPosition(x, y, 0, 0, shZ)
 		}
 		// add last
 		// pos := path2dst[len(path2dst)-1]

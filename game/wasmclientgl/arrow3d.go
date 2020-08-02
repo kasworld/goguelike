@@ -65,6 +65,7 @@ func (p *PoolColorArrow3D) Put(pb *ColorArrow3D) {
 }
 
 type ColorArrow3D struct {
+	Dir      way9type.Way9Type
 	ColorStr string
 	GeoInfo  GeoInfo
 	Mesh     js.Value
@@ -104,16 +105,17 @@ func (aog *ColorArrow3D) Visible(b bool) {
 	aog.Mesh.Set("visible", b)
 }
 
-func (aog *ColorArrow3D) SetFieldPosition(fx, fy int, shZ float64) {
+func (aog *ColorArrow3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		DstCellSize/2+shZ,
+		shX+float64(fx)*DstCellSize+DstCellSize/2,
+		-shY-float64(fy)*DstCellSize-DstCellSize/2,
+		shZ+DstCellSize/2,
 	)
 }
 
 func (aog *ColorArrow3D) SetDir(dir way9type.Way9Type) {
+	aog.Dir = dir
 	aog.RotateZ(-float64(dir-1) * math.Pi / 4)
 }
 
