@@ -60,6 +60,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
 			}
 		}
+		vp.animateMoveArrow(cf, aod, ao.X, ao.Y, ao.Dir, frameProgress)
 	}
 
 	vp.animateFieldObj()
@@ -76,6 +77,21 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	vp.cursor.SetFieldPosition(fx, fy, tl)
 
 	vp.renderer.Call("render", vp.scene, vp.camera)
+}
+
+// animate move arrow
+func (vp *GameScene) animateMoveArrow(
+	cf *clientfloor.ClientFloor, ao3d *ActiveObj3D,
+	fx, fy int, dir way9type.Way9Type, frameProgress float64) {
+
+	if dir != way9type.Center {
+		dx, dy := dir.DxDy()
+		tl := cf.Tiles[fx][fy]
+		shX := DstCellSize * frameProgress * float64(dx)
+		shY := DstCellSize * frameProgress * float64(dy)
+		shZ := GetTile3DOnByCache(tl)
+		ao3d.MoveArrow.SetFieldPosition(fx, fy, shX, shY, shZ)
+	}
 }
 
 // floorview frame update
@@ -359,7 +375,12 @@ func (vp *GameScene) processNotiObjectList(
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shZ := GetTile3DOnByCache(tl)
 		ao3d.SetFieldPosition(fx, fy, shZ)
-		vp.UpdateMoveArrow(cf, ao3d, fx, fy, ao.Dir)
+		if ao.Dir != way9type.Center {
+			ao3d.MoveArrow.Visible(true)
+			ao3d.MoveArrow.SetDir(ao.Dir)
+		} else {
+			ao3d.MoveArrow.Visible(false)
+		}
 
 		addAOuuid[ao.UUID] = true
 		if len(ao.Chat) == 0 {
@@ -488,21 +509,6 @@ func (vp *GameScene) UpdatePlayerAO(
 	vp.HP.SetFieldPosition(fx, fy, 0, -(spw+apw+hpw)*2, DstCellSize+6+shZ)
 	vp.AP.SetFieldPosition(fx, fy, 0, -(spw+apw)*2, DstCellSize+4+shZ)
 	vp.SP.SetFieldPosition(fx, fy, 0, -(spw)*2, DstCellSize+2+shZ)
-}
-
-// update move arrow
-func (vp *GameScene) UpdateMoveArrow(
-	cf *clientfloor.ClientFloor, ao3d *ActiveObj3D, fx, fy int, dir way9type.Way9Type) {
-	if dir != way9type.Center {
-		ao3d.MoveArrow.Visible(true)
-		ao3d.MoveArrow.SetDir(dir)
-		dx, dy := dir.DxDy()
-		tl := cf.Tiles[cf.XWrapSafe(fx+dx)][cf.YWrapSafe(fy+dy)]
-		shZ := GetTile3DOnByCache(tl)
-		ao3d.MoveArrow.SetFieldPosition(fx+dx, fy+dy, 0, 0, shZ)
-	} else {
-		ao3d.MoveArrow.Visible(false)
-	}
 }
 
 func (vp *GameScene) ClearMovePath() {
