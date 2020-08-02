@@ -3,8 +3,12 @@ Login
 Heartbeat
 Chat
 AchieveInfo
+
 Rebirth
-Meditate
+MoveFloor
+AIPlay
+
+Meditate 
 KillSelf
 Move
 Attack
@@ -16,11 +20,10 @@ DrinkPotion
 ReadScroll
 Recycle
 EnterPortal
-MoveFloor
 ActTeleport
+
 AdminTowerCmd
 AdminFloorCmd
 AdminActiveObjCmd
 AdminFloorMove
 AdminTeleport
-AIPlay

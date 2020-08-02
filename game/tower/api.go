@@ -237,6 +237,57 @@ func (tw *Tower) bytesAPIFn_ReqRebirth(
 	return rhd, spacket, nil
 }
 
+func (tw *Tower) bytesAPIFn_ReqMoveFloor(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	robj, ok := r.(*c2t_obj.ReqMoveFloor_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
+	}
+	spacket := &c2t_obj.RspMoveFloor_data{}
+
+	tw.GetReqCh() <- &cmd2tower.FloorMove{
+		ActiveObj: ao,
+		FloorUUID: robj.UUID,
+	}
+	return c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}, spacket, nil
+}
+
+func (tw *Tower) bytesAPIFn_ReqAIPlay(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	robj, ok := r.(*c2t_obj.ReqAIPlay_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
+	}
+	rhd := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	if err := ao.DoAIOnOff(robj.On); err != nil {
+		tw.log.Error("fail to AIOn %v %v", me)
+	}
+	return rhd, &c2t_obj.RspAIPlay_data{}, nil
+}
+
 func (tw *Tower) bytesAPIFn_ReqMeditate(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
@@ -524,32 +575,6 @@ func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 	}, spacket, nil
 }
 
-func (tw *Tower) bytesAPIFn_ReqMoveFloor(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
-	}
-	robj, ok := r.(*c2t_obj.ReqMoveFloor_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
-	}
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
-	spacket := &c2t_obj.RspMoveFloor_data{}
-
-	tw.GetReqCh() <- &cmd2tower.FloorMove{
-		ActiveObj: ao,
-		FloorUUID: robj.UUID,
-	}
-	return c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}, spacket, nil
-}
-
 func (tw *Tower) bytesAPIFn_ReqActTeleport(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
@@ -565,29 +590,4 @@ func (tw *Tower) bytesAPIFn_ReqActTeleport(
 	return c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}, spacket, nil
-}
-
-func (tw *Tower) bytesAPIFn_ReqAIPlay(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
-
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
-	}
-	robj, ok := r.(*c2t_obj.ReqAIPlay_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
-	}
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	if err := ao.DoAIOnOff(robj.On); err != nil {
-		tw.log.Error("fail to AIOn %v %v", me)
-	}
-	return rhd, &c2t_obj.RspAIPlay_data{}, nil
 }
