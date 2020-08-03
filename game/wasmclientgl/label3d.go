@@ -84,13 +84,14 @@ func NewLabel3D(str string) *Label3D {
 	textWidth := ctx.Call("measureText", str).Get("width").Int()
 	canvasWidth := NextPowerOf2(textWidth)
 	cnv.Set("width", canvasWidth)
-	cnv.Set("height", height)
+	canvasHeight := NextPowerOf2(height)
+	cnv.Set("height", canvasHeight)
 
 	ctx.Set("fillStyle", "#00000080")
-	ctx.Call("fillRect", 0, 0, canvasWidth, height)
+	ctx.Call("fillRect", 0, 0, canvasWidth, canvasHeight)
 	ctx.Set("font", font)
 	ctx.Set("fillStyle", "white")
-	ctx.Call("fillText", str, (canvasWidth-textWidth)/2, height-height/5)
+	ctx.Call("fillText", str, (canvasWidth-textWidth)/2, canvasHeight-canvasHeight/3)
 
 	tex := ThreeJsNew("CanvasTexture", cnv)
 	mat := ThreeJsNew("MeshStandardMaterial",
@@ -100,7 +101,7 @@ func NewLabel3D(str string) *Label3D {
 	)
 	mat.Set("transparent", true)
 
-	geo := ThreeJsNew("PlaneGeometry", canvasWidth, height)
+	geo := ThreeJsNew("PlaneGeometry", canvasWidth, canvasHeight)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &Label3D{
 		Str:     str,
