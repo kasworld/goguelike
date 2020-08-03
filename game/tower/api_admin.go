@@ -68,7 +68,7 @@ var cmdFnArgs = map[string]struct {
 	// "AddPotion":   {adminActiveObjCmd, ""},
 	// "AddScroll":   {adminActiveObjCmd, ""},
 	// "AddMoney":    {adminActiveObjCmd, ""},
-	"AddEquip": {adminActiveObjCmd, ""},
+	// "AddEquip": {adminActiveObjCmd, ""},
 	// "GetFloorMap": {adminActiveObjCmd, ""},
 	// "ForgetFloor": {adminActiveObjCmd, ""},
 }
@@ -434,7 +434,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddMoney(
 	return sendHeader, sendBody, nil
 }
 
-// TODO
 // AdminAddEquip add random equip to inven
 func (tw *Tower) bytesAPIFn_ReqAdminAddEquip(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
@@ -452,6 +451,15 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddEquip(
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	eq := carryingobject.NewEquipByFactionSlot("admin",
+		recvBody.Faction, recvBody.Equip,
+		tw.rnd,
+	)
+	ao.GetInven().AddToBag(eq)
 	sendBody := &c2t_obj.RspAdminAddEquip_data{}
 	return sendHeader, sendBody, nil
 }

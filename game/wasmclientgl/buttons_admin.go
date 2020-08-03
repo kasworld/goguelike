@@ -15,6 +15,7 @@ import (
 	"strconv"
 
 	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
@@ -36,7 +37,9 @@ var adminCmds = []c2t_idcmd.CommandID{
 	c2t_idcmd.AdminAddMoney,
 	c2t_idcmd.AdminAddPotion,
 	c2t_idcmd.AdminAddScroll,
+	c2t_idcmd.AdminAddEquip,
 }
+
 var adminCommandButtons = htmlbutton.NewButtonGroup(" ",
 	[]*htmlbutton.HTMLButton{
 		htmlbutton.New("1", "AdminTeleport", []string{"Teleport"}, "teleport random", adminCmdTeleport, 0),
@@ -51,6 +54,7 @@ var adminCommandButtons = htmlbutton.NewButtonGroup(" ",
 		htmlbutton.New("0", "AddMoney", []string{"AddMoney"}, "add money", adminCmdAddMoney, 0),
 		htmlbutton.New("-", "Potion", []string{"Potion"}, "add potion", adminCmdAddPotion, 0),
 		htmlbutton.New("=", "Scroll", []string{"Scroll"}, "add scroll", adminCmdAddScroll, 0),
+		htmlbutton.New("", "Equip", []string{"Equip"}, "add equip by slot", adminCmdAddEquip, 0),
 	})
 
 func adminCmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -258,5 +262,27 @@ func adminCmdAddScroll(obj interface{}, v *htmlbutton.HTMLButton) {
 		jslog.Errorf("unknown admin scroll %v", args)
 	}
 
+	v.Blur()
+}
+
+func adminCmdAddEquip(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	ft := app.olNotiData.ActiveObj.Bias.NearFaction()
+	args := getChatMsg()
+	pt, exist := equipslottype.String2EquipSlotType(args)
+	if exist {
+		go app.sendPacket(c2t_idcmd.AdminAddEquip,
+			&c2t_obj.ReqAdminAddEquip_data{
+				Faction: ft,
+				Equip:   pt,
+			},
+		)
+	} else {
+		jslog.Errorf("unknown admin scroll %v", args)
+	}
 	v.Blur()
 }

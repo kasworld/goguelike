@@ -66,6 +66,35 @@ func NewRandFactionEquipObj(aoname string, ft factiontype.FactionType, rnd *g2ra
 	return &po
 }
 
+func NewEquipByFactionSlot(aoname string,
+	ft factiontype.FactionType,
+	eqslot equipslottype.EquipSlotType,
+	rnd *g2rand.G2Rand) gamei.EquipObjI {
+
+	po := EquipObj{
+		uuid: uuidstr.New(),
+	}
+	po.Faction = ft
+	po.equipType = eqslot
+
+	// materialadj := po.Faction.String()
+
+	materiallist := po.equipType.Materials()
+	material := materiallist[rnd.Intn(len(materiallist))]
+
+	namelist := po.equipType.Names()
+	name := namelist[rnd.Intn(len(namelist))]
+	po.name = fmt.Sprintf("%s's %s %s", aoname, material, name)
+
+	biaslen := po.equipType.BaseLen()
+	po.BiasLen = rnd.NormFloat64Range(biaslen, biaslen/2)
+	if po.BiasLen < 0 {
+		po.BiasLen = -po.BiasLen
+	}
+
+	return &po
+}
+
 func (po *EquipObj) GetBias() bias.Bias {
 	return bias.NewByFaction(po.Faction, po.BiasLen)
 }

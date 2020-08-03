@@ -77,19 +77,19 @@ func (ao *ActiveObject) DoParsedAdminCmd(ca *scriptparse.CmdArgs) error {
 	switch ca.Cmd {
 	default:
 		return fmt.Errorf("unknown cmd %v", ca.Cmd)
-	// case "AddPotion":
-	// 	ao.addRandPotion(1)
-	// case "AddScroll":
-	// 	ao.addRandScroll(1)
-	// case "AddMoney":
-	// 	v := ao.rnd.NormFloat64Range(gameconst.InitGoldMean, gameconst.InitGoldMean/2)
-	// 	if v < 1 {
-	// 		v = 1
-	// 	}
-	// 	ao.inven.AddToWallet(carryingobject.NewMoney(v))
-	// 	ao.achieveStat.Add(achievetype.MoneyGet, float64(v))
-	case "AddEquip":
-		ao.addRandCarryObjEquip(ao.nickName, 1)
+		// case "AddPotion":
+		// 	ao.addRandPotion(1)
+		// case "AddScroll":
+		// 	ao.addRandScroll(1)
+		// case "AddMoney":
+		// 	v := ao.rnd.NormFloat64Range(gameconst.InitGoldMean, gameconst.InitGoldMean/2)
+		// 	if v < 1 {
+		// 		v = 1
+		// 	}
+		// 	ao.inven.AddToWallet(carryingobject.NewMoney(v))
+		// 	ao.achieveStat.Add(achievetype.MoneyGet, float64(v))
+		// case "AddEquip":
+		// 	ao.addRandCarryObjEquip(ao.nickName, 1)
 
 		// case "ForgetFloor":
 		// 	err := ao.ForgetFloorByUUID(ao.currrentFloor.GetUUID())

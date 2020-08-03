@@ -14,6 +14,7 @@ package c2t_obj
 import (
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/equipslottype"
+	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 )
@@ -129,7 +130,8 @@ type RspAdminAddMoney_data struct {
 
 // AdminAddEquip add random equip to inven
 type ReqAdminAddEquip_data struct {
-	Equip equipslottype.EquipSlotType
+	Faction factiontype.FactionType
+	Equip   equipslottype.EquipSlotType
 }
 
 // AdminAddEquip add random equip to inven
