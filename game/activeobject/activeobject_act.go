@@ -252,7 +252,7 @@ func (ao *ActiveObject) DoUseCarryObj(poid string) error {
 			ao.log.Fatal("unknown scrolltype %v", po)
 		case scrolltype.Empty:
 		case scrolltype.FloorMap:
-			return ao.makeFloorComplete(ao.currrentFloor)
+			return ao.MakeFloorComplete(ao.currrentFloor)
 		case scrolltype.Teleport:
 			ao.log.Fatal("Scroll_Teleport must processed in floor %v", ao)
 		}

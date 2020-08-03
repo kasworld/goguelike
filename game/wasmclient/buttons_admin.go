@@ -12,6 +12,11 @@
 package wasmclient
 
 import (
+	"strconv"
+
+	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/potiontype"
+	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -20,22 +25,32 @@ import (
 
 var adminCmds = []c2t_idcmd.CommandID{
 	c2t_idcmd.AdminTeleport,
-	c2t_idcmd.AdminActiveObjCmd,
-	c2t_idcmd.AdminActiveObjCmd,
-	c2t_idcmd.AdminActiveObjCmd,
 	c2t_idcmd.AdminFloorMove,
 	c2t_idcmd.AdminFloorMove,
-	c2t_idcmd.AdminActiveObjCmd,
+	c2t_idcmd.AdminForgetFloor,
+	c2t_idcmd.AdminFloorMap,
+	c2t_idcmd.AdminAddExp,
+	c2t_idcmd.AdminPotionEffect,
+	c2t_idcmd.AdminScrollEffect,
+	c2t_idcmd.AdminCondition,
+	c2t_idcmd.AdminAddMoney,
+	c2t_idcmd.AdminAddPotion,
+	c2t_idcmd.AdminAddScroll,
 }
 var adminCommandButtons = htmlbutton.NewButtonGroup(" ",
 	[]*htmlbutton.HTMLButton{
 		htmlbutton.New("1", "AdminTeleport", []string{"Teleport"}, "teleport random", adminCmdTeleport, 0),
-		htmlbutton.New("2", "IncExp", []string{"IncExp"}, "inc exp", adminCmdIncExp, 0),
-		htmlbutton.New("3", "FloorBefore", []string{"FloorBefore"}, "before floor", adminCmdFloorBefore, 0),
-		htmlbutton.New("4", "FloorNext", []string{"FloorNext"}, "next floor", adminCmdFloorNext, 0),
-		htmlbutton.New("5", "Potion", []string{"Potion"}, "apply potion", adminCmdPotion, 0),
-		htmlbutton.New("7", "Scroll", []string{"Scroll"}, "apply scroll", adminCmdScroll, 0),
-		htmlbutton.New("8", "Condition", []string{"Condition"}, "set contidion", adminCmdCondition, 0),
+		htmlbutton.New("2", "FloorBefore", []string{"FloorBefore"}, "before floor", adminCmdFloorBefore, 0),
+		htmlbutton.New("3", "FloorNext", []string{"FloorNext"}, "next floor", adminCmdFloorNext, 0),
+		htmlbutton.New("4", "FloorForget", []string{"FloorForget"}, "forget floor", adminCmdForgetFloor, 0),
+		htmlbutton.New("5", "FloorMap", []string{"FloorMap"}, "floor map complete", adminCmdFloorMap, 0),
+		htmlbutton.New("6", "AddExp", []string{"AddExp"}, "+/- exp", adminCmdAddExp, 0),
+		htmlbutton.New("7", "PotionBuff", []string{"PotionBuff"}, "apply potion buff", adminCmdPotionEffect, 0),
+		htmlbutton.New("8", "ScrollBuff", []string{"ScrollBuff"}, "apply scroll buff", adminCmdScrollEffect, 0),
+		htmlbutton.New("9", "Condition", []string{"Condition"}, "set contidion", adminCmdCondition, 0),
+		htmlbutton.New("0", "AddMoney", []string{"AddMoney"}, "add money", adminCmdAddMoney, 0),
+		htmlbutton.New("-", "Potion", []string{"Potion"}, "add potion", adminCmdAddPotion, 0),
+		htmlbutton.New("=", "Scroll", []string{"Scroll"}, "add scroll", adminCmdAddScroll, 0),
 	})
 
 func adminCmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -50,21 +65,7 @@ func adminCmdTeleport(obj interface{}, v *htmlbutton.HTMLButton) {
 			Y: 0,
 		},
 	)
-	Focus2Canvas()
-}
-func adminCmdIncExp(obj interface{}, v *htmlbutton.HTMLButton) {
-	app, ok := obj.(*WasmClient)
-	if !ok {
-		jslog.Errorf("obj not app %v", obj)
-		return
-	}
-	go app.sendPacket(c2t_idcmd.AdminActiveObjCmd,
-		&c2t_obj.ReqAdminActiveObjCmd_data{
-			Cmd: "IncExp",
-			Arg: getChatMsg(),
-		},
-	)
-	Focus2Canvas()
+	v.Blur()
 }
 func adminCmdFloorBefore(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
@@ -77,7 +78,7 @@ func adminCmdFloorBefore(obj interface{}, v *htmlbutton.HTMLButton) {
 			Floor: "Before",
 		},
 	)
-	Focus2Canvas()
+	v.Blur()
 }
 func adminCmdFloorNext(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
@@ -90,37 +91,92 @@ func adminCmdFloorNext(obj interface{}, v *htmlbutton.HTMLButton) {
 			Floor: "Next",
 		},
 	)
-	Focus2Canvas()
+	v.Blur()
 }
 
-func adminCmdPotion(obj interface{}, v *htmlbutton.HTMLButton) {
+func adminCmdForgetFloor(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
 	if !ok {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
-	go app.sendPacket(c2t_idcmd.AdminActiveObjCmd,
-		&c2t_obj.ReqAdminActiveObjCmd_data{
-			Cmd: "Potion",
-			Arg: getChatMsg(),
-		},
+	go app.sendPacket(c2t_idcmd.AdminForgetFloor,
+		&c2t_obj.ReqAdminForgetFloor_data{},
 	)
-	Focus2Canvas()
+	v.Blur()
 }
 
-func adminCmdScroll(obj interface{}, v *htmlbutton.HTMLButton) {
+func adminCmdFloorMap(obj interface{}, v *htmlbutton.HTMLButton) {
 	app, ok := obj.(*WasmClient)
 	if !ok {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
-	go app.sendPacket(c2t_idcmd.AdminActiveObjCmd,
-		&c2t_obj.ReqAdminActiveObjCmd_data{
-			Cmd: "Scroll",
-			Arg: getChatMsg(),
-		},
+	go app.sendPacket(c2t_idcmd.AdminFloorMap,
+		&c2t_obj.ReqAdminFloorMap_data{},
 	)
-	Focus2Canvas()
+	v.Blur()
+}
+
+func adminCmdAddExp(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	expstr := getChatMsg()
+	i64, err := strconv.ParseInt(expstr, 0, 64)
+	if err != nil {
+		jslog.Errorf("invalid AddExp %v", expstr)
+	} else {
+		go app.sendPacket(c2t_idcmd.AdminAddExp,
+			&c2t_obj.ReqAdminAddExp_data{
+				Exp: int(i64),
+			},
+		)
+	}
+	v.Blur()
+}
+
+func adminCmdPotionEffect(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	args := getChatMsg()
+	pt, exist := potiontype.String2PotionType(args)
+	if exist {
+		go app.sendPacket(c2t_idcmd.AdminPotionEffect,
+			&c2t_obj.ReqAdminPotionEffect_data{
+				Potion: pt,
+			},
+		)
+	} else {
+		jslog.Errorf("unknown admin potion %v", args)
+	}
+	v.Blur()
+}
+
+func adminCmdScrollEffect(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	args := getChatMsg()
+	pt, exist := scrolltype.String2ScrollType(args)
+	if exist {
+		go app.sendPacket(c2t_idcmd.AdminScrollEffect,
+			&c2t_obj.ReqAdminScrollEffect_data{
+				Scroll: pt,
+			},
+		)
+	} else {
+		jslog.Errorf("unknown admin scroll %v", args)
+	}
+
+	v.Blur()
 }
 
 func adminCmdCondition(obj interface{}, v *htmlbutton.HTMLButton) {
@@ -129,11 +185,78 @@ func adminCmdCondition(obj interface{}, v *htmlbutton.HTMLButton) {
 		jslog.Errorf("obj not app %v", obj)
 		return
 	}
-	go app.sendPacket(c2t_idcmd.AdminActiveObjCmd,
-		&c2t_obj.ReqAdminActiveObjCmd_data{
-			Cmd: "Condition",
-			Arg: getChatMsg(),
-		},
-	)
-	Focus2Canvas()
+	args := getChatMsg()
+	cond, exist := condition.String2Condition(args)
+	if exist {
+		go app.sendPacket(c2t_idcmd.AdminCondition,
+			&c2t_obj.ReqAdminCondition_data{
+				Condition: cond,
+			},
+		)
+	} else {
+		jslog.Errorf("unknown admin condition %v", args)
+	}
+
+	v.Blur()
+}
+
+func adminCmdAddMoney(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	expstr := getChatMsg()
+	i64, err := strconv.ParseInt(expstr, 0, 64)
+	if err != nil {
+		jslog.Errorf("invalid AddMoney %v", expstr)
+	} else {
+		go app.sendPacket(c2t_idcmd.AdminAddMoney,
+			&c2t_obj.ReqAdminAddMoney_data{
+				Money: int(i64),
+			},
+		)
+	}
+	v.Blur()
+}
+
+func adminCmdAddPotion(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	args := getChatMsg()
+	pt, exist := potiontype.String2PotionType(args)
+	if exist {
+		go app.sendPacket(c2t_idcmd.AdminAddPotion,
+			&c2t_obj.ReqAdminAddPotion_data{
+				Potion: pt,
+			},
+		)
+	} else {
+		jslog.Errorf("unknown admin potion %v", args)
+	}
+	v.Blur()
+}
+
+func adminCmdAddScroll(obj interface{}, v *htmlbutton.HTMLButton) {
+	app, ok := obj.(*WasmClient)
+	if !ok {
+		jslog.Errorf("obj not app %v", obj)
+		return
+	}
+	args := getChatMsg()
+	pt, exist := scrolltype.String2ScrollType(args)
+	if exist {
+		go app.sendPacket(c2t_idcmd.AdminAddScroll,
+			&c2t_obj.ReqAdminAddScroll_data{
+				Scroll: pt,
+			},
+		)
+	} else {
+		jslog.Errorf("unknown admin scroll %v", args)
+	}
+
+	v.Blur()
 }

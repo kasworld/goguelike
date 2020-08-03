@@ -48,12 +48,12 @@ func (ao *ActiveObject) UpdateBySightMat2(
 
 func (ao *ActiveObject) forgetAnyFloor() error {
 	for _, fuuid := range ao.uuid2VisitArea.GetIDList() {
-		return ao.forgetFloorByUUID(fuuid)
+		return ao.ForgetFloorByUUID(fuuid)
 	}
 	return fmt.Errorf("no visit floor")
 }
 
-func (ao *ActiveObject) forgetFloorByUUID(fuuid string) error {
+func (ao *ActiveObject) ForgetFloorByUUID(fuuid string) error {
 	if err := ao.uuid2VisitArea.Forget(fuuid); err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (ao *ActiveObject) forgetFloorByUUID(fuuid string) error {
 	return nil
 }
 
-func (ao *ActiveObject) makeFloorComplete(f gamei.FloorI) error {
+func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 	va, _ := ao.uuid2VisitArea.GetByID(f.GetUUID())
 	va.MakeComplete()
 

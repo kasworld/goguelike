@@ -14,9 +14,6 @@ package activeobject
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/game/carryingobject"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 )
@@ -80,31 +77,31 @@ func (ao *ActiveObject) DoParsedAdminCmd(ca *scriptparse.CmdArgs) error {
 	switch ca.Cmd {
 	default:
 		return fmt.Errorf("unknown cmd %v", ca.Cmd)
-	case "AddPotion":
-		ao.addRandPotion(1)
-	case "AddScroll":
-		ao.addRandScroll(1)
-	case "AddMoney":
-		v := ao.rnd.NormFloat64Range(gameconst.InitGoldMean, gameconst.InitGoldMean/2)
-		if v < 1 {
-			v = 1
-		}
-		ao.inven.AddToWallet(carryingobject.NewMoney(v))
-		ao.achieveStat.Add(achievetype.MoneyGet, float64(v))
+	// case "AddPotion":
+	// 	ao.addRandPotion(1)
+	// case "AddScroll":
+	// 	ao.addRandScroll(1)
+	// case "AddMoney":
+	// 	v := ao.rnd.NormFloat64Range(gameconst.InitGoldMean, gameconst.InitGoldMean/2)
+	// 	if v < 1 {
+	// 		v = 1
+	// 	}
+	// 	ao.inven.AddToWallet(carryingobject.NewMoney(v))
+	// 	ao.achieveStat.Add(achievetype.MoneyGet, float64(v))
 	case "AddEquip":
 		ao.addRandCarryObjEquip(ao.nickName, 1)
 
-	case "ForgetFloor":
-		err := ao.forgetFloorByUUID(ao.currrentFloor.GetUUID())
-		if err != nil {
-			ao.log.Error("%v", err)
-		}
+		// case "ForgetFloor":
+		// 	err := ao.ForgetFloorByUUID(ao.currrentFloor.GetUUID())
+		// 	if err != nil {
+		// 		ao.log.Error("%v", err)
+		// 	}
 
-	case "GetFloorMap":
-		err := ao.makeFloorComplete(ao.currrentFloor)
-		if err != nil {
-			ao.log.Error("%v", err)
-		}
+		// case "GetFloorMap":
+		// 	err := ao.MakeFloorComplete(ao.currrentFloor)
+		// 	if err != nil {
+		// 		ao.log.Error("%v", err)
+		// 	}
 	}
 	return nil
 }

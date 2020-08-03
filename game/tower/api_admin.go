@@ -14,9 +14,11 @@ package tower
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/statusoptype"
+	"github.com/kasworld/goguelike/game/carryingobject"
 	"github.com/kasworld/goguelike/game/cmd2floor"
 	"github.com/kasworld/goguelike/game/cmd2tower"
 	"github.com/kasworld/goguelike/game/gamei"
@@ -63,12 +65,12 @@ var cmdFnArgs = map[string]struct {
 	fn     func(ao gamei.ActiveObjectI, ca *scriptparse.CmdArgs) error
 	format string
 }{
-	"AddPotion":   {adminActiveObjCmd, ""},
-	"AddScroll":   {adminActiveObjCmd, ""},
-	"AddMoney":    {adminActiveObjCmd, ""},
-	"AddEquip":    {adminActiveObjCmd, ""},
-	"GetFloorMap": {adminActiveObjCmd, ""},
-	"ForgetFloor": {adminActiveObjCmd, ""},
+	// "AddPotion":   {adminActiveObjCmd, ""},
+	// "AddScroll":   {adminActiveObjCmd, ""},
+	// "AddMoney":    {adminActiveObjCmd, ""},
+	"AddEquip": {adminActiveObjCmd, ""},
+	// "GetFloorMap": {adminActiveObjCmd, ""},
+	// "ForgetFloor": {adminActiveObjCmd, ""},
 }
 
 func init() {
@@ -367,6 +369,12 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddPotion(
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	pt := carryingobject.NewPotion(recvBody.Potion)
+	ao.GetInven().AddToBag(pt)
 	sendBody := &c2t_obj.RspAdminAddPotion_data{}
 	return sendHeader, sendBody, nil
 }
@@ -388,6 +396,12 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddScroll(
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	pt := carryingobject.NewScroll(recvBody.Scroll)
+	ao.GetInven().AddToBag(pt)
 	sendBody := &c2t_obj.RspAdminAddScroll_data{}
 	return sendHeader, sendBody, nil
 }
@@ -409,10 +423,18 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddMoney(
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	ao.GetInven().AddToWallet(carryingobject.NewMoney(float64(recvBody.Money)))
+	ao.GetAchieveStat().Add(achievetype.MoneyGet, float64(recvBody.Money))
+
 	sendBody := &c2t_obj.RspAdminAddMoney_data{}
 	return sendHeader, sendBody, nil
 }
 
+// TODO
 // AdminAddEquip add random equip to inven
 func (tw *Tower) bytesAPIFn_ReqAdminAddEquip(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
@@ -451,6 +473,18 @@ func (tw *Tower) bytesAPIFn_ReqAdminForgetFloor(
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	f := ao.GetCurrentFloor()
+	if f == nil {
+		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
+	}
+	if err := ao.ForgetFloorByUUID(f.GetUUID()); err != nil {
+		tw.log.Error("%v", err)
+	}
+
 	sendBody := &c2t_obj.RspAdminForgetFloor_data{}
 	return sendHeader, sendBody, nil
 }
@@ -472,6 +506,18 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMap(
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	f := ao.GetCurrentFloor()
+	if f == nil {
+		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
+	}
+	if err := ao.MakeFloorComplete(f); err != nil {
+		tw.log.Error("%v", err)
+	}
+
 	sendBody := &c2t_obj.RspAdminFloorMap_data{}
 	return sendHeader, sendBody, nil
 }

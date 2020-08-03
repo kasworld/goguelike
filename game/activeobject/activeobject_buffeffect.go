@@ -121,7 +121,7 @@ func (ao *ActiveObject) applyOpArg(
 		ao.currentBias = ao.currentBias.RotateLeft()
 
 	case statusoptype.ForgetFloor:
-		if err := ao.forgetFloorByUUID(ao.currrentFloor.GetUUID()); err != nil {
+		if err := ao.ForgetFloorByUUID(ao.currrentFloor.GetUUID()); err != nil {
 			ao.log.Fatal("%v", err)
 		}
 
