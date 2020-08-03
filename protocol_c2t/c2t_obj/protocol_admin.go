@@ -11,6 +11,13 @@
 
 package c2t_obj
 
+import (
+	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/equipslottype"
+	"github.com/kasworld/goguelike/enum/potiontype"
+	"github.com/kasworld/goguelike/enum/scrolltype"
+)
+
 type ReqAdminFloorMove_data struct {
 	Floor string
 }
@@ -50,9 +57,102 @@ type RspAdminActiveObjCmd_data struct {
 	Dummy uint8
 }
 
-type ReqAIPlay_data struct {
-	On bool
+// AdminAddExp  add arg to battle exp
+type ReqAdminAddExp_data struct {
+	Exp int
 }
-type RspAIPlay_data struct {
-	Dummy uint8
+
+// AdminAddExp  add arg to battle exp
+type RspAdminAddExp_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminPotionEffect buff by arg potion type
+type ReqAdminPotionEffect_data struct {
+	Potion potiontype.PotionType
+}
+
+// AdminPotionEffect buff by arg potion type
+type RspAdminPotionEffect_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminScrollEffect buff by arg Scroll type
+type ReqAdminScrollEffect_data struct {
+	Scroll scrolltype.ScrollType
+}
+
+// AdminScrollEffect buff by arg Scroll type
+type RspAdminScrollEffect_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminCondition add arg condition for 100 turn
+type ReqAdminCondition_data struct {
+	Condition condition.Condition
+}
+
+// AdminCondition add arg condition for 100 turn
+type RspAdminCondition_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminAddPotion add arg potion to inven
+type ReqAdminAddPotion_data struct {
+	Potion potiontype.PotionType
+}
+
+// AdminAddPotion add arg potion to inven
+type RspAdminAddPotion_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminAddScroll add arg scroll to inven
+type ReqAdminAddScroll_data struct {
+	Scroll scrolltype.ScrollType
+}
+
+// AdminAddScroll add arg scroll to inven
+type RspAdminAddScroll_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminAddMoney add arg money to inven
+type ReqAdminAddMoney_data struct {
+	Money int
+}
+
+// AdminAddMoney add arg money to inven
+type RspAdminAddMoney_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminAddEquip add random equip to inven
+type ReqAdminAddEquip_data struct {
+	Equip equipslottype.EquipSlotType
+}
+
+// AdminAddEquip add random equip to inven
+type RspAdminAddEquip_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminForgetFloor forget current floor map
+type ReqAdminForgetFloor_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminForgetFloor forget current floor map
+type RspAdminForgetFloor_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminFloorMap complete current floor map
+type ReqAdminFloorMap_data struct {
+	Dummy uint8 // change as you need
+}
+
+// AdminFloorMap complete current floor map
+type RspAdminFloorMap_data struct {
+	Dummy uint8 // change as you need
 }

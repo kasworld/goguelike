@@ -13,14 +13,9 @@ package activeobject
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/enum/condition"
-	"github.com/kasworld/goguelike/enum/potiontype"
-	"github.com/kasworld/goguelike/enum/scrolltype"
-	"github.com/kasworld/goguelike/enum/statusoptype"
 	"github.com/kasworld/goguelike/game/carryingobject"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
@@ -36,45 +31,45 @@ func (ao *ActiveObject) DoAdminCmd(cmd, args string) c2t_error.ErrorCode {
 		ao.log.Error("unknown admin ao cmd %v %v", cmd, args)
 		ec = c2t_error.ActionProhibited
 
-	case "IncExp":
-		f64, err := strconv.ParseFloat(args, 64)
-		if err != nil {
-			ao.log.Error("invalid IncExp arg %v %v", cmd, args)
-			ec = c2t_error.ActionProhibited
-		} else {
-			ao.AddBattleExp(f64)
-		}
+		// case "IncExp":
+		// 	f64, err := strconv.ParseFloat(args, 64)
+		// 	if err != nil {
+		// 		ao.log.Error("invalid IncExp arg %v %v", cmd, args)
+		// 		ec = c2t_error.ActionProhibited
+		// 	} else {
+		// 		ao.AddBattleExp(f64)
+		// 	}
 
-	case "Potion":
-		pt, exist := potiontype.String2PotionType(args)
-		if exist {
-			ao.buffManager.Add(pt.String(), false, false,
-				potiontype.GetBuffByPotionType(pt),
-			)
-		} else {
-			ao.log.Error("unknown admin potion arg %v %v", cmd, args)
-			ec = c2t_error.ActionProhibited
-		}
+		// case "Potion":
+		// 	pt, exist := potiontype.String2PotionType(args)
+		// 	if exist {
+		// 		ao.buffManager.Add(pt.String(), false, false,
+		// 			potiontype.GetBuffByPotionType(pt),
+		// 		)
+		// 	} else {
+		// 		ao.log.Error("unknown admin potion arg %v %v", cmd, args)
+		// 		ec = c2t_error.ActionProhibited
+		// 	}
 
-	case "Scroll":
-		pt, exist := scrolltype.String2ScrollType(args)
-		if exist {
-			ao.buffManager.Add(pt.String(), false, false,
-				scrolltype.GetBuffByScrollType(pt),
-			)
-		} else {
-			ao.log.Error("unknown admin potion arg %v %v", cmd, args)
-			ec = c2t_error.ActionProhibited
-		}
+		// case "Scroll":
+		// 	pt, exist := scrolltype.String2ScrollType(args)
+		// 	if exist {
+		// 		ao.buffManager.Add(pt.String(), false, false,
+		// 			scrolltype.GetBuffByScrollType(pt),
+		// 		)
+		// 	} else {
+		// 		ao.log.Error("unknown admin potion arg %v %v", cmd, args)
+		// 		ec = c2t_error.ActionProhibited
+		// 	}
 
-	case "Condition":
-		cond, exist := condition.String2Condition(args)
-		if exist {
-			buff2add := statusoptype.Repeat(100,
-				statusoptype.OpArg{statusoptype.SetCondition, cond},
-			)
-			ao.buffManager.Add("admin"+args, true, true, buff2add)
-		}
+		// case "Condition":
+		// 	cond, exist := condition.String2Condition(args)
+		// 	if exist {
+		// 		buff2add := statusoptype.Repeat(100,
+		// 			statusoptype.OpArg{statusoptype.SetCondition, cond},
+		// 		)
+		// 		ao.buffManager.Add("admin"+args, true, true, buff2add)
+		// 	}
 	}
 
 	return ec

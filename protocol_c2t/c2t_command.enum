@@ -5,25 +5,37 @@ Chat
 AchieveInfo
 
 Rebirth
-MoveFloor
+MoveFloor tower cmd 
 AIPlay
 
-Meditate 
-KillSelf
-Move
-Attack
-Pickup
-Drop
-Equip
-UnEquip
-DrinkPotion
-ReadScroll
-Recycle
-EnterPortal
-ActTeleport
+Meditate turn act 
+KillSelf turn act 
+Move turn act 
+Attack turn act 
+Pickup turn act 
+Drop turn act 
+Equip turn act 
+UnEquip turn act 
+DrinkPotion turn act 
+ReadScroll turn act 
+Recycle turn act 
+EnterPortal turn act 
+ActTeleport turn act 
 
-AdminTowerCmd
-AdminFloorCmd
-AdminActiveObjCmd
-AdminFloorMove
-AdminTeleport
+AdminTowerCmd generic cmd 
+AdminFloorCmd generic cmd 
+AdminActiveObjCmd generic cmd 
+
+AdminFloorMove Next Before floorUUID
+AdminTeleport random pos in floor 
+
+AdminAddExp  add arg to battle exp
+AdminPotionEffect buff by arg potion type
+AdminScrollEffect buff by arg Scroll type
+AdminCondition add arg condition for 100 turn
+AdminAddPotion add arg potion to inven
+AdminAddScroll add arg scroll to inven
+AdminAddMoney add arg money to inven
+AdminAddEquip add random equip to inven
+AdminForgetFloor forget current floor map
+AdminFloorMap complete current floor map 

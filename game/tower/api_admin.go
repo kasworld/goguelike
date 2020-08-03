@@ -14,6 +14,9 @@ package tower
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/potiontype"
+	"github.com/kasworld/goguelike/enum/scrolltype"
+	"github.com/kasworld/goguelike/enum/statusoptype"
 	"github.com/kasworld/goguelike/game/cmd2floor"
 	"github.com/kasworld/goguelike/game/cmd2tower"
 	"github.com/kasworld/goguelike/game/gamei"
@@ -126,14 +129,14 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 	if err != nil {
 		return hd, nil, err
 	}
-	rhd := c2t_packet.Header{
+	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	spacket := &c2t_obj.RspAdminFloorCmd_data{}
 
 	f := ao.GetCurrentFloor()
 	if f == nil {
-		return rhd, nil, fmt.Errorf("user not in floor %v", me)
+		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	f.GetReqCh() <- &cmd2floor.APIAdminCmd2Floor{
@@ -209,7 +212,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 
-	rhd := c2t_packet.Header{
+	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
 	ao, err := tw.api_me2ao(me)
@@ -218,7 +221,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	}
 	f := ao.GetCurrentFloor()
 	if f == nil {
-		return rhd, nil, fmt.Errorf("user not in floor %v", me)
+		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	f.GetReqCh() <- &cmd2floor.APIAdminTeleport2Floor{
@@ -230,4 +233,245 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	return c2t_packet.Header{
 		ErrorCode: ec,
 	}, &c2t_obj.RspAdminTeleport_data{}, nil
+}
+
+// AdminAddExp  add arg to battle exp
+func (tw *Tower) bytesAPIFn_ReqAdminAddExp(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminAddExp_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	ao.AddBattleExp(float64(recvBody.Exp))
+	sendBody := &c2t_obj.RspAdminAddExp_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminPotionEffect buff by arg potion type
+func (tw *Tower) bytesAPIFn_ReqAdminPotionEffect(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminPotionEffect_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	ao.GetBuffManager().Add(recvBody.Potion.String(), false, false,
+		potiontype.GetBuffByPotionType(recvBody.Potion),
+	)
+
+	sendBody := &c2t_obj.RspAdminPotionEffect_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminScrollEffect buff by arg Scroll type
+func (tw *Tower) bytesAPIFn_ReqAdminScrollEffect(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminScrollEffect_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	ao.GetBuffManager().Add(recvBody.Scroll.String(), false, false,
+		scrolltype.GetBuffByScrollType(recvBody.Scroll),
+	)
+	sendBody := &c2t_obj.RspAdminScrollEffect_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminCondition add arg condition for 100 turn
+func (tw *Tower) bytesAPIFn_ReqAdminCondition(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminCondition_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return sendHeader, nil, err
+	}
+	buff2add := statusoptype.Repeat(100,
+		statusoptype.OpArg{statusoptype.SetCondition, recvBody.Condition},
+	)
+	ao.GetBuffManager().Add(
+		"admin"+recvBody.Condition.String(),
+		true, true, buff2add)
+
+	sendBody := &c2t_obj.RspAdminCondition_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminAddPotion add arg potion to inven
+func (tw *Tower) bytesAPIFn_ReqAdminAddPotion(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminAddPotion_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	sendBody := &c2t_obj.RspAdminAddPotion_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminAddScroll add arg scroll to inven
+func (tw *Tower) bytesAPIFn_ReqAdminAddScroll(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminAddScroll_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	sendBody := &c2t_obj.RspAdminAddScroll_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminAddMoney add arg money to inven
+func (tw *Tower) bytesAPIFn_ReqAdminAddMoney(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminAddMoney_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	sendBody := &c2t_obj.RspAdminAddMoney_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminAddEquip add random equip to inven
+func (tw *Tower) bytesAPIFn_ReqAdminAddEquip(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminAddEquip_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	sendBody := &c2t_obj.RspAdminAddEquip_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminForgetFloor forget current floor map
+func (tw *Tower) bytesAPIFn_ReqAdminForgetFloor(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminForgetFloor_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	sendBody := &c2t_obj.RspAdminForgetFloor_data{}
+	return sendHeader, sendBody, nil
+}
+
+// AdminFloorMap complete current floor map
+func (tw *Tower) bytesAPIFn_ReqAdminFloorMap(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recvBody, ok := robj.(*c2t_obj.ReqAdminFloorMap_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+	}
+	_ = recvBody
+
+	sendHeader := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+	sendBody := &c2t_obj.RspAdminFloorMap_data{}
+	return sendHeader, sendBody, nil
 }

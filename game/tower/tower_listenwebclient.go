@@ -58,32 +58,42 @@ func (tw *Tower) initServiceWeb(ctx context.Context) {
 	tw.demuxReq2BytesAPIFnMap = [c2t_idcmd.CommandID_Count]func(
 		me interface{}, hd c2t_packet.Header, rbody []byte) (
 		c2t_packet.Header, interface{}, error){
-		c2t_idcmd.Invalid:           tw.bytesAPIFn_ReqInvalid,
-		c2t_idcmd.Login:             tw.bytesAPIFn_ReqLogin,
-		c2t_idcmd.Heartbeat:         tw.bytesAPIFn_ReqHeartbeat,
-		c2t_idcmd.Chat:              tw.bytesAPIFn_ReqChat,
-		c2t_idcmd.AchieveInfo:       tw.bytesAPIFn_ReqAchieveInfo,
-		c2t_idcmd.Rebirth:           tw.bytesAPIFn_ReqRebirth,
-		c2t_idcmd.Meditate:          tw.bytesAPIFn_ReqMeditate,
-		c2t_idcmd.KillSelf:          tw.bytesAPIFn_ReqKillSelf,
-		c2t_idcmd.Move:              tw.bytesAPIFn_ReqMove,
-		c2t_idcmd.Attack:            tw.bytesAPIFn_ReqAttack,
-		c2t_idcmd.Pickup:            tw.bytesAPIFn_ReqPickup,
-		c2t_idcmd.Drop:              tw.bytesAPIFn_ReqDrop,
-		c2t_idcmd.Equip:             tw.bytesAPIFn_ReqEquip,
-		c2t_idcmd.UnEquip:           tw.bytesAPIFn_ReqUnEquip,
-		c2t_idcmd.DrinkPotion:       tw.bytesAPIFn_ReqDrinkPotion,
-		c2t_idcmd.ReadScroll:        tw.bytesAPIFn_ReqReadScroll,
-		c2t_idcmd.Recycle:           tw.bytesAPIFn_ReqRecycle,
-		c2t_idcmd.EnterPortal:       tw.bytesAPIFn_ReqEnterPortal,
-		c2t_idcmd.MoveFloor:         tw.bytesAPIFn_ReqMoveFloor,
-		c2t_idcmd.ActTeleport:       tw.bytesAPIFn_ReqActTeleport,
-		c2t_idcmd.AdminTowerCmd:     tw.bytesAPIFn_ReqAdminTowerCmd,
-		c2t_idcmd.AdminFloorCmd:     tw.bytesAPIFn_ReqAdminFloorCmd,
-		c2t_idcmd.AdminActiveObjCmd: tw.bytesAPIFn_ReqAdminActiveObjCmd,
-		c2t_idcmd.AdminFloorMove:    tw.bytesAPIFn_ReqAdminFloorMove,
-		c2t_idcmd.AdminTeleport:     tw.bytesAPIFn_ReqAdminTeleport,
-		c2t_idcmd.AIPlay:            tw.bytesAPIFn_ReqAIPlay,
+		c2t_idcmd.Invalid:           tw.bytesAPIFn_ReqInvalid,           // Invalid make empty packet error
+		c2t_idcmd.Login:             tw.bytesAPIFn_ReqLogin,             // Login
+		c2t_idcmd.Heartbeat:         tw.bytesAPIFn_ReqHeartbeat,         // Heartbeat
+		c2t_idcmd.Chat:              tw.bytesAPIFn_ReqChat,              // Chat
+		c2t_idcmd.AchieveInfo:       tw.bytesAPIFn_ReqAchieveInfo,       // AchieveInfo
+		c2t_idcmd.Rebirth:           tw.bytesAPIFn_ReqRebirth,           // Rebirth
+		c2t_idcmd.MoveFloor:         tw.bytesAPIFn_ReqMoveFloor,         // MoveFloor tower cmd
+		c2t_idcmd.AIPlay:            tw.bytesAPIFn_ReqAIPlay,            // AIPlay
+		c2t_idcmd.Meditate:          tw.bytesAPIFn_ReqMeditate,          // Meditate turn act
+		c2t_idcmd.KillSelf:          tw.bytesAPIFn_ReqKillSelf,          // KillSelf turn act
+		c2t_idcmd.Move:              tw.bytesAPIFn_ReqMove,              // Move turn act
+		c2t_idcmd.Attack:            tw.bytesAPIFn_ReqAttack,            // Attack turn act
+		c2t_idcmd.Pickup:            tw.bytesAPIFn_ReqPickup,            // Pickup turn act
+		c2t_idcmd.Drop:              tw.bytesAPIFn_ReqDrop,              // Drop turn act
+		c2t_idcmd.Equip:             tw.bytesAPIFn_ReqEquip,             // Equip turn act
+		c2t_idcmd.UnEquip:           tw.bytesAPIFn_ReqUnEquip,           // UnEquip turn act
+		c2t_idcmd.DrinkPotion:       tw.bytesAPIFn_ReqDrinkPotion,       // DrinkPotion turn act
+		c2t_idcmd.ReadScroll:        tw.bytesAPIFn_ReqReadScroll,        // ReadScroll turn act
+		c2t_idcmd.Recycle:           tw.bytesAPIFn_ReqRecycle,           // Recycle turn act
+		c2t_idcmd.EnterPortal:       tw.bytesAPIFn_ReqEnterPortal,       // EnterPortal turn act
+		c2t_idcmd.ActTeleport:       tw.bytesAPIFn_ReqActTeleport,       // ActTeleport turn act
+		c2t_idcmd.AdminTowerCmd:     tw.bytesAPIFn_ReqAdminTowerCmd,     // AdminTowerCmd generic cmd
+		c2t_idcmd.AdminFloorCmd:     tw.bytesAPIFn_ReqAdminFloorCmd,     // AdminFloorCmd generic cmd
+		c2t_idcmd.AdminActiveObjCmd: tw.bytesAPIFn_ReqAdminActiveObjCmd, // AdminActiveObjCmd generic cmd
+		c2t_idcmd.AdminFloorMove:    tw.bytesAPIFn_ReqAdminFloorMove,    // AdminFloorMove Next Before floorUUID
+		c2t_idcmd.AdminTeleport:     tw.bytesAPIFn_ReqAdminTeleport,     // AdminTeleport random pos in floor
+		c2t_idcmd.AdminAddExp:       tw.bytesAPIFn_ReqAdminAddExp,       // AdminAddExp  add arg to battle exp
+		c2t_idcmd.AdminPotionEffect: tw.bytesAPIFn_ReqAdminPotionEffect, // AdminPotionEffect buff by arg potion type
+		c2t_idcmd.AdminScrollEffect: tw.bytesAPIFn_ReqAdminScrollEffect, // AdminScrollEffect buff by arg Scroll type
+		c2t_idcmd.AdminCondition:    tw.bytesAPIFn_ReqAdminCondition,    // AdminCondition add arg condition for 100 turn
+		c2t_idcmd.AdminAddPotion:    tw.bytesAPIFn_ReqAdminAddPotion,    // AdminAddPotion add arg potion to inven
+		c2t_idcmd.AdminAddScroll:    tw.bytesAPIFn_ReqAdminAddScroll,    // AdminAddScroll add arg scroll to inven
+		c2t_idcmd.AdminAddMoney:     tw.bytesAPIFn_ReqAdminAddMoney,     // AdminAddMoney add arg money to inven
+		c2t_idcmd.AdminAddEquip:     tw.bytesAPIFn_ReqAdminAddEquip,     // AdminAddEquip add random equip to inven
+		c2t_idcmd.AdminForgetFloor:  tw.bytesAPIFn_ReqAdminForgetFloor,  // AdminForgetFloor forget current floor map
+		c2t_idcmd.AdminFloorMap:     tw.bytesAPIFn_ReqAdminFloorMap,     // AdminFloorMap complete current floor map
 	}
 }
 

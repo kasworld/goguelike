@@ -52,4 +52,15 @@ var attrib = [CommandID_Count]struct {
 	AdminActiveObjCmd: {false, 0},
 	AdminFloorMove:    {false, 0},
 	AdminTeleport:     {false, 0},
+
+	AdminAddExp:       {false, 0},
+	AdminPotionEffect: {false, 0},
+	AdminScrollEffect: {false, 0},
+	AdminCondition:    {false, 0},
+	AdminAddPotion:    {false, 0},
+	AdminAddScroll:    {false, 0},
+	AdminAddMoney:     {false, 0},
+	AdminAddEquip:     {false, 0},
+	AdminForgetFloor:  {false, 0},
+	AdminFloorMap:     {false, 0},
 }

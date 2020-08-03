@@ -61,3 +61,17 @@ type ReqRebirth_data struct {
 type RspRebirth_data struct {
 	Dummy uint8
 }
+
+type ReqMoveFloor_data struct {
+	UUID string
+}
+type RspMoveFloor_data struct {
+	Dummy uint8
+}
+
+type ReqAIPlay_data struct {
+	On bool
+}
+type RspAIPlay_data struct {
+	Dummy uint8
+}

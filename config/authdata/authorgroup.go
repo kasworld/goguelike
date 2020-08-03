@@ -66,6 +66,16 @@ var allAuthorizationSet = map[string]*c2t_authorize.AuthorizedCmds{
 		c2t_idcmd.AdminActiveObjCmd,
 		c2t_idcmd.AdminFloorMove,
 		c2t_idcmd.AdminTeleport,
+		c2t_idcmd.AdminAddExp,
+		c2t_idcmd.AdminPotionEffect,
+		c2t_idcmd.AdminScrollEffect,
+		c2t_idcmd.AdminCondition,
+		c2t_idcmd.AdminAddPotion,
+		c2t_idcmd.AdminAddScroll,
+		c2t_idcmd.AdminAddMoney,
+		c2t_idcmd.AdminAddEquip,
+		c2t_idcmd.AdminForgetFloor,
+		c2t_idcmd.AdminFloorMap,
 	}),
 }
 

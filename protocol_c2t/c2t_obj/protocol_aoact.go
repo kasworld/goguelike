@@ -99,13 +99,6 @@ type RspEnterPortal_data struct {
 	Dummy uint8
 }
 
-type ReqMoveFloor_data struct {
-	UUID string
-}
-type RspMoveFloor_data struct {
-	Dummy uint8
-}
-
 type ReqActTeleport_data struct {
 	Dummy uint8
 }
