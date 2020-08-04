@@ -15,17 +15,29 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/kasworld/goguelike/tool/towermaker/roguetower"
 	"github.com/kasworld/goguelike/tool/towermaker/starttower"
 )
 
 func main() {
-	towername := flag.String("towername", "towermaker", "tower filename w/o .tower")
-	floorcount := flag.Int("floorcount", 100, "floor count in tower")
+	towername := flag.String("towername", "", "starting,roguelike tower to make")
+	floorcount := flag.Int("floorcount", 100, "roguelike floor count")
 	flag.Parse()
 
-	fmt.Printf("try make tower with towername:%v floorcount:%v\n", *towername, *floorcount)
-	// tower := roguetower.MakeRogueTower(*towername, *floorcount)
-	tower := starttower.MakeStartTower(*towername)
+	switch *towername {
+	default:
+		fmt.Println("invalid option")
+		flag.PrintDefaults()
 
-	tower.Save()
+	case "starting":
+		fmt.Printf("try make tower with towername:%v\n", *towername)
+		tower := starttower.MakeStartTower(*towername)
+		tower.Save()
+	case "roguelike":
+		twname := fmt.Sprintf("%v%v", *towername, *floorcount)
+		fmt.Printf("try make tower with towername:%v floorcount:%v\n", twname, *floorcount)
+		tower := roguetower.MakeRogueTower(twname, *floorcount)
+		tower.Save()
+	}
+
 }

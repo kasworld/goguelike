@@ -13,6 +13,9 @@ package towermake
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/kasworld/goguelike/game/towerscript"
 )
@@ -58,7 +61,8 @@ func (tw *Tower) GetCount() int {
 func (tw *Tower) Save() error {
 	twst := make(towerscript.TowerScript, 0)
 	twst = append(twst, []string{
-		fmt.Sprintf("#tower %v, made by tower maker", tw.name),
+		fmt.Sprintf("# tower %v, made by tower maker", tw.name),
+		fmt.Sprintf("# %s %s", filepath.Base(os.Args[0]), strings.Join(os.Args[1:], " ")),
 	})
 	for _, fm := range tw.byList {
 		twst = append(twst, fm.Script)
