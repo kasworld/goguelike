@@ -412,7 +412,7 @@
     ],
     [
         "NewTerrain w=80 h=43 name=Ghost ao=16 po=0 actturnboost=1",
-        "AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
+        "AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4 min=4",
         "ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
         "FinalizeTerrain",
         "",

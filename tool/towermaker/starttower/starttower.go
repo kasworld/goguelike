@@ -128,7 +128,7 @@ func MakeStartTower(name string) *towermake.Tower {
 		"ConnectRooms tile=Sand connect=1 allconnect=true diagonal=false",
 	)
 	tw.Add("Ghost", 80, 43, 16, 0, 1.0).Appends(
-		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4 min=4",
 		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
 	)
 	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
