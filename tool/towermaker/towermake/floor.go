@@ -60,6 +60,15 @@ func (fm *Floor) Appendf(format string, arg ...interface{}) *Floor {
 	return fm
 }
 
+func (fm *Floor) IsFinalizeTerrain() bool {
+	for _, v := range fm.Script {
+		if v == "FinalizeTerrain" {
+			return true
+		}
+	}
+	return false
+}
+
 func (fm *Floor) MakePortalIDStringInc() string {
 	rtn := fmt.Sprintf("%v-%v", fm.Name, fm.PortalIDToUse)
 	// inc portal id to use

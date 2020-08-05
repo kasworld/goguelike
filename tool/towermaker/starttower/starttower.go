@@ -12,6 +12,7 @@
 package starttower
 
 import (
+	"github.com/kasworld/goguelike/tool/towermaker/floortemplete"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
 
@@ -30,20 +31,7 @@ func MakeStartTower(name string) *towermake.Tower {
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 	)
 	tw.Add("ManyPortals", 128, 128, 64, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil   amount=255    x=0  y=0  w=128 h=128",
-		"ResourceRect resource=Plant  amount=1000001 x=0  y=0  w=128 h=128",
-		"ResourceLine resource=Stone amount=1000001 x1=30 y1=30 x2=96 y2=96",
-		"ResourceLine resource=Stone amount=1000001 x1=31 y1=97 x2=97 y2=31",
-		"",
-		"AddRoom bgtile=Ice walltile=Wall terrace=false    x=8  y=8  w=24 h=24",
-		"AddRoom bgtile=Sand walltile=Wall terrace=false   x=8  y=96 w=24 h=24",
-		"AddRoom bgtile=Magma walltile=Wall terrace=false  x=96 y=8  w=24 h=24",
-		"AddRoom bgtile=Swamp walltile=Wall terrace=false  x=96 y=96 w=24 h=24",
-		"AddRoom bgtile=Smoke walltile=Wall terrace=false  x=53 y=8  w=24 h=24",
-		"AddRoom bgtile=Sea walltile=Wall terrace=false    x=53 y=96 w=24 h=24",
-		"AddRoom bgtile=Road walltile=Wall terrace=false   x=8  y=53 w=24 h=24",
-		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=96 y=53 w=24 h=24",
-		"AddRoom bgtile=Room walltile=Wall terrace=false   x=53 y=53 w=24 h=24",
+		floortemplete.BGTile9Rooms128x128()...,
 	)
 	tw.Add("SoilWater", 128, 128, 64, 0, 1.0).Appends(
 		"ResourceFillRect resource=Soil amount=1000000 x=0 w=128 y=0 h=128",
@@ -75,37 +63,13 @@ func MakeStartTower(name string) *towermake.Tower {
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 	)
 	tw.Add("AgeingCity", 256, 256, 256, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
-		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceAgeing initrun=10 msper=65000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=64 mean=8 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		floortemplete.AgeingCity256x256()...,
 	)
 	tw.Add("AgeingField", 256, 256, 256, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
-		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceAgeing initrun=10 msper=66000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=8 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		floortemplete.AgeingField256x256()...,
 	)
 	tw.Add("AgeingMaze", 256, 256, 256, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
-		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceMazeWall resource=Stone amount=2000001 xn=32 yn=32 connerfill=false",
-		"ResourceAgeing initrun=10 msper=67000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=10 stddev=4 min=4",
+		floortemplete.AgeingMaze256x256()...,
 	)
 	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
 		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
@@ -132,10 +96,7 @@ func MakeStartTower(name string) *towermake.Tower {
 		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
 	)
 	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
-		"ResourceFillRect     resource=Soil amount=256 x=0  y=0  w=64 h=64",
-		"ResourceFillEllipses resource=Plant amount=256 x=0  y=0  w=64 h=64",
-		"ResourceFillEllipses resource=Water amount=256 x=8  y=8  w=48 h=48",
-		"ResourceFillEllipses resource=Ice amount=256 x=16  y=16  w=32 h=32",
+		floortemplete.FreeForAll64x64()...,
 	)
 	tw.Add("TileRooms", 64, 32, 0, 0, 1.5).Appends(
 		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16",
@@ -197,7 +158,9 @@ func MakeStartTower(name string) *towermake.Tower {
 	)
 
 	for _, fm := range tw.GetList() {
-		fm.Appends("FinalizeTerrain", "")
+		if !fm.IsFinalizeTerrain() {
+			fm.Appends("FinalizeTerrain", "")
+		}
 	}
 
 	tw.GetByName("PortalMaze").Appends(
