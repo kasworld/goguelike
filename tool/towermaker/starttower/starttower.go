@@ -12,29 +12,29 @@
 package starttower
 
 import (
-	"github.com/kasworld/goguelike/tool/towermaker/floortemplete"
+	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
 
 func MakeStartTower(name string) *towermake.Tower {
 	tw := towermake.New(name)
 	tw.Add("Practice", 64, 32, 0, 0, 0.7).Appends(
-		floortemplete.Practice64x32()...,
+		floortemplate.Practice64x32()...,
 	)
 	tw.Add("SoilPlant", 64, 64, 16, 0, 1.0).Appends(
-		floortemplete.SoilPlant64x64()...,
+		floortemplate.SoilPlant64x64()...,
 	)
 	tw.Add("ManyPortals", 128, 128, 64, 0, 1.0).Appends(
-		floortemplete.BGTile9Rooms128x128()...,
+		floortemplate.BGTile9Rooms128x128()...,
 	)
 	tw.Add("SoilWater", 128, 128, 64, 0, 1.0).Appends(
-		floortemplete.SoilWater128x128()...,
+		floortemplate.SoilWater128x128()...,
 	)
 	tw.Add("SoilMagma", 128, 128, 64, 0, 1.0).Appends(
-		floortemplete.SoilMagma128x128()...,
+		floortemplate.SoilMagma128x128()...,
 	)
 	tw.Add("SoilIce", 128, 128, 64, 0, 1.0).Appends(
-		floortemplete.SoilIce128x128()...,
+		floortemplate.SoilIce128x128()...,
 	)
 	tw.Add("MadeByImage", 256, 256, 256, 0, 1.0).Appends(
 		"ResourceFromPNG name=imagefloor.png",
@@ -44,40 +44,40 @@ func MakeStartTower(name string) *towermake.Tower {
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 	)
 	tw.Add("AgeingCity", 256, 256, 256, 0, 1.0).Appends(
-		floortemplete.AgeingCity256x256()...,
+		floortemplate.AgeingCity256x256()...,
 	)
 	tw.Add("AgeingField", 256, 256, 256, 0, 1.0).Appends(
-		floortemplete.AgeingField256x256()...,
+		floortemplate.AgeingField256x256()...,
 	)
 	tw.Add("AgeingMaze", 256, 256, 256, 0, 1.0).Appends(
-		floortemplete.AgeingMaze256x256()...,
+		floortemplate.AgeingMaze256x256()...,
 	)
 	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
-		floortemplete.RogueLike80x43()...,
+		floortemplate.RogueLike80x43()...,
 	)
 	tw.Add("GogueLike", 80, 43, 32, 0, 1.0).Appends(
-		floortemplete.GogueLike()...,
+		floortemplate.GogueLike()...,
 	)
 	tw.Add("Ghost", 80, 43, 16, 0, 1.0).Appends(
-		floortemplete.Ghost80x43()...,
+		floortemplate.Ghost80x43()...,
 	)
 	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
-		floortemplete.FreeForAll64x64()...,
+		floortemplate.FreeForAll64x64()...,
 	)
 	tw.Add("TileRooms", 64, 32, 0, 0, 1.5).Appends(
-		floortemplete.TileRooms64x32()...,
+		floortemplate.TileRooms64x32()...,
 	)
 	tw.Add("PortalMaze", 64, 32, 0, 0, 1.5).Appends(
-		floortemplete.PortalMaze64x32Finalized()...,
+		floortemplate.PortalMaze64x32Finalized()...,
 	)
 	tw.Add("MazeRooms1", 64, 32, 0, 0, 1.5).Appends(
-		floortemplete.MazeBigSmall64x32()...,
+		floortemplate.MazeBigSmall64x32()...,
 	)
 	tw.Add("MazeRooms2", 64, 32, 0, 0, 1.5).Appends(
-		floortemplete.MazeRooms64x32()...,
+		floortemplate.MazeRooms64x32()...,
 	)
 	tw.Add("MazeRooms3", 64, 32, 0, 0, 1.5).Appends(
-		floortemplete.MazeRoomsOverlapWall64x32()...,
+		floortemplate.MazeRoomsOverlapWall64x32()...,
 	)
 	tw.Add("MazeWalk", 64, 64, 0, 0, 2.0).Appends(
 		"ResourceMazeWalk resource=Soil amount=64 xn=16 yn=16 connerfill=true",
