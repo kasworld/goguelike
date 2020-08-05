@@ -11,12 +11,6 @@
 
 package floortemplate
 
-import (
-	"fmt"
-
-	"github.com/kasworld/goguelike/enum/tile"
-)
-
 func GogueLike() []string {
 	return []string{
 		"AddRoomsRand bgtile=Swamp walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
@@ -54,18 +48,5 @@ func Ghost80x43() []string {
 	return []string{
 		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4 min=4",
 		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
-	}
-}
-
-func RogueLikeFinalized(roomTile tile.Tile, roomCount int, roadTile tile.Tile) []string {
-	return []string{
-		fmt.Sprintf(
-			"AddRoomsRand bgtile=%v walltile=Wall terrace=false align=1 count=%v mean=8 stddev=2 min=6",
-			roomTile, roomCount),
-		fmt.Sprintf(
-			"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
-			roadTile),
-		"FinalizeTerrain",
-		"",
 	}
 }
