@@ -15,6 +15,9 @@ import (
 	"fmt"
 	"math/bits"
 
+	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
+
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
@@ -48,11 +51,12 @@ func MakeRogueTower(name string, floorCount int) *towermake.Tower {
 		)
 	}
 
-	var allRoomTile = []string{
-		"Room", "Soil", "Sand", "Stone", "Grass", "Tree", "Ice", "Magma", "Swamp", "Sea", "Smoke",
+	var allRoomTile = []tile.Tile{
+		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
+		tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
 	}
-	var allRoadTile = []string{
-		"Road", "Soil", "Sand", "Stone", "Grass", "Tree", "Fog",
+	var allRoadTile = []tile.Tile{
+		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
 	}
 	for _, fm := range tw.GetList() {
 		roomCount := fm.W * fm.H / 512
@@ -61,13 +65,9 @@ func MakeRogueTower(name string, floorCount int) *towermake.Tower {
 		}
 		roomTile := allRoomTile[rnd.Intn(len(allRoomTile))]
 		roadTile := allRoadTile[rnd.Intn(len(allRoadTile))]
-		fm.Appendf(
-			"AddRoomsRand bgtile=%v walltile=Wall terrace=false align=1 count=%v mean=8 stddev=2 min=6",
-			roomTile, roomCount)
-		fm.Appendf(
-			"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
-			roadTile)
-		fm.Appends("FinalizeTerrain", "")
+		fm.Appends(
+			floortemplate.RogueLikeFinalized(roomTile, roomCount, roadTile)...,
+		)
 	}
 
 	for i, fm := range tw.GetList() {
