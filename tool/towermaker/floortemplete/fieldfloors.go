@@ -80,3 +80,45 @@ func FreeForAll64x64() []string {
 		"ResourceFillEllipses resource=Ice amount=256 x=16  y=16  w=32 h=32",
 	}
 }
+
+func SoilPlant64x64() []string {
+	return []string{
+		"ResourceFillRect resource=Soil amount=64   x=0  y=0  w=64 h=64",
+		"ResourceMazeWall resource=Plant amount=2000000 xn=8  yn=8  connerfill=true",
+		"ResourceMazeWall resource=Stone amount=1000000 xn=32 yn=32 connerfill=true",
+		"ResourceAgeing initrun=1 msper=60000 resetaftern=60",
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
+		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+	}
+}
+
+func SoilWater128x128() []string {
+	return []string{
+		"ResourceFillRect resource=Soil amount=1000000 x=0 w=128 y=0 h=128",
+		"ResourceMazeWall resource=Water amount=1000000 xn=64 yn=64 connerfill=true",
+		"ResourceAgeing initrun=1 msper=61000 resetaftern=1440",
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
+		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+	}
+}
+
+func SoilMagma128x128() []string {
+	return []string{
+		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=128 h=128",
+		"ResourceMazeWall resource=Soil amount=500000 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Fire amount=1000000 xn=64 yn=64 connerfill=true",
+		"ResourceAgeing initrun=1 msper=62000 resetaftern=1440",
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
+		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+	}
+}
+
+func SoilIce128x128() []string {
+	return []string{
+		"ResourceFillRect resource=Soil amount=256 x=0  y=0  w=128 h=128",
+		"ResourceMazeWall  resource=Ice  amount=512 xn=64 yn=64 connerfill=true",
+		"ResourceAgeing initrun=1 msper=63000 resetaftern=360",
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=16 mean=6 stddev=4 min=4",
+		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+	}
+}

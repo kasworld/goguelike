@@ -19,41 +19,22 @@ import (
 func MakeStartTower(name string) *towermake.Tower {
 	tw := towermake.New(name)
 	tw.Add("Practice", 64, 32, 0, 0, 0.7).Appends(
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
+		floortemplete.Practice64x32()...,
 	)
 	tw.Add("SoilPlant", 64, 64, 16, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=64   x=0  y=0  w=64 h=64",
-		"ResourceMazeWall resource=Plant amount=2000000 xn=8  yn=8  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 xn=32 yn=32 connerfill=true",
-		"ResourceAgeing initrun=1 msper=60000 resetaftern=60",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		floortemplete.SoilPlant64x64()...,
 	)
 	tw.Add("ManyPortals", 128, 128, 64, 0, 1.0).Appends(
 		floortemplete.BGTile9Rooms128x128()...,
 	)
 	tw.Add("SoilWater", 128, 128, 64, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1000000 x=0 w=128 y=0 h=128",
-		"ResourceMazeWall resource=Water amount=1000000 xn=64 yn=64 connerfill=true",
-		"ResourceAgeing initrun=1 msper=61000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		floortemplete.SoilWater128x128()...,
 	)
 	tw.Add("SoilMagma", 128, 128, 64, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=128 h=128",
-		"ResourceMazeWall resource=Soil amount=500000 xn=64 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Fire amount=1000000 xn=64 yn=64 connerfill=true",
-		"ResourceAgeing initrun=1 msper=62000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		floortemplete.SoilMagma128x128()...,
 	)
 	tw.Add("SoilIce", 128, 128, 64, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=256 x=0  y=0  w=128 h=128",
-		"ResourceMazeWall  resource=Ice  amount=512 xn=64 yn=64 connerfill=true",
-		"ResourceAgeing initrun=1 msper=63000 resetaftern=360",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=16 mean=6 stddev=4 min=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		floortemplete.SoilIce128x128()...,
 	)
 	tw.Add("MadeByImage", 256, 256, 256, 0, 1.0).Appends(
 		"ResourceFromPNG name=imagefloor.png",
@@ -72,58 +53,31 @@ func MakeStartTower(name string) *towermake.Tower {
 		floortemplete.AgeingMaze256x256()...,
 	)
 	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
-		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
-		"ConnectRooms tile=Soil connect=2 allconnect=true diagonal=false",
+		floortemplete.RogueLike80x43()...,
 	)
 	tw.Add("GogueLike", 80, 43, 32, 0, 1.0).Appends(
 		floortemplete.GogueLike()...,
 	)
 	tw.Add("Ghost", 80, 43, 16, 0, 1.0).Appends(
-		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4 min=4",
-		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
+		floortemplete.Ghost80x43()...,
 	)
 	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
 		floortemplete.FreeForAll64x64()...,
 	)
 	tw.Add("TileRooms", 64, 32, 0, 0, 1.5).Appends(
-		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16",
-		"AddRoom bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=16 h=16",
-		"AddRoom bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=16 h=16",
-		"AddRoom bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=16 h=16",
-		"AddRoom bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=16 h=16",
-		"AddRoom bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=16 h=16",
-		"AddRoom bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=16 h=16",
-		"AddRoom bgtile=Soil walltile=Wall  terrace=false  x=48 y=16 w=16 h=16",
+		floortemplete.TileRooms64x32()...,
 	)
 	tw.Add("PortalMaze", 64, 32, 0, 0, 1.5).Appends(
 		floortemplete.PortalMaze64x32Finalized()...,
 	)
 	tw.Add("MazeRooms1", 64, 32, 0, 0, 1.5).Appends(
-		"ResourceFillRect resource=Soil amount=64  x=0  y=0  w=64 h=32",
-		"AddRoomMaze bgtile=Room walltile=Wall terrace=false  x=0   y=0   w=33 h=31 xn=16 yn=15 connerfill=true",
-		"AddRoomMaze bgtile=Road walltile=Wall terrace=false  x=40  y=8  w=17 h=17 xn=8 yn=8 connerfill=true",
+		floortemplete.MazeBigSmall64x32()...,
 	)
 	tw.Add("MazeRooms2", 64, 32, 0, 0, 1.5).Appends(
-		"ResourceFillRect resource=Soil amount=64  x=0  y=0  w=64 h=32",
-		"AddRoomMaze bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Tree walltile=Wall  terrace=false  x=48 y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
+		floortemplete.MazeRooms64x32()...,
 	)
 	tw.Add("MazeRooms3", 64, 32, 0, 0, 1.5).Appends(
-		"ResourceFillRect resource=Soil amount=64  x=0  y=0  w=64 h=32",
-		"AddRoomMaze bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
-		"AddRoomMaze bgtile=Tree walltile=Wall  terrace=false  x=48 y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
+		floortemplete.MazeRoomsOverlapWall64x32()...,
 	)
 	tw.Add("MazeWalk", 64, 64, 0, 0, 2.0).Appends(
 		"ResourceMazeWalk resource=Soil amount=64 xn=16 yn=16 connerfill=true",

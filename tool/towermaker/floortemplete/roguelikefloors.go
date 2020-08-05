@@ -29,3 +29,24 @@ func GogueLike() []string {
 		"ConnectRooms tile=Sand connect=1 allconnect=true diagonal=false",
 	}
 }
+
+func Practice64x32() []string {
+	return []string{
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
+		"ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
+	}
+}
+
+func RogueLike80x43() []string {
+	return []string{
+		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
+		"ConnectRooms tile=Soil connect=2 allconnect=true diagonal=false",
+	}
+}
+
+func Ghost80x43() []string {
+	return []string{
+		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4 min=4",
+		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
+	}
+}
