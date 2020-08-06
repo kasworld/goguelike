@@ -16,7 +16,7 @@ import (
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
 
-func MakeStartTower(name string) *towermake.Tower {
+func New(name string) *towermake.Tower {
 	tw := towermake.New(name)
 	tw.Add("Practice", 64, 32, 0, 0, 0.7).Appends(
 		floortemplate.Practice64x32()...,

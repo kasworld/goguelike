@@ -29,7 +29,18 @@ func makePowerOf2(v int) int {
 	return 1 << uint(bits.Len(uint(v-1)))
 }
 
-func MakeRogueTower(name string, floorCount int) *towermake.Tower {
+var allRoomTile = []tile.Tile{
+	tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
+	tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
+}
+var allRoadTile = []tile.Tile{
+	tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
+}
+var allWallTile = []tile.Tile{
+	tile.Wall, tile.Window,
+}
+
+func New(name string, floorCount int) *towermake.Tower {
 	var rnd = g2rand.New()
 	var whList = []int{
 		32, 64, 128,
@@ -42,29 +53,7 @@ func MakeRogueTower(name string, floorCount int) *towermake.Tower {
 		if roomCount < 2 {
 			roomCount = 2
 		}
-		tw.Add(
-			fmt.Sprintf("Floor%v", i),
-			w, h,
-			roomCount/2, 0,
-			1.0,
-		)
-	}
-
-	var allRoomTile = []tile.Tile{
-		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
-		tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
-	}
-	var allRoadTile = []tile.Tile{
-		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
-	}
-	var allWallTile = []tile.Tile{
-		tile.Wall, tile.Window,
-	}
-	for _, fm := range tw.GetList() {
-		roomCount := fm.W * fm.H / 512
-		if roomCount < 2 {
-			roomCount = 2
-		}
+		fm := tw.Add(fmt.Sprintf("Floor%v", i), w, h, roomCount/2, 0, 1.0)
 		for i := 0; i < roomCount; i++ {
 			roomTile := allRoomTile[rnd.Intn(len(allRoomTile))]
 			wallTile := allWallTile[rnd.Intn(len(allWallTile))]
@@ -77,11 +66,16 @@ func MakeRogueTower(name string, floorCount int) *towermake.Tower {
 		fm.Appendf(
 			"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
 			roadTile)
-		fm.Appends("FinalizeTerrain", "")
+	}
+
+	for _, fm := range tw.GetList() {
+		if !fm.IsFinalizeTerrain() {
+			fm.Appends("FinalizeTerrain", "")
+		}
 	}
 
 	for i, fm := range tw.GetList() {
-		roomCount := fm.W * fm.H / 512
+		roomCount := fm.CalcRoomCount()
 		fm.ConnectStairUp("InRoom", "InRoom", tw.GetList()[wrapInt(i+1, floorCount)])
 		fm.AddRecycler("InRoom", roomCount/2)
 		fm.AddTeleportIn("InRoom", roomCount/2)
