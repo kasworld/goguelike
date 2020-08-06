@@ -15,24 +15,12 @@ import (
 	"fmt"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
 
 func wrapInt(v, l int) int {
 	return (v%l + l) % l
-}
-
-var allRoomTile = []tile.Tile{
-	tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
-	tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
-}
-var allRoadTile = []tile.Tile{
-	tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
-}
-var allWallTile = []tile.Tile{
-	tile.Wall, tile.Window,
 }
 
 func New(name string, floorCount int) *towermake.Tower {
@@ -52,18 +40,9 @@ func New(name string, floorCount int) *towermake.Tower {
 				roomCount = 2
 			}
 			fm := tw.Add(floorName, w, h, roomCount/2, 0, 1.0)
-			for i := 0; i < roomCount; i++ {
-				roomTile := allRoomTile[rnd.Intn(len(allRoomTile))]
-				wallTile := allWallTile[rnd.Intn(len(allWallTile))]
-				fm.Appendf(
-					"AddRoomsRand bgtile=%v walltile=%v terrace=false align=1 count=1 mean=8 stddev=2 min=6",
-					roomTile, wallTile)
-
-			}
-			roadTile := allRoadTile[rnd.Intn(len(allRoadTile))]
-			fm.Appendf(
-				"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
-				roadTile)
+			fm.Appends(
+				floortemplate.RoguelikeRand(roomCount, rnd.Intn)...,
+			)
 		case 1:
 			tw.Add(floorName, 256, 256, 256, 0, 1.0).Appends(
 				floortemplate.AgeingCity256x256()...,
