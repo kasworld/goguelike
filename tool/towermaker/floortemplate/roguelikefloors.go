@@ -72,15 +72,15 @@ func RoguelikeRand(roomCount int, intnfn func(int) int) []string {
 	for i := 0; i < roomCount; i++ {
 		roomTile := allRoomTile[intnfn(len(allRoomTile))]
 		wallTile := allWallTile[intnfn(len(allWallTile))]
-		fmt.Sprintf(
+		rtn = append(rtn, fmt.Sprintf(
 			"AddRoomsRand bgtile=%v walltile=%v terrace=false align=1 count=1 mean=8 stddev=2 min=6",
-			roomTile, wallTile)
+			roomTile, wallTile))
 
 	}
 	roadTile := allRoadTile[intnfn(len(allRoadTile))]
-	fmt.Sprintf(
+	rtn = append(rtn, fmt.Sprintf(
 		"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
-		roadTile)
+		roadTile))
 
 	return rtn
 }
