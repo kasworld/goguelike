@@ -28,6 +28,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=4 message=Recycle"
     ],
     [
@@ -59,6 +60,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=4 message=Recycle",
         "AddRecyclerRand display=Recycler count=4 message=Recycle"
     ],
@@ -111,6 +113,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=9 message=Recycle",
         "AddRecyclerRand display=Recycler count=23 message=Recycle"
     ],
@@ -142,6 +145,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
         "AddRecyclerRand display=Recycler count=24 message=Recycle"
     ],
@@ -174,6 +178,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
         "AddRecyclerRand display=Recycler count=24 message=Recycle"
     ],
@@ -205,6 +210,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=16 message=Recycle",
         "AddRecyclerRand display=Recycler count=16 message=Recycle"
     ],
@@ -236,6 +242,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=32 message=Recycle",
         "AddRecyclerRand display=Recycler count=96 message=Recycle"
     ],
@@ -271,6 +278,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=64 message=Recycle",
         "AddRecyclerRand display=Recycler count=64 message=Recycle"
     ],
@@ -306,6 +314,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
         "AddRecyclerRand display=Recycler count=120 message=Recycle"
     ],
@@ -341,6 +350,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=8 message=Recycle",
         "AddRecyclerRand display=Recycler count=120 message=Recycle"
     ],
@@ -369,6 +379,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=6 message=Recycle"
     ],
     [
@@ -408,6 +419,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=6 message=Recycle"
     ],
     [
@@ -435,6 +447,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=6 message=Recycle"
     ],
     [
@@ -464,6 +477,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsRand display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerRand display=Recycler count=0 message=Recycle",
         "AddRecyclerRand display=Recycler count=8 message=Recycle"
     ],
@@ -497,6 +511,7 @@
         "AddTrapsInRoom display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsInRoom display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsInRoom display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsInRoom display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerInRoom display=Recycler count=4 message=Recycle"
     ],
     [
@@ -569,6 +584,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsRand display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerRand display=Recycler count=0 message=Recycle",
         "AddRecyclerRand display=Recycler count=4 message=Recycle"
     ],
@@ -597,6 +613,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsRand display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerRand display=Recycler count=2 message=Recycle",
         "AddRecyclerRand display=Recycler count=2 message=Recycle"
     ],
@@ -631,6 +648,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsRand display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerRand display=Recycler count=4 message=Recycle"
     ],
     [
@@ -664,6 +682,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsRand display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerRand display=Recycler count=4 message=Recycle"
     ],
     [
@@ -689,6 +708,7 @@
         "AddTrapsRand display=None acttype=Greasy count=1 message=Greasy",
         "AddTrapsRand display=None acttype=Drunken count=1 message=Drunken",
         "AddTrapsRand display=None acttype=Sleepy count=1 message=Sleepy",
+        "AddTrapsRand display=None acttype=Contagion count=1 message=Contagion",
         "AddRecyclerRand display=Recycler count=0 message=Recycle",
         "AddRecyclerRand display=Recycler count=8 message=Recycle"
     ],

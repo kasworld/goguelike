@@ -5,3 +5,4 @@ Float  no pickup, no interact to fieldobj, overload half, no slip on slippery ti
 Greasy drop equiped carryobj randomly
 Drunken move/attack dir changed randomly
 Sleep cannot act except killself
+Contagion make contagion other contacted, die or heal randomly
