@@ -28,6 +28,7 @@ func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjCli
 		NickName:   ao.nickName,
 		Faction:    ao.currentBias.NearFaction(),
 		EquippedPo: ao.inven.ToPacket_EquipClient(),
+		Conditions: ao.AOTurnData.Condition, // TODO not all condition send
 		X:          x,
 		Y:          y,
 		Alive:      ao.IsAlive(),

@@ -128,6 +128,7 @@ type ActiveObjClient struct {
 	NickName   string
 	Faction    factiontype.FactionType
 	EquippedPo []*EquipClient
+	Conditions condition_flag.ConditionFlag // not all condition
 	X          int
 	Y          int
 	Alive      bool
