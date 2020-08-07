@@ -166,7 +166,7 @@ func (ao *ActiveObject) ReduceSP(apToReduce float64) float64 {
 	return oldvalue - ao.sp
 }
 
-func (ao *ActiveObject) GetTurnData() aoturndata.ActiveObjTurnData {
+func (ao *ActiveObject) GetTurnData() *aoturndata.ActiveObjTurnData {
 	return ao.AOTurnData
 }
 

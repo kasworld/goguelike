@@ -103,7 +103,7 @@ type ActiveObject struct {
 	turnActReqRsp  *aoactreqrsp.ActReqRsp `prettystring:"simple"`
 
 	aoClientCache *c2t_obj.ActiveObjClient `prettystring:"simple"`
-	AOTurnData    aoturndata.ActiveObjTurnData
+	AOTurnData    *aoturndata.ActiveObjTurnData
 }
 
 func newActiveObj(
@@ -125,6 +125,7 @@ func newActiveObj(
 		inven:          inventory.New(towerAchieveStat),
 		buffManager:    activebuff.New(),
 		uuid2VisitArea: visitarea.NewID2VisitArea(),
+		AOTurnData:     &aoturndata.ActiveObjTurnData{},
 	}
 	ao.bornFaction = factiontype.FactionType(ao.rnd.Intn(factiontype.FactionType_Count))
 	ao.currentBias = bias.Bias(ao.bornFaction.FactorBase()).MakeAbsSumTo(gameconst.ActiveObjBaseBiasLen)

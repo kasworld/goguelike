@@ -22,7 +22,7 @@ import (
 
 // apply status effect one time
 func (ao *ActiveObject) applyOpArg(
-	oldData aoturndata.ActiveObjTurnData,
+	oldData *aoturndata.ActiveObjTurnData,
 	newData *aoturndata.ActiveObjTurnData,
 	oparg statusoptype.OpArg) {
 	switch oparg.Op {

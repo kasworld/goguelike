@@ -63,12 +63,12 @@ func (ao *ActiveObject) SetTurnActReqRsp(actrsp *aoactreqrsp.ActReqRsp) {
 
 func (ao *ActiveObject) updateActiveObjTurnData() {
 	old := ao.AOTurnData
-	ao.AOTurnData = aoturndata.ActiveObjTurnData{}
+	ao.AOTurnData = &aoturndata.ActiveObjTurnData{}
 
 	if ao.IsAlive() {
 		oparglist := ao.buffManager.GetOpArgListToApply()
 		for _, v := range oparglist {
-			ao.applyOpArg(old, &ao.AOTurnData, v)
+			ao.applyOpArg(old, ao.AOTurnData, v)
 		}
 	}
 

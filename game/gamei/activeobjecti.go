@@ -78,7 +78,7 @@ type ActiveObjectI interface {
 	SetReq2Handle(req *aoactreqrsp.Act)
 	GetClearReq2Handle() *aoactreqrsp.Act
 
-	GetTurnData() aoturndata.ActiveObjTurnData
+	GetTurnData() *aoturndata.ActiveObjTurnData
 	GetBuffManager() *activebuff.BuffManager
 
 	GetClientConn() *c2t_serveconnbyte.ServeConnByte

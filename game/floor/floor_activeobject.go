@@ -14,6 +14,8 @@ package floor
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/fieldobjacttype"
+
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/slippperydata"
 	"github.com/kasworld/goguelike/config/viewportdata"
@@ -236,6 +238,16 @@ func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile
 	if src.GetTurnData().Condition.TestByCondition(condition.Blind) && f.rnd.Intn(2) == 0 {
 		src.GetAchieveStat().Inc(achievetype.AttackMiss)
 		return
+	}
+
+	// use fieldobj Contagion trigger rate
+	if src.GetTurnData().Condition.TestByCondition(condition.Contagion) &&
+		fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
+		dst.GetTurnData().Condition.SetByCondition(condition.Contagion)
+	}
+	if dst.GetTurnData().Condition.TestByCondition(condition.Contagion) &&
+		fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
+		src.GetTurnData().Condition.SetByCondition(condition.Contagion)
 	}
 
 	envbias := f.GetEnvBias()
