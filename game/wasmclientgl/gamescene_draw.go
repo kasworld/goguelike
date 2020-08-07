@@ -374,7 +374,11 @@ func (vp *GameScene) processNotiObjectList(
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shZ := GetTile3DOnByCache(tl)
-		ao3d.SetFieldPosition(fx, fy, shZ)
+		if ao.Conditions.TestByCondition(condition.Float) {
+			ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize)
+		} else {
+			ao3d.SetFieldPosition(fx, fy, shZ)
+		}
 		if ao.Dir != way9type.Center {
 			ao3d.MoveArrow.Visible(true)
 			ao3d.MoveArrow.SetDir(ao.Dir)
@@ -415,9 +419,6 @@ func (vp *GameScene) processNotiObjectList(
 				ao3d.Visible(false)
 			} else {
 				ao3d.Visible(true)
-			}
-			if aop.Conditions.TestByCondition(condition.Float) {
-				ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize)
 			}
 			vp.UpdatePlayerAO(cf, ao, aop)
 		}
