@@ -4,13 +4,13 @@ BUILD_VER=${1}
 
 # build 2d client
 
-rm wasmclient.wasm
+# rm wasmclient.wasm
 
-echo "GOOS=js GOARCH=wasm go build -o wasmclient.wasm -ldflags -X main.Ver=${BUILD_VER}"
-GOOS=js GOARCH=wasm go build -o wasmclient.wasm -ldflags "-X main.Ver=${BUILD_VER}" wasmclient.go
+# echo "GOOS=js GOARCH=wasm go build -o wasmclient.wasm -ldflags -X main.Ver=${BUILD_VER}"
+# GOOS=js GOARCH=wasm go build -o wasmclient.wasm -ldflags "-X main.Ver=${BUILD_VER}" wasmclient.go
 
-echo "move files"
-mv wasmclient.wasm clientdata/
+# echo "move files"
+# mv wasmclient.wasm clientdata/
 
 # build gl client
 

@@ -228,10 +228,10 @@ func (tw *Tower) ServiceInit() error {
 	if tw.sconfig.StandAlone {
 		fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 			tw.sconfig.ServiceHostBase, tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
-		fmt.Printf("WebClient : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
+		// fmt.Printf("WebClient : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
+		// fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
+		fmt.Printf("WebClient : %v:%v/\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
 		fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
-		fmt.Printf("WebClientGL : %v:%v/gl.html\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
-		fmt.Printf("WebClientGL with authkey : %v:%v/gl.html?authkey=%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
 	}
 
 	return nil
