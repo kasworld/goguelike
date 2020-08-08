@@ -546,20 +546,7 @@ func (vp *GameScene) makeMovePathInView(
 			shZ := GetTile3DOnByCache(tl)
 			ar3d.SetFieldPosition(x, y, 0, 0, shZ)
 		}
-		// add last
-		// pos := path2dst[len(path2dst)-1]
-		// ar3d, exist := vp.jsSceneMovePathArrows[pos]
-		// if !exist {
-		// 	ar3d = gPoolColorArrow3D.Get()
-		// 	vp.jsSceneMovePathArrows[pos] = ar3d
-		// 	vp.scene.Call("add", ar3d.Mesh)
-		// }
-		// addAr3Duuid[pos] = true
-		// ti := gClientTile.Dir2Tiles[way9type.Center]
-		// ar3d.SetDir(diri)
-		// tl := cf.Tiles[cf.XWrapSafe(pos[0])][cf.YWrapSafe(pos[1])]
-		// x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
-		// ar3d.SetFieldPosition(x, y, tl)
+		// add last ?
 	}
 
 	for pos, ar3d := range vp.jsSceneMovePathArrows {

@@ -22,7 +22,6 @@ import (
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/clientinitdata"
-	"github.com/kasworld/goguelike/lib/clienttile"
 )
 
 const (
@@ -43,7 +42,6 @@ var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 var gXYLenListView findnear.XYLenList = findnear.NewXYLenList(
 	gameconst.ClientViewPortW, gameconst.ClientViewPortH)
 var gInitData *clientinitdata.InitData = clientinitdata.New()
-var gClientTile *clienttile.ClientTile = clienttile.New()
 
 var gTextureLoader js.Value = ThreeJsNew("TextureLoader")
 var gFontLoader js.Value = ThreeJsNew("FontLoader")
