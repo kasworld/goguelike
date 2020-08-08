@@ -19,93 +19,113 @@ import (
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-var gPoolCarryObj3D = NewPoolCarryObj3D(PoolSizeCarryObj3D)
+func NewCarryObj3DGeo(str string) js.Value {
+	refSize := float64(DstCellSize) / 2
+	geo := ThreeJsNew("TextGeometry", str,
+		map[string]interface{}{
+			"font":           gFont_droid_sans_mono_regular,
+			"size":           refSize * 0.7,
+			"height":         refSize * 0.3,
+			"curveSegments":  refSize / 3,
+			"bevelEnabled":   true,
+			"bevelThickness": refSize / 8,
+			"bevelSize":      refSize / 16,
+			"bevelOffset":    0,
+			"bevelSegments":  refSize / 8,
+		})
+	geo.Call("center")
+	return geo
+}
 
-type PoolCarryObj3D struct {
+func Equiped2StrColor(o *c2t_obj.EquipClient) (string, string) {
+	return o.EquipType.Rune(), o.Faction.Color24().ToHTMLColorString()
+}
+
+func CarryObj2StrColor(o *c2t_obj.CarryObjClientOnFloor) (string, string) {
+	switch o.CarryingObjectType {
+	case carryingobjecttype.Equip:
+		return o.EquipType.Rune(), o.Faction.Color24().ToHTMLColorString()
+	case carryingobjecttype.Money:
+		for _, v := range moneycolor.Attrib {
+			if o.Value < v.UpLimit {
+				return "$", v.Color.ToHTMLColorString()
+			}
+		}
+		v := moneycolor.Attrib[len(moneycolor.Attrib)-1]
+		return "$", v.Color.ToHTMLColorString()
+	case carryingobjecttype.Potion:
+		return o.PotionType.Rune(), o.PotionType.Color24().ToHTMLColorString()
+	case carryingobjecttype.Scroll:
+		return o.ScrollType.Rune(), o.ScrollType.Color24().ToHTMLColorString()
+	}
+	return "", ""
+}
+
+var gPoolCarryObj3DGeo = NewPoolCarryObj3DGeo()
+
+type PoolCarryObj3DGeo struct {
 	mutex    sync.Mutex
-	poolData []*CarryObj3D
+	poolData map[string][]js.Value
 	newCount int
 	getCount int
 	putCount int
 }
 
-func NewPoolCarryObj3D(initCap int) *PoolCarryObj3D {
-	return &PoolCarryObj3D{
-		poolData: make([]*CarryObj3D, 0, initCap),
+func NewPoolCarryObj3DGeo() *PoolCarryObj3DGeo {
+	return &PoolCarryObj3DGeo{
+		poolData: make(map[string][]js.Value),
 	}
 }
 
-func (p *PoolCarryObj3D) String() string {
-	return fmt.Sprintf("PoolCarryObj3D[%v/%v new:%v get:%v put:%v]",
-		len(p.poolData), cap(p.poolData), p.newCount, p.getCount, p.putCount,
+func (p *PoolCarryObj3DGeo) String() string {
+	return fmt.Sprintf("PoolCarryObj3DGeo[%v new:%v get:%v put:%v]",
+		len(p.poolData), p.newCount, p.getCount, p.putCount,
 	)
 }
 
-func (p *PoolCarryObj3D) Get() *CarryObj3D {
+func (p *PoolCarryObj3DGeo) Get(str string) js.Value {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	var rtn *CarryObj3D
-	if l := len(p.poolData); l > 0 {
-		rtn = p.poolData[l-1]
-		p.poolData = p.poolData[:l-1]
+	var rtn js.Value
+	if l := len(p.poolData[str]); l > 0 {
+		rtn = p.poolData[str][l-1]
+		p.poolData[str] = p.poolData[str][:l-1]
 		p.getCount++
 	} else {
-		rtn = NewCarryObj3D()
+		rtn = NewCarryObj3DGeo(str)
 		p.newCount++
 	}
 	return rtn
 }
 
-func (p *PoolCarryObj3D) Put(pb *CarryObj3D) {
+func (p *PoolCarryObj3DGeo) Put(geo js.Value, str string) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.poolData = append(p.poolData, pb)
+	p.poolData[str] = append(p.poolData[str], geo)
 	p.putCount++
 }
 
 type CarryObj3D struct {
-	Cnv     js.Value
-	Ctx     js.Value
-	Tex     js.Value
+	Str     string
+	Color   string
 	GeoInfo GeoInfo
 	Mesh    js.Value
 }
 
-func NewCarryObj3D() *CarryObj3D {
-	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-	ctx := cnv.Call("getContext", "2d")
-	ctx.Set("imageSmoothingEnabled", false)
-	cnv.Set("width", DstCellSize)
-	cnv.Set("height", DstCellSize)
-	tex := ThreeJsNew("CanvasTexture", cnv)
-	mat := ThreeJsNew("MeshStandardMaterial",
-		map[string]interface{}{
-			"map": tex,
-		},
-	)
+func NewCarryObj3D(str, color string) *CarryObj3D {
+	mat := GetColorMaterialByCache(color)
 	mat.Set("transparent", true)
-	geo := ThreeJsNew("BoxGeometry",
-		DstCellSize/3, DstCellSize/3, DstCellSize/3)
+	geo := gPoolCarryObj3DGeo.Get(str)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &CarryObj3D{
-		Cnv:     cnv,
-		Ctx:     ctx,
-		Tex:     tex,
+		Str:     str,
+		Color:   color,
 		GeoInfo: GetGeoInfo(geo),
 		Mesh:    mesh,
 	}
-}
-
-func (aog *CarryObj3D) ChangeTile(ti webtilegroup.TileInfo) {
-	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-	aog.Tex.Set("needsUpdate", true)
 }
 
 func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shInfo ShiftInfo) {
@@ -129,44 +149,11 @@ func (aog *CarryObj3D) RotateZ(rad float64) {
 
 func (aog *CarryObj3D) Dispose() {
 	// mesh do not need dispose
-	aog.Mesh.Get("geometry").Call("dispose")
-	aog.Mesh.Get("material").Call("dispose")
-	aog.Tex.Call("dispose")
-
-	aog.Cnv = js.Undefined()
-	aog.Ctx = js.Undefined()
+	// aog.Mesh.Get("geometry").Call("dispose")
+	gPoolCarryObj3DGeo.Put(aog.Mesh.Get("geometry"), aog.Str)
+	// aog.Mesh.Get("material").Call("dispose")
 	aog.Mesh = js.Undefined()
-	aog.Tex = js.Undefined()
 	// no need createElement canvas dom obj
-}
-
-func Equiped2TileInfo(o *c2t_obj.EquipClient) webtilegroup.TileInfo {
-	return gClientTile.EquipTiles[o.EquipType][o.Faction]
-}
-
-func CarryObj2TileInfo(o *c2t_obj.CarryObjClientOnFloor) webtilegroup.TileInfo {
-	var ti webtilegroup.TileInfo
-	switch o.CarryingObjectType {
-	case carryingobjecttype.Equip:
-		ti = gClientTile.EquipTiles[o.EquipType][o.Faction]
-	case carryingobjecttype.Money:
-		var find bool
-		for i, v := range moneycolor.Attrib {
-			if o.Value < v.UpLimit {
-				ti = gClientTile.GoldTiles[i]
-				find = true
-				break
-			}
-		}
-		if !find {
-			ti = gClientTile.GoldTiles[len(gClientTile.GoldTiles)-1]
-		}
-	case carryingobjecttype.Potion:
-		ti = gClientTile.PotionTiles[o.PotionType]
-	case carryingobjecttype.Scroll:
-		ti = gClientTile.ScrollTiles[o.ScrollType]
-	}
-	return ti
 }
 
 type ShiftInfo struct {

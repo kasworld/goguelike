@@ -69,8 +69,8 @@ func (ao3d *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bo
 		return ao3d.Mesh, false
 	}
 	oldmesh := ao3d.Mesh
-	ao3d.Mesh.Get("geometry").Call("dispose")
-	ao3d.Mesh.Get("material").Call("dispose")
+	// ao3d.Mesh.Get("geometry").Call("dispose")
+	// ao3d.Mesh.Get("material").Call("dispose")
 	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
 	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
@@ -125,8 +125,8 @@ func (ao3d *ActiveObj3D) ScaleZ(z float64) {
 
 func (ao3d *ActiveObj3D) Dispose() {
 	// mesh do not need dispose
-	ao3d.Mesh.Get("geometry").Call("dispose")
-	ao3d.Mesh.Get("material").Call("dispose")
+	// ao3d.Mesh.Get("geometry").Call("dispose")
+	// ao3d.Mesh.Get("material").Call("dispose")
 	ao3d.Mesh = js.Undefined()
 
 	gPoolColorArrow3D.Put(ao3d.MoveArrow)

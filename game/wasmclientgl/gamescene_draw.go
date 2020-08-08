@@ -432,9 +432,8 @@ func (vp *GameScene) processNotiObjectList(
 		for _, eqo := range ao.EquippedPo {
 			cr3d, exist := vp.jsSceneCOs[eqo.UUID]
 			if !exist {
-				cr3d = gPoolCarryObj3D.Get()
-				ti := Equiped2TileInfo(eqo)
-				cr3d.ChangeTile(ti)
+				str, color := Equiped2StrColor(eqo)
+				cr3d = NewCarryObj3D(str, color)
 				vp.scene.Call("add", cr3d.Mesh)
 				vp.jsSceneCOs[eqo.UUID] = cr3d
 			}
@@ -463,9 +462,8 @@ func (vp *GameScene) processNotiObjectList(
 	for _, cro := range olNoti.CarryObjList {
 		cr3d, exist := vp.jsSceneCOs[cro.UUID]
 		if !exist {
-			cr3d = gPoolCarryObj3D.Get()
-			ti := CarryObj2TileInfo(cro)
-			cr3d.ChangeTile(ti)
+			str, color := CarryObj2StrColor(cro)
+			cr3d = NewCarryObj3D(str, color)
 			vp.scene.Call("add", cr3d.Mesh)
 			vp.jsSceneCOs[cro.UUID] = cr3d
 		}
@@ -480,7 +478,7 @@ func (vp *GameScene) processNotiObjectList(
 		if !addCOuuid[id] {
 			vp.scene.Call("remove", cr3d.Mesh)
 			delete(vp.jsSceneCOs, id)
-			gPoolCarryObj3D.Put(cr3d)
+			cr3d.Dispose()
 		}
 	}
 }
