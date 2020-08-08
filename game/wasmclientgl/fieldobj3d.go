@@ -17,15 +17,19 @@ import (
 	"sync"
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 var gPoolFieldObj3D = NewPoolFieldObj3D()
 
+type FOKey struct {
+	ActType     fieldobjacttype.FieldObjActType
+	DisplayType fieldobjdisplaytype.FieldObjDisplayType
+}
 type PoolFieldObj3D struct {
 	mutex    sync.Mutex
-	poolData map[fieldobjdisplaytype.FieldObjDisplayType][]*FieldObj3D
+	poolData map[FOKey][]*FieldObj3D
 	newCount int
 	getCount int
 	putCount int
@@ -33,7 +37,7 @@ type PoolFieldObj3D struct {
 
 func NewPoolFieldObj3D() *PoolFieldObj3D {
 	return &PoolFieldObj3D{
-		poolData: make(map[fieldobjdisplaytype.FieldObjDisplayType][]*FieldObj3D),
+		poolData: make(map[FOKey][]*FieldObj3D),
 	}
 }
 
@@ -43,31 +47,43 @@ func (p *PoolFieldObj3D) String() string {
 	)
 }
 
-func (p *PoolFieldObj3D) Get(fo *c2t_obj.FieldObjClient) *FieldObj3D {
+func (p *PoolFieldObj3D) Get(
+	ActType fieldobjacttype.FieldObjActType,
+	DisplayType fieldobjdisplaytype.FieldObjDisplayType) *FieldObj3D {
+
+	fokey := FOKey{
+		ActType, DisplayType,
+	}
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	var rtn *FieldObj3D
-	if l := len(p.poolData[fo.DisplayType]); l > 0 {
-		rtn = p.poolData[fo.DisplayType][l-1]
-		p.poolData[fo.DisplayType] = p.poolData[fo.DisplayType][:l-1]
+	if l := len(p.poolData[fokey]); l > 0 {
+		rtn = p.poolData[fokey][l-1]
+		p.poolData[fokey] = p.poolData[fokey][:l-1]
 		p.getCount++
 	} else {
-		rtn = NewFieldObj3D(fo)
+		rtn = NewFieldObj3D(ActType, DisplayType)
 		p.newCount++
 	}
 	return rtn
 }
 
 func (p *PoolFieldObj3D) Put(pb *FieldObj3D) {
+	fokey := FOKey{
+		pb.ActType, pb.DisplayType,
+	}
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.poolData[pb.FO.DisplayType] = append(p.poolData[pb.FO.DisplayType], pb)
+	p.poolData[fokey] = append(p.poolData[fokey], pb)
 	p.putCount++
 }
 
-func FieldObj2StrColor(fo *c2t_obj.FieldObjClient) (string, string) {
-	str := fo.DisplayType.String()[:2]
-	co := fo.ActType.Color24().ToHTMLColorString()
+func FieldObj2StrColor(
+	ActType fieldobjacttype.FieldObjActType,
+	DisplayType fieldobjdisplaytype.FieldObjDisplayType) (string, string) {
+
+	str := DisplayType.String()[:2]
+	co := ActType.Color24().ToHTMLColorString()
 	return str, co
 }
 
@@ -90,22 +106,27 @@ func NewFieldObjGeo(str string) js.Value {
 }
 
 type FieldObj3D struct {
-	FO      *c2t_obj.FieldObjClient
-	Label   *Label3D
-	GeoInfo GeoInfo
-	Mesh    js.Value
+	ActType     fieldobjacttype.FieldObjActType
+	DisplayType fieldobjdisplaytype.FieldObjDisplayType
+	Label       *Label3D
+	GeoInfo     GeoInfo
+	Mesh        js.Value
 }
 
-func NewFieldObj3D(fo *c2t_obj.FieldObjClient) *FieldObj3D {
-	str, color := FieldObj2StrColor(fo)
+func NewFieldObj3D(
+	ActType fieldobjacttype.FieldObjActType,
+	DisplayType fieldobjdisplaytype.FieldObjDisplayType) *FieldObj3D {
+
+	str, color := FieldObj2StrColor(ActType, DisplayType)
 	mat := GetColorMaterialByCache(color)
 	mat.Set("transparent", true)
 	geo := NewFieldObjGeo(str)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &FieldObj3D{
-		FO:      fo,
-		GeoInfo: GetGeoInfo(geo),
-		Mesh:    mesh,
+		ActType:     ActType,
+		DisplayType: DisplayType,
+		GeoInfo:     GetGeoInfo(geo),
+		Mesh:        mesh,
 	}
 }
 
