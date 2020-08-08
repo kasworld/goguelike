@@ -139,7 +139,8 @@ func calcTile3DTop(tl tile_flag.TileFlag) float64 {
 		if !tl.TestByTile(tile.Tile(i)) {
 			continue
 		}
-		z := gTileZInfo[i].Size + gTileZInfo[i].Shift
+		z := gTile3D[i].GeoInfo.Len[2] + gTileZInfo[i].Shift
+		// z := gTileZInfo[i].Size + gTileZInfo[i].Shift
 		if z > rtn {
 			rtn = z
 		}
