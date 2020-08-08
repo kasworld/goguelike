@@ -47,7 +47,7 @@ var attrib = [EquipSlotType_Count]struct {
 	Names          []string
 	Materials      []string
 }{
-	Weapon: {true, false, .5, "🔪",
+	Weapon: {true, false, .5, "/",
 		[]string{
 			"Dagger", "Mace", "Blade", "Spear", "Hammer", "Club", "Sword", "Pike", "Sickle",
 			"Knife", "Razor", "Trident", "Axe", "Staff", "Machete", "Rapier", "Scimitar",
@@ -61,7 +61,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Shield: {false, true, .25, "⛨",
+	Shield: {false, true, .25, ")",
 		[]string{
 			"Buckler", "LightShield", "MediumShield", "HeavyShield", "TowerShield",
 		},
@@ -71,7 +71,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Helmet: {false, true, 0.125, "👑",
+	Helmet: {false, true, 0.125, "^",
 		[]string{
 			"Circlet", "Crown", "Hat", "Helm", "Hood", "Headband",
 		},
@@ -81,7 +81,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Armor: {false, true, .25, "👕",
+	Armor: {false, true, .25, "%",
 		[]string{
 			"Armor", "Coat", "Tunic", "Shirt", "Bodysuit", "Mail", "Chainmail", "Bandedmail",
 			"Splintmail", "Fieldplate", "Breastplate", "Halfplate", "Fullplate",
@@ -92,7 +92,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Gauntlet: {false, true, 0.125, " 🧤",
+	Gauntlet: {false, true, 0.125, "=",
 		[]string{
 			"Gauntlet",
 		},
@@ -102,7 +102,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Footwear: {false, true, 0.125, "👢",
+	Footwear: {false, true, 0.125, ",,",
 		[]string{
 			"Boots", "Sandals", "Shoes", "Slippers",
 		},
@@ -112,7 +112,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Ring: {true, false, 0.125, " 💍",
+	Ring: {true, false, 0.125, "o",
 		[]string{
 			"Ring",
 		},
@@ -122,7 +122,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Amulet: {true, false, 0.125, "🎀",
+	Amulet: {true, false, 0.125, "+",
 		[]string{
 			"Amulet",
 		},
