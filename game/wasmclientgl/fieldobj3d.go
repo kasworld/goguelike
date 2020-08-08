@@ -82,23 +82,26 @@ func FieldObj2StrColor(
 	ActType fieldobjacttype.FieldObjActType,
 	DisplayType fieldobjdisplaytype.FieldObjDisplayType) (string, string) {
 
-	str := DisplayType.String()[:2]
-	co := ActType.Color24().ToHTMLColorString()
-	return str, co
+	if DisplayType == fieldobjdisplaytype.None {
+		return ActType.Rune(), ActType.Color24().ToHTMLColorString()
+	} else {
+		return DisplayType.Rune(), ActType.Color24().ToHTMLColorString()
+	}
 }
 
 func NewFieldObjGeo(str string) js.Value {
+	refSize := float64(DstCellSize)
 	geo := ThreeJsNew("TextGeometry", str,
 		map[string]interface{}{
-			"font":           gFont_droid_sans_mono_regular,
-			"size":           DstCellSize * 0.7,
-			"height":         DstCellSize * 0.3,
-			"curveSegments":  DstCellSize / 3,
+			"font":           gFont_helvetiker_regular,
+			"size":           refSize * 0.7,
+			"height":         refSize * 0.3,
+			"curveSegments":  refSize / 3,
 			"bevelEnabled":   true,
-			"bevelThickness": DstCellSize / 8,
-			"bevelSize":      DstCellSize / 16,
+			"bevelThickness": refSize / 8,
+			"bevelSize":      refSize / 16,
 			"bevelOffset":    0,
-			"bevelSegments":  DstCellSize / 8,
+			"bevelSegments":  refSize / 8,
 		})
 	geo.Call("rotateX", math.Pi/2)
 	geo.Call("center")

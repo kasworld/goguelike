@@ -21,6 +21,10 @@ func (v FieldObjActType) Color24() htmlcolors.Color24 {
 	return attrib[v].Color24
 }
 
+func (v FieldObjActType) Rune() string {
+	return attrib[v].Rune
+}
+
 func (v FieldObjActType) TrapNoti() bool {
 	return attrib[v].TrapNoti
 }
@@ -41,6 +45,7 @@ func (v FieldObjActType) NeedTANoti() bool {
 }
 
 var attrib = [FieldObjActType_Count]struct {
+	Rune        string
 	TrapNoti    bool
 	AutoTrigger bool
 	TriggerRate float64
@@ -48,27 +53,27 @@ var attrib = [FieldObjActType_Count]struct {
 	NeedTANoti  bool
 	Color24     htmlcolors.Color24
 }{
-	None:            {false, false, 1.0, false, false, htmlcolors.Black},
-	PortalInOut:     {false, false, 1.0, false, false, htmlcolors.Cyan},
-	PortalIn:        {false, false, 1.0, false, false, htmlcolors.Cyan},
-	PortalOut:       {false, false, 1.0, false, false, htmlcolors.Cyan},
-	PortalAutoIn:    {false, true, 1.0, true, true, htmlcolors.Cyan},
-	RecycleCarryObj: {false, false, 1.0, false, false, htmlcolors.Green},
-	Teleport:        {true, true, 0.1, true, true, htmlcolors.Red},
-	ForgetFloor:     {true, true, 0.2, false, true, htmlcolors.OrangeRed},
-	ForgetOneFloor:  {true, true, 0.3, false, true, htmlcolors.OrangeRed},
-	AlterFaction:    {true, true, 0.5, false, false, htmlcolors.Red},
-	AllFaction:      {true, true, 0.5, false, false, htmlcolors.Red},
-	Bleeding:        {true, true, 0.2, false, false, htmlcolors.DeepPink},
-	Chilly:          {true, true, 0.2, false, false, htmlcolors.DeepPink},
-	Blind:           {true, true, 0.2, false, false, htmlcolors.DeepPink},
-	Invisible:       {true, true, 0.5, false, false, htmlcolors.DeepPink},
-	Burden:          {true, true, 0.2, false, false, htmlcolors.DeepPink},
-	Float:           {true, true, 0.3, false, false, htmlcolors.DeepPink},
-	Greasy:          {true, true, 0.5, false, false, htmlcolors.DeepPink},
-	Drunken:         {true, true, 0.5, false, false, htmlcolors.DeepPink},
-	Sleepy:          {true, true, 0.1, false, false, htmlcolors.DeepPink},
-	Contagion:       {true, true, 0.1, false, false, htmlcolors.DarkGreen},
+	None:            {"?", false, false, 1.0, false, false, htmlcolors.Black},
+	PortalInOut:     {"?", false, false, 1.0, false, false, htmlcolors.Cyan},
+	PortalIn:        {"?", false, false, 1.0, false, false, htmlcolors.Cyan},
+	PortalOut:       {"?", false, false, 1.0, false, false, htmlcolors.Cyan},
+	PortalAutoIn:    {"?", false, true, 1.0, true, true, htmlcolors.Cyan},
+	RecycleCarryObj: {"?", false, false, 1.0, false, false, htmlcolors.Green},
+	Teleport:        {"?", true, true, 0.1, true, true, htmlcolors.Red},
+	ForgetFloor:     {"?", true, true, 0.2, false, true, htmlcolors.OrangeRed},
+	ForgetOneFloor:  {"?", true, true, 0.3, false, true, htmlcolors.OrangeRed},
+	AlterFaction:    {"?", true, true, 0.5, false, false, htmlcolors.Red},
+	AllFaction:      {"?", true, true, 0.5, false, false, htmlcolors.Red},
+	Bleeding:        {"?", true, true, 0.2, false, false, htmlcolors.DeepPink},
+	Chilly:          {"?", true, true, 0.2, false, false, htmlcolors.DeepPink},
+	Blind:           {"?", true, true, 0.2, false, false, htmlcolors.DeepPink},
+	Invisible:       {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
+	Burden:          {"?", true, true, 0.2, false, false, htmlcolors.DeepPink},
+	Float:           {"?", true, true, 0.3, false, false, htmlcolors.DeepPink},
+	Greasy:          {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
+	Drunken:         {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
+	Sleepy:          {"?", true, true, 0.1, false, false, htmlcolors.DeepPink},
+	Contagion:       {"?", true, true, 0.1, false, false, htmlcolors.DarkGreen},
 }
 
 // try act on fieldobj
