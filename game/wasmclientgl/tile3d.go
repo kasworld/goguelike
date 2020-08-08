@@ -201,14 +201,6 @@ func (aog *Tile3D) Dispose() {
 	// no need createElement canvas dom obj
 }
 
-// func (t3d *Tile3D) ChangeTile(ti webtilegroup.TileInfo) {
-// 	t3d.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-// 	t3d.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-// 		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-// 		0, 0, DstCellSize, DstCellSize)
-// 	t3d.Tex.Set("needsUpdate", true)
-// }
-
 func (t3d *Tile3D) DrawTexture(srcx, srcy int) {
 	srcx = t3d.SrcWrapX(srcx)
 	srcy = t3d.SrcWrapY(srcy)

@@ -307,9 +307,7 @@ func (vp *GameScene) updateFieldObjInView(
 		fo3d, exist := vp.jsSceneFOs[obj.GetUUID()]
 		if !exist {
 			// add new fieldobj
-			fo3d = gPoolFieldObj3D.Get()
-			ti := FieldObj2TileInfo(fo.DisplayType, fo.X, fo.Y)
-			fo3d.ChangeTile(ti)
+			fo3d = gPoolFieldObj3D.Get(fo)
 			vp.jsSceneFOs[obj.GetUUID()] = fo3d
 			vp.scene.Call("add", fo3d.Mesh)
 
