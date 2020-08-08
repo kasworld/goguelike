@@ -15,90 +15,52 @@ import (
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/enum/tile_flag"
-
-	"github.com/kasworld/goguelike/lib/webtilegroup"
 )
 
 type Cursor3D struct {
-	Cnv     js.Value
-	Ctx     js.Value
-	Tex     js.Value
 	GeoInfo GeoInfo
-	Mesh    js.Value
+	Mesh    [3]js.Value
 }
 
 func NewCursor3D() *Cursor3D {
-	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
-	ctx := cnv.Call("getContext", "2d")
-	ctx.Set("imageSmoothingEnabled", false)
-	cnv.Set("width", DstCellSize)
-	cnv.Set("height", DstCellSize)
-	tex := ThreeJsNew("CanvasTexture", cnv)
-	mat := ThreeJsNew("MeshStandardMaterial",
-		map[string]interface{}{
-			"map": tex,
-		},
-	)
-	mat.Set("transparent", true)
-
+	rtn := &Cursor3D{}
 	geo := ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	return &Cursor3D{
-		Cnv:     cnv,
-		Ctx:     ctx,
-		Tex:     tex,
-		GeoInfo: GetGeoInfo(geo),
-		Mesh:    mesh,
+	rtn.GeoInfo = GetGeoInfo(geo)
+	for i, v := range [3]string{"#00ff00", "#ff0000", "#0000ff"} {
+		mat := GetColorMaterialByCache(v)
+		rtn.Mesh[i] = ThreeJsNew("Mesh", geo, mat)
 	}
-}
-
-func (aog *Cursor3D) ChangeTile(ti webtilegroup.TileInfo) {
-	aog.Ctx.Call("clearRect", 0, 0, DstCellSize, DstCellSize)
-	aog.Ctx.Call("drawImage", gClientTile.TilePNG.Cnv,
-		ti.Rect.X, ti.Rect.Y, ti.Rect.W, ti.Rect.H,
-		0, 0, DstCellSize, DstCellSize)
-	aog.Tex.Set("needsUpdate", true)
+	return rtn
 }
 
 func (aog *Cursor3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
 	height := GetTile3DTopByCache(tl)
+	aog.VisibleByTile(tl)
+	for i := range aog.Mesh {
+		SetPosition(
+			aog.Mesh[i],
+			float64(fx)*DstCellSize+DstCellSize/2,
+			-float64(fy)*DstCellSize-DstCellSize/2,
+			aog.GeoInfo.Len[2]/2+2+height,
+		)
+	}
+}
+
+func (aog *Cursor3D) VisibleByTile(tl tile_flag.TileFlag) {
+	for i := range aog.Mesh {
+		aog.Visible(i, false)
+	}
 	if !tl.CharPlaceable() {
-		aog.ChangeTile(gClientTile.CursorTiles[2])
+		aog.Visible(2, true)
 	} else {
 		if tl.NoBattle() {
-			aog.ChangeTile(gClientTile.CursorTiles[0])
-
+			aog.Visible(0, true)
 		} else {
-			aog.ChangeTile(gClientTile.CursorTiles[1])
+			aog.Visible(1, true)
 		}
 	}
-	SetPosition(
-		aog.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		aog.GeoInfo.Len[2]/2+1+height,
-	)
 }
 
-func (aog *Cursor3D) RotateX(rad float64) {
-	aog.Mesh.Get("rotation").Set("x", rad)
-}
-func (aog *Cursor3D) RotateY(rad float64) {
-	aog.Mesh.Get("rotation").Set("y", rad)
-}
-func (aog *Cursor3D) RotateZ(rad float64) {
-	aog.Mesh.Get("rotation").Set("z", rad)
-}
-
-func (aog *Cursor3D) Dispose() {
-	// mesh do not need dispose
-	aog.Mesh.Get("geometry").Call("dispose")
-	aog.Mesh.Get("material").Call("dispose")
-	aog.Tex.Call("dispose")
-
-	aog.Cnv = js.Undefined()
-	aog.Ctx = js.Undefined()
-	aog.Mesh = js.Undefined()
-	aog.Tex = js.Undefined()
-	// no need createElement canvas dom obj
+func (ao3d *Cursor3D) Visible(i int, b bool) {
+	ao3d.Mesh[i].Set("visible", b)
 }

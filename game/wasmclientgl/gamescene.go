@@ -84,8 +84,9 @@ func NewGameScene() *GameScene {
 	vp.raycastPlane.Mesh.Set("visible", false)
 
 	vp.cursor = NewCursor3D()
-	vp.cursor.ChangeTile(gClientTile.CursorTiles[0])
-	vp.scene.Call("add", vp.cursor.Mesh)
+	for i := range vp.cursor.Mesh {
+		vp.scene.Call("add", vp.cursor.Mesh[i])
+	}
 
 	vp.scene.Call("add", vp.HP.Mesh)
 	vp.scene.Call("add", vp.SP.Mesh)
