@@ -23,12 +23,9 @@ var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
 }
 
 func preMakeActiveObj3DGeo() {
-	ftList := [factiontype.FactionType_Count]string{
-		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-	}
-	for i, str := range ftList {
-		geo := ThreeJsNew("TextGeometry", str,
+	for i := 0; i < factiontype.FactionType_Count; i++ {
+		ftstr := factiontype.FactionType(i).Rune()
+		geo := ThreeJsNew("TextGeometry", ftstr,
 			map[string]interface{}{
 				"font":           gFont_droid_sans_mono_regular,
 				"size":           DstCellSize * 0.7,
