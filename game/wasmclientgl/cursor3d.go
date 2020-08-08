@@ -26,8 +26,9 @@ func NewCursor3D() *Cursor3D {
 	rtn := &Cursor3D{}
 	geo := ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
 	rtn.GeoInfo = GetGeoInfo(geo)
-	for i, v := range [3]string{"#00ff00", "#ff0000", "#0000ff"} {
+	for i, v := range [3]string{"#00ff00", "#0000ff", "#ff0000"} {
 		mat := GetColorMaterialByCache(v)
+		mat.Set("opacity", 0.5)
 		rtn.Mesh[i] = ThreeJsNew("Mesh", geo, mat)
 	}
 	return rtn
