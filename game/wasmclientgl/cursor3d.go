@@ -35,7 +35,7 @@ func NewCursor3D() *Cursor3D {
 }
 
 func (aog *Cursor3D) SetFieldPosition(fx, fy int, tl tile_flag.TileFlag) {
-	height := GetTile3DTopByCache(tl)
+	height := GetTile3DVisibleTopByCache(tl)
 	aog.VisibleByTile(tl)
 	for i := range aog.Mesh {
 		SetPosition(

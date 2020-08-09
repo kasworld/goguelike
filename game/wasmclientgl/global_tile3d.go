@@ -35,8 +35,8 @@ var gTileZInfo = [tile.Tile_Count]struct {
 	tile.Tree:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 3.0},
 	tile.Road:   {UnitTileZ * 3.0, UnitTileZ * 3.0, UnitTileZ * 6.0},
 	tile.Room:   {UnitTileZ * 3.0, UnitTileZ * 3.0, UnitTileZ * 6.0},
-	tile.Wall:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 18.0},
-	tile.Window: {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 18.0},
+	tile.Wall:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 19.0},
+	tile.Window: {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 19.0},
 	tile.Door:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 3.0},
 	tile.Fog:    {UnitTileZ * 1.0, UnitTileZ * 6.0, UnitTileZ * 3.0},
 	tile.Smoke:  {UnitTileZ * 1.0, UnitTileZ * 6.0, UnitTileZ * 3.0},
@@ -120,13 +120,13 @@ var gTileflagTopCache [1 << uint(tile.Tile_Count)]float64
 // for place obj step
 var gTileflagOnCache [1 << uint(tile.Tile_Count)]float64
 
-func calcTile3DTop(tl tile_flag.TileFlag) float64 {
+func calcTile3DVisibleTop(tl tile_flag.TileFlag) float64 {
 	rtn := 0.0
 	for i := 0; i < tile.Tile_Count; i++ {
 		if !tl.TestByTile(tile.Tile(i)) {
 			continue
 		}
-		z := gTile3D[i].GeoInfo.Len[2] + gTileZInfo[i].Shift
+		z := gTileZInfo[i].Size + gTileZInfo[i].Shift
 		if z > rtn {
 			rtn = z
 		}
@@ -135,16 +135,16 @@ func calcTile3DTop(tl tile_flag.TileFlag) float64 {
 }
 
 // top height for view, use for cursor
-func GetTile3DTopByCache(tl tile_flag.TileFlag) float64 {
+func GetTile3DVisibleTopByCache(tl tile_flag.TileFlag) float64 {
 	z := gTileflagTopCache[tl]
 	if tl != 0 && z == 0 {
-		z = calcTile3DTop(tl)
+		z = calcTile3DVisibleTop(tl)
 		gTileflagTopCache[tl] = z
 	}
 	return z
 }
 
-func calcTile3DOn(tl tile_flag.TileFlag) float64 {
+func calcTile3DStepOn(tl tile_flag.TileFlag) float64 {
 	rtn := 0.0
 	for i := 0; i < tile.Tile_Count; i++ {
 		if !tl.TestByTile(tile.Tile(i)) {
@@ -159,10 +159,10 @@ func calcTile3DOn(tl tile_flag.TileFlag) float64 {
 }
 
 // height for step on
-func GetTile3DOnByCache(tl tile_flag.TileFlag) float64 {
+func GetTile3DStepOnByCache(tl tile_flag.TileFlag) float64 {
 	z := gTileflagTopCache[tl]
 	if tl != 0 && z == 0 {
-		z = calcTile3DOn(tl)
+		z = calcTile3DStepOn(tl)
 		gTileflagTopCache[tl] = z
 	}
 	return z
