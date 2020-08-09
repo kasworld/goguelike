@@ -19,6 +19,34 @@ import (
 var gTile3D [tile.Tile_Count]*Tile3D
 var gTile3DDark [tile.Tile_Count]*Tile3D
 
+func CalcTile3DVisibleTop(tl tile_flag.TileFlag) float64 {
+	rtn := 0.0
+	for i := 0; i < tile.Tile_Count; i++ {
+		if !tl.TestByTile(tile.Tile(i)) {
+			continue
+		}
+		z := gTileZInfo[i].Size + gTileZInfo[i].Shift
+		if z > rtn {
+			rtn = z
+		}
+	}
+	return rtn
+}
+
+func CalcTile3DStepOn(tl tile_flag.TileFlag) float64 {
+	rtn := 0.0
+	for i := 0; i < tile.Tile_Count; i++ {
+		if !tl.TestByTile(tile.Tile(i)) {
+			continue
+		}
+		z := gTileZInfo[i].OnHeight
+		if z > rtn {
+			rtn = z
+		}
+	}
+	return rtn
+}
+
 var gTileZInfo = [tile.Tile_Count]struct {
 	Size     float64
 	Shift    float64
@@ -112,58 +140,4 @@ func preMakeTileMatGeo() {
 	// for i, tl := range gTile3D {
 	// 	jslog.Infof("%v %v %v", tile.Tile(i), tl.GeoInfo, gTileZInfo[i])
 	// }
-}
-
-// for view
-var gTileflagTopCache [1 << uint(tile.Tile_Count)]float64
-
-// for place obj step
-var gTileflagOnCache [1 << uint(tile.Tile_Count)]float64
-
-func calcTile3DVisibleTop(tl tile_flag.TileFlag) float64 {
-	rtn := 0.0
-	for i := 0; i < tile.Tile_Count; i++ {
-		if !tl.TestByTile(tile.Tile(i)) {
-			continue
-		}
-		z := gTileZInfo[i].Size + gTileZInfo[i].Shift
-		if z > rtn {
-			rtn = z
-		}
-	}
-	return rtn
-}
-
-// top height for view, use for cursor
-func GetTile3DVisibleTopByCache(tl tile_flag.TileFlag) float64 {
-	z := gTileflagTopCache[tl]
-	if tl != 0 && z == 0 {
-		z = calcTile3DVisibleTop(tl)
-		gTileflagTopCache[tl] = z
-	}
-	return z
-}
-
-func calcTile3DStepOn(tl tile_flag.TileFlag) float64 {
-	rtn := 0.0
-	for i := 0; i < tile.Tile_Count; i++ {
-		if !tl.TestByTile(tile.Tile(i)) {
-			continue
-		}
-		z := gTileZInfo[i].OnHeight
-		if z > rtn {
-			rtn = z
-		}
-	}
-	return rtn
-}
-
-// height for step on
-func GetTile3DStepOnByCache(tl tile_flag.TileFlag) float64 {
-	z := gTileflagTopCache[tl]
-	if tl != 0 && z == 0 {
-		z = calcTile3DStepOn(tl)
-		gTileflagTopCache[tl] = z
-	}
-	return z
 }

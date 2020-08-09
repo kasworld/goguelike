@@ -89,7 +89,7 @@ func (vp *GameScene) animateMoveArrow(
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shX := DstCellSize * frameProgress * float64(dx)
 		shY := DstCellSize * frameProgress * float64(dy)
-		shZ := GetTile3DStepOnByCache(tl)
+		shZ := CalcTile3DStepOn(tl)
 		ao3d.MoveArrow.SetFieldPosition(fx, fy, shX, shY, shZ)
 	}
 }
@@ -317,7 +317,7 @@ func (vp *GameScene) updateFieldObjInView(
 		}
 		if !addFOuuid[obj.GetUUID()] {
 			tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-			shZ := GetTile3DStepOnByCache(tl)
+			shZ := CalcTile3DStepOn(tl)
 			fo3d.SetFieldPosition(fx, fy, shZ)
 			addFOuuid[obj.GetUUID()] = true
 			fo3d.Label.SetFieldPosition(fx, fy,
@@ -371,7 +371,7 @@ func (vp *GameScene) processNotiObjectList(
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		shZ := GetTile3DStepOnByCache(tl)
+		shZ := CalcTile3DStepOn(tl)
 		if ao.Conditions.TestByCondition(condition.Float) {
 			ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize)
 		} else {
@@ -486,7 +486,7 @@ func (vp *GameScene) UpdatePlayerAO(
 	cf *clientfloor.ClientFloor, ao *c2t_obj.ActiveObjClient, aop *c2t_obj.PlayerActiveObjInfo) {
 
 	fx, fy := ao.X, ao.Y
-	shZ := GetTile3DStepOnByCache(cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)])
+	shZ := CalcTile3DStepOn(cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)])
 	var spw, hpw float64
 	apw := math.Sqrt(leveldata.CalcLevelFromExp(float64(aop.Exp))) + 1
 	vp.AP.ScaleY(apw)
@@ -543,7 +543,7 @@ func (vp *GameScene) makeMovePathInView(
 			ar3d.SetDir(diri)
 			x, y := CalcAroundPos(w, h, vpx, vpy, pos[0], pos[1])
 			tl := cf.Tiles[cf.XWrapSafe(x)][cf.YWrapSafe(y)]
-			shZ := GetTile3DStepOnByCache(tl)
+			shZ := CalcTile3DStepOn(tl)
 			ar3d.SetFieldPosition(x, y, 0, 0, shZ)
 		}
 		// add last ?
