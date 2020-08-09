@@ -130,6 +130,7 @@ func (ao3d *ActiveObj3D) Dispose() {
 	// mesh do not need dispose
 	// ao3d.Mesh.Get("geometry").Call("dispose")
 	// ao3d.Mesh.Get("material").Call("dispose")
+	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
 	ao3d.Mesh = js.Undefined()
 
 	gPoolColorArrow3D.Put(ao3d.MoveArrow)

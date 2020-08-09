@@ -55,7 +55,8 @@ func (p *PoolColorMaterial) Get(color string) js.Value {
 }
 
 func (p *PoolColorMaterial) Put(pb js.Value) {
-	color := pb.Get("color").String()
+	color := "#" + pb.Get("color").Call("getHexString").String()
+	// jslog.Infof("put color %v", color)
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.poolData[color] = append(p.poolData[color], pb)
