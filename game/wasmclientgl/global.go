@@ -30,10 +30,6 @@ const (
 	HelperSize       = DstCellSize * 32
 	UnitTileZ        = DstCellSize / 16
 
-	PoolSizeActiveObj3D = 1000
-	PoolSizeCarryObj3D  = 1000
-	PoolSizeFieldObj3D  = 1000
-
 	// invalid value
 	Tile3DHeightMin = -1000.0
 )
