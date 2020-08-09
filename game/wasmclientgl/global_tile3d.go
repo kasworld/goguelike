@@ -115,28 +115,18 @@ func preMakeTileMatGeo() {
 }
 
 // for view
-var tileflagTopCache [1 << uint(tile.Tile_Count)]float64
+var gTileflagTopCache [1 << uint(tile.Tile_Count)]float64
 
 // for place obj step
-var tileflagOnCache [1 << uint(tile.Tile_Count)]float64
-
-func init() {
-	for i := range tileflagTopCache {
-		tileflagTopCache[i] = Tile3DHeightMin
-	}
-	for i := range tileflagOnCache {
-		tileflagOnCache[i] = Tile3DHeightMin
-	}
-}
+var gTileflagOnCache [1 << uint(tile.Tile_Count)]float64
 
 func calcTile3DTop(tl tile_flag.TileFlag) float64 {
-	rtn := Tile3DHeightMin
+	rtn := 0.0
 	for i := 0; i < tile.Tile_Count; i++ {
 		if !tl.TestByTile(tile.Tile(i)) {
 			continue
 		}
 		z := gTile3D[i].GeoInfo.Len[2] + gTileZInfo[i].Shift
-		// z := gTileZInfo[i].Size + gTileZInfo[i].Shift
 		if z > rtn {
 			rtn = z
 		}
@@ -146,19 +136,16 @@ func calcTile3DTop(tl tile_flag.TileFlag) float64 {
 
 // top height for view, use for cursor
 func GetTile3DTopByCache(tl tile_flag.TileFlag) float64 {
-	z := tileflagTopCache[tl]
-	if z == Tile3DHeightMin {
+	z := gTileflagTopCache[tl]
+	if tl != 0 && z == 0 {
 		z = calcTile3DTop(tl)
-		if z == Tile3DHeightMin { // empty tile
-			z = 0 // prevent recalc empty tile
-		}
-		tileflagTopCache[tl] = z
+		gTileflagTopCache[tl] = z
 	}
 	return z
 }
 
 func calcTile3DOn(tl tile_flag.TileFlag) float64 {
-	rtn := Tile3DHeightMin
+	rtn := 0.0
 	for i := 0; i < tile.Tile_Count; i++ {
 		if !tl.TestByTile(tile.Tile(i)) {
 			continue
@@ -173,13 +160,10 @@ func calcTile3DOn(tl tile_flag.TileFlag) float64 {
 
 // height for step on
 func GetTile3DOnByCache(tl tile_flag.TileFlag) float64 {
-	z := tileflagTopCache[tl]
-	if z == Tile3DHeightMin {
+	z := gTileflagTopCache[tl]
+	if tl != 0 && z == 0 {
 		z = calcTile3DOn(tl)
-		if z == Tile3DHeightMin { // empty tile
-			z = 0 // prevent recalc empty tile
-		}
-		tileflagTopCache[tl] = z
+		gTileflagTopCache[tl] = z
 	}
 	return z
 }

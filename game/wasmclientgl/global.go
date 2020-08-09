@@ -29,9 +29,6 @@ const (
 	DstCellSize      = 64.0
 	HelperSize       = DstCellSize * 32
 	UnitTileZ        = DstCellSize / 16
-
-	// invalid value
-	Tile3DHeightMin = -1000.0
 )
 
 var gRnd *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
