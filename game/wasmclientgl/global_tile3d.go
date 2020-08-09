@@ -46,68 +46,68 @@ func preMakeTileMatGeo() {
 	var tlt tile.Tile
 
 	tlt = tile.Swamp
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 0.5)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 0.5).MakeSrcDark()
 
 	tlt = tile.Soil
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Stone
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Sand
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Sea
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 0.5)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 0.5).MakeSrcDark()
 
 	tlt = tile.Magma
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Ice
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 0.5)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 0.5).MakeSrcDark()
 
 	tlt = tile.Road
-	gTile3D[tlt] = NewTile3D_OctCylinderTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_OctCylinderTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_OctCylinderTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_OctCylinderTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Room
-	gTile3D[tlt] = NewTile3D_OctCylinderTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_OctCylinderTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_OctCylinderTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_OctCylinderTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Fog
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 0.5)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 0.5).MakeSrcDark()
 
 	tlt = tile.Smoke
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 0.5)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 0.5).MakeSrcDark()
 
 	tlt = tile.Grass
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Tree
-	gTile3D[tlt] = NewTile3D_Tree()
-	gTile3DDark[tlt] = NewTile3D_Tree().MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_Tree(1.0)
+	gTile3DDark[tlt] = NewTile3D_Tree(1.0).MakeSrcDark()
 
 	tlt = tile.Wall
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 1.0)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 1.0).MakeSrcDark()
 
 	tlt = tile.Window
-	gTile3D[tlt] = NewTile3D_BoxTexture(tlt)
-	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt).MakeSrcDark()
+	gTile3D[tlt] = NewTile3D_BoxTexture(tlt, 0.5)
+	gTile3DDark[tlt] = NewTile3D_BoxTexture(tlt, 0.5).MakeSrcDark()
 
 	tlt = tile.Door
-	gTile3D[tlt] = NewTile3D_Door()
-	gTile3DDark[tlt] = NewTile3D_Door()
+	gTile3D[tlt] = NewTile3D_Door(0.5)
+	gTile3DDark[tlt] = NewTile3D_Door(0.5)
 
 	// for i, tl := range gTile3D {
 	// 	jslog.Infof("%v %v %v", tile.Tile(i), tl.GeoInfo, gTileZInfo[i])
