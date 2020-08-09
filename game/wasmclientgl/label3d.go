@@ -78,13 +78,13 @@ func NewLabel3D(str string) *Label3D {
 	cnv.Set("width", len(str)*DstCellSize)
 	cnv.Set("height", DstCellSize)
 	height := DstCellSize / 3
-	font := fmt.Sprintf("%dpx sans-serif", height)
+	font := fmt.Sprintf("%vpx sans-serif", height)
 
 	ctx.Set("font", font)
 	textWidth := ctx.Call("measureText", str).Get("width").Int()
 	canvasWidth := NextPowerOf2(textWidth)
 	cnv.Set("width", canvasWidth)
-	canvasHeight := NextPowerOf2(height)
+	canvasHeight := NextPowerOf2(int(height))
 	cnv.Set("height", canvasHeight)
 
 	ctx.Set("fillStyle", "#00000080")

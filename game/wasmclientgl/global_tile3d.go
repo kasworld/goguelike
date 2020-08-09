@@ -32,7 +32,7 @@ var gTileZInfo = [tile.Tile_Count]struct {
 	tile.Magma:  {UnitTileZ * 1.0, UnitTileZ * 0.0, UnitTileZ * 1.0},
 	tile.Ice:    {UnitTileZ * 4.0, UnitTileZ * 0.0, UnitTileZ * 4.0},
 	tile.Grass:  {UnitTileZ * 5.0, UnitTileZ * 0.0, UnitTileZ * 3.0},
-	tile.Tree:   {UnitTileZ * 0.0, UnitTileZ * 3.0, UnitTileZ * 3.0},
+	tile.Tree:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 3.0},
 	tile.Road:   {UnitTileZ * 3.0, UnitTileZ * 3.0, UnitTileZ * 6.0},
 	tile.Room:   {UnitTileZ * 3.0, UnitTileZ * 3.0, UnitTileZ * 6.0},
 	tile.Wall:   {UnitTileZ * 16.0, UnitTileZ * 3.0, UnitTileZ * 18.0},
@@ -109,12 +109,8 @@ func preMakeTileMatGeo() {
 	gTile3D[tlt] = NewTile3D_Door()
 	gTile3DDark[tlt] = NewTile3D_Door()
 
-	for i := 0; i < tile.Tile_Count; i++ {
-		gTile3D[i].Shift[2] = gTileZInfo[i].Shift
-		gTile3DDark[i].Shift[2] = gTileZInfo[i].Shift
-	}
 	// for i, tl := range gTile3D {
-	// 	jslog.Infof("%v %v", tile.Tile(i), tl.GeoInfo)
+	// 	jslog.Infof("%v %v %v", tile.Tile(i), tl.GeoInfo, gTileZInfo[i])
 	// }
 }
 

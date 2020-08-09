@@ -34,19 +34,19 @@ type Tile3D struct {
 	Tex     js.Value
 	Mat     js.Value
 	Geo     js.Value
-	Shift   [3]float64
 	GeoInfo GeoInfo
+	Tile    tile.Tile
 }
 
 func (aog *Tile3D) MakePosVector3(fx, fy int) js.Value {
 	return ThreeJsNew("Vector3",
-		aog.Shift[0]+float64(fx)*DstCellSize+DstCellSize/2,
-		-aog.Shift[1]-float64(fy)*DstCellSize-DstCellSize/2,
-		aog.Shift[2]+aog.GeoInfo.Len[2]/2,
+		float64(fx)*DstCellSize+DstCellSize/2,
+		-float64(fy)*DstCellSize-DstCellSize/2,
+		aog.GeoInfo.Len[2]/2+gTileZInfo[aog.Tile].Shift,
 	)
 }
 
-func newTile3D() *Tile3D {
+func newTile3D(tl tile.Tile) *Tile3D {
 	cnv := js.Global().Get("document").Call("createElement", "CANVAS")
 	ctx := cnv.Call("getContext", "2d")
 	ctx.Set("imageSmoothingEnabled", false)
@@ -59,12 +59,15 @@ func newTile3D() *Tile3D {
 		},
 	)
 	mat.Set("transparent", true)
-	return &Tile3D{
-		Cnv: cnv,
-		Ctx: ctx,
-		Tex: tex,
-		Mat: mat,
+	aog := &Tile3D{
+		Tile: tl,
+		Cnv:  cnv,
+		Ctx:  ctx,
+		Tex:  tex,
+		Mat:  mat,
 	}
+	aog.initSrc(tl)
+	return aog
 }
 
 // for texture tile
@@ -106,7 +109,7 @@ func (aog *Tile3D) MakeSrcDark() *Tile3D {
 }
 
 // func NewTile3D_PlaneGeo(tl tile.Tile) *Tile3D {
-// 	t3d := newTile3D().initSrc(tl)
+// 	t3d := newTile3D(tl)
 // 	// t3d.Geo = ThreeJsNew("PlaneGeometry", DstCellSize, DstCellSize)
 // 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, DstCellSize/16)
 // 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
@@ -115,17 +118,20 @@ func (aog *Tile3D) MakeSrcDark() *Tile3D {
 // }
 
 func NewTile3D_BoxTexture(tl tile.Tile) *Tile3D {
-	t3d := newTile3D().initSrc(tl)
+	t3d := newTile3D(tl)
 	t3d.Geo = ThreeJsNew("BoxGeometry", DstCellSize-1, DstCellSize-1, gTileZInfo[tl].Size)
+	t3d.Geo.Call("center")
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
 	return t3d
 }
 
 func NewTile3D_OctCylinderTexture(tl tile.Tile) *Tile3D {
-	t3d := newTile3D().initSrc(tl)
+	t3d := newTile3D(tl)
 	t3d.Geo = ThreeJsNew("CylinderGeometry",
 		DstCellSize/2, DstCellSize/2, gTileZInfo[tl].Size, 8)
+	t3d.Geo.Call("center")
+
 	t3d.Geo.Call("rotateX", math.Pi/2)
 	t3d.Geo.Call("rotateZ", math.Pi*2/8/2)
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
@@ -135,7 +141,7 @@ func NewTile3D_OctCylinderTexture(tl tile.Tile) *Tile3D {
 
 func NewTile3D_Tree() *Tile3D {
 	tl := tile.Tree
-	t3d := newTile3D().initSrc(tl)
+	t3d := newTile3D(tl)
 	t3d.Geo = MakeTreeGeo()
 	t3d.GeoInfo = GetGeoInfo(t3d.Geo)
 	t3d.DrawTexture(0, 0)
@@ -168,7 +174,7 @@ func MakeTreeGeo() js.Value {
 }
 
 func NewTile3D_Door() *Tile3D {
-	t3d := newTile3D().initSrc(tile.Door)
+	t3d := newTile3D(tile.Door)
 
 	t3d.Mat.Set("side", ThreeJs().Get("DoubleSide"))
 	t3d.Mat.Set("opacity", 0.5)
