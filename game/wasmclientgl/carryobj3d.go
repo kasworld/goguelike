@@ -26,7 +26,7 @@ func NewCarryObj3DGeo(str string) js.Value {
 	refSize := float64(DstCellSize) / 2
 	geo := ThreeJsNew("TextGeometry", str,
 		map[string]interface{}{
-			"font":           gFont_droid_sans_mono_regular,
+			"font":           gFont_helvetiker_regular,
 			"size":           refSize * 0.7,
 			"height":         refSize * 0.3,
 			"curveSegments":  refSize / 3,
@@ -116,8 +116,8 @@ type CarryObj3D struct {
 }
 
 func NewCarryObj3D(str, color string) *CarryObj3D {
-	mat := GetColorMaterialByCache(color)
-	mat.Set("transparent", true)
+	mat := gPoolColorMaterial.Get((color))
+	mat.Set("opacity", 1)
 	geo := gPoolCarryObj3DGeo.Get(str)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &CarryObj3D{

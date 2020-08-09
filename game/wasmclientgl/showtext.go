@@ -437,7 +437,7 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 	fmt.Fprintf(&buf, "Sent move packet lastTurn %d<br/>", app.movePacketPerTurn)
 	fmt.Fprintf(&buf, "Sent act packet lastTurn %d<br/>", app.actPacketPerTurn)
 
-	fmt.Fprintf(&buf, "gColorMaterialCache %v<br/>", len(gColorMaterialCache))
+	fmt.Fprintf(&buf, "%v<br/>", gPoolColorMaterial)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolCarryObj3DGeo)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolFieldObj3D)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolColorArrow3D)

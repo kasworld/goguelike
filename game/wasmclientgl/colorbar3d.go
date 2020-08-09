@@ -78,6 +78,7 @@ func NewColorBar3D(colorstr string) *ColorBar3D {
 		},
 	)
 	mat.Set("transparent", true)
+	mat.Set("opacity", 0.9)
 
 	geo := ThreeJsNew("CylinderGeometry", 1, 1, DstCellSize)
 	geo.Call("rotateZ", math.Pi/2)

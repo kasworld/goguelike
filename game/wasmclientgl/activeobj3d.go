@@ -52,7 +52,10 @@ type ActiveObj3D struct {
 }
 
 func NewActiveObj3D(ft factiontype.FactionType, name string) *ActiveObj3D {
-	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
+	mat := gPoolColorMaterial.Get(ft.Color24().ToHTMLColorString())
+	// mat.Set("transparent", true)
+	mat.Set("opacity", 1)
+
 	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &ActiveObj3D{
@@ -69,9 +72,9 @@ func (ao3d *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bo
 		return ao3d.Mesh, false
 	}
 	oldmesh := ao3d.Mesh
-	// ao3d.Mesh.Get("geometry").Call("dispose")
-	// ao3d.Mesh.Get("material").Call("dispose")
-	mat := GetColorMaterialByCache(ft.Color24().ToHTMLColorString())
+	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
+	mat := gPoolColorMaterial.Get(ft.Color24().ToHTMLColorString())
+	mat.Set("opacity", 1)
 	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	ao3d.Faction = ft

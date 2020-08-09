@@ -121,8 +121,9 @@ func NewFieldObj3D(
 	DisplayType fieldobjdisplaytype.FieldObjDisplayType) *FieldObj3D {
 
 	str, color := FieldObj2StrColor(ActType, DisplayType)
-	mat := GetColorMaterialByCache(color)
-	mat.Set("transparent", true)
+	mat := gPoolColorMaterial.Get(color)
+	// mat.Set("transparent", true)
+	mat.Set("opacity", 1)
 	geo := NewFieldObjGeo(str)
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &FieldObj3D{
