@@ -61,7 +61,7 @@ var attrib = [EquipSlotType_Count]struct {
 			"Copper", "Brass", "Bronze", "Iron", "Steel", "Duralumin", "Silver", "Gold", "Platinum", "Titanium",
 		},
 	},
-	Shield: {false, true, .25, ")",
+	Shield: {false, true, .25, "(",
 		[]string{
 			"Buckler", "LightShield", "MediumShield", "HeavyShield", "TowerShield",
 		},

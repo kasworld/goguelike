@@ -131,8 +131,8 @@ func NewCarryObj3D(str, color string) *CarryObj3D {
 func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shInfo ShiftInfo) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+aog.GeoInfo.Len[0]/2+shInfo.X,
-		-float64(fy)*DstCellSize-aog.GeoInfo.Len[1]/2-shInfo.Y,
+		float64(fx)*DstCellSize+shInfo.X,
+		-float64(fy)*DstCellSize-shInfo.Y,
 		aog.GeoInfo.Len[2]/2+shInfo.Z,
 	)
 }
@@ -164,17 +164,19 @@ type ShiftInfo struct {
 
 // equipped shift, around ao
 var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
-	equipslottype.Helmet: {DstCellSize * -0.33, DstCellSize * 0.0, DstCellSize * 0.66},
-	equipslottype.Amulet: {DstCellSize * 1.00, DstCellSize * 0.0, DstCellSize * 0.66},
+	// center
+	equipslottype.Helmet:   {DstCellSize * 0.5, DstCellSize * 0.00, DstCellSize * 1.00},
+	equipslottype.Amulet:   {DstCellSize * 0.5, DstCellSize * 0.33, DstCellSize * 1.00},
+	equipslottype.Armor:    {DstCellSize * 0.5, DstCellSize * 0.66, DstCellSize * 1.00},
+	equipslottype.Footwear: {DstCellSize * 0.5, DstCellSize * 1.00, DstCellSize * 1.00},
 
-	equipslottype.Weapon: {DstCellSize * -0.33, DstCellSize * 0.25, DstCellSize * 0.66},
-	equipslottype.Shield: {DstCellSize * 1.00, DstCellSize * 0.25, DstCellSize * 0.66},
+	// right
+	equipslottype.Weapon:   {DstCellSize * 1.00, DstCellSize * 0.33, DstCellSize * 1.00},
+	equipslottype.Gauntlet: {DstCellSize * 1.00, DstCellSize * 0.66, DstCellSize * 1.00},
 
-	equipslottype.Ring:     {DstCellSize * -0.33, DstCellSize * 0.50, DstCellSize * 0.66},
-	equipslottype.Gauntlet: {DstCellSize * 1.00, DstCellSize * 0.50, DstCellSize * 0.66},
-
-	equipslottype.Armor:    {DstCellSize * -0.33, DstCellSize * 0.75, DstCellSize * 0.66},
-	equipslottype.Footwear: {DstCellSize * 1.00, DstCellSize * 0.75, DstCellSize * 0.66},
+	// left
+	equipslottype.Shield: {DstCellSize * 0.00, DstCellSize * 0.33, DstCellSize * 1.00},
+	equipslottype.Ring:   {DstCellSize * 0.00, DstCellSize * 0.66, DstCellSize * 1.00},
 }
 
 func CarryObjClientOnFloor2DrawInfo(
