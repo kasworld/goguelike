@@ -511,6 +511,12 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
 			for _, v := range aoList {
 				dstAo := v.O.(gamei.ActiveObjectI)
+				if ao.GetUUID() == dstAo.GetUUID() {
+					continue
+				}
+				if dstAo.GetTurnData().Condition.TestByCondition(condition.Contagion) {
+					continue
+				}
 				if fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
 					fob := fieldobjacttype.GetBuffByFieldObjActType(fieldobjacttype.Contagion)
 					dstAo.GetBuffManager().Add(

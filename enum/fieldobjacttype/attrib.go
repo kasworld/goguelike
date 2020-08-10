@@ -73,7 +73,7 @@ var attrib = [FieldObjActType_Count]struct {
 	Greasy:          {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
 	Drunken:         {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
 	Sleepy:          {"?", true, true, 0.1, false, false, htmlcolors.DeepPink},
-	Contagion:       {"?", true, true, 0.1, false, false, htmlcolors.DarkGreen},
+	Contagion:       {"?", true, true, 0.5, false, false, htmlcolors.DarkGreen},
 }
 
 // try act on fieldobj
