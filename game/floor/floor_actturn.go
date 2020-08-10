@@ -513,6 +513,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
 			for _, v := range aoList {
 				dstAo := v.O.(gamei.ActiveObjectI)
+				if !dstAo.IsAlive() {
+					continue
+				}
 				if ao.GetUUID() == dstAo.GetUUID() {
 					continue
 				}
