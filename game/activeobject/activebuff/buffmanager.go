@@ -59,6 +59,15 @@ func (bm *BuffManager) Add(name string, clearOnDeath bool, replaceSameName bool,
 	return false
 }
 
+func (bm *BuffManager) Exist(name string) bool {
+	for _, v := range bm.BuffList {
+		if v != nil && v.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
 func (bm *BuffManager) ClearOnDeath() {
 	bm.Mutex.Lock()
 	defer bm.Mutex.Unlock()

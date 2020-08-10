@@ -506,7 +506,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			ao.AppendTurnResult(turnresult.New(turnresulttype.DropCarryObj, co2drop, 0))
 		}
-		if ao.GetTurnData().Condition.TestByCondition(condition.Contagion) {
+
+		bufname := fieldobjacttype.Contagion.String()
+		if ao.GetBuffManager().Exist(bufname) {
 			// infact other near
 			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
 			for _, v := range aoList {
@@ -514,13 +516,10 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				if ao.GetUUID() == dstAo.GetUUID() {
 					continue
 				}
-				if dstAo.GetTurnData().Condition.TestByCondition(condition.Contagion) {
-					continue
-				}
 				if fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
 					fob := fieldobjacttype.GetBuffByFieldObjActType(fieldobjacttype.Contagion)
-					dstAo.GetBuffManager().Add(
-						fieldobjacttype.Contagion.String(), true, true, fob)
+					dstAo.GetBuffManager().Add(bufname, true, true, fob)
+					// fmt.Printf("%v %v to %v\n", bufname, ao, dstAo)
 				}
 			}
 		}
