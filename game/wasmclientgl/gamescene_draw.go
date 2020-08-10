@@ -311,9 +311,8 @@ func (vp *GameScene) updateFieldObjInView(
 			vp.jsSceneFOs[obj.GetUUID()] = fo3d
 			vp.scene.Call("add", fo3d.Mesh)
 
-			lb3d := gPoolLabel3D.Get(fo.Message)
-			fo3d.Label = lb3d
-			vp.scene.Call("add", lb3d.Mesh)
+			fo3d.Label = gPoolLabel3D.Get(fo.Message)
+			vp.scene.Call("add", fo3d.Label.Mesh)
 		}
 		if !addFOuuid[obj.GetUUID()] {
 			tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
@@ -321,7 +320,7 @@ func (vp *GameScene) updateFieldObjInView(
 			fo3d.SetFieldPosition(fx, fy, shZ)
 			addFOuuid[obj.GetUUID()] = true
 			fo3d.Label.SetFieldPosition(fx, fy,
-				0, 0, DstCellSize+2+shZ)
+				0, 0, fo3d.GeoInfo.Len[2]+2+shZ)
 		} else {
 			// same fo in gXYLenListView
 			// field too small
@@ -335,10 +334,10 @@ func (vp *GameScene) updateFieldObjInView(
 			vp.scene.Call("remove", fo3d.Mesh)
 			gPoolFieldObj3D.Put(fo3d)
 			delete(vp.jsSceneFOs, id)
-			lb3d := fo3d.Label
+
+			vp.scene.Call("remove", fo3d.Label.Mesh)
+			gPoolLabel3D.Put(fo3d.Label)
 			fo3d.Label = nil
-			vp.scene.Call("remove", lb3d.Mesh)
-			gPoolLabel3D.Put(lb3d)
 		}
 	}
 }
