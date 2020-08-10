@@ -29,7 +29,7 @@ func (as ActiveBuff) String() string {
 
 type ActiveBuff struct {
 	Name         string
-	ClearOnDeath bool
+	ClearOnRebirth bool
 	Buff         []statusoptype.OpArg
 	AppliedCount int
 }

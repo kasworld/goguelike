@@ -28,7 +28,6 @@ func (ao *ActiveObject) Noti_Death(f gamei.FloorI) {
 	ao.battleExp *= gameconst.ActiveObjExp_DieRate
 	ao.remainTurn2Rebirth += gameconst.ActiveObjRebirthWaitTurn
 	ao.remainTurn2Act = 0
-	ao.buffManager.ClearOnDeath()
 	ao.achieveStat.Inc(achievetype.Death)
 	if ao.ai != nil {
 		ao.ai.ResetPlan()

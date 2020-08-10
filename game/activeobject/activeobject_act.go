@@ -164,6 +164,7 @@ func (ao *ActiveObject) ApplyTurnAct() {
 
 func (ao *ActiveObject) TryRebirth() error {
 	if ao.remainTurn2Rebirth == 0 && !ao.IsAlive() {
+		ao.buffManager.ClearOnRebirth()
 		ao.homefloor.GetTower().GetReqCh() <- &cmd2tower.ActiveObjRebirth{
 			ao,
 		}

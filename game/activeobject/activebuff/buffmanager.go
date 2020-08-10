@@ -32,11 +32,11 @@ func New() *BuffManager {
 }
 
 // Add return true if replace
-func (bm *BuffManager) Add(name string, clearOnDeath bool, replaceSameName bool, tb []statusoptype.OpArg) bool {
+func (bm *BuffManager) Add(name string, clearOnRebirth bool, replaceSameName bool, tb []statusoptype.OpArg) bool {
 	afs := &ActiveBuff{
-		Name:         name,
-		ClearOnDeath: clearOnDeath,
-		Buff:         tb,
+		Name:           name,
+		ClearOnRebirth: clearOnRebirth,
+		Buff:           tb,
 	}
 	bm.Mutex.Lock()
 	defer bm.Mutex.Unlock()
@@ -68,14 +68,14 @@ func (bm *BuffManager) Exist(name string) bool {
 	return false
 }
 
-func (bm *BuffManager) ClearOnDeath() {
+func (bm *BuffManager) ClearOnRebirth() {
 	bm.Mutex.Lock()
 	defer bm.Mutex.Unlock()
 	for i, v := range bm.BuffList {
 		if v == nil {
 			continue
 		}
-		if v.ClearOnDeath {
+		if v.ClearOnRebirth {
 			bm.BuffList[i] = nil
 		}
 	}
