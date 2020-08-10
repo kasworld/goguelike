@@ -14,6 +14,7 @@ package floor
 import (
 	"time"
 
+	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/slippperydata"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -484,7 +485,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 	}
 
-	// handle condition greasy
+	// handle condition greasy Contagion
+	nearXYLen := findnear.NewXYLenList(3, 3)
 	for _, ao := range aoListToProcessInTurn {
 		if !ao.IsAlive() {
 			continue
@@ -503,6 +505,18 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				f.log.Error("%v %v %v", f, ao, err)
 			}
 			ao.AppendTurnResult(turnresult.New(turnresulttype.DropCarryObj, co2drop, 0))
+		}
+		if ao.GetTurnData().Condition.TestByCondition(condition.Contagion) {
+			// infact other near
+			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
+			for _, v := range aoList {
+				dstAo := v.O.(gamei.ActiveObjectI)
+				if fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
+					fob := fieldobjacttype.GetBuffByFieldObjActType(fieldobjacttype.Contagion)
+					dstAo.GetBuffManager().Add(
+						fieldobjacttype.Contagion.String(), true, true, fob)
+				}
+			}
 		}
 	}
 
