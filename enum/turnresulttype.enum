@@ -1,4 +1,4 @@
-None
+None empty make error
 AttackTo
 AttackedFrom
 Kill
@@ -10,3 +10,5 @@ SPDamageFromTrap
 DropCarryObj
 DropMoney
 DropMoneyInsteadOfCarryObj
+ContagionTo
+ContagionFrom

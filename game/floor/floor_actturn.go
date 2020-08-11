@@ -522,6 +522,10 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				if fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
 					fob := fieldobjacttype.GetBuffByFieldObjActType(fieldobjacttype.Contagion)
 					dstAo.GetBuffManager().Add(bufname, true, true, fob)
+
+					ao.AppendTurnResult(turnresult.New(turnresulttype.ContagionTo, dstAo, 0))
+					dstAo.AppendTurnResult(turnresult.New(turnresulttype.ContagionFrom, ao, 0))
+
 					// fmt.Printf("%v %v to %v\n", bufname, ao, dstAo)
 				}
 			}

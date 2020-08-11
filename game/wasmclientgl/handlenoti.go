@@ -421,7 +421,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 				nickname = dstao.NickName
 			}
 			app.systemMessage.Appendf("Killed by %v", aostr)
-			app.NotiMessage.AppendTf(tcsInfo, "You are killed by %v", nickname)
+			app.NotiMessage.AppendTf(tcsInfo, "Killed by %v", nickname)
 
 		case turnresulttype.HPDamageFromTrap:
 			app.systemMessage.Appendf("HP Damage from Trap %4.1f", v.Arg)
@@ -434,6 +434,27 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		case turnresulttype.DeadByTile:
 			app.systemMessage.Append("Die by Tile damage")
 			app.NotiMessage.AppendTf(tcsInfo, "Die by Tile damage")
+
+		case turnresulttype.ContagionFrom:
+			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+			aostr := ""
+			nickname := ""
+			if exist {
+				aostr = obj2ColorStr(dstao)
+				nickname = dstao.NickName
+			}
+			app.systemMessage.Appendf("Contagion from %v", aostr)
+			app.NotiMessage.AppendTf(tcsInfo, "Contagion from %v", nickname)
+		case turnresulttype.ContagionTo:
+			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+			aostr := ""
+			nickname := ""
+			if exist {
+				aostr = obj2ColorStr(dstao)
+				nickname = dstao.NickName
+			}
+			app.systemMessage.Appendf("Contagion to %v", aostr)
+			app.NotiMessage.AppendTf(tcsInfo, "Contagion to %v", nickname)
 		}
 	}
 
