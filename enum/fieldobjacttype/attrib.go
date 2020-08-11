@@ -73,7 +73,7 @@ var attrib = [FieldObjActType_Count]struct {
 	Greasy:          {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
 	Drunken:         {"?", true, true, 0.5, false, false, htmlcolors.DeepPink},
 	Sleepy:          {"?", true, true, 0.1, false, false, htmlcolors.DeepPink},
-	Contagion:       {"?", true, true, 0.5, false, false, htmlcolors.DarkGreen},
+	Contagion:       {"?", true, true, 0.2, false, false, htmlcolors.DarkGreen},
 }
 
 // try act on fieldobj
@@ -154,7 +154,7 @@ var foAct2BuffList = [FieldObjActType_Count][]statusoptype.OpArg{
 	Sleepy: statusoptype.RepeatShift(200, 4,
 		statusoptype.OpArg{statusoptype.SetCondition, condition.Sleep},
 	),
-	Contagion: statusoptype.RepeatShift(200, 4,
+	Contagion: statusoptype.RepeatShift(400, 4,
 		statusoptype.OpArg{statusoptype.SetCondition, condition.Contagion},
 	),
 }

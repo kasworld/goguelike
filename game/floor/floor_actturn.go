@@ -488,11 +488,40 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	// handle condition greasy Contagion
 	nearXYLen := findnear.NewXYLenList(3, 3)
 	for _, ao := range aoListToProcessInTurn {
-		if !ao.IsAlive() {
-			continue
-		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
+			continue
+		}
+
+		// contagion can infected from dead ao
+		bufname := fieldobjacttype.Contagion.String()
+		if ao.GetBuffManager().Exist(bufname) {
+			// infact other near
+			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
+			for _, v := range aoList {
+				dstAo := v.O.(gamei.ActiveObjectI)
+				if !dstAo.IsAlive() { // skip dead dst
+					continue
+				}
+				if ao.GetUUID() == dstAo.GetUUID() { // skip self
+					continue
+				}
+				if dstAo.GetBuffManager().Exist(bufname) { // skip infected dst
+					continue
+				}
+				if fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
+					fob := fieldobjacttype.GetBuffByFieldObjActType(fieldobjacttype.Contagion)
+					dstAo.GetBuffManager().Add(bufname, true, true, fob)
+
+					ao.AppendTurnResult(turnresult.New(turnresulttype.ContagionTo, dstAo, 0))
+					dstAo.AppendTurnResult(turnresult.New(turnresulttype.ContagionFrom, ao, 0))
+
+					// fmt.Printf("%v %v to %v\n", bufname, ao, dstAo)
+				}
+			}
+		}
+
+		if !ao.IsAlive() {
 			continue
 		}
 		if ao.GetTurnData().Condition.TestByCondition(condition.Greasy) {
@@ -507,29 +536,6 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			ao.AppendTurnResult(turnresult.New(turnresulttype.DropCarryObj, co2drop, 0))
 		}
 
-		bufname := fieldobjacttype.Contagion.String()
-		if ao.GetBuffManager().Exist(bufname) {
-			// infact other near
-			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
-			for _, v := range aoList {
-				dstAo := v.O.(gamei.ActiveObjectI)
-				if !dstAo.IsAlive() {
-					continue
-				}
-				if ao.GetUUID() == dstAo.GetUUID() {
-					continue
-				}
-				if fieldobjacttype.Contagion.TriggerRate() > f.rnd.Float64() {
-					fob := fieldobjacttype.GetBuffByFieldObjActType(fieldobjacttype.Contagion)
-					dstAo.GetBuffManager().Add(bufname, true, true, fob)
-
-					ao.AppendTurnResult(turnresult.New(turnresulttype.ContagionTo, dstAo, 0))
-					dstAo.AppendTurnResult(turnresult.New(turnresulttype.ContagionFrom, ao, 0))
-
-					// fmt.Printf("%v %v to %v\n", bufname, ao, dstAo)
-				}
-			}
-		}
 	}
 
 	// set ao act result
