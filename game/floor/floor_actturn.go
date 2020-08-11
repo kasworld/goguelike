@@ -486,7 +486,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 
 	// handle condition greasy Contagion
-	nearXYLen := findnear.NewXYLenList(3, 3)
+	nearXYLen := findnear.NewXYLenList(5, 5)
 	for _, ao := range aoListToProcessInTurn {
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
