@@ -14,7 +14,7 @@ package floor
 import (
 	"time"
 
-	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/config/contagionarea"
 	"github.com/kasworld/goguelike/config/slippperydata"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -486,7 +486,6 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 
 	// handle condition greasy Contagion
-	nearXYLen := findnear.NewXYLenList(5, 5)
 	for _, ao := range aoListToProcessInTurn {
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
@@ -497,7 +496,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		bufname := fieldobjacttype.Contagion.String()
 		if ao.GetBuffManager().Exist(bufname) {
 			// infact other near
-			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(nearXYLen, aox, aoy, 10)
+			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(contagionarea.ContagionArea, aox, aoy, 10)
 			for _, v := range aoList {
 				dstAo := v.O.(gamei.ActiveObjectI)
 				if !dstAo.IsAlive() { // skip dead dst
