@@ -359,103 +359,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	for _, v := range newOLNotiData.ActiveObj.TurnResult {
-		switch v.ResultType {
-		default:
-			jslog.Error("unknown acttype %v", v)
-
-		case turnresulttype.DropCarryObj:
-			o, exist := app.CaObjUUID2CaObjClient[v.DstUUID]
-			if exist {
-				app.systemMessage.Appendf("Drop %v", obj2ColorStr(o))
-			} else {
-				jslog.Errorf("not found %v", v)
-			}
-
-		case turnresulttype.DropMoney:
-			app.systemMessage.Appendf("Drop %v", makeMoneyColor(int(v.Arg)))
-
-		case turnresulttype.DropMoneyInsteadOfCarryObj:
-			o, exist := app.CaObjUUID2CaObjClient[v.DstUUID]
-			if exist {
-				app.systemMessage.Appendf("Drop %v for %v",
-					makeMoneyColor(int(v.Arg)), obj2ColorStr(o),
-				)
-			} else {
-				jslog.Errorf("not found %v", v)
-			}
-
-		case turnresulttype.AttackTo:
-			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
-			aostr := ""
-			if exist {
-				aostr = obj2ColorStr(dstao)
-			}
-			app.systemMessage.Appendf("%s %v",
-				wrapspan.ColorTextf("Lime", "Damage  %4.1f to", v.Arg),
-				aostr)
-		case turnresulttype.Kill:
-			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
-			aostr := ""
-			nickname := ""
-			if exist {
-				aostr = obj2ColorStr(dstao)
-				nickname = dstao.NickName
-			}
-			app.systemMessage.Appendf("Kill %v", aostr)
-			app.NotiMessage.AppendTf(tcsInfo, "You kill %v", nickname)
-		case turnresulttype.AttackedFrom:
-			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
-			aostr := ""
-			if exist {
-				aostr = obj2ColorStr(dstao)
-			}
-			app.systemMessage.Appendf("%s %v",
-				wrapspan.ColorTextf("Red", "Damage %4.1f from", v.Arg),
-				aostr)
-		case turnresulttype.KilledBy:
-			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
-			aostr := ""
-			nickname := ""
-			if exist {
-				aostr = obj2ColorStr(dstao)
-				nickname = dstao.NickName
-			}
-			app.systemMessage.Appendf("Killed by %v", aostr)
-			app.NotiMessage.AppendTf(tcsInfo, "Killed by %v", nickname)
-
-		case turnresulttype.HPDamageFromTrap:
-			app.systemMessage.Appendf("HP Damage from Trap %4.1f", v.Arg)
-
-		case turnresulttype.SPDamageFromTrap:
-			app.systemMessage.Appendf("SP Damage from Trap %4.1f", v.Arg)
-
-		case turnresulttype.DamagedByTile:
-
-		case turnresulttype.DeadByTile:
-			app.systemMessage.Append("Die by Tile damage")
-			app.NotiMessage.AppendTf(tcsInfo, "Die by Tile damage")
-
-		case turnresulttype.ContagionFrom:
-			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
-			aostr := ""
-			nickname := ""
-			if exist {
-				aostr = obj2ColorStr(dstao)
-				nickname = dstao.NickName
-			}
-			app.systemMessage.Appendf("Contagion from %v", aostr)
-			app.NotiMessage.AppendTf(tcsInfo, "Contagion from %v", nickname)
-		case turnresulttype.ContagionTo:
-			dstao, exist := app.AOUUID2AOClient[v.DstUUID]
-			aostr := ""
-			nickname := ""
-			if exist {
-				aostr = obj2ColorStr(dstao)
-				nickname = dstao.NickName
-			}
-			app.systemMessage.Appendf("Contagion to %v", aostr)
-			app.NotiMessage.AppendTf(tcsInfo, "Contagion to %v", nickname)
-		}
+		app.processTurnResult(v)
 	}
 
 	SoundByActResult(newOLNotiData.ActiveObj.Act)
@@ -521,6 +425,106 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	return nil
+}
+
+func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
+	switch v.ResultType {
+	default:
+		jslog.Error("unknown acttype %v", v)
+
+	case turnresulttype.DropCarryObj:
+		o, exist := app.CaObjUUID2CaObjClient[v.DstUUID]
+		if exist {
+			app.systemMessage.Appendf("Drop %v", obj2ColorStr(o))
+		} else {
+			jslog.Errorf("not found %v", v)
+		}
+
+	case turnresulttype.DropMoney:
+		app.systemMessage.Appendf("Drop %v", makeMoneyColor(int(v.Arg)))
+
+	case turnresulttype.DropMoneyInsteadOfCarryObj:
+		o, exist := app.CaObjUUID2CaObjClient[v.DstUUID]
+		if exist {
+			app.systemMessage.Appendf("Drop %v for %v",
+				makeMoneyColor(int(v.Arg)), obj2ColorStr(o),
+			)
+		} else {
+			jslog.Errorf("not found %v", v)
+		}
+
+	case turnresulttype.AttackTo:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+		}
+		app.systemMessage.Appendf("%s %v",
+			wrapspan.ColorTextf("Lime", "Damage  %4.1f to", v.Arg),
+			aostr)
+	case turnresulttype.Kill:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		nickname := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+			nickname = dstao.NickName
+		}
+		app.systemMessage.Appendf("Kill %v", aostr)
+		app.NotiMessage.AppendTf(tcsInfo, "You kill %v", nickname)
+	case turnresulttype.AttackedFrom:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+		}
+		app.systemMessage.Appendf("%s %v",
+			wrapspan.ColorTextf("Red", "Damage %4.1f from", v.Arg),
+			aostr)
+	case turnresulttype.KilledBy:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		nickname := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+			nickname = dstao.NickName
+		}
+		app.systemMessage.Appendf("Killed by %v", aostr)
+		app.NotiMessage.AppendTf(tcsInfo, "Killed by %v", nickname)
+
+	case turnresulttype.HPDamageFromTrap:
+		app.systemMessage.Appendf("HP Damage from Trap %4.1f", v.Arg)
+
+	case turnresulttype.SPDamageFromTrap:
+		app.systemMessage.Appendf("SP Damage from Trap %4.1f", v.Arg)
+
+	case turnresulttype.DamagedByTile:
+
+	case turnresulttype.DeadByTile:
+		app.systemMessage.Append("Die by Tile damage")
+		app.NotiMessage.AppendTf(tcsInfo, "Die by Tile damage")
+
+	case turnresulttype.ContagionFrom:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		nickname := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+			nickname = dstao.NickName
+		}
+		app.systemMessage.Appendf("Contagion from %v", aostr)
+		app.NotiMessage.AppendTf(tcsInfo, "Contagion from %v", nickname)
+	case turnresulttype.ContagionTo:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		nickname := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+			nickname = dstao.NickName
+		}
+		app.systemMessage.Appendf("Contagion to %v", aostr)
+		app.NotiMessage.AppendTf(tcsInfo, "Contagion to %v", nickname)
+	}
 }
 
 // from noti obj list
