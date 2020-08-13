@@ -1,1 +1,0 @@
-add folder here for bitmap tiles
