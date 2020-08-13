@@ -238,11 +238,21 @@ func tryAutoUsePotionScroll(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		}
 	}
 
+	envFaction := app.GetEnvBias().NearFaction()
+	aoFaction := app.olNotiData.ActiveObj.Bias.NearFaction()
+	changeFaction := false
+	scroll2Use := scrolltype.FactionScroll(envFaction)
+	if envFaction != aoFaction {
+		changeFaction = true
+	}
 	for _, po := range app.olNotiData.ActiveObj.ScrollBag {
 		if app.needUseScroll(po) {
 			go app.sendPacket(c2t_idcmd.ReadScroll,
 				&c2t_obj.ReqReadScroll_data{UUID: po.UUID},
 			)
+			return true
+		}
+		if changeFaction && scroll2Use == po.ScrollType {
 			return true
 		}
 	}

@@ -31,6 +31,10 @@ func (pt ScrollType) MakeRate() int {
 	return attrib[pt].MakeRate
 }
 
+func FactionScroll(ft factiontype.FactionType) ScrollType {
+	return FactionBlack + ScrollType(ft)
+}
+
 var attrib = [ScrollType_Count]struct {
 	Rune     string
 	Color    htmlcolors.Color24
