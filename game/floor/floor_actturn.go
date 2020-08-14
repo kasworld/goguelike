@@ -516,6 +516,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 					dstAo.AppendTurnResult(turnresult.New(turnresulttype.ContagionFrom, ao, 0))
 
 					// fmt.Printf("%v %v to %v\n", bufname, ao, dstAo)
+				} else {
+					ao.AppendTurnResult(turnresult.New(turnresulttype.ContagionToFail, dstAo, 0))
+					dstAo.AppendTurnResult(turnresult.New(turnresulttype.ContagionFromFail, ao, 0))
 				}
 			}
 		}

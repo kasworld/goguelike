@@ -10,5 +10,7 @@ SPDamageFromTrap
 DropCarryObj
 DropMoney
 DropMoneyInsteadOfCarryObj
-ContagionTo
-ContagionFrom
+ContagionTo success 
+ContagionFrom success 
+ContagionToFail fail
+ContagionFromFail fail

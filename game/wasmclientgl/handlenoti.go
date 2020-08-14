@@ -524,6 +524,26 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 		}
 		app.systemMessage.Appendf("Contagion to %v", aostr)
 		app.NotiMessage.AppendTf(tcsInfo, "Contagion to %v", nickname)
+	case turnresulttype.ContagionFromFail:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		nickname := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+			nickname = dstao.NickName
+		}
+		app.systemMessage.Appendf("Resist Contagion from %v", aostr)
+		app.NotiMessage.AppendTf(tcsInfo, "Resist Contagion from %v", nickname)
+	case turnresulttype.ContagionToFail:
+		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
+		aostr := "??"
+		nickname := "??"
+		if exist {
+			aostr = obj2ColorStr(dstao)
+			nickname = dstao.NickName
+		}
+		app.systemMessage.Appendf("Fail Contagion to %v", aostr)
+		app.NotiMessage.AppendTf(tcsInfo, "Fail Contagion to %v", nickname)
 	}
 }
 
