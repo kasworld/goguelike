@@ -28,6 +28,7 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientfloor"
+	"github.com/kasworld/goguelike/lib/canvastext"
 	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -607,16 +608,50 @@ func (app *WasmClient) MakeNotiMessage() string {
 	win := js.Global().Get("window")
 	winH := win.Get("innerHeight").Float()
 	var buf bytes.Buffer
+
 	app.NotiMessage = app.NotiMessage.Compact()
+	mergeCount := 1
+	var lastCanvasText *canvastext.CanvasText
 	for i := 0; i < len(app.NotiMessage); i++ {
 		v := app.NotiMessage[i]
 		if v.IsEnded() {
 			continue
 		}
-		fontH := int(winH / 50 * v.SizeRate)
-		fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
-			fontH, v.Color, 1-v.ProgressRate(), v.Text,
-		)
+		if lastCanvasText == nil {
+			lastCanvasText = v
+			continue
+		}
+		//lastCanvasText != nil
+		if lastCanvasText.CanMerge(*v) {
+			lastCanvasText = v
+			mergeCount++
+			continue
+		}
+		// print last
+		fontH := int(winH / 50 * lastCanvasText.SizeRate)
+		if mergeCount == 1 {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text,
+			)
+		} else {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s (%v)</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text, mergeCount,
+			)
+		}
+		mergeCount = 1
+		lastCanvasText = v
+	}
+	if lastCanvasText != nil {
+		fontH := int(winH / 50 * lastCanvasText.SizeRate)
+		if mergeCount == 1 {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text,
+			)
+		} else {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s (%v)</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text, mergeCount,
+			)
+		}
 	}
 
 	return buf.String()

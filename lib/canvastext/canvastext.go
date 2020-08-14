@@ -38,6 +38,10 @@ func (ct CanvasText) ProgressRate() float64 {
 	return time.Now().Sub(ct.StartTime).Seconds() / ct.Dur.Seconds()
 }
 
+func (ct CanvasText) CanMerge(dst CanvasText) bool {
+	return ct.Color == dst.Color && ct.SizeRate == dst.SizeRate && ct.Text == dst.Text
+}
+
 type CanvasTextList []*CanvasText
 
 func (til *CanvasTextList) AppendTf(
