@@ -12,6 +12,7 @@
 package canvastext
 
 import (
+	"bytes"
 	"fmt"
 	"time"
 )
@@ -99,4 +100,55 @@ func (til CanvasTextList) GetLastN(n int) CanvasTextList {
 		return til
 	}
 	return til[l-n:]
+}
+
+func (til *CanvasTextList) ToHtml(refsize float64) string {
+	var buf bytes.Buffer
+
+	*til = (*til).Compact()
+	mergeCount := 1
+	var lastCanvasText *CanvasText
+	for i := 0; i < len(*til); i++ {
+		v := (*til)[i]
+		if v.IsEnded() {
+			continue
+		}
+		if lastCanvasText == nil {
+			lastCanvasText = v
+			continue
+		}
+		//lastCanvasText != nil
+		if lastCanvasText.CanMerge(*v) {
+			lastCanvasText = v
+			mergeCount++
+			continue
+		}
+		// print last
+		fontH := int(refsize * lastCanvasText.SizeRate)
+		if mergeCount == 1 {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text,
+			)
+		} else {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s (%v)</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text, mergeCount,
+			)
+		}
+		mergeCount = 1
+		lastCanvasText = v
+	}
+	if lastCanvasText != nil {
+		fontH := int(refsize * lastCanvasText.SizeRate)
+		if mergeCount == 1 {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text,
+			)
+		} else {
+			fmt.Fprintf(&buf, `<div style="font-size: %vpx; color:%s; opacity: %v;">%s (%v)</div>`,
+				fontH, lastCanvasText.Color, 1-lastCanvasText.ProgressRate(), lastCanvasText.Text, mergeCount,
+			)
+		}
+	}
+	return buf.String()
+
 }
