@@ -24,7 +24,7 @@ var gPoolColorBar3D = NewPoolColorBar3D()
 
 type PoolColorBar3D struct {
 	mutex    sync.Mutex
-	poolData map[string][]*ColorBar3D
+	poolData map[string][]*ColorBar3D // by html color "#000000"
 	newCount int
 	getCount int
 	putCount int
@@ -42,16 +42,16 @@ func (p *PoolColorBar3D) String() string {
 	)
 }
 
-func (p *PoolColorBar3D) Get(str string) *ColorBar3D {
+func (p *PoolColorBar3D) Get(colorstr string) *ColorBar3D {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	var rtn *ColorBar3D
-	if l := len(p.poolData[str]); l > 0 {
-		rtn = p.poolData[str][l-1]
-		p.poolData[str] = p.poolData[str][:l-1]
+	if l := len(p.poolData[colorstr]); l > 0 {
+		rtn = p.poolData[colorstr][l-1]
+		p.poolData[colorstr] = p.poolData[colorstr][:l-1]
 		p.getCount++
 	} else {
-		rtn = NewColorBar3D(str)
+		rtn = NewColorBar3D(colorstr)
 		p.newCount++
 	}
 	return rtn
@@ -66,7 +66,6 @@ func (p *PoolColorBar3D) Put(pb *ColorBar3D) {
 
 type ColorBar3D struct {
 	ColorStr string
-	Tex      js.Value
 	GeoInfo  GeoInfo
 	Mesh     js.Value
 }

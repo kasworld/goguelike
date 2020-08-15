@@ -11,6 +11,8 @@
 
 package condition
 
+import "github.com/kasworld/htmlcolors"
+
 func (cn Condition) HideSelf() bool {
 	return attrib[cn].hideSelf
 }
@@ -19,16 +21,21 @@ func (cn Condition) HideOther() bool {
 	return attrib[cn].hideOther
 }
 
+func (cn Condition) Color() htmlcolors.Color24 {
+	return attrib[cn].Color24
+}
+
 var attrib = [Condition_Count]struct {
 	hideSelf  bool // hide to client self ao
 	hideOther bool // hide to client other ao
+	Color24   htmlcolors.Color24
 }{
-	Blind:     {false, false},
-	Invisible: {false, false},
-	Burden:    {false, false},
-	Float:     {false, false},
-	Greasy:    {false, false},
-	Drunken:   {false, false},
-	Sleep:     {false, false},
-	Contagion: {false, false},
+	Blind:     {false, false, htmlcolors.DarkRed},
+	Invisible: {false, false, htmlcolors.LemonChiffon},
+	Burden:    {false, false, htmlcolors.DeepPink},
+	Float:     {false, false, htmlcolors.Wheat},
+	Greasy:    {false, false, htmlcolors.PapayaWhip},
+	Drunken:   {false, false, htmlcolors.Plum},
+	Sleep:     {false, false, htmlcolors.LightCoral},
+	Contagion: {false, false, htmlcolors.DarkGreen},
 }
