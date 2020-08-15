@@ -20,6 +20,10 @@ type PosLen struct {
 	X, Y, L float64
 }
 
+func (pl PosLen) CellXY() (float64, float64) {
+	return math.Floor(pl.X), math.Floor(pl.Y)
+}
+
 type PosLenList []PosLen
 
 func (pll PosLenList) Len() int {
