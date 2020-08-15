@@ -14,6 +14,8 @@ package lineofsight
 import (
 	"math"
 	"sort"
+
+	"github.com/kasworld/findnear"
 )
 
 type PosLen struct {
@@ -102,19 +104,14 @@ func (pll PosLenList) DelDup() PosLenList {
 	return rtn
 }
 
-type CellLen struct {
-	X, Y int
-	L    float64
-}
-
 // fromsrclen to in square len
-func (pll PosLenList) ToCellLenList() []CellLen {
+func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	if len(pll) == 0 {
 		return nil
 	}
 	// calc diff
-	rtn := make([]CellLen, 0, len(pll))
-	rtn = append(rtn, CellLen{
+	rtn := make(findnear.XYLenList, 0, len(pll))
+	rtn = append(rtn, findnear.XYLen{
 		X: int(math.Floor(pll[0].X)),
 		Y: int(math.Floor(pll[0].Y)),
 		L: pll[0].L,
@@ -122,7 +119,7 @@ func (pll PosLenList) ToCellLenList() []CellLen {
 	for i, v := range pll[1:] {
 		// loop i == 0, v = pll[1] ...
 		last := pll[i]
-		rtn = append(rtn, CellLen{
+		rtn = append(rtn, findnear.XYLen{
 			X: int(math.Floor((v.X + last.X) / 2)),
 			Y: int(math.Floor((v.Y + last.Y) / 2)),
 			L: v.L - last.L,

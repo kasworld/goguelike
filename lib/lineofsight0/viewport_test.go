@@ -9,21 +9,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package viewport
+package lineofsight0
 
 import (
+	"fmt"
 	"testing"
-
-	"github.com/kasworld/goguelike/config/viewportdata"
-	"github.com/kasworld/goguelike/enum/way9type"
 )
 
-func TestMakeViewPort2dLines(t *testing.T) {
-	var viewPortLinesByXYLenList = MakeViewPortLinesByXYLenList(viewportdata.ViewportXYLenList)
-	for i, v := range viewPortLinesByXYLenList {
-		t.Logf("%v %v %v", i, viewportdata.ViewportXYLenList[i], v)
-	}
-}
+// func TestMakeViewPort2dLines(t *testing.T) {
+// 	var viewPortLinesByXYLenList = MakeViewPortLinesByXYLenList(viewportdata.ViewportXYLenList)
+// 	for i, v := range viewPortLinesByXYLenList {
+// 		t.Logf("%v %v %v", i, viewportdata.ViewportXYLenList[i], v)
+// 	}
+// }
 
 // func Test_calcNextAxisCrossPos(t *testing.T) {
 // 	type args struct {
@@ -49,11 +47,18 @@ func TestMakeViewPort2dLines(t *testing.T) {
 // 	}
 // }
 
-func Test_CalcXYLenListLine(t *testing.T) {
-	for i := 1; i < way9type.Way9Type_Count; i++ {
-		dir := way9type.Way9Type(i)
-		x2, y2 := dir.Dx()*2, dir.Dy()*2
-		xylist, err := CalcXYLenListLine(0, 0, x2, y2)
-		t.Logf("[%v %v] [%v %v] %v %v", 0, 0, x2, y2, xylist, err)
+// func Test_CalcXYLenListLine(t *testing.T) {
+// 	for i := 1; i < way9type.Way9Type_Count; i++ {
+// 		dir := way9type.Way9Type(i)
+// 		x2, y2 := dir.Dx()*2, dir.Dy()*2
+// 		xylist, err := CalcXYLenListLine(0, 0, x2, y2)
+// 		t.Logf("[%v %v] [%v %v] %v %v", 0, 0, x2, y2, xylist, err)
+// 	}
+// }
+
+func TestMakePosLenList(t *testing.T) {
+	pll, _ := CalcXYLenListLine(0, -1, 13, -11)
+	for i, v := range pll {
+		fmt.Printf("%v %v\n", i, v)
 	}
 }

@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package viewport
+package lineofsight0
 
 import (
 	"fmt"
@@ -17,22 +17,6 @@ import (
 
 	"github.com/kasworld/findnear"
 )
-
-func MakeViewPortLinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
-	rtn := make([]findnear.XYLenList, len(xyLenList))
-	var err error
-	_ = err
-loop:
-	for i, v := range xyLenList {
-		dstX, dstY := v.X, v.Y
-		rtn[i], err = CalcXYLenListLine(0, 0, dstX, dstY)
-		if err != nil {
-			panic(fmt.Sprintf("[0 0] to [%v %v] %v", dstX, dstY, err))
-			break loop
-		}
-	}
-	return rtn
-}
 
 func CalcXYLenListLine(x1, y1, x2, y2 int) (findnear.XYLenList, error) {
 	srcPos := [2]float64{float64(x1) + 0.5, float64(y1) + 0.5}
