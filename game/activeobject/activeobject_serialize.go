@@ -13,6 +13,7 @@ package activeobject
 
 import (
 	"github.com/kasworld/goguelike/enum/achievetype"
+	"github.com/kasworld/goguelike/enum/condition_flag"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/game/aoexpsort"
 	"github.com/kasworld/goguelike/game/aoscore"
@@ -23,12 +24,14 @@ func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjCli
 	if ao.aoClientCache != nil {
 		return ao.aoClientCache
 	}
+	cnf := ao.AOTurnData.Condition
+	cnf.ClearByConditionFlag(condition_flag.HideOther())
 	aoc := &c2t_obj.ActiveObjClient{
 		UUID:       ao.uuid,
 		NickName:   ao.nickName,
 		Faction:    ao.currentBias.NearFaction(),
 		EquippedPo: ao.inven.ToPacket_EquipClient(),
-		Conditions: ao.AOTurnData.Condition, // TODO not all condition send
+		Conditions: cnf,
 		X:          x,
 		Y:          y,
 		Alive:      ao.IsAlive(),
@@ -63,9 +66,12 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjI
 	aoList := ao.GetHomeFloor().GetTower().GetExpRanking()
 	rank := aoexpsort.ByExp(aoList).FindPosByKey(ao.AOTurnData.TotalExp)
 
+	cnf := ao.AOTurnData.Condition
+	cnf.ClearByConditionFlag(condition_flag.HideSelf())
+
 	rtn := c2t_obj.PlayerActiveObjInfo{
 		Bias:       ao.currentBias,
-		Conditions: ao.AOTurnData.Condition,
+		Conditions: cnf,
 
 		Exp:     int(ao.AOTurnData.TotalExp),
 		Ranking: rank,
