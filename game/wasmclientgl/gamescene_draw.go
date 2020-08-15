@@ -362,6 +362,9 @@ func (vp *GameScene) processNotiObjectList(
 			vp.jsSceneAOs[ao.UUID] = ao3d
 			vp.scene.Call("add", ao3d.Name.Mesh)
 			vp.scene.Call("add", ao3d.MoveArrow.Mesh)
+			for _, v := range ao3d.Condition {
+				vp.scene.Call("add", v.Mesh)
+			}
 		}
 		if oldmesh, changed := ao3d.ChangeFaction(ao.Faction); changed {
 			vp.scene.Call("remove", oldmesh)
@@ -372,9 +375,9 @@ func (vp *GameScene) processNotiObjectList(
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shZ := CalcTile3DStepOn(tl)
 		if ao.Conditions.TestByCondition(condition.Float) {
-			ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize)
+			ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize, ao.Conditions)
 		} else {
-			ao3d.SetFieldPosition(fx, fy, shZ)
+			ao3d.SetFieldPosition(fx, fy, shZ, ao.Conditions)
 		}
 		if ao.Dir != way9type.Center {
 			ao3d.MoveArrow.Visible(true)
@@ -442,6 +445,9 @@ func (vp *GameScene) processNotiObjectList(
 
 	for id, ao3d := range vp.jsSceneAOs {
 		if !addAOuuid[id] {
+			for _, v := range ao3d.Condition {
+				vp.scene.Call("remove", v.Mesh)
+			}
 			vp.scene.Call("remove", ao3d.Name.Mesh)
 			vp.scene.Call("remove", ao3d.MoveArrow.Mesh)
 			vp.scene.Call("remove", ao3d.Mesh)

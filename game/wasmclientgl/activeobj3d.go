@@ -14,6 +14,10 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/enum/condition_flag"
+
+	"github.com/kasworld/goguelike/enum/condition"
+
 	"github.com/kasworld/goguelike/enum/factiontype"
 )
 
@@ -45,6 +49,7 @@ func preMakeActiveObj3DGeo() {
 
 type ActiveObj3D struct {
 	Faction   factiontype.FactionType
+	Condition [condition.Condition_Count]*Condition3D
 	MoveArrow *ColorArrow3D
 	Name      *Label3D
 	Chat      *Label3D
@@ -58,12 +63,17 @@ func NewActiveObj3D(ft factiontype.FactionType, name string) *ActiveObj3D {
 
 	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
-	return &ActiveObj3D{
+	ao3d := &ActiveObj3D{
 		MoveArrow: gPoolColorArrow3D.Get("#ffffff"),
 		Name:      gPoolLabel3D.Get(name),
 		Faction:   ft,
 		Mesh:      mesh,
 	}
+	for i := range ao3d.Condition {
+		ao3d.Condition[i] = gPoolCondition3D.Get(condition.Condition(i))
+	}
+
+	return ao3d
 }
 
 // return changed
@@ -82,7 +92,7 @@ func (ao3d *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bo
 	return oldmesh, true
 }
 
-func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
+func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64, cnf condition_flag.ConditionFlag) {
 	geoinfo := gActiveObj3DGeo[ao3d.Faction].GeoInfo
 	SetPosition(
 		ao3d.Mesh,
@@ -91,6 +101,10 @@ func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64) {
 		geoinfo.Len[2]/2+1+shZ,
 	)
 	ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
+	for i, v := range ao3d.Condition {
+		v.SetFieldPosition(fx, fy, float64(i)*DstCellSize/8, DstCellSize, DstCellSize+2+shZ)
+		v.Visible(cnf.TestByCondition(condition.Condition(i)))
+	}
 }
 
 func (ao3d *ActiveObj3D) Visible(b bool) {
@@ -127,6 +141,11 @@ func (ao3d *ActiveObj3D) ScaleZ(z float64) {
 }
 
 func (ao3d *ActiveObj3D) Dispose() {
+	for i := range ao3d.Condition {
+		gPoolCondition3D.Put(ao3d.Condition[i])
+		ao3d.Condition[i] = nil
+	}
+
 	// mesh do not need dispose
 	// ao3d.Mesh.Get("geometry").Call("dispose")
 	// ao3d.Mesh.Get("material").Call("dispose")

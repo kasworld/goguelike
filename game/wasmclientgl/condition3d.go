@@ -13,11 +13,9 @@ package wasmclientgl
 
 import (
 	"fmt"
-	"math"
 	"sync"
 	"syscall/js"
 
-	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/condition"
 )
 
@@ -67,7 +65,6 @@ func (p *PoolCondition3D) Put(pb *Condition3D) {
 
 type Condition3D struct {
 	Condition condition.Condition
-	Tex       js.Value
 	GeoInfo   GeoInfo
 	Mesh      js.Value
 }
@@ -82,8 +79,8 @@ func NewCondition3D(cn condition.Condition) *Condition3D {
 	mat.Set("transparent", true)
 	mat.Set("opacity", 0.9)
 
-	geo := ThreeJsNew("CylinderGeometry", 1, 1, DstCellSize)
-	geo.Call("rotateZ", math.Pi/2)
+	geo := ThreeJsNew("SphereGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/16)
+	// geo.Call("rotateZ", math.Pi/2)
 	geo.Call("center")
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &Condition3D{
@@ -93,61 +90,53 @@ func NewCondition3D(cn condition.Condition) *Condition3D {
 	}
 }
 
-func (aog *Condition3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
+func (cn3d *Condition3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
-		aog.Mesh,
+		cn3d.Mesh,
 		shX+float64(fx)*DstCellSize,
 		-shY-float64(fy)*DstCellSize,
-		shZ+aog.GeoInfo.Len[2]/2,
+		shZ+cn3d.GeoInfo.Len[2]/2,
 	)
 }
 
-func (aog *Condition3D) SetWH(v, maxv int) (float64, float64) {
-	barw := float64(maxv) / gameconst.ActiveObjBaseBiasLen
-	if barw < 1 {
-		barw = 1
-	}
-	barlen := float64(v) / float64(maxv)
-	aog.ScaleX(barlen)
-	aog.ScaleY(barw)
-	aog.ScaleZ(barw)
-	return barlen, barw
+func (cn3d *Condition3D) Visible(b bool) {
+	cn3d.Mesh.Set("visible", b)
 }
 
-func (aog *Condition3D) ResetMatrix() {
-	aog.ScaleX(1.0)
-	aog.ScaleY(1.0)
-	aog.ScaleZ(1.0)
-	aog.RotateX(0.0)
-	aog.RotateY(0.0)
-	aog.RotateZ(0.0)
+func (cn3d *Condition3D) ResetMatrix() {
+	cn3d.ScaleX(1.0)
+	cn3d.ScaleY(1.0)
+	cn3d.ScaleZ(1.0)
+	cn3d.RotateX(0.0)
+	cn3d.RotateY(0.0)
+	cn3d.RotateZ(0.0)
 }
 
-func (aog *Condition3D) RotateX(rad float64) {
-	aog.Mesh.Get("rotation").Set("x", rad)
+func (cn3d *Condition3D) RotateX(rad float64) {
+	cn3d.Mesh.Get("rotation").Set("x", rad)
 }
-func (aog *Condition3D) RotateY(rad float64) {
-	aog.Mesh.Get("rotation").Set("y", rad)
+func (cn3d *Condition3D) RotateY(rad float64) {
+	cn3d.Mesh.Get("rotation").Set("y", rad)
 }
-func (aog *Condition3D) RotateZ(rad float64) {
-	aog.Mesh.Get("rotation").Set("z", rad)
-}
-
-func (aog *Condition3D) ScaleX(x float64) {
-	aog.Mesh.Get("scale").Set("x", x)
-}
-func (aog *Condition3D) ScaleY(y float64) {
-	aog.Mesh.Get("scale").Set("y", y)
-}
-func (aog *Condition3D) ScaleZ(z float64) {
-	aog.Mesh.Get("scale").Set("z", z)
+func (cn3d *Condition3D) RotateZ(rad float64) {
+	cn3d.Mesh.Get("rotation").Set("z", rad)
 }
 
-func (aog *Condition3D) Dispose() {
+func (cn3d *Condition3D) ScaleX(x float64) {
+	cn3d.Mesh.Get("scale").Set("x", x)
+}
+func (cn3d *Condition3D) ScaleY(y float64) {
+	cn3d.Mesh.Get("scale").Set("y", y)
+}
+func (cn3d *Condition3D) ScaleZ(z float64) {
+	cn3d.Mesh.Get("scale").Set("z", z)
+}
+
+func (cn3d *Condition3D) Dispose() {
 	// mesh do not need dispose
-	aog.Mesh.Get("geometry").Call("dispose")
-	aog.Mesh.Get("material").Call("dispose")
+	cn3d.Mesh.Get("geometry").Call("dispose")
+	cn3d.Mesh.Get("material").Call("dispose")
 
-	aog.Mesh = js.Undefined()
+	cn3d.Mesh = js.Undefined()
 	// no need createElement canvas dom obj
 }
