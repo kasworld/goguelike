@@ -127,3 +127,9 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	}
 	return rtn
 }
+
+func CalcXYLenListLine(x1, y1, x2, y2 int) (findnear.XYLenList, error) {
+	return MakePosLenList(
+		float64(x1)+0.5, float64(y1)+0.5, float64(x2)+0.5, float64(y2)+0.5,
+	).DelDup().ToCellLenList(), nil
+}
