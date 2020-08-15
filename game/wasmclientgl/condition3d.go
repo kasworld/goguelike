@@ -79,7 +79,8 @@ func NewCondition3D(cn condition.Condition) *Condition3D {
 	mat.Set("transparent", true)
 	mat.Set("opacity", 0.9)
 
-	geo := ThreeJsNew("SphereGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/16)
+	geo := ThreeJsNew("SphereGeometry",
+		DstCellSize/8, DstCellSize/8, DstCellSize/8)
 	// geo.Call("rotateZ", math.Pi/2)
 	geo.Call("center")
 	mesh := ThreeJsNew("Mesh", geo, mat)

@@ -102,7 +102,8 @@ func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64, cnf condition
 	)
 	ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
 	for i, v := range ao3d.Condition {
-		v.SetFieldPosition(fx, fy, float64(i)*DstCellSize/8, DstCellSize, DstCellSize+2+shZ)
+		v.SetFieldPosition(fx, fy,
+			float64(i)*DstCellSize/8, DstCellSize+DstCellSize/2, DstCellSize+2+shZ)
 		v.Visible(cnf.TestByCondition(condition.Condition(i)))
 	}
 }
