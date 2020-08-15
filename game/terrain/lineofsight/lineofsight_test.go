@@ -17,9 +17,8 @@ import (
 )
 
 func TestMakePosLenList(t *testing.T) {
-	pll := MakePosLenList(0.5, -0.5, 13.5, -11).DelDup().ToInLen()
+	pll := MakePosLenList(0.5, -0.5, 13.5, -11).DelDup().ToCellLenList()
 	for i, v := range pll {
-		cellx, celly := v.CellXY()
-		fmt.Printf("%v %v (%v %v)\n", i, v, cellx, celly)
+		fmt.Printf("%v %v\n", i, v)
 	}
 }

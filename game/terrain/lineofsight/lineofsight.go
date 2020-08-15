@@ -20,10 +20,6 @@ type PosLen struct {
 	X, Y, L float64
 }
 
-func (pl PosLen) CellXY() (float64, float64) {
-	return math.Floor(pl.X), math.Floor(pl.Y)
-}
-
 type PosLenList []PosLen
 
 func (pll PosLenList) Len() int {
@@ -106,19 +102,31 @@ func (pll PosLenList) DelDup() PosLenList {
 	return rtn
 }
 
+type CellLen struct {
+	X, Y int
+	L    float64
+}
+
 // fromsrclen to in square len
-func (pll PosLenList) ToInLen() PosLenList {
-	if len(pll) < 2 {
-		return pll
+func (pll PosLenList) ToCellLenList() []CellLen {
+	if len(pll) == 0 {
+		return nil
 	}
 	// calc diff
-	rtn := make(PosLenList, 0, len(pll))
-	rtn = append(rtn, pll[0])
+	rtn := make([]CellLen, 0, len(pll))
+	rtn = append(rtn, CellLen{
+		X: int(math.Floor(pll[0].X)),
+		Y: int(math.Floor(pll[0].Y)),
+		L: pll[0].L,
+	})
 	for i, v := range pll[1:] {
 		// loop i == 0, v = pll[1] ...
 		last := pll[i]
-		rtn = append(rtn, PosLen{v.X, v.Y, v.L - last.L})
+		rtn = append(rtn, CellLen{
+			X: int(math.Floor((v.X + last.X) / 2)),
+			Y: int(math.Floor((v.Y + last.Y) / 2)),
+			L: v.L - last.L,
+		})
 	}
 	return rtn
-
 }
