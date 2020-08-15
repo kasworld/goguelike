@@ -81,6 +81,7 @@ func NewColorBar3D(colorstr string) *ColorBar3D {
 
 	geo := ThreeJsNew("CylinderGeometry", 1, 1, DstCellSize)
 	geo.Call("rotateZ", math.Pi/2)
+	geo.Call("center")
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &ColorBar3D{
 		ColorStr: colorstr,

@@ -22,20 +22,25 @@ func (cn Condition) HideOther() bool {
 }
 
 func (cn Condition) Color() htmlcolors.Color24 {
-	return attrib[cn].Color24
+	return attrib[cn].color24
+}
+
+func (cn Condition) Rune() string {
+	return attrib[cn].runeStr
 }
 
 var attrib = [Condition_Count]struct {
+	runeStr   string
 	hideSelf  bool // hide to client self ao
 	hideOther bool // hide to client other ao
-	Color24   htmlcolors.Color24
+	color24   htmlcolors.Color24
 }{
-	Blind:     {false, false, htmlcolors.DarkRed},
-	Invisible: {false, false, htmlcolors.LemonChiffon},
-	Burden:    {false, false, htmlcolors.DeepPink},
-	Float:     {false, false, htmlcolors.Wheat},
-	Greasy:    {false, false, htmlcolors.PapayaWhip},
-	Drunken:   {false, false, htmlcolors.Plum},
-	Sleep:     {false, false, htmlcolors.LightCoral},
-	Contagion: {false, false, htmlcolors.DarkGreen},
+	Blind:     {"bl", false, false, htmlcolors.DarkRed},
+	Invisible: {"iv", false, false, htmlcolors.LemonChiffon},
+	Burden:    {"bu", false, false, htmlcolors.DeepPink},
+	Float:     {"fl", false, false, htmlcolors.Wheat},
+	Greasy:    {"gr", false, false, htmlcolors.PapayaWhip},
+	Drunken:   {"dr", false, false, htmlcolors.Plum},
+	Sleep:     {"sl", false, false, htmlcolors.LightCoral},
+	Contagion: {"cn", false, false, htmlcolors.DarkGreen},
 }

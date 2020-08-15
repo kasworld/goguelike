@@ -17,6 +17,7 @@ import (
 	"sync"
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/condition"
 )
 
@@ -83,10 +84,70 @@ func NewCondition3D(cn condition.Condition) *Condition3D {
 
 	geo := ThreeJsNew("CylinderGeometry", 1, 1, DstCellSize)
 	geo.Call("rotateZ", math.Pi/2)
+	geo.Call("center")
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &Condition3D{
 		Condition: cn,
 		GeoInfo:   GetGeoInfo(geo),
 		Mesh:      mesh,
 	}
+}
+
+func (aog *Condition3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
+	SetPosition(
+		aog.Mesh,
+		shX+float64(fx)*DstCellSize,
+		-shY-float64(fy)*DstCellSize,
+		shZ+aog.GeoInfo.Len[2]/2,
+	)
+}
+
+func (aog *Condition3D) SetWH(v, maxv int) (float64, float64) {
+	barw := float64(maxv) / gameconst.ActiveObjBaseBiasLen
+	if barw < 1 {
+		barw = 1
+	}
+	barlen := float64(v) / float64(maxv)
+	aog.ScaleX(barlen)
+	aog.ScaleY(barw)
+	aog.ScaleZ(barw)
+	return barlen, barw
+}
+
+func (aog *Condition3D) ResetMatrix() {
+	aog.ScaleX(1.0)
+	aog.ScaleY(1.0)
+	aog.ScaleZ(1.0)
+	aog.RotateX(0.0)
+	aog.RotateY(0.0)
+	aog.RotateZ(0.0)
+}
+
+func (aog *Condition3D) RotateX(rad float64) {
+	aog.Mesh.Get("rotation").Set("x", rad)
+}
+func (aog *Condition3D) RotateY(rad float64) {
+	aog.Mesh.Get("rotation").Set("y", rad)
+}
+func (aog *Condition3D) RotateZ(rad float64) {
+	aog.Mesh.Get("rotation").Set("z", rad)
+}
+
+func (aog *Condition3D) ScaleX(x float64) {
+	aog.Mesh.Get("scale").Set("x", x)
+}
+func (aog *Condition3D) ScaleY(y float64) {
+	aog.Mesh.Get("scale").Set("y", y)
+}
+func (aog *Condition3D) ScaleZ(z float64) {
+	aog.Mesh.Get("scale").Set("z", z)
+}
+
+func (aog *Condition3D) Dispose() {
+	// mesh do not need dispose
+	aog.Mesh.Get("geometry").Call("dispose")
+	aog.Mesh.Get("material").Call("dispose")
+
+	aog.Mesh = js.Undefined()
+	// no need createElement canvas dom obj
 }
