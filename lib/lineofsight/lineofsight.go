@@ -45,40 +45,32 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 	dx := dstx - srcx
 	dy := dsty - srcy
 
-	if srcx < dstx {
+	if dx > 0 {
 		for x := math.Ceil(srcx); x <= math.Floor(dstx); x++ {
 			y := x * dy / dx
-			l := math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))
-			cp := PosLen{x, y, l}
-			rtn = append(rtn, cp)
+			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
-	} else if srcx > dstx {
+	} else if dx < 0 {
 		for x := math.Floor(srcx); x >= math.Ceil(dstx); x-- {
 			y := x * dy / dx
-			l := math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))
-			cp := PosLen{x, y, l}
-			rtn = append(rtn, cp)
+			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
 	} else {
-		// skip srcx == dstx
+		// skip dx == 0
 	}
 
-	if srcy < dsty {
+	if dy > 0 {
 		for y := math.Ceil(srcy); y <= math.Floor(dsty); y++ {
 			x := y * dx / dy
-			l := math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))
-			cp := PosLen{x, y, l}
-			rtn = append(rtn, cp)
+			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
-	} else if srcy > dsty {
+	} else if dy < 0 {
 		for y := math.Floor(srcy); y >= math.Ceil(dsty); y-- {
 			x := y * dx / dy
-			l := math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))
-			cp := PosLen{x, y, l}
-			rtn = append(rtn, cp)
+			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
 	} else {
-		// skip srcy == dsty
+		// skip dy ==0
 	}
 
 	rtn = append(rtn, last)
