@@ -18,9 +18,10 @@ import (
 func New(name string) *towermake.Tower {
 	tw := towermake.New(name)
 	tw.Add("SightTest", 128, 128, 0, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=128 h=128",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=6 mean=16 stddev=4 min=6",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=128 h=128",
+		"AddRoomsRand bgtile=Room  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
+		"AddRoomsRand bgtile=Fog   walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
+		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
 	)
 
 	for _, fm := range tw.GetList() {

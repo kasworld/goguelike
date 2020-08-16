@@ -17,7 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/tilearea"
-	"github.com/kasworld/goguelike/lib/lineofsight0"
+	"github.com/kasworld/goguelike/lib/lineofsight"
 	"github.com/kasworld/hitrate"
 	"github.com/kasworld/wrapper"
 )
@@ -70,7 +70,7 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 	return vpc.RequireSightFromXY[x][y]
 }
 
-var sightlinesByXYLenList = lineofsight0.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
+var sightlinesByXYLenList = lineofsight.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
 
 // make visible map, lineofsight0
 func (vpc *ViewportCache) makeAt2(centerX, centerY int) *viewportdata.ViewportSight2 {
