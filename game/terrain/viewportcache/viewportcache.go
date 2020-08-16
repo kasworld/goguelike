@@ -72,6 +72,7 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 
 var sightlinesByXYLenList = lineofsight0.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
 
+// make visible map, lineofsight0
 func (vpc *ViewportCache) makeAt2(centerX, centerY int) *viewportdata.ViewportSight2 {
 	vpSightMat := viewportdata.ViewportSight2{}
 
@@ -80,14 +81,37 @@ func (vpc *ViewportCache) makeAt2(centerX, centerY int) *viewportdata.ViewportSi
 	yWrap := vpc.terrain.GetYWrapper().GetWrapFn()
 
 	for i, sightLine := range sightlinesByXYLenList {
-		// make visible map
 		needSight := 0.0
 		if len(sightLine) > 0 {
 			last := sightLine[len(sightLine)-1]
 			for _, w := range sightLine {
+				// skip last cell
 				if w.X == last.X && w.Y == last.Y {
 					break
 				}
+				tx := xWrap(centerX + w.X)
+				ty := yWrap(centerY + w.Y)
+				needSight += tiles[tx][ty].BlockSight() * w.L
+			}
+		}
+		vpSightMat[i] = float32(needSight)
+	}
+	return &vpSightMat
+}
+
+// make visible map, lineofsight
+func (vpc *ViewportCache) makeAt3(centerX, centerY int) *viewportdata.ViewportSight2 {
+	vpSightMat := viewportdata.ViewportSight2{}
+
+	tiles := vpc.terrain.GetTiles()
+	xWrap := vpc.terrain.GetXWrapper().GetWrapFn()
+	yWrap := vpc.terrain.GetYWrapper().GetWrapFn()
+
+	for i, sightLine := range sightlinesByXYLenList {
+		needSight := 0.0
+		if len(sightLine) > 0 {
+			// skip last
+			for _, w := range sightLine[:len(sightLine)-1] {
 				tx := xWrap(centerX + w.X)
 				ty := yWrap(centerY + w.Y)
 				needSight += tiles[tx][ty].BlockSight() * w.L
