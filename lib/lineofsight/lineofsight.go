@@ -91,7 +91,7 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 	return rtn2
 }
 
-// fromsrclen to in square len
+// ToCellLenList fromsrclen to in square len
 func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	if len(pll) == 0 {
 		return nil
@@ -116,9 +116,16 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	return rtn
 }
 
-func CalcXYLenListLine(x1, y1, x2, y2 int) (findnear.XYLenList, error) {
-	return MakePosLenList(
-		// float64(x1), float64(y1), float64(x2), float64(y2),
-		float64(x1)+0.5, float64(y1)+0.5, float64(x2)+0.5, float64(y2)+0.5,
-	).ToCellLenList(), nil
+// MakeSightlinesByXYLenList make sighit lines 0,0 to all xyLenList dst
+func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
+	rtn := make([]findnear.XYLenList, len(xyLenList))
+	for i, v := range xyLenList {
+		rtn[i] = MakePosLenList(
+			0+0.5,
+			0+0.5,
+			float64(v.X)+0.5,
+			float64(v.Y)+0.5,
+		).ToCellLenList()
+	}
+	return rtn
 }

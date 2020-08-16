@@ -17,7 +17,7 @@ import (
 )
 
 func TestMakePosLenList(t *testing.T) {
-	pll := MakePosLenList(0.5, 0.5, -10.5, -10.5)
+	pll := MakePosLenList(0.5, -0.5, 13.5, -10.5)
 	for i, v := range pll {
 		fmt.Printf("%v %v\n", i, v)
 	}
@@ -26,3 +26,10 @@ func TestMakePosLenList(t *testing.T) {
 		fmt.Printf("%v %v\n", i, v)
 	}
 }
+
+// func TestMakePosLenList(t *testing.T) {
+// 	pll, _ := CalcXYLenListLine(0, -1, 13, -11)
+// 	for i, v := range pll {
+// 		fmt.Printf("%v %v\n", i, v)
+// 	}
+// }

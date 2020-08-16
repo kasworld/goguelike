@@ -160,3 +160,19 @@ func Absf(n float64) float64 {
 		return 0
 	}
 }
+
+func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
+	rtn := make([]findnear.XYLenList, len(xyLenList))
+	var err error
+	_ = err
+loop:
+	for i, v := range xyLenList {
+		dstX, dstY := v.X, v.Y
+		rtn[i], err = CalcXYLenListLine(0, 0, dstX, dstY)
+		if err != nil {
+			panic(fmt.Sprintf("[0 0] to [%v %v] %v", dstX, dstY, err))
+			break loop
+		}
+	}
+	return rtn
+}

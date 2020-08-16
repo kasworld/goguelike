@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/terraini"
 	"github.com/kasworld/goguelike/lib/lineofsight"
@@ -65,23 +64,7 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 	return vpc.RequireSightFromXY[x][y]
 }
 
-var sightlinesByXYLenList = makesightlinesByXYLenList(viewportdata.ViewportXYLenList)
-
-func makesightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
-	rtn := make([]findnear.XYLenList, len(xyLenList))
-	var err error
-	_ = err
-loop:
-	for i, v := range xyLenList {
-		dstX, dstY := v.X, v.Y
-		rtn[i], err = lineofsight.CalcXYLenListLine(0, 0, dstX, dstY)
-		if err != nil {
-			panic(fmt.Sprintf("[0 0] to [%v %v] %v", dstX, dstY, err))
-			break loop
-		}
-	}
-	return rtn
-}
+var sightlinesByXYLenList = lineofsight.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
 
 func (vpc *ViewportCache) makeAt2(centerX, centerY int) *viewportdata.ViewportSight2 {
 	vpSightMat := viewportdata.ViewportSight2{}
