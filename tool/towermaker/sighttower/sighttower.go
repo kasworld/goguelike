@@ -22,6 +22,7 @@ func New(name string) *towermake.Tower {
 		"AddRoomsRand bgtile=Room  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
 		"AddRoomsRand bgtile=Fog   walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
 		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
+		"AddRoomsRand bgtile=Tree  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
 	)
 
 	for _, fm := range tw.GetList() {
