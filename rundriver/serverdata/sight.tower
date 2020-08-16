@@ -1,0 +1,17 @@
+[
+    [
+        "# tower sight, made by tower maker",
+        "# towermaker -towername=sight"
+    ],
+    [
+        "NewTerrain w=128 h=128 name=SightTest ao=0 po=0 actturnboost=1",
+        "ResourceFillRect resource=Soil amount=1 x=0  y=0  w=128 h=128",
+        "AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=6 mean=16 stddev=4 min=6",
+        "ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+        "FinalizeTerrain",
+        ""
+    ],
+    [
+        "#tower sight, made by tower maker"
+    ]
+]
