@@ -76,24 +76,19 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 	rtn = append(rtn, last)
 
 	sort.Sort(rtn)
-	return rtn
-}
-
-// remove dup pos
-func (pll PosLenList) DelDup() PosLenList {
-	if len(pll) < 2 {
-		return pll
+	if len(rtn) < 2 {
+		return rtn
 	}
 	// del dup
-	rtn := make(PosLenList, 0, len(pll))
-	rtn = append(rtn, pll[0])
-	for _, v := range pll[1:] {
-		if rtn[len(rtn)-1] == v {
+	rtn2 := make(PosLenList, 0, len(rtn))
+	rtn2 = append(rtn2, rtn[0])
+	for _, v := range rtn[1:] {
+		if rtn2[len(rtn2)-1] == v {
 			continue
 		}
-		rtn = append(rtn, v)
+		rtn2 = append(rtn2, v)
 	}
-	return rtn
+	return rtn2
 }
 
 // fromsrclen to in square len
@@ -103,25 +98,27 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	}
 	// calc diff
 	rtn := make(findnear.XYLenList, 0, len(pll))
-	rtn = append(rtn, findnear.XYLen{
-		X: int(math.Floor(pll[0].X)),
-		Y: int(math.Floor(pll[0].Y)),
-		L: pll[0].L,
-	})
-	for i, v := range pll[1:] {
-		// loop i == 0, v = pll[1] ...
-		last := pll[i]
+	for i, v := range pll[:len(pll)-1] {
+		next := pll[i+1]
 		rtn = append(rtn, findnear.XYLen{
-			X: int(math.Floor((v.X + last.X) / 2)),
-			Y: int(math.Floor((v.Y + last.Y) / 2)),
-			L: v.L - last.L,
+			X: int(math.Floor((v.X + next.X) / 2)),
+			Y: int(math.Floor((v.Y + next.Y) / 2)),
+			L: next.L - v.L,
 		})
 	}
+	// calc last?
+	// last := pll[len(pll)-1]
+	// rtn = append(rtn, findnear.XYLen{
+	// 	X: int(math.Floor((last.X))),
+	// 	Y: int(math.Floor((last.Y))),
+	// 	L: 0,
+	// })
 	return rtn
 }
 
 func CalcXYLenListLine(x1, y1, x2, y2 int) (findnear.XYLenList, error) {
 	return MakePosLenList(
+		// float64(x1), float64(y1), float64(x2), float64(y2),
 		float64(x1)+0.5, float64(y1)+0.5, float64(x2)+0.5, float64(y2)+0.5,
-	).DelDup().ToCellLenList(), nil
+	).ToCellLenList(), nil
 }

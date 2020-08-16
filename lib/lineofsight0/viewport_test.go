@@ -16,13 +16,6 @@ import (
 	"testing"
 )
 
-// func TestMakeViewPort2dLines(t *testing.T) {
-// 	var viewPortLinesByXYLenList = MakeViewPortLinesByXYLenList(viewportdata.ViewportXYLenList)
-// 	for i, v := range viewPortLinesByXYLenList {
-// 		t.Logf("%v %v %v", i, viewportdata.ViewportXYLenList[i], v)
-// 	}
-// }
-
 // func Test_calcNextAxisCrossPos(t *testing.T) {
 // 	type args struct {
 // 		currentPos    float64

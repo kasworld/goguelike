@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/terraini"
-	"github.com/kasworld/goguelike/lib/lineofsight0"
+	"github.com/kasworld/goguelike/lib/lineofsight"
 	"github.com/kasworld/hitrate"
 )
 
@@ -65,16 +65,16 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 	return vpc.RequireSightFromXY[x][y]
 }
 
-var viewPortLinesByXYLenList = MakeViewPortLinesByXYLenList(viewportdata.ViewportXYLenList)
+var sightlinesByXYLenList = makesightlinesByXYLenList(viewportdata.ViewportXYLenList)
 
-func MakeViewPortLinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
+func makesightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, len(xyLenList))
 	var err error
 	_ = err
 loop:
 	for i, v := range xyLenList {
 		dstX, dstY := v.X, v.Y
-		rtn[i], err = lineofsight0.CalcXYLenListLine(0, 0, dstX, dstY)
+		rtn[i], err = lineofsight.CalcXYLenListLine(0, 0, dstX, dstY)
 		if err != nil {
 			panic(fmt.Sprintf("[0 0] to [%v %v] %v", dstX, dstY, err))
 			break loop
@@ -90,7 +90,7 @@ func (vpc *ViewportCache) makeAt2(centerX, centerY int) *viewportdata.ViewportSi
 	xWrap := vpc.terrain.GetXWrapper().GetWrapFn()
 	yWrap := vpc.terrain.GetYWrapper().GetWrapFn()
 
-	for i, sightLine := range viewPortLinesByXYLenList {
+	for i, sightLine := range sightlinesByXYLenList {
 		// make visible map
 		needSight := 0.0
 		if len(sightLine) > 0 {
