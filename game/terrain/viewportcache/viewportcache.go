@@ -16,12 +16,18 @@ import (
 	"sync"
 
 	"github.com/kasworld/goguelike/config/viewportdata"
-	"github.com/kasworld/goguelike/game/terraini"
+	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/lineofsight0"
 	"github.com/kasworld/hitrate"
+	"github.com/kasworld/wrapper"
 )
 
-var _ terraini.ViewportCacheI = &ViewportCache{}
+type terrainI interface {
+	GetTiles() tilearea.TileArea
+	GetXYLen() (int, int)
+	GetXWrapper() *wrapper.Wrapper
+	GetYWrapper() *wrapper.Wrapper
+}
 
 func (vpc *ViewportCache) String() string {
 	return fmt.Sprintf("ViewportCache%v",
@@ -30,12 +36,12 @@ func (vpc *ViewportCache) String() string {
 
 type ViewportCache struct {
 	mutex              sync.Mutex `prettystring:"hide"`
-	terrain            terraini.TerrainI
+	terrain            terrainI
 	RequireSightFromXY [][]*viewportdata.ViewportSight2
 	HitRate            hitrate.HitRate
 }
 
-func New(tr terraini.TerrainI) *ViewportCache {
+func New(tr terrainI) *ViewportCache {
 	return &ViewportCache{
 		terrain: tr,
 	}

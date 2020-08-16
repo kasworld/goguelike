@@ -14,7 +14,7 @@ package terrain
 import (
 	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
 	"github.com/kasworld/goguelike/game/terrain/room"
-	"github.com/kasworld/goguelike/game/terraini"
+	"github.com/kasworld/goguelike/game/terrain/viewportcache"
 	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/wrapper"
@@ -45,7 +45,7 @@ func (tr *Terrain) AgeingCount() int64 {
 	return tr.ageingCount
 }
 
-func (tr *Terrain) GetViewportCache() terraini.ViewportCacheI {
+func (tr *Terrain) GetViewportCache() *viewportcache.ViewportCache {
 	return tr.viewportCache
 }
 
