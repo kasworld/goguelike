@@ -17,7 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/terraini"
-	"github.com/kasworld/goguelike/lib/lineofsight"
+	"github.com/kasworld/goguelike/lib/lineofsight0"
 	"github.com/kasworld/hitrate"
 )
 
@@ -64,7 +64,7 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 	return vpc.RequireSightFromXY[x][y]
 }
 
-var sightlinesByXYLenList = lineofsight.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
+var sightlinesByXYLenList = lineofsight0.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
 
 func (vpc *ViewportCache) makeAt2(centerX, centerY int) *viewportdata.ViewportSight2 {
 	vpSightMat := viewportdata.ViewportSight2{}

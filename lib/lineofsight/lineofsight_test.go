@@ -14,6 +14,8 @@ package lineofsight
 import (
 	"fmt"
 	"testing"
+
+	"github.com/kasworld/goguelike/config/viewportdata"
 )
 
 func TestMakePosLenList(t *testing.T) {
@@ -27,9 +29,9 @@ func TestMakePosLenList(t *testing.T) {
 	}
 }
 
-// func TestMakePosLenList(t *testing.T) {
-// 	pll, _ := CalcXYLenListLine(0, -1, 13, -11)
-// 	for i, v := range pll {
-// 		fmt.Printf("%v %v\n", i, v)
-// 	}
-// }
+func TestMakeSightlinesByXYLenList(t *testing.T) {
+	sightlinesByXYLenList := MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
+	for _, v := range sightlinesByXYLenList {
+		fmt.Printf("%v\n", v)
+	}
+}
