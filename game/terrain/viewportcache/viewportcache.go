@@ -83,8 +83,7 @@ func (vpc *ViewportCache) makeAt3(centerX, centerY int) *viewportdata.ViewportSi
 	for i, sightLine := range sightlinesByXYLenList {
 		needSight := 0.0
 		if len(sightLine) > 0 {
-			// skip last
-			for _, w := range sightLine[:len(sightLine)-1] {
+			for _, w := range sightLine {
 				tx := xWrap(centerX + w.X)
 				ty := yWrap(centerY + w.Y)
 				needSight += tiles[tx][ty].BlockSight() * w.L

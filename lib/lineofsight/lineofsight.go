@@ -120,13 +120,24 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 // MakeSightlinesByXYLenList make sighit lines 0,0 to all xyLenList dst
 func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, len(xyLenList))
-	shift := 0.5
 	for i, v := range xyLenList {
+		// calc to dst near point
+		shiftx := 0.5
+		shifty := 0.5
+		if v.X > 0 {
+			shiftx = 0
+		} else if v.X < 0 {
+			shiftx = 1
+		}
+		if v.Y > 0 {
+			shifty = 0
+		} else if v.Y < 0 {
+			shifty = 1
+		}
 		rtn[i] = MakePosLenList(
-			0+shift,
-			0+shift,
-			float64(v.X)+shift,
-			float64(v.Y)+shift,
+			0+0.5, 0+0.5, // from src center
+			float64(v.X)+shiftx,
+			float64(v.Y)+shifty,
 		).ToCellLenList()
 	}
 	return rtn
