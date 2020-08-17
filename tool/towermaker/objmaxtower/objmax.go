@@ -22,11 +22,11 @@ func New(name string) *towermake.Tower {
 
 	tw := towermake.New(name)
 	fm := tw.Add("ObjMax", 512, 512, 8192, 8192, 1.0).Appends(
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=512 h=512",
+		// "ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=512 h=512",
+		"ResourceMazeWall resource=Soil  amount=500000  xn=128 yn=128 connerfill=true",
 		"ResourceMazeWall resource=Water amount=1000000 xn=63 yn=63 connerfill=true",
-		"ResourceMazeWall resource=Soil  amount=500000  xn=65 yn=65 connerfill=true",
 		"ResourceMazeWall resource=Fire  amount=1000000 xn=67 yn=67 connerfill=true",
-		"ResourceMazeWall resource=Ice   amount=1000000     xn=69 yn=69 connerfill=true",
+		"ResourceMazeWall resource=Ice   amount=1000000 xn=69 yn=69 connerfill=true",
 		"ResourceMazeWall resource=Plant amount=2000000 xn=71 yn=71  connerfill=true",
 		"ResourceMazeWall resource=Stone amount=1000000 xn=73 yn=73 connerfill=true",
 	)
