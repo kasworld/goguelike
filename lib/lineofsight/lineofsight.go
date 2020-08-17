@@ -50,12 +50,12 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 
 	if dx > 0 { // srcx -> dstx
 		for x := math.Ceil(srcx); x <= math.Floor(dstx); x++ {
-			y := x * dy / dx
+			y := (x-orix)*dy/dx + oriy
 			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else if dx < 0 { // dstx -> srcx
 		for x := math.Ceil(dstx); x <= math.Floor(srcx); x++ {
-			y := x * dy / dx
+			y := (x-orix)*dy/dx + oriy
 			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else {
@@ -64,12 +64,12 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 
 	if dy > 0 { // srcy -> dsty
 		for y := math.Ceil(srcy); y <= math.Floor(dsty); y++ {
-			x := y * dx / dy
+			x := (y-oriy)*dx/dy + orix
 			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else if dy < 0 { // dsty -> srcy
 		for y := math.Ceil(dsty); y <= math.Floor(srcy); y++ {
-			x := y * dx / dy
+			x := (y-oriy)*dx/dy + orix
 			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else {

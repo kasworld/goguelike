@@ -19,7 +19,7 @@ import (
 )
 
 func TestMakePosLenList(t *testing.T) {
-	pll := MakePosLenList(0.5, -0.5, 13.5, -10.5)
+	pll := MakePosLenList(0.5, 0.5, 1.5, 0.5)
 	for i, v := range pll {
 		fmt.Printf("%v %v\n", i, v)
 	}
@@ -30,8 +30,9 @@ func TestMakePosLenList(t *testing.T) {
 }
 
 func TestMakeSightlinesByXYLenList(t *testing.T) {
-	sightlinesByXYLenList := MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
-	for _, v := range sightlinesByXYLenList {
-		fmt.Printf("%v\n", v)
+	vp := viewportdata.ViewportXYLenList[:9]
+	sightlinesByXYLenList := MakeSightlinesByXYLenList(vp)
+	for i, v := range sightlinesByXYLenList {
+		fmt.Printf("%v %v\n", vp[i], v)
 	}
 }
