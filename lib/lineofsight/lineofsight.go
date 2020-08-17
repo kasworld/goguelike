@@ -45,13 +45,13 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 	dx := dstx - srcx
 	dy := dsty - srcy
 
-	if dx > 0 {
+	if dx > 0 { // srcx -> dstx
 		for x := math.Ceil(srcx); x <= math.Floor(dstx); x++ {
 			y := x * dy / dx
 			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
-	} else if dx < 0 {
-		for x := math.Floor(srcx); x >= math.Ceil(dstx); x-- {
+	} else if dx < 0 { // dstx -> srcx
+		for x := math.Ceil(dstx); x <= math.Floor(srcx); x++ {
 			y := x * dy / dx
 			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
@@ -59,13 +59,13 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 		// skip dx == 0
 	}
 
-	if dy > 0 {
+	if dy > 0 { // srcy -> dsty
 		for y := math.Ceil(srcy); y <= math.Floor(dsty); y++ {
 			x := y * dx / dy
 			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
-	} else if dy < 0 {
-		for y := math.Floor(srcy); y >= math.Ceil(dsty); y-- {
+	} else if dy < 0 { // dsty -> srcy
+		for y := math.Ceil(dsty); y <= math.Floor(srcy); y++ {
 			x := y * dx / dy
 			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
 		}
@@ -76,19 +76,23 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 	rtn = append(rtn, last)
 
 	sort.Sort(rtn)
-	if len(rtn) < 2 {
-		return rtn
+	return rtn.delDup()
+}
+
+func (pll PosLenList) delDup() PosLenList {
+	if len(pll) < 2 {
+		return pll
 	}
 	// del dup
-	rtn2 := make(PosLenList, 0, len(rtn))
-	rtn2 = append(rtn2, rtn[0])
-	for _, v := range rtn[1:] {
-		if rtn2[len(rtn2)-1] == v {
+	rtn := make(PosLenList, 0, len(pll))
+	rtn = append(rtn, pll[0])
+	for _, v := range pll[1:] {
+		if rtn[len(rtn)-1] == v {
 			continue
 		}
-		rtn2 = append(rtn2, v)
+		rtn = append(rtn, v)
 	}
-	return rtn2
+	return rtn
 }
 
 // ToCellLenList fromsrclen to in square len
@@ -119,12 +123,13 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 // MakeSightlinesByXYLenList make sighit lines 0,0 to all xyLenList dst
 func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, len(xyLenList))
+	shift := 0.0
 	for i, v := range xyLenList {
 		rtn[i] = MakePosLenList(
-			0+0.5,
-			0+0.5,
-			float64(v.X)+0.5,
-			float64(v.Y)+0.5,
+			0+shift,
+			0+shift,
+			float64(v.X)+shift,
+			float64(v.Y)+shift,
 		).ToCellLenList()
 	}
 	return rtn

@@ -62,7 +62,7 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 	defer vpc.mutex.Unlock()
 	if vpc.RequireSightFromXY[x][y] == nil {
 		vpc.HitRate.Miss()
-		vpc.RequireSightFromXY[x][y] = vpc.makeAt2(
+		vpc.RequireSightFromXY[x][y] = vpc.makeAt3(
 			x, y)
 	} else {
 		vpc.HitRate.Hit()
