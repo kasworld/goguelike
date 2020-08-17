@@ -670,7 +670,7 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 		jslog.Warn("%v", err)
 		return nil
 	}
-	app.vp.UpdateByViewportTile(
+	app.vp.ProcessNotiVPTiles(
 		cf, app.taNotiData, app.olNotiData, app.Path2dst)
 
 	if !oldComplete && cf.Visited.IsComplete() { // just completed

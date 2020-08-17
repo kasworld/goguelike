@@ -296,21 +296,24 @@ func (app *WasmClient) jsHandleMouseMove(this js.Value, args []js.Value) interfa
 }
 
 func (app *WasmClient) actByMouseMove() {
-	oldDir := app.MouseDir
-	plx, ply := app.GetPlayerXY()
-	app.MouseDir = way9type.RemoteDxDy2Way9(
-		app.vp.mouseCursorFx-plx,
-		app.vp.mouseCursorFy-ply,
-	)
 	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
+		oldDir := app.MouseDir
+		plx, ply := app.GetPlayerXY()
+		app.MouseDir = way9type.RemoteDxDy2Way9(
+			app.vp.mouseCursorFx-plx,
+			app.vp.mouseCursorFy-ply,
+		)
 		if app.ClientColtrolMode == clientcontroltype.FollowMouse {
 			if oldDir != app.MouseDir {
 				app.sendMovePacketByInput(app.MouseDir)
 			}
 		}
 	case 1: // floor viewport mode
-		dir := app.MouseDir
+		dir := way9type.RemoteDxDy2Way9(
+			app.vp.mouseCursorFx-app.floorVPPosX,
+			app.vp.mouseCursorFy-app.floorVPPosY,
+		)
 		app.floorVPPosX += dir.Dx()
 		app.floorVPPosY += dir.Dy()
 	}

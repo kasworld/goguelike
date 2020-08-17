@@ -24,61 +24,6 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-// playview frame update
-func (vp *GameScene) UpdatePlayViewFrame(
-	cf *clientfloor.ClientFloor,
-	frameProgress float64,
-	scrollDir way9type.Way9Type,
-	taNoti *c2t_obj.NotiVPTiles_data,
-	olNoti *c2t_obj.NotiObjectList_data,
-	lastOLNoti *c2t_obj.NotiObjectList_data,
-	envBias bias.Bias,
-) {
-	playerUUID := gInitData.AccountInfo.ActiveObjUUID
-
-	// activeobj animate
-	for i, ao := range olNoti.ActiveObjList {
-		aod, exist := vp.jsSceneAOs[ao.UUID]
-		if !exist {
-			continue // ??
-		}
-		if !ao.Alive {
-			continue
-		}
-		aod.ResetMatrix()
-		if ao.UUID == playerUUID {
-			// player
-			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
-				aod.RotateY(CalcRotateFrameProgress(frameProgress))
-				vp.AP.ScaleX(frameProgress)
-			}
-		}
-		if ao.DamageTake > 0 {
-			if i%2 == 0 {
-				aod.ScaleX(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
-			} else {
-				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
-			}
-		}
-		vp.animateMoveArrow(cf, aod, ao.X, ao.Y, ao.Dir, frameProgress)
-	}
-
-	vp.animateFieldObj()
-	vp.animateTile(envBias)
-	vp.moveCameraLight(
-		cf, taNoti.VPX, taNoti.VPY,
-		frameProgress, scrollDir,
-		envBias,
-	)
-
-	// move cursor
-	fx, fy := vp.mouseCursorFx, vp.mouseCursorFy
-	tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-	vp.cursor.SetFieldPosition(fx, fy, tl)
-
-	vp.renderer.Call("render", vp.scene, vp.camera)
-}
-
 // animate move arrow
 func (vp *GameScene) animateMoveArrow(
 	cf *clientfloor.ClientFloor, ao3d *ActiveObj3D,
@@ -92,22 +37,6 @@ func (vp *GameScene) animateMoveArrow(
 		shZ := CalcTile3DStepOn(tl)
 		ao3d.MoveArrow.SetFieldPosition(fx, fy, shX, shY, shZ)
 	}
-}
-
-// floorview frame update
-func (vp *GameScene) UpdateFloorViewFrame(
-	cf *clientfloor.ClientFloor, vpx, vpy int, envBias bias.Bias) {
-
-	vp.makeClientTile4FloorView(cf, vpx, vpy)
-	vp.updateFieldObjInView(cf, vpx, vpy)
-	vp.animateFieldObj()
-	vp.animateTile(envBias)
-	vp.moveCameraLight(
-		cf, vpx, vpy,
-		0, 0,
-		envBias,
-	)
-	vp.renderer.Call("render", vp.scene, vp.camera)
 }
 
 // fieldobj animate
@@ -203,93 +132,6 @@ func (vp *GameScene) moveCameraLight(
 			0,
 		),
 	)
-}
-
-// add tiles in gXYLenListView for playview
-func (vp *GameScene) makeClientTile4PlayView(
-	cf *clientfloor.ClientFloor,
-	taNoti *c2t_obj.NotiVPTiles_data) {
-	vpx, vpy := taNoti.VPX, taNoti.VPY
-	for ti := 0; ti < tile.Tile_Count; ti++ {
-		vp.jsTile3DCount[ti] = 0     // clear use count
-		vp.jsTile3DDarkCount[ti] = 0 // clear use count
-	}
-	// matrix := ThreeJsNew("Matrix4")
-	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
-	for vpi, v := range gXYLenListView {
-		fx := v.X + vpx
-		fy := v.Y + vpy
-		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		dark := false
-		if vpi >= len(taNoti.VPTiles) || taNoti.VPTiles[vpi] == 0 {
-			dark = true
-		}
-		for ti := 0; ti < tile.Tile_Count; ti++ {
-			if !newTile.TestByTile(tile.Tile(ti)) {
-				continue
-			}
-			matrix := ThreeJsNew("Matrix4")
-			if dark {
-				if tile.Tile(ti) == tile.Door {
-					matrix.Call("makeRotationZ", rad)
-				}
-				matrix.Call("setPosition",
-					gTile3DDark[ti].MakePosVector3(fx, fy),
-				)
-				vp.jsTile3DDarkMesh[ti].Call("setMatrixAt",
-					vp.jsTile3DDarkCount[ti], matrix)
-				vp.jsTile3DDarkCount[ti]++
-			} else {
-				if tile.Tile(ti) == tile.Door {
-					matrix.Call("makeRotationZ", rad)
-				}
-				matrix.Call("setPosition",
-					gTile3D[ti].MakePosVector3(fx, fy),
-				)
-				vp.jsTile3DMesh[ti].Call("setMatrixAt",
-					vp.jsTile3DCount[ti], matrix)
-				vp.jsTile3DCount[ti]++
-			}
-		}
-	}
-	for ti := 0; ti < tile.Tile_Count; ti++ {
-		vp.jsTile3DMesh[ti].Set("count", vp.jsTile3DCount[ti])
-		vp.jsTile3DMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
-		vp.jsTile3DDarkMesh[ti].Set("count", vp.jsTile3DDarkCount[ti])
-		vp.jsTile3DDarkMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
-	}
-}
-
-// make floor tiles for floorview
-func (vp *GameScene) makeClientTile4FloorView(
-	cf *clientfloor.ClientFloor, vpx, vpy int) {
-	for i := 0; i < tile.Tile_Count; i++ {
-		vp.jsTile3DCount[i] = 0     // clear use count
-		vp.jsTile3DDarkCount[i] = 0 // clear use count
-	}
-	matrix := ThreeJsNew("Matrix4")
-	for _, v := range gXYLenListView {
-		fx := v.X + vpx
-		fy := v.Y + vpy
-		newTile := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
-		for ti := 0; ti < tile.Tile_Count; ti++ {
-			if !newTile.TestByTile(tile.Tile(ti)) {
-				continue
-			}
-			matrix.Call("setPosition",
-				gTile3D[ti].MakePosVector3(fx, fy),
-			)
-			vp.jsTile3DMesh[ti].Call("setMatrixAt",
-				vp.jsTile3DCount[ti], matrix)
-			vp.jsTile3DCount[ti]++
-		}
-	}
-	for ti := 0; ti < tile.Tile_Count; ti++ {
-		vp.jsTile3DMesh[ti].Set("count", vp.jsTile3DCount[ti])
-		vp.jsTile3DMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
-		vp.jsTile3DDarkMesh[ti].Set("count", vp.jsTile3DDarkCount[ti])
-		vp.jsTile3DDarkMesh[ti].Get("instanceMatrix").Set("needsUpdate", true)
-	}
 }
 
 // add fo to clientview by vp.FieldObjPosMan

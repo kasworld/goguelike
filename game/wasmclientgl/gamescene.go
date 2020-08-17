@@ -12,13 +12,10 @@
 package wasmclientgl
 
 import (
-	"fmt"
 	"syscall/js"
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 type GameScene struct {
@@ -146,26 +143,6 @@ func (vp *GameScene) Resize(w, h float64) {
 func (vp *GameScene) Zoom(zoom int) {
 	vp.camera.Set("zoom", 1.0+float64(zoom)/2)
 	vp.camera.Call("updateProjectionMatrix")
-}
-
-// viewport x,y changed == need scroll
-func (vp *GameScene) UpdateByViewportTile(
-	cf *clientfloor.ClientFloor,
-	taNoti *c2t_obj.NotiVPTiles_data,
-	olNoti *c2t_obj.NotiObjectList_data,
-	path2dst [][2]int,
-) error {
-
-	if cf.FloorInfo.UUID != taNoti.FloorUUID {
-		return fmt.Errorf("vptile data floor not match %v %v",
-			cf.FloorInfo.UUID, taNoti.FloorUUID)
-
-	}
-	vp.makeClientTile4PlayView(cf, taNoti)
-	vp.updateFieldObjInView(cf, taNoti.VPX, taNoti.VPY)
-	vp.makeMovePathInView(cf, taNoti.VPX, taNoti.VPY, path2dst)
-	vp.raycastPlane.MoveCenterTo(taNoti.VPX, taNoti.VPY)
-	return nil
 }
 
 func (vp *GameScene) FindRayCastingFxFy(jsMouse js.Value) (int, int) {
