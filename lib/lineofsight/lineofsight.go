@@ -114,13 +114,6 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 			L: next.L - v.L,
 		})
 	}
-	// calc last?
-	// last := pll[len(pll)-1]
-	// rtn = append(rtn, findnear.XYLen{
-	// 	X: int(math.Floor((last.X))),
-	// 	Y: int(math.Floor((last.Y))),
-	// 	L: 0,
-	// })
 	return rtn
 }
 
