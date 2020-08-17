@@ -326,6 +326,8 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 				app.lastOLNotiData,
 				envBias)
 		case 1: // floor view
+			app.floorVPPosX = cf.XWrapSafe(app.floorVPPosX)
+			app.floorVPPosY = cf.YWrapSafe(app.floorVPPosY)
 			app.vp.UpdateFloorViewFrame(cf,
 				app.floorVPPosX, app.floorVPPosY,
 				envBias,
