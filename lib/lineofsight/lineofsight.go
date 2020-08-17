@@ -22,6 +22,11 @@ type PosLen struct {
 	X, Y, L float64
 }
 
+func (pl *PosLen) UpdataLenFrom(srcx, srcy float64) PosLen {
+	pl.L = math.Sqrt((srcx-pl.X)*(srcx-pl.X) + (srcy-pl.Y)*(srcy-pl.Y))
+	return *pl
+}
+
 type PosLenList []PosLen
 
 func (pll PosLenList) Len() int {
@@ -35,25 +40,23 @@ func (pll PosLenList) Less(i, j int) bool {
 }
 
 func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
-	first := PosLen{srcx, srcy, 0}
-	last := PosLen{dstx, dsty,
-		math.Sqrt((srcx-dstx)*(srcx-dstx) + (srcy-dsty)*(srcy-dsty))}
+	rtn := make(PosLenList, 0)
+	rtn = append(rtn, PosLen{X: srcx, Y: srcy}) // add first
+	rtn = append(rtn, PosLen{X: dstx, Y: dsty}) // add last
 
 	orix, oriy := srcx, srcy
-	rtn := make(PosLenList, 0)
-	rtn = append(rtn, first)
 	dx := dstx - srcx
 	dy := dsty - srcy
 
 	if dx > 0 { // srcx -> dstx
 		for x := math.Ceil(srcx); x <= math.Floor(dstx); x++ {
 			y := x * dy / dx
-			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
+			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else if dx < 0 { // dstx -> srcx
 		for x := math.Ceil(dstx); x <= math.Floor(srcx); x++ {
 			y := x * dy / dx
-			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
+			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else {
 		// skip dx == 0
@@ -62,19 +65,20 @@ func MakePosLenList(srcx, srcy, dstx, dsty float64) PosLenList {
 	if dy > 0 { // srcy -> dsty
 		for y := math.Ceil(srcy); y <= math.Floor(dsty); y++ {
 			x := y * dx / dy
-			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
+			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else if dy < 0 { // dsty -> srcy
 		for y := math.Ceil(dsty); y <= math.Floor(srcy); y++ {
 			x := y * dx / dy
-			rtn = append(rtn, PosLen{x, y, math.Sqrt((orix-x)*(orix-x) + (oriy-y)*(oriy-y))})
+			rtn = append(rtn, PosLen{X: x, Y: y})
 		}
 	} else {
 		// skip dy ==0
 	}
 
-	rtn = append(rtn, last)
-
+	for i := range rtn { // calc len from start pos
+		rtn[i].UpdataLenFrom(orix, oriy)
+	}
 	sort.Sort(rtn)
 	return rtn.delDup()
 }
@@ -123,7 +127,7 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 // MakeSightlinesByXYLenList make sighit lines 0,0 to all xyLenList dst
 func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, len(xyLenList))
-	shift := 0.0
+	shift := 0.5
 	for i, v := range xyLenList {
 		rtn[i] = MakePosLenList(
 			0+shift,
