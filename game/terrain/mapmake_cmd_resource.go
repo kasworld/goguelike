@@ -159,7 +159,7 @@ func cmdResourceMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if yv {
-				tr.resourceTileArea.OpXY(
+				tr.resourceTileArea.OpAddXY(
 					tr.XWrapper.WrapSafe(maX+x),
 					tr.YWrapper.WrapSafe(maY+y),
 					rv)
@@ -187,7 +187,7 @@ func cmdResourceMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if !yv {
-				tr.resourceTileArea.OpXY(
+				tr.resourceTileArea.OpAddXY(
 					tr.XWrapper.WrapSafe(maX+x),
 					tr.YWrapper.WrapSafe(maY+y),
 					rv)

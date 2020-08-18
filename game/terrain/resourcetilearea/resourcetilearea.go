@@ -54,6 +54,11 @@ func (rta ResourceTileArea) OpXY(x, y int, v interface{}) {
 	rta[x][y][rv.T] = rv.V
 }
 
+func (rta ResourceTileArea) OpAddXY(x, y int, v interface{}) {
+	rv := v.(resourcetile.ResourceTypeValue)
+	rta[x][y][rv.T] += rv.V
+}
+
 func (rta ResourceTileArea) GetXY(x, y int) *resourcetile.ResourceTile {
 	return &rta[x][y]
 }
