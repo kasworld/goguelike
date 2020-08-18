@@ -45,7 +45,7 @@ const (
 
 var DX = map[Dir]int{E: 1, W: -1, N: 0, S: 0}
 var DY = map[Dir]int{E: 0, W: 0, N: -1, S: 1}
-var OPCarryObjSITE = map[Dir]Dir{E: W, W: E, N: S, S: N}
+var OPPOSITE = map[Dir]Dir{E: W, W: E, N: S, S: N}
 
 type Maze struct {
 	W       int
@@ -88,7 +88,7 @@ func (m *Maze) make(rnd *g2rand.G2Rand) {
 			nx, ny := x+DX[dir], y+DY[dir]
 			if nx >= 0 && ny >= 0 && nx < m.W && ny < m.H && m.Cells[nx][ny] == 0 {
 				m.Cells[x][y] |= dir
-				m.Cells[nx][ny] |= OPCarryObjSITE[dir]
+				m.Cells[nx][ny] |= OPPOSITE[dir]
 				m.PosList = append(m.PosList, [2]int{nx, ny})
 				delCur = false
 				break
