@@ -21,18 +21,20 @@ func New(name string) *towermake.Tower {
 	var rnd = g2rand.New()
 
 	str := []string{
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
-		"ResourceMazeWall resource=Fog   amount=500000  x=0 y=0 w=800 h=640 xn=128 yn=128 connerfill=true",
-		"ResourceMazeWall resource=Water amount=1000000 x=2 y=2 w=800 h=640 xn=64 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Fire  amount=1000000 x=4 y=4 w=800 h=640 xn=64 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Ice   amount=1000000 x=6 y=6 w=800 h=640 xn=64 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Plant amount=2000000 x=8 y=8 w=800 h=640 xn=64 yn=64  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 x=10 y=10 w=800 h=640 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Fog   amount=500000  x=0 y=0 w=800 h=640 xn=80 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Water amount=1000000 x=2 y=2 w=800 h=640 xn=80 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Fire  amount=1000000 x=4 y=4 w=800 h=640 xn=80 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Ice   amount=1000000 x=6 y=6 w=800 h=640 xn=80 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Plant amount=2000000 x=8 y=8 w=800 h=640 xn=80 yn=64  connerfill=true",
+		"ResourceMazeWall resource=Stone amount=1000000 x=10 y=10 w=800 h=640 xn=80 yn=64 connerfill=true",
 	}
 
 	tw := towermake.New(name)
 	fm := tw.Add("ObjMax1", 800, 640, 8192, 0, 1.0).Appends(
 		str...,
+	)
+	fm.Appends(
+		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
 	)
 	fm.Appends(
 		floortemplate.CityRoomsRand(1024, rnd.Intn)...,
