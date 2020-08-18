@@ -84,3 +84,31 @@ func RoguelikeRand(roomCount int, intnfn func(int) int) []string {
 
 	return rtn
 }
+
+func CityRoomsRand(roomCount int, intnfn func(int) int) []string {
+	var allRoomTile = []tile.Tile{
+		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
+		tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
+	}
+	var allRoadTile = []tile.Tile{
+		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
+	}
+	var allWallTile = []tile.Tile{
+		tile.Wall, tile.Wall, tile.Window,
+	}
+	rtn := make([]string, 0)
+	for i := 0; i < roomCount; i++ {
+		roomTile := allRoomTile[intnfn(len(allRoomTile))]
+		wallTile := allWallTile[intnfn(len(allWallTile))]
+		rtn = append(rtn, fmt.Sprintf(
+			"AddRoomsRand bgtile=%v walltile=%v terrace=false align=16 count=1 mean=16 stddev=2 min=8",
+			roomTile, wallTile))
+
+	}
+	roadTile := allRoadTile[intnfn(len(allRoadTile))]
+	rtn = append(rtn, fmt.Sprintf(
+		"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
+		roadTile))
+
+	return rtn
+}

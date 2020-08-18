@@ -39,6 +39,9 @@ type Room struct {
 }
 
 func New(rt rect.Rect, bgTile tile.Tile) *Room {
+	if rt.W < 4 || rt.H < 4 {
+		panic(fmt.Sprintf("room to small %v", rt))
+	}
 	r := &Room{
 		UUID:       uuidstr.New(),
 		BgTile:     bgTile,

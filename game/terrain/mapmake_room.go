@@ -19,20 +19,20 @@ import (
 
 func (tr *Terrain) randRoomRect2(RoomGrid, RoomMeanSize, Stddev, Min int) rect.Rect {
 
-	rx, ry := tr.rnd.NormIntRange(RoomMeanSize, Stddev), tr.rnd.NormIntRange(RoomMeanSize, Stddev)
-	if rx < Min {
-		rx = Min
+	roomW, roomH := tr.rnd.NormIntRange(RoomMeanSize, Stddev), tr.rnd.NormIntRange(RoomMeanSize, Stddev)
+	roomW = roomW/RoomGrid*RoomGrid + 1
+	roomH = roomH/RoomGrid*RoomGrid + 1
+	if roomW < Min {
+		roomW = Min
 	}
-	if ry < Min {
-		ry = Min
+	if roomH < Min {
+		roomH = Min
 	}
-	rx = rx/RoomGrid*RoomGrid + 1
-	ry = ry/RoomGrid*RoomGrid + 1
-	stx, sty := tr.rnd.IntRange(0, tr.Xlen-rx), tr.rnd.IntRange(0, tr.Ylen-ry)
-	stx = stx / RoomGrid * RoomGrid
-	sty = sty / RoomGrid * RoomGrid
-	stx, sty = stx%tr.Xlen, sty%tr.Ylen
-	return rect.Rect{stx, sty, rx, ry}
+	roomX, roomY := tr.rnd.IntRange(0, tr.Xlen-roomW), tr.rnd.IntRange(0, tr.Ylen-roomH)
+	roomX = roomX / RoomGrid * RoomGrid
+	roomY = roomY / RoomGrid * RoomGrid
+	roomX, roomY = roomX%tr.Xlen, roomY%tr.Ylen
+	return rect.Rect{roomX, roomY, roomW, roomH}
 }
 func (tr *Terrain) addRoomManual(rt rect.Rect, bgtile, walltile tile.Tile, terrace bool) error {
 	r := room.New(rt, bgtile)

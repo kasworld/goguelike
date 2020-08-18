@@ -44,7 +44,7 @@ func New(name string) *towermake.Tower {
 		"ResourceMazeWall resource=Stone amount=1000000 xn=73 yn=73 connerfill=true",
 	)
 	fm.Appends(
-		floortemplate.RoguelikeRand(1024, rnd.Intn)...,
+		floortemplate.CityRoomsRand(1024, rnd.Intn)...,
 	)
 
 	for _, fm := range tw.GetList() {
