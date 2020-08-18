@@ -22,12 +22,12 @@ func New(name string) *towermake.Tower {
 
 	str := []string{
 		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
-		"ResourceMazeWall resource=Fog  amount=500000   x=0 y=0 w=800 h=640 xn=128 yn=128 connerfill=true",
-		"ResourceMazeWall resource=Water amount=1000000 x=0 y=0 w=800 h=640 xn=63 yn=63 connerfill=true",
-		"ResourceMazeWall resource=Fire  amount=1000000 x=0 y=0 w=800 h=640 xn=67 yn=67 connerfill=true",
-		"ResourceMazeWall resource=Ice   amount=1000000 x=0 y=0 w=800 h=640 xn=69 yn=69 connerfill=true",
-		"ResourceMazeWall resource=Plant amount=2000000 x=0 y=0 w=800 h=640 xn=71 yn=71  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 x=0 y=0 w=800 h=640 xn=73 yn=73 connerfill=true",
+		"ResourceMazeWall resource=Fog   amount=500000  x=0 y=0 w=800 h=640 xn=128 yn=128 connerfill=true",
+		"ResourceMazeWall resource=Water amount=1000000 x=2 y=2 w=800 h=640 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Fire  amount=1000000 x=4 y=4 w=800 h=640 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Ice   amount=1000000 x=6 y=6 w=800 h=640 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Plant amount=2000000 x=8 y=8 w=800 h=640 xn=64 yn=64  connerfill=true",
+		"ResourceMazeWall resource=Stone amount=1000000 x=10 y=10 w=800 h=640 xn=64 yn=64 connerfill=true",
 	}
 
 	tw := towermake.New(name)
