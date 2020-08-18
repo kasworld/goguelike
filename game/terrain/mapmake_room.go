@@ -17,21 +17,19 @@ import (
 	"github.com/kasworld/rect"
 )
 
-func (tr *Terrain) randRoomRect2(RoomGrid, RoomMeanSize, Stddev, Min int) rect.Rect {
+func (tr *Terrain) randRoomRect2(align, RoomMeanSize, Stddev, Min int) rect.Rect {
 
 	roomW, roomH := tr.rnd.NormIntRange(RoomMeanSize, Stddev), tr.rnd.NormIntRange(RoomMeanSize, Stddev)
-	roomW = roomW/RoomGrid*RoomGrid + 1
-	roomH = roomH/RoomGrid*RoomGrid + 1
+	roomW = roomW/align*align + 1
+	roomH = roomH/align*align + 1
 	if roomW < Min {
 		roomW = Min
 	}
 	if roomH < Min {
 		roomH = Min
 	}
-	roomX, roomY := tr.rnd.IntRange(0, tr.Xlen-roomW), tr.rnd.IntRange(0, tr.Ylen-roomH)
-	roomX = roomX / RoomGrid * RoomGrid
-	roomY = roomY / RoomGrid * RoomGrid
-	roomX, roomY = roomX%tr.Xlen, roomY%tr.Ylen
+	roomX := tr.rnd.Intn((tr.Xlen - roomW) / align)
+	roomY := tr.rnd.Intn((tr.Ylen - roomH) / align)
 	return rect.Rect{roomX, roomY, roomW, roomH}
 }
 func (tr *Terrain) addRoomManual(rt rect.Rect, bgtile, walltile tile.Tile, terrace bool) error {
