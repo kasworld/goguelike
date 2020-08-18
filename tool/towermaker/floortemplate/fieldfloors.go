@@ -66,7 +66,7 @@ func AgeingMaze256x256() []string {
 		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
 		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
 		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceMazeWall resource=Stone amount=2000001 xn=32 yn=32 connerfill=false",
+		"ResourceMazeWall resource=Stone amount=2000001 x=0 y=0 w=256 h=256 xn=32 yn=32 connerfill=false",
 		"ResourceAgeing initrun=10 msper=67000 resetaftern=1440",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=10 stddev=4 min=4",
 	}
@@ -84,8 +84,8 @@ func FreeForAll64x64() []string {
 func SoilPlant64x64() []string {
 	return []string{
 		"ResourceFillRect resource=Soil amount=64   x=0  y=0  w=64 h=64",
-		"ResourceMazeWall resource=Plant amount=2000000 xn=8  yn=8  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 xn=32 yn=32 connerfill=true",
+		"ResourceMazeWall resource=Plant amount=2000000 x=0 y=0 w=64 h=64 xn=8  yn=8  connerfill=true",
+		"ResourceMazeWall resource=Stone amount=1000000 x=0 y=0 w=64 h=64 xn=32 yn=32 connerfill=true",
 		"ResourceAgeing initrun=1 msper=60000 resetaftern=60",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=4 mean=6 stddev=4 min=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
@@ -95,7 +95,7 @@ func SoilPlant64x64() []string {
 func SoilWater128x128() []string {
 	return []string{
 		"ResourceFillRect resource=Soil amount=1000000 x=0 w=128 y=0 h=128",
-		"ResourceMazeWall resource=Water amount=1000000 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Water amount=1000000 x=0 y=0 w=128 h=128 xn=64 yn=64 connerfill=true",
 		"ResourceAgeing initrun=1 msper=61000 resetaftern=1440",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
@@ -105,8 +105,8 @@ func SoilWater128x128() []string {
 func SoilMagma128x128() []string {
 	return []string{
 		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=128 h=128",
-		"ResourceMazeWall resource=Soil amount=500000 xn=64 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Fire amount=1000000 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Soil amount=500000 x=0 y=0 w=128 h=128 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall resource=Fire amount=1000000 x=0 y=0 w=128 h=128 xn=64 yn=64 connerfill=true",
 		"ResourceAgeing initrun=1 msper=62000 resetaftern=1440",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
@@ -116,7 +116,7 @@ func SoilMagma128x128() []string {
 func SoilIce128x128() []string {
 	return []string{
 		"ResourceFillRect resource=Soil amount=256 x=0  y=0  w=128 h=128",
-		"ResourceMazeWall  resource=Ice  amount=512 xn=64 yn=64 connerfill=true",
+		"ResourceMazeWall  resource=Ice  amount=512 x=0 y=0 w=128 h=128 xn=64 yn=64 connerfill=true",
 		"ResourceAgeing initrun=1 msper=63000 resetaftern=360",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=16 mean=6 stddev=4 min=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",

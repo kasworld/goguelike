@@ -1,6 +1,6 @@
 NewTerrain  name:string w:int h:int ao:int po:int actturnboost:float
-ResourceMazeWall        resource:TileRsc_Type amount:int xn:int yn:int connerfill:bool
-ResourceMazeWalk        resource:TileRsc_Type amount:int xn:int yn:int connerfill:bool
+ResourceMazeWall        resource:TileRsc_Type amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
+ResourceMazeWalk        resource:TileRsc_Type amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
 ResourceRand            resource:TileRsc_Type mean:int stddev:int repeat:int
 Resource                resource:TileRsc_Type amount:int x:int y:int
 ResourceHLine           resource:TileRsc_Type amount:int x:int w:int y:int

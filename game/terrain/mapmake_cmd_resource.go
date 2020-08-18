@@ -145,12 +145,13 @@ func cmdResourceMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var rsctl resourcetype.ResourceType
 	var amount, xn, yn int
 	var conerFill bool
-	if err := ca.GetArgs(&rsctl, &amount, &xn, &yn, &conerFill); err != nil {
+	var maX, maY, maW, maH int
+	if err := ca.GetArgs(&rsctl, &amount, &maX, &maY, &maW, &maH, &xn, &yn, &conerFill); err != nil {
 		return err
 	}
 
 	m := maze2.New(tr.rnd, xn, yn)
-	ma, err := m.ToMazeArea(tr.GetXLen(), tr.GetYLen(), conerFill)
+	ma, err := m.ToMazeArea(maW, maH, conerFill)
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
@@ -158,7 +159,10 @@ func cmdResourceMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if yv {
-				tr.resourceTileArea.OpXY(x, y, rv)
+				tr.resourceTileArea.OpXY(
+					tr.XWrapper.WrapSafe(maX+x),
+					tr.YWrapper.WrapSafe(maY+y),
+					rv)
 			}
 		}
 	}
@@ -169,7 +173,8 @@ func cmdResourceMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var rsctl resourcetype.ResourceType
 	var amount, xn, yn int
 	var conerFill bool
-	if err := ca.GetArgs(&rsctl, &amount, &xn, &yn, &conerFill); err != nil {
+	var maX, maY, maW, maH int
+	if err := ca.GetArgs(&rsctl, &amount, &maX, &maY, &maW, &maH, &xn, &yn, &conerFill); err != nil {
 		return err
 	}
 
@@ -182,7 +187,10 @@ func cmdResourceMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if !yv {
-				tr.resourceTileArea.OpXY(x, y, rv)
+				tr.resourceTileArea.OpXY(
+					tr.XWrapper.WrapSafe(maX+x),
+					tr.YWrapper.WrapSafe(maY+y),
+					rv)
 			}
 		}
 	}

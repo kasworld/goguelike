@@ -24,7 +24,7 @@ import (
 
 func main() {
 	towername := flag.String("towername", "",
-		"starting,roguelike,big,sight,objmax tower to make")
+		"all,start,roguelike,big,sight,objmax tower to make")
 	floorcount := flag.Int("floorcount", 100, "roguelike,big tower floor count")
 	flag.Parse()
 
@@ -33,32 +33,34 @@ func main() {
 		fmt.Println("invalid option")
 		flag.PrintDefaults()
 
-	case "starting":
+	case "all":
+		starttower.New("start").Save()
+		sighttower.New("sight").Save()
+		objmaxtower.New("objmax").Save()
+		roguetower.New(fmt.Sprintf("roguelike%v", *floorcount), *floorcount).Save()
+		bigtower.New(fmt.Sprintf("big%v", *floorcount), *floorcount).Save()
+
+	case "start":
 		fmt.Printf("try make tower with towername:%v\n", *towername)
-		tower := starttower.New(*towername)
-		tower.Save()
+		starttower.New(*towername).Save()
 
 	case "sight":
 		fmt.Printf("try make tower with towername:%v\n", *towername)
-		tower := sighttower.New(*towername)
-		tower.Save()
+		sighttower.New(*towername).Save()
 
 	case "objmax":
 		fmt.Printf("try make tower with towername:%v\n", *towername)
-		tower := objmaxtower.New(*towername)
-		tower.Save()
+		objmaxtower.New(*towername).Save()
 
 	case "roguelike":
 		twname := fmt.Sprintf("%v%v", *towername, *floorcount)
 		fmt.Printf("try make tower with towername:%v floorcount:%v\n", twname, *floorcount)
-		tower := roguetower.New(twname, *floorcount)
-		tower.Save()
+		roguetower.New(twname, *floorcount).Save()
 
 	case "big":
 		twname := fmt.Sprintf("%v%v", *towername, *floorcount)
 		fmt.Printf("try make tower with towername:%v floorcount:%v\n", twname, *floorcount)
-		tower := bigtower.New(twname, *floorcount)
-		tower.Save()
+		bigtower.New(twname, *floorcount).Save()
 
 	}
 

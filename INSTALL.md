@@ -136,7 +136,7 @@ towerserver : goguelike game server
     -StandAlone
             StandAlone (default true)
     -TowerFilename string
-            TowerFilename (default "starting")
+            TowerFilename (default "start")
     -TowerNumber int
             TowerNumber (default 1)
     -TurnPerSec float

@@ -80,7 +80,7 @@ func New(name string) *towermake.Tower {
 		floortemplate.MazeRoomsOverlapWall64x32()...,
 	)
 	tw.Add("MazeWalk", 64, 64, 0, 0, 2.0).Appends(
-		"ResourceMazeWalk resource=Soil amount=64 xn=16 yn=16 connerfill=true",
+		"ResourceMazeWalk resource=Soil amount=64 x=0 y=0 w=64 h=64 xn=16 yn=16 connerfill=true",
 	)
 
 	for _, fm := range tw.GetList() {

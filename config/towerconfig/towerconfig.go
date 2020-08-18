@@ -34,7 +34,7 @@ type TowerConfig struct {
 	// config for each tower
 	ServicePort           int     `default:"14101"  argname:""`
 	AdminPort             int     `default:"14201"  argname:""`
-	TowerFilename         string  `default:"starting" argname:""`
+	TowerFilename         string  `default:"start" argname:""`
 	TowerNumber           int     `default:"1" argname:""`
 	DisplayName           string  `default:"Default" argname:""`
 	ConcurrentConnections int     `default:"10000" argname:""`

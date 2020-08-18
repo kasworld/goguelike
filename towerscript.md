@@ -1,6 +1,6 @@
 # 지형 스크립트 설명 
 
-기본적인 예는 goguelike/rundriver/serverdata/starting.tower 를 참고 할것 
+기본적인 예는 goguelike/rundriver/serverdata/start.tower 를 참고 할것 
 
 스크립트 명령어 
 

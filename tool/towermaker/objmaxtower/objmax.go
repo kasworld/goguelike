@@ -20,28 +20,26 @@ import (
 func New(name string) *towermake.Tower {
 	var rnd = g2rand.New()
 
+	str := []string{
+		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
+		"ResourceMazeWall resource=Fog  amount=500000   x=0 y=0 w=800 h=640 xn=128 yn=128 connerfill=true",
+		"ResourceMazeWall resource=Water amount=1000000 x=0 y=0 w=800 h=640 xn=63 yn=63 connerfill=true",
+		"ResourceMazeWall resource=Fire  amount=1000000 x=0 y=0 w=800 h=640 xn=67 yn=67 connerfill=true",
+		"ResourceMazeWall resource=Ice   amount=1000000 x=0 y=0 w=800 h=640 xn=69 yn=69 connerfill=true",
+		"ResourceMazeWall resource=Plant amount=2000000 x=0 y=0 w=800 h=640 xn=71 yn=71  connerfill=true",
+		"ResourceMazeWall resource=Stone amount=1000000 x=0 y=0 w=800 h=640 xn=73 yn=73 connerfill=true",
+	}
+
 	tw := towermake.New(name)
 	fm := tw.Add("ObjMax1", 800, 640, 8192, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
-		"ResourceMazeWall resource=Fog  amount=500000  xn=128 yn=128 connerfill=true",
-		"ResourceMazeWall resource=Water amount=1000000 xn=63 yn=63 connerfill=true",
-		"ResourceMazeWall resource=Fire  amount=1000000 xn=67 yn=67 connerfill=true",
-		"ResourceMazeWall resource=Ice   amount=1000000 xn=69 yn=69 connerfill=true",
-		"ResourceMazeWall resource=Plant amount=2000000 xn=71 yn=71  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 xn=73 yn=73 connerfill=true",
+		str...,
 	)
 	fm.Appends(
 		floortemplate.CityRoomsRand(1024, rnd.Intn)...,
 	)
 
 	fm = tw.Add("ObjMax2", 800, 640, 8192, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
-		"ResourceMazeWall resource=Fog  amount=500000  xn=128 yn=128 connerfill=true",
-		"ResourceMazeWall resource=Water amount=1000000 xn=63 yn=63 connerfill=true",
-		"ResourceMazeWall resource=Fire  amount=1000000 xn=67 yn=67 connerfill=true",
-		"ResourceMazeWall resource=Ice   amount=1000000 xn=69 yn=69 connerfill=true",
-		"ResourceMazeWall resource=Plant amount=2000000 xn=71 yn=71  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 xn=73 yn=73 connerfill=true",
+		str...,
 	)
 	fm.Appends(
 		floortemplate.CityRoomsRand(1024, rnd.Intn)...,
