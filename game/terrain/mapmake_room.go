@@ -28,8 +28,8 @@ func (tr *Terrain) randRoomRect2(align, RoomMeanSize, Stddev, Min int) rect.Rect
 	if roomH < Min {
 		roomH = Min
 	}
-	roomX := tr.rnd.Intn((tr.Xlen - roomW) / align)
-	roomY := tr.rnd.Intn((tr.Ylen - roomH) / align)
+	roomX := tr.rnd.Intn((tr.Xlen-roomW)/align) * align
+	roomY := tr.rnd.Intn((tr.Ylen-roomH)/align) * align
 	return rect.Rect{roomX, roomY, roomW, roomH}
 }
 func (tr *Terrain) addRoomManual(rt rect.Rect, bgtile, walltile tile.Tile, terrace bool) error {
