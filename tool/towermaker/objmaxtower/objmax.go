@@ -21,8 +21,8 @@ func New(name string) *towermake.Tower {
 	var rnd = g2rand.New()
 
 	tw := towermake.New(name)
-	fm := tw.Add("ObjMax1", 800, 600, 8192, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=600",
+	fm := tw.Add("ObjMax1", 800, 640, 8192, 0, 1.0).Appends(
+		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
 		"ResourceMazeWall resource=Fog  amount=500000  xn=128 yn=128 connerfill=true",
 		"ResourceMazeWall resource=Water amount=1000000 xn=63 yn=63 connerfill=true",
 		"ResourceMazeWall resource=Fire  amount=1000000 xn=67 yn=67 connerfill=true",
@@ -34,8 +34,8 @@ func New(name string) *towermake.Tower {
 		floortemplate.RoguelikeRand(1024, rnd.Intn)...,
 	)
 
-	fm = tw.Add("ObjMax2", 800, 600, 8192, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=600",
+	fm = tw.Add("ObjMax2", 800, 640, 8192, 0, 1.0).Appends(
+		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
 		"ResourceMazeWall resource=Fog  amount=500000  xn=128 yn=128 connerfill=true",
 		"ResourceMazeWall resource=Water amount=1000000 xn=63 yn=63 connerfill=true",
 		"ResourceMazeWall resource=Fire  amount=1000000 xn=67 yn=67 connerfill=true",
