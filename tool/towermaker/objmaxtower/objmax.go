@@ -12,6 +12,8 @@
 package objmaxtower
 
 import (
+	"fmt"
+
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
@@ -20,38 +22,57 @@ import (
 func New(name string) *towermake.Tower {
 	var rnd = g2rand.New()
 
+	floorW, floorH := 512, 256
+	ao := 1024
+
 	str := []string{
-		"ResourceMazeWall resource=Fog   amount=500000  x=0 y=0 w=512 h=256 xn=80 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Water amount=1000000 x=2 y=2 w=512 h=256 xn=80 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Soil  amount=1000000 x=2 y=2 w=512 h=256 xn=80 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Fire  amount=1000000 x=4 y=4 w=512 h=256 xn=80 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Ice   amount=1000000 x=6 y=6 w=512 h=256 xn=80 yn=64 connerfill=true",
-		"ResourceMazeWall resource=Plant amount=1000000 x=8 y=8 w=512 h=256 xn=80 yn=64  connerfill=true",
-		"ResourceMazeWall resource=Plant amount=1000000 x=8 y=8 w=512 h=256 xn=80 yn=64  connerfill=true",
-		"ResourceMazeWall resource=Stone amount=1000000 x=10 y=10 w=512 h=256 xn=80 yn=64 connerfill=true",
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Fog   amount=500000  x=0 y=0 w=%v h=%v xn=80 yn=64 connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Water amount=1000000 x=2 y=2 w=%v h=%v xn=80 yn=64 connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Soil  amount=1000000 x=2 y=2 w=%v h=%v xn=80 yn=64 connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Fire  amount=1000000 x=4 y=4 w=%v h=%v xn=80 yn=64 connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Ice   amount=1000000 x=6 y=6 w=%v h=%v xn=80 yn=64 connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Plant amount=1000000 x=8 y=8 w=%v h=%v xn=80 yn=64  connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Plant amount=1000000 x=8 y=8 w=%v h=%v xn=80 yn=64  connerfill=true",
+			floorW, floorH),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Stone amount=1000000 x=10 y=10 w=%v h=%v xn=80 yn=64 connerfill=true",
+			floorW, floorH),
 	}
 
 	tw := towermake.New(name)
 
-	fm := tw.Add("ObjMax0", 512, 256, 1024, 0, 1.0).Appends(
-		floortemplate.CityRooms(512, 256, 12, 10, 5, rnd.Intn)...,
+	fm := tw.Add("ObjMax0", floorW, floorH, ao, 0, 1.0).Appends(
+		floortemplate.CityRooms(floorW, floorH, 12, 10, 5, rnd.Intn)...,
 	)
 
-	fm = tw.Add("ObjMax1", 512, 256, 1024, 0, 1.0).Appends(
+	fm = tw.Add("ObjMax1", floorW, floorH, ao, 0, 1.0).Appends(
 		str...,
 	)
 	fm.Appends(
-		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=512 h=256",
+		fmt.Sprintf("ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=%v h=%v", floorW, floorH),
 	)
 	fm.Appends(
-		floortemplate.CityRoomsRand(1024, rnd.Intn)...,
+		floortemplate.CityRoomsRand(floorW, rnd.Intn)...,
 	)
 
-	fm = tw.Add("ObjMax2", 512, 256, 1024, 0, 1.0).Appends(
+	fm = tw.Add("ObjMax2", floorW, floorH, ao, 0, 1.0).Appends(
 		str...,
 	)
 	fm.Appends(
-		floortemplate.CityRoomsRand(1024, rnd.Intn)...,
+		floortemplate.CityRoomsRand(floorW, rnd.Intn)...,
 	)
 
 	for _, fm := range tw.GetList() {
@@ -59,19 +80,19 @@ func New(name string) *towermake.Tower {
 			fm.Appends("FinalizeTerrain", "")
 		}
 	}
-	for i := 0; i < 1024; i++ {
+	for i := 0; i < floorW; i++ {
 		tw.GetByName("ObjMax0").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax1"))
 		tw.GetByName("ObjMax1").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax2"))
 	}
 
 	for _, fm := range tw.GetList() {
 		suffix := "Rand"
-		for i := 0; i < 256; i++ {
+		for i := 0; i < floorH; i++ {
 			fm.ConnectAutoInPortalTo(suffix, suffix, fm)
 			fm.AddTrapTeleportTo(suffix, fm)
 		}
-		fm.AddAllEffectTrap(suffix, 512)
-		fm.AddRecycler(suffix, 1024)
+		fm.AddAllEffectTrap(suffix, floorH)
+		fm.AddRecycler(suffix, floorW)
 	}
 
 	return tw
