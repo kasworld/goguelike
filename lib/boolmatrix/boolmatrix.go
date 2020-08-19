@@ -9,16 +9,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package mazearea bool matrix of maze wall, road
-package mazearea
+// Package boolmatrix bool matrix of maze wall, road
+package boolmatrix
 
 import (
 	"bytes"
 )
 
-type MazeArea [][]bool
+type BoolMatrix [][]bool
 
-func New(w, h int) MazeArea {
+func New(w, h int) BoolMatrix {
 	ma := make([][]bool, w)
 	for x := range ma {
 		ma[x] = make([]bool, h)
@@ -26,11 +26,11 @@ func New(w, h int) MazeArea {
 	return ma
 }
 
-func (ma MazeArea) String() string {
+func (ma BoolMatrix) String() string {
 	return ma.ToString('0', '1')
 }
 
-func (ma MazeArea) ToString(r1, r2 rune) string {
+func (ma BoolMatrix) ToString(r1, r2 rune) string {
 	var buf bytes.Buffer
 	for _, v := range ma {
 		for _, w := range v {
@@ -45,7 +45,7 @@ func (ma MazeArea) ToString(r1, r2 rune) string {
 	return buf.String()
 }
 
-func (ma MazeArea) HLine(x1, x2, y int, v bool) {
+func (ma BoolMatrix) HLine(x1, x2, y int, v bool) {
 	w := len(ma)
 	h := len(ma[0])
 	if y >= h {
@@ -62,7 +62,7 @@ func (ma MazeArea) HLine(x1, x2, y int, v bool) {
 	}
 }
 
-func (ma MazeArea) VLine(x, y1, y2 int, v bool) {
+func (ma BoolMatrix) VLine(x, y1, y2 int, v bool) {
 	w := len(ma)
 	h := len(ma[0])
 	if y1 >= h {

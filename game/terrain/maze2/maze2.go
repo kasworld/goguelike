@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/game/terrain/mazearea"
+	"github.com/kasworld/goguelike/lib/boolmatrix"
 )
 
 type Dir int
@@ -108,8 +108,8 @@ func (m *Maze) MazeString() string {
 	return buf.String()
 }
 
-func (m *Maze) ToMazeArea(w, h int, conerFill bool) (mazearea.MazeArea, error) {
-	ma := mazearea.New(w, h)
+func (m *Maze) ToMazeArea(w, h int, conerFill bool) (boolmatrix.BoolMatrix, error) {
+	ma := boolmatrix.New(w, h)
 	cellx := w / m.W
 	celly := h / m.H
 	if cellx < 2 || celly < 2 {

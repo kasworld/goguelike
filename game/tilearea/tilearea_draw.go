@@ -15,7 +15,7 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/tileoptype"
-	"github.com/kasworld/goguelike/game/terrain/mazearea"
+	"github.com/kasworld/goguelike/lib/boolmatrix"
 	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/walk2d"
 )
@@ -89,7 +89,7 @@ func (ta TileArea) Ellipses(x, w, y, h int, tl tile.Tile) {
 }
 
 func (ta TileArea) SetBoolMapTrue(xWrap, yWrap func(i int) int,
-	maX, maY int, ma mazearea.MazeArea, tl tile.Tile) {
+	maX, maY int, ma boolmatrix.BoolMatrix, tl tile.Tile) {
 	rv := tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl}
 	for x, xv := range ma {
 		for y, yv := range xv {
@@ -101,7 +101,7 @@ func (ta TileArea) SetBoolMapTrue(xWrap, yWrap func(i int) int,
 }
 
 func (ta TileArea) SetBoolMapFalse(xWrap, yWrap func(i int) int,
-	maX, maY int, ma mazearea.MazeArea, tl tile.Tile) {
+	maX, maY int, ma boolmatrix.BoolMatrix, tl tile.Tile) {
 	rv := tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl}
 	for x, xv := range ma {
 		for y, yv := range xv {

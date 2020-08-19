@@ -9,8 +9,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package mazearea bool matrix of maze wall, road
-package mazearea
+// Package boolmatrix bool matrix of maze wall, road
+package boolmatrix
 
 import (
 	"testing"
