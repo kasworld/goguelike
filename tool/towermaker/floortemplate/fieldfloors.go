@@ -11,6 +11,8 @@
 
 package floortemplate
 
+import "fmt"
+
 func BGTile9Rooms128x128() []string {
 	return []string{
 		"ResourceFillRect resource=Soil   amount=255    x=0  y=0  w=128 h=128",
@@ -121,4 +123,36 @@ func SoilIce128x128() []string {
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=16 mean=6 stddev=4 min=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 	}
+}
+
+func MixedResourceMaze(floorW, floorH int) []string {
+	xn := floorW / 12
+	yn := floorH / 12
+	str := []string{
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Fog   amount=500000  x=0 y=0 w=%v h=%v xn=%v yn=%v connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Water amount=1000000 x=2 y=2 w=%v h=%v xn=%v yn=%v connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Soil  amount=1000000 x=2 y=2 w=%v h=%v xn=%v yn=%v connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Fire  amount=1000000 x=4 y=4 w=%v h=%v xn=%v yn=%v connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Ice   amount=1000000 x=6 y=6 w=%v h=%v xn=%v yn=%v connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Plant amount=1000000 x=8 y=8 w=%v h=%v xn=%v yn=%v  connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Plant amount=1000000 x=8 y=8 w=%v h=%v xn=%v yn=%v  connerfill=true",
+			floorW, floorH, xn, yn),
+		fmt.Sprintf(
+			"ResourceMazeWall resource=Stone amount=1000000 x=10 y=10 w=%v h=%v xn=%v yn=%v connerfill=true",
+			floorW, floorH, xn, yn),
+	}
+	return str
 }
