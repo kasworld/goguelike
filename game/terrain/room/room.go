@@ -16,7 +16,7 @@ import (
 
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/game/terrain/maze2"
+	"github.com/kasworld/goguelike/lib/maze2"
 	"github.com/kasworld/prettystring"
 	"github.com/kasworld/rect"
 	"github.com/kasworld/uuidstr"
@@ -60,7 +60,7 @@ func New(rt rect.Rect, bgTile tile.Tile) *Room {
 
 func (r *Room) DrawMaze(rnd *g2rand.G2Rand, xn, yn int, walltile tile.Tile, connerFill bool) error {
 	m := maze2.New(rnd, xn, yn)
-	ma, err := m.ToMazeArea(r.Area.W-1, r.Area.H-1, connerFill)
+	ma, err := m.ToBoolMatrix(r.Area.W-1, r.Area.H-1, connerFill)
 	if err != nil {
 		return fmt.Errorf("room %v %v", r, err)
 	}

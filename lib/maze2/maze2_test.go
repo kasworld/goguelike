@@ -18,6 +18,6 @@ import (
 
 func TestNew(t *testing.T) {
 	m := New(8, 8)
-	ma, err := m.ToMazeArea(16, 16, true)
+	ma, err := m.ToBoolMatrix(16, 16, true)
 	t.Logf("%v %v", err, ma)
 }

@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 
-	"github.com/kasworld/goguelike/game/terrain/maze2"
+	"github.com/kasworld/goguelike/lib/maze2"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
@@ -107,7 +107,7 @@ func cmdTileMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	}
 
 	m := maze2.New(tr.rnd, xn, yn)
-	ma, err := m.ToMazeArea(maW, maH, conerFill)
+	ma, err := m.ToBoolMatrix(maW, maH, conerFill)
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
@@ -126,7 +126,7 @@ func cmdTileMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	}
 
 	m := maze2.New(tr.rnd, xn, yn)
-	ma, err := m.ToMazeArea(tr.GetXLen(), tr.GetYLen(), conerFill)
+	ma, err := m.ToBoolMatrix(tr.GetXLen(), tr.GetYLen(), conerFill)
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}

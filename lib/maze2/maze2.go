@@ -108,7 +108,7 @@ func (m *Maze) MazeString() string {
 	return buf.String()
 }
 
-func (m *Maze) ToMazeArea(w, h int, conerFill bool) (boolmatrix.BoolMatrix, error) {
+func (m *Maze) ToBoolMatrix(w, h int, conerFill bool) (boolmatrix.BoolMatrix, error) {
 	ma := boolmatrix.New(w, h)
 	cellx := w / m.W
 	celly := h / m.H
