@@ -23,7 +23,9 @@ func New(name string) *towermake.Tower {
 	var rnd = g2rand.New()
 
 	floorW, floorH := 512, 256
-	ao := 1024
+	aoCount := 1024
+	stairCount := 1024
+	roomCount := 512
 
 	str := []string{
 		fmt.Sprintf(
@@ -54,25 +56,25 @@ func New(name string) *towermake.Tower {
 
 	tw := towermake.New(name)
 
-	fm := tw.Add("ObjMax0", floorW, floorH, ao, 0, 1.0).Appends(
+	fm := tw.Add("ObjMax0", floorW, floorH, aoCount, 0, 1.0).Appends(
 		floortemplate.CityRooms(floorW, floorH, 12, 10, 5, rnd.Intn)...,
 	)
 
-	fm = tw.Add("ObjMax1", floorW, floorH, ao, 0, 1.0).Appends(
+	fm = tw.Add("ObjMax1", floorW, floorH, aoCount, 0, 1.0).Appends(
 		str...,
 	)
 	fm.Appends(
 		fmt.Sprintf("ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=%v h=%v", floorW, floorH),
 	)
 	fm.Appends(
-		floortemplate.CityRoomsRand(floorW, rnd.Intn)...,
+		floortemplate.CityRoomsRand(roomCount, rnd.Intn)...,
 	)
 
-	fm = tw.Add("ObjMax2", floorW, floorH, ao, 0, 1.0).Appends(
+	fm = tw.Add("ObjMax2", floorW, floorH, aoCount, 0, 1.0).Appends(
 		str...,
 	)
 	fm.Appends(
-		floortemplate.CityRoomsRand(floorW, rnd.Intn)...,
+		floortemplate.CityRoomsRand(roomCount, rnd.Intn)...,
 	)
 
 	for _, fm := range tw.GetList() {
@@ -80,19 +82,20 @@ func New(name string) *towermake.Tower {
 			fm.Appends("FinalizeTerrain", "")
 		}
 	}
-	for i := 0; i < floorW; i++ {
+	for i := 0; i < stairCount; i++ {
 		tw.GetByName("ObjMax0").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax1"))
 		tw.GetByName("ObjMax1").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax2"))
+		tw.GetByName("ObjMax2").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax0"))
 	}
 
 	for _, fm := range tw.GetList() {
 		suffix := "Rand"
-		for i := 0; i < floorH; i++ {
+		for i := 0; i < roomCount; i++ {
 			fm.ConnectAutoInPortalTo(suffix, suffix, fm)
 			fm.AddTrapTeleportTo(suffix, fm)
 		}
-		fm.AddAllEffectTrap(suffix, floorH)
-		fm.AddRecycler(suffix, floorW)
+		fm.AddAllEffectTrap(suffix, roomCount/8)
+		fm.AddRecycler(suffix, stairCount)
 	}
 
 	return tw
