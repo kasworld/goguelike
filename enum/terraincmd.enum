@@ -22,7 +22,7 @@ AddRoomMaze             bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y
 AddRoomsRand            bgtile:Tile_Type walltile:Tile_Type terrace:bool align:int count:int mean:int stddev:int min:int
 ConnectRooms            tile:Tile_Type connect:int allconnect:bool diagonal:bool
 
-# add time 
+# add tile
 TileMazeWall        tile:Tile_Type x:int y:int w:int h:int xn:int yn:int connerfill:bool
 TileMazeWalk        tile:Tile_Type x:int y:int w:int h:int xn:int yn:int connerfill:bool
 TileAt              tile:Tile_Type x:int y:int
