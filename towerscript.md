@@ -2,35 +2,61 @@
 
 기본적인 예는 goguelike/rundriver/serverdata/start.tower 를 참고 할것 
 
-스크립트 명령어 
+command 목록은 /enum/terraincmd.enum 을 사용해서 자동 생성되며 
 
-	NewTerrain :             name:string w:int h:int ao:int po:int actturnboost:float
-	ResourceMazeWall :       resource:TileRsc_Type amount:int xn:int yn:int connerfill:bool
-	ResourceMazeWalk :       resource:TileRsc_Type amount:int xn:int yn:int connerfill:bool
-	ResourceRand :           resource:TileRsc_Type mean:int stddev:int repeat:int
-	Resource :               resource:TileRsc_Type amount:int x:int y:int
-	ResourceHLine :          resource:TileRsc_Type amount:int x:int w:int y:int
-	ResourceVLine :          resource:TileRsc_Type amount:int x:int y:int h:int
-	ResourceLine :           resource:TileRsc_Type amount:int x1:int y1:int x2:int y2:int
-	ResourceRect :           resource:TileRsc_Type amount:int x:int w:int y:int h:int
-	ResourceFillRect :       resource:TileRsc_Type amount:int x:int w:int y:int h:int
-	ResourceFillEllipses :   resource:TileRsc_Type amount:int x:int w:int y:int h:int
-	ResourceFromPNG :        name:string
-	ResourceAgeing :         initrun:int msper:int resetaftern:int
-	AddRoom :                bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y:int w:int h:int
-	AddRoomMaze :            bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
-	AddRoomsRand :           bgtile:Tile_Type walltile:Tile_Type terrace:bool align:int count:int mean:int stddev:int min:int
-	ConnectRooms :           tile:Tile_Type connect:int allconnect:bool diagonal:bool
-	FinalizeTerrain :        
-	AddPortal :              x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
-	AddPortalRand :         display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
-	AddPortalInRoom :       display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
-	AddRecycler :            x:int y:int display:FieldObjDisplay_Type message:string
-	AddRecyclerRand :        display:FieldObjDisplay_Type count:int message:string
-	AddRecyclerInRoom :      display:FieldObjDisplay_Type count:int message:string
-	AddTrapTeleport :        x:int y:int DstFloor:string message:string 
-	AddTrapTeleportsRand :   DstFloor:string count:int message:string
-	AddTrapTeleportsInRoom : DstFloor:string count:int message:string
-	AddTrap :                x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type message:string
-	AddTrapsRand :           display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
-	AddTrapsInRoom :         display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
+실 처리 하는 부분은 /game/terrain/mapmake.go 에서 이루어 진다. 
+
+script를 parse하는 것은 /lib/scriptparse 를 볼것. 
+
+스크립트 명령어 /enum/terraincmd.enum 의 내용.
+
+	# cmd argformat
+
+	NewTerrain  name:string w:int h:int ao:int po:int actturnboost:float
+
+	# add resource  
+	ResourceMazeWall        resource:TileRsc_Type amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	ResourceMazeWalk        resource:TileRsc_Type amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	ResourceRand            resource:TileRsc_Type mean:int stddev:int repeat:int
+	ResourceAt              resource:TileRsc_Type amount:int x:int y:int
+	ResourceHLine           resource:TileRsc_Type amount:int x:int w:int y:int
+	ResourceVLine           resource:TileRsc_Type amount:int x:int y:int h:int
+	ResourceLine            resource:TileRsc_Type amount:int x1:int y1:int x2:int y2:int
+	ResourceRect            resource:TileRsc_Type amount:int x:int w:int y:int h:int
+	ResourceFillRect        resource:TileRsc_Type amount:int x:int w:int y:int h:int
+	ResourceFillEllipses    resource:TileRsc_Type amount:int x:int w:int y:int h:int
+	ResourceFromPNG         name:string
+	ResourceAgeing          initrun:int msper:int resetaftern:int
+
+	# add room
+	AddRoom                 bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y:int w:int h:int
+	AddRoomMaze             bgtile:Tile_Type walltile:Tile_Type terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	AddRoomsRand            bgtile:Tile_Type walltile:Tile_Type terrace:bool align:int count:int mean:int stddev:int min:int
+	ConnectRooms            tile:Tile_Type connect:int allconnect:bool diagonal:bool
+
+	# add time 
+	TileMazeWall        tile:Tile_Type x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	TileMazeWalk        tile:Tile_Type x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	TileAt              tile:Tile_Type x:int y:int
+	TileHLine           tile:Tile_Type x:int w:int y:int
+	TileVLine           tile:Tile_Type x:int y:int h:int
+	TileLine            tile:Tile_Type x1:int y1:int x2:int y2:int
+	TileRect            tile:Tile_Type x:int w:int y:int h:int
+	TileFillRect        tile:Tile_Type x:int w:int y:int h:int
+	TileFillEllipses    tile:Tile_Type x:int w:int y:int h:int
+
+	FinalizeTerrain         
+
+	# add fieldobj
+	AddPortal               x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
+	AddPortalRand           display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
+	AddPortalInRoom         display:FieldObjDisplay_Type acttype:FieldObjAct_Type PortalID:string DstPortalID:string message:string
+	AddRecycler             x:int y:int display:FieldObjDisplay_Type message:string
+	AddRecyclerRand         display:FieldObjDisplay_Type count:int message:string
+	AddRecyclerInRoom       display:FieldObjDisplay_Type count:int message:string
+	AddTrapTeleport         x:int y:int DstFloor:string message:string 
+	AddTrapTeleportsRand    DstFloor:string count:int message:string
+	AddTrapTeleportsInRoom  DstFloor:string count:int message:string
+	AddTrap                 x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type message:string
+	AddTrapsRand            display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
+	AddTrapsInRoom          display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
