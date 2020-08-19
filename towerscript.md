@@ -34,7 +34,7 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 	AddRoomsRand            bgtile:Tile_Type walltile:Tile_Type terrace:bool align:int count:int mean:int stddev:int min:int
 	ConnectRooms            tile:Tile_Type connect:int allconnect:bool diagonal:bool
 
-	# add time 
+	# add tile 
 	TileMazeWall        tile:Tile_Type x:int y:int w:int h:int xn:int yn:int connerfill:bool
 	TileMazeWalk        tile:Tile_Type x:int y:int w:int h:int xn:int yn:int connerfill:bool
 	TileAt              tile:Tile_Type x:int y:int
