@@ -15,7 +15,7 @@ import (
 
 func (tr *Terrain) isPlaceableWithVt(x, y int, vx, vy int) bool {
 	tx, ty := tr.WrapXY(x+vx, y+vy)
-	return tr.tileArea[tx][ty].CharPlaceable()
+	return tr.serviceTileArea[tx][ty].CharPlaceable()
 }
 
 func (tr *Terrain) isBlockWay(x, y int) bool {
@@ -61,7 +61,7 @@ func (tr *Terrain) canPlaceFieldObjAt(x, y int) bool {
 			return false
 		}
 	}
-	tl := tr.tileArea[x][y]
+	tl := tr.serviceTileArea[x][y]
 	return tl.CharPlaceable() && !tl.TestByTile(tile.Door)
 }
 

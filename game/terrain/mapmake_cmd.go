@@ -99,7 +99,9 @@ func cmdConnectRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
 func cmdFinalizeTerrain(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	tr.crpCache = nil
 	tr.findList = nil
-	tr.finalize()
+	tr.tileLayer.DrawRooms(tr.roomManager.GetRoomList())
+	tr.tileLayer.DrawCorridors(tr.corridorList)
+	tr.renderServiceTileArea()
 	return nil
 }
 

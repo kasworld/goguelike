@@ -51,13 +51,19 @@ type Terrain struct {
 	ageingCount int64
 	inAgeing    int32
 
+	// convert serviceTileArea
 	resourceTileArea resourcetilearea.ResourceTileArea `prettystring:"simple"`
-	tileArea         tilearea.TileArea                 `prettystring:"simple"`
 
-	roomManager *roommanager.RoomManager `prettystring:"simple"`
+	// service tile area
+	serviceTileArea tilearea.TileArea `prettystring:"simple"`
 
-	corridorList []*corridor.Corridor `prettystring:"simple"`
-	crp8Way      bool                 // corridor connect 4way or 8way
+	// need override to tilearea after ageing
+	tileLayer tilearea.TileArea `prettystring:"simple"`
+
+	// tile layer relate data
+	roomManager  *roommanager.RoomManager `prettystring:"simple"`
+	corridorList []*corridor.Corridor     `prettystring:"simple"`
+	crp8Way      bool                     // corridor connect 4way or 8way
 
 	// must clear after terrain made
 	crpCache [][]*CorridorPather `prettystring:"simple"`
@@ -134,7 +140,7 @@ func (tr *Terrain) AgeingNoCheck() error {
 		defer atomic.AddInt32(&tr.inAgeing, -1)
 		rta := tr.GetRcsTiles().Dup().Ageing(tr.rnd.Intn, 1)
 		tr.resourceTileArea = rta
-		tr.finalize()
+		tr.renderServiceTileArea()
 		tr.ageingCount++
 		return nil
 	} else {
@@ -147,7 +153,7 @@ func (tr *Terrain) ResetAgeing() error {
 		defer atomic.AddInt32(&tr.inAgeing, -1)
 		rta := tr.GetOriRcsTiles().Dup()
 		tr.resourceTileArea = rta
-		tr.finalize()
+		tr.renderServiceTileArea()
 		tr.ageingCount = 0
 		return nil
 	} else {
@@ -155,12 +161,11 @@ func (tr *Terrain) ResetAgeing() error {
 	}
 }
 
-func (tr *Terrain) finalize() {
+func (tr *Terrain) renderServiceTileArea() {
 	tr.resource2View()
-	tr.tileArea.DrawRooms(tr.roomManager.GetRoomList())
-	tr.tileArea.DrawCorridors(tr.corridorList)
+	tr.tileLayer2SeviceTileArea()
 	tr.openBlockedDoor()
-	tr.Tile2Discover = tr.tileArea.CalcNotEmptyTileCount()
+	tr.Tile2Discover = tr.serviceTileArea.CalcNotEmptyTileCount()
 	tr.viewportCache.Reset()
 	tr.ta4ff = tilearea4pathfind.New(tr.GetTiles())
 	for _, o := range tr.foPosMan.GetAllList() {
@@ -169,7 +174,7 @@ func (tr *Terrain) finalize() {
 			tr.log.Fatal("not *fieldobject.FieldObject %v", o)
 			continue
 		}
-		if !tr.tileArea[iao.X][iao.Y].CharPlaceable() {
+		if !tr.serviceTileArea[iao.X][iao.Y].CharPlaceable() {
 			tr.log.Fatal("iao placed at NonCharPlaceable tile %v", iao)
 		}
 	}

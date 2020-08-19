@@ -48,6 +48,7 @@ var TerrainScriptFn = map[terraincmd.TerrainCmd]func(tr *Terrain, ca *scriptpars
 	terraincmd.AddRoomsRand: cmdAddRandRooms,
 	terraincmd.ConnectRooms: cmdConnectRooms,
 
+	// operations to tileLayer
 	terraincmd.TileMazeWall:     cmdTileMazeWall,
 	terraincmd.TileMazeWalk:     cmdTileMazeWalk,
 	terraincmd.TileAt:           cmdTileAt,
@@ -138,7 +139,8 @@ func (tr *Terrain) execNewTerrain(
 
 	tr.Name = name
 	tr.ActTurnBoost = actturnboost
-	tr.tileArea = tilearea.New(w, h)
+	tr.serviceTileArea = tilearea.New(w, h)
+	tr.tileLayer = tilearea.New(w, h)
 	tr.resourceTileArea = resourcetilearea.New(w, h)
 	tr.roomManager = roommanager.New(w, h)
 	tr.corridorList = make([]*corridor.Corridor, 0)

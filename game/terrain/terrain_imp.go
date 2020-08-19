@@ -22,7 +22,7 @@ import (
 
 // imp terraini
 func (tr *Terrain) GetTiles() tilearea.TileArea {
-	return tr.tileArea
+	return tr.serviceTileArea
 }
 func (tr *Terrain) GetName() string {
 	return tr.Name

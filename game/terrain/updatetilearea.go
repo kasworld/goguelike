@@ -20,7 +20,7 @@ import (
 func (tr *Terrain) resource2View() {
 	for x, xv := range tr.resourceTileArea {
 		for y, yv := range xv {
-			tr.tileArea[x][y] = yv.Resource2View()
+			tr.serviceTileArea[x][y] = yv.Resource2View()
 		}
 	}
 }
@@ -29,10 +29,10 @@ func (tr *Terrain) openBlockedDoor() {
 	for _, r := range tr.roomManager.GetRoomList() {
 		for _, connPos := range r.ConnectPos {
 			x, y := tr.XWrap(connPos[0]), tr.YWrap(connPos[1])
-			t := tr.tileArea[x][y]
+			t := tr.serviceTileArea[x][y]
 			if t.CannotPlaceObj() {
 				if tr.roomManager.GetRoomByPos(x, y) != nil {
-					tr.tileArea[x][y].Op(
+					tr.serviceTileArea[x][y].Op(
 						tile_flag.TileTypeValue{
 							Op:  tileoptype.OverrideBits,
 							Arg: tile.Door},
@@ -40,6 +40,18 @@ func (tr *Terrain) openBlockedDoor() {
 					tr.log.Warn("wall blocked door found %v [%v %v], change to door", tr, x, y)
 				}
 			}
+		}
+	}
+}
+
+func (tr *Terrain) tileLayer2SeviceTileArea() {
+	for x, xv := range tr.tileLayer {
+		for y, yv := range xv {
+			tr.serviceTileArea[x][y].Op(
+				tile_flag.TileTypeValue{
+					Op:  tileoptype.SetBits,
+					Arg: yv},
+			)
 		}
 	}
 }

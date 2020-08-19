@@ -23,13 +23,15 @@ import (
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
+// all function is operation to tileLayer
+
 func cmdTileAt(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var tl tile.Tile
 	var x, y int
 	if err := ca.GetArgs(&tl, &x, &y); err != nil {
 		return err
 	}
-	tr.tileArea.OpXY(x, y, tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl})
+	tr.tileLayer.OpXY(x, y, tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl})
 	return nil
 }
 
@@ -40,7 +42,7 @@ func cmdTileHLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	tr.tileArea.HLine(x, w, y, tl)
+	tr.tileLayer.HLine(x, w, y, tl)
 	return nil
 }
 
@@ -51,7 +53,7 @@ func cmdTileVLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	tr.tileArea.VLine(x, y, h, tl)
+	tr.tileLayer.VLine(x, y, h, tl)
 	return nil
 }
 
@@ -62,7 +64,7 @@ func cmdTileLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	tr.tileArea.Line(x1, y1, x2, y2, tl)
+	tr.tileLayer.Line(x1, y1, x2, y2, tl)
 	return nil
 }
 
@@ -73,7 +75,7 @@ func cmdTileRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	tr.tileArea.Rect(x, w, y, h, tl)
+	tr.tileLayer.Rect(x, w, y, h, tl)
 	return nil
 }
 
@@ -83,7 +85,7 @@ func cmdTileFillRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&tl, &x, &w, &y, &h); err != nil {
 		return err
 	}
-	tr.tileArea.FillRect(x, w, y, h, tl)
+	tr.tileLayer.FillRect(x, w, y, h, tl)
 	return nil
 }
 
@@ -93,7 +95,7 @@ func cmdTileFillEllipses(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&tl, &x, &w, &y, &h); err != nil {
 		return err
 	}
-	tr.tileArea.Ellipses(x, w, y, h, tl)
+	tr.tileLayer.Ellipses(x, w, y, h, tl)
 	return nil
 }
 
@@ -112,7 +114,7 @@ func cmdTileMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
 
-	tr.tileArea.DrawBoolMapTrue(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
+	tr.tileLayer.DrawBoolMapTrue(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
 	return nil
 }
 
@@ -130,6 +132,6 @@ func cmdTileMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
-	tr.tileArea.DrawBoolMapFalse(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
+	tr.tileLayer.DrawBoolMapFalse(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
 	return nil
 }

@@ -23,7 +23,7 @@ func (tr *Terrain) Search1stByXYLenList(
 
 	for _, v := range xylenlist {
 		x, y := tr.WrapXY(sx+v.X, sy+v.Y)
-		if filterfn(&tr.tileArea[x][y]) {
+		if filterfn(&tr.serviceTileArea[x][y]) {
 			return x, y, true
 		}
 	}

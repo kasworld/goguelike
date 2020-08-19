@@ -157,7 +157,7 @@ func (tr *Terrain) calcZoom() int {
 
 func (tr *Terrain) Web_TerrainImageZoom(w http.ResponseWriter, r *http.Request) {
 	zoom := weblib.GetIntByName("zoom", 1, w, r)
-	img := tr.tileArea.ToImage(zoom)
+	img := tr.serviceTileArea.ToImage(zoom)
 	err := png.Encode(w, img)
 	if err != nil {
 		tr.log.Error("%v", err)
@@ -166,7 +166,7 @@ func (tr *Terrain) Web_TerrainImageZoom(w http.ResponseWriter, r *http.Request) 
 
 func (tr *Terrain) Web_TerrainImageAutoZoom(w http.ResponseWriter, r *http.Request) {
 	zoom := tr.calcZoom()
-	img := tr.tileArea.ToImage(zoom)
+	img := tr.serviceTileArea.ToImage(zoom)
 	err := png.Encode(w, img)
 	if err != nil {
 		tr.log.Error("%v", err)
@@ -184,7 +184,7 @@ func (tr *Terrain) Web_TileInfo(w http.ResponseWriter, r *http.Request) {
 	zoom := tr.calcZoom()
 	x /= zoom
 	y /= zoom
-	tl := tr.tileArea.GetByXY(x, y)
+	tl := tr.serviceTileArea.GetByXY(x, y)
 	rtl := tr.resourceTileArea.GetXY(x, y)
 	fmt.Fprintf(w, "[%v %v] %v %v", x, y, tl, rtl)
 }
