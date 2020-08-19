@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/walk2d"
 )
 
-func cmdResource(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdResourceAt(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var rsctl resourcetype.ResourceType
 	var amount, x, y int
 	if err := ca.GetArgs(&rsctl, &amount, &x, &y); err != nil {

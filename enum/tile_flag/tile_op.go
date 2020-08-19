@@ -29,15 +29,15 @@ func (t TileFlag) Empty() bool {
 }
 
 type TileTypeValue struct {
-	T tileoptype.TileOpType
-	V interface{}
+	Op  tileoptype.TileOpType
+	Arg interface{}
 }
 
 func (t *TileFlag) Op(rv TileTypeValue) error {
-	switch rv.V.(type) {
+	switch rv.Arg.(type) {
 	case TileFlag:
-		v := rv.V.(TileFlag)
-		switch rv.T {
+		v := rv.Arg.(TileFlag)
+		switch rv.Op {
 		case tileoptype.SetBits:
 			t.SetByTileFlag(v)
 		case tileoptype.ClearBits:
@@ -46,8 +46,8 @@ func (t *TileFlag) Op(rv TileTypeValue) error {
 			return fmt.Errorf("Invalid op %v", rv)
 		}
 	case tile.Tile:
-		v := rv.V.(tile.Tile)
-		switch rv.T {
+		v := rv.Arg.(tile.Tile)
+		switch rv.Op {
 		case tileoptype.SetBit:
 			t.SetByTile(v)
 		case tileoptype.ClearBit:

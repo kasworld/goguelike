@@ -42,8 +42,8 @@ func (tr *Terrain) openBlockedDoor() {
 				if tr.roomManager.GetRoomByPos(x, y) != nil {
 					tr.tileArea[x][y].Op(
 						tile_flag.TileTypeValue{
-							T: tileoptype.OverrideBits,
-							V: tile.Door},
+							Op:  tileoptype.OverrideBits,
+							Arg: tile.Door},
 					)
 					tr.log.Warn("wall blocked door found %v [%v %v], change to door", tr, x, y)
 				}

@@ -66,9 +66,9 @@ func (ta TileArea) GetXYLen() (int, int) {
 }
 
 // for draw2d
-func (ta TileArea) OpXY(x, y int, v interface{}) {
-	rv := v.(tile_flag.TileTypeValue)
-	ta[x][y].Op(rv)
+func (ta TileArea) OpXY(x, y int, v tile_flag.TileTypeValue) {
+	// rv := v.(tile_flag.TileTypeValue)
+	ta[x][y].Op(v)
 }
 
 func (ta TileArea) TotalPos() int {
@@ -86,8 +86,8 @@ func (ta TileArea) DrawRoomsToFloor(rs []*room.Room) {
 		for x, xv := range r.Tiles {
 			for y, yv := range xv {
 				tax, tay := xWrap(roomRect.X+x), yWrap(roomRect.Y+y)
-				ta[tax][tay].Op(tile_flag.TileTypeValue{T: tileoptype.OverrideBits, V: r.BgTile})
-				ta[tax][tay].Op(tile_flag.TileTypeValue{T: tileoptype.OverrideBits, V: yv})
+				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: r.BgTile})
+				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: yv})
 			}
 		}
 	}

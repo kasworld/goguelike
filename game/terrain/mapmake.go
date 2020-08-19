@@ -21,31 +21,45 @@ import (
 	"github.com/kasworld/goguelike/game/terrain/paramconv"
 	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
 	"github.com/kasworld/goguelike/game/terrain/roommanager"
-	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/game/tilearea"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/wrapper"
 )
 
 var TerrainScriptFn = map[terraincmd.TerrainCmd]func(tr *Terrain, ca *scriptparse.CmdArgs) error{
-	terraincmd.NewTerrain:             cmdNewTerrain,
-	terraincmd.ResourceMazeWall:       cmdResourceMazeWall,
-	terraincmd.ResourceMazeWalk:       cmdResourceMazeWalk,
-	terraincmd.ResourceRand:           cmdResourceRand,
-	terraincmd.Resource:               cmdResource,
-	terraincmd.ResourceHLine:          cmdResourceHLine,
-	terraincmd.ResourceVLine:          cmdResourceVLine,
-	terraincmd.ResourceLine:           cmdResourceLine,
-	terraincmd.ResourceRect:           cmdResourceRect,
-	terraincmd.ResourceFillRect:       cmdResourceFillRect,
-	terraincmd.ResourceFillEllipses:   cmdResourceFillEllipses,
-	terraincmd.ResourceFromPNG:        cmdResourceFromPNG,
-	terraincmd.ResourceAgeing:         cmdAgeing,
-	terraincmd.AddRoom:                cmdAddRoom,
-	terraincmd.AddRoomMaze:            cmdAddMazeRoom,
-	terraincmd.AddRoomsRand:           cmdAddRandRooms,
-	terraincmd.ConnectRooms:           cmdConnectRooms,
-	terraincmd.FinalizeTerrain:        cmdFinalizeTerrain,
+	terraincmd.NewTerrain: cmdNewTerrain,
+
+	terraincmd.ResourceMazeWall:     cmdResourceMazeWall,
+	terraincmd.ResourceMazeWalk:     cmdResourceMazeWalk,
+	terraincmd.ResourceRand:         cmdResourceRand,
+	terraincmd.ResourceAt:           cmdResourceAt,
+	terraincmd.ResourceHLine:        cmdResourceHLine,
+	terraincmd.ResourceVLine:        cmdResourceVLine,
+	terraincmd.ResourceLine:         cmdResourceLine,
+	terraincmd.ResourceRect:         cmdResourceRect,
+	terraincmd.ResourceFillRect:     cmdResourceFillRect,
+	terraincmd.ResourceFillEllipses: cmdResourceFillEllipses,
+	terraincmd.ResourceFromPNG:      cmdResourceFromPNG,
+	terraincmd.ResourceAgeing:       cmdAgeing,
+
+	terraincmd.AddRoom:      cmdAddRoom,
+	terraincmd.AddRoomMaze:  cmdAddMazeRoom,
+	terraincmd.AddRoomsRand: cmdAddRandRooms,
+	terraincmd.ConnectRooms: cmdConnectRooms,
+
+	terraincmd.TileMazeWall:     cmdTileMazeWall,
+	terraincmd.TileMazeWalk:     cmdTileMazeWalk,
+	terraincmd.TileAt:           cmdTileAt,
+	terraincmd.TileHLine:        cmdTileHLine,
+	terraincmd.TileVLine:        cmdTileVLine,
+	terraincmd.TileLine:         cmdTileLine,
+	terraincmd.TileRect:         cmdTileRect,
+	terraincmd.TileFillRect:     cmdTileFillRect,
+	terraincmd.TileFillEllipses: cmdTileFillEllipses,
+
+	terraincmd.FinalizeTerrain: cmdFinalizeTerrain,
+
 	terraincmd.AddPortal:              cmdAddPortal,
 	terraincmd.AddPortalRand:          cmdAddPortalRand,
 	terraincmd.AddPortalInRoom:        cmdAddPortalRandInRoom,
