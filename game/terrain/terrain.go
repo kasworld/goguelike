@@ -158,7 +158,7 @@ func (tr *Terrain) ResetAgeing() error {
 func (tr *Terrain) finalize() {
 	tr.resource2View()
 	tr.tileArea.DrawRoomsToFloor(tr.roomManager.GetRoomList())
-	tr.drawCorridors()
+	tr.tileArea.DrawCorridors(tr.corridorList)
 	tr.openBlockedDoor()
 	tr.Tile2Discover = tr.tileArea.CalcNotEmptyTileCount()
 	tr.viewportCache.Reset()

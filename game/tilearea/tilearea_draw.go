@@ -15,8 +15,9 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/tileoptype"
-	"github.com/kasworld/goguelike/lib/boolmatrix"
+	"github.com/kasworld/goguelike/game/terrain/corridor"
 	"github.com/kasworld/goguelike/game/terrain/room"
+	"github.com/kasworld/goguelike/lib/boolmatrix"
 	"github.com/kasworld/walk2d"
 )
 
@@ -30,6 +31,14 @@ func (ta TileArea) DrawRoomsToFloor(rs []*room.Room) {
 				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: r.BgTile})
 				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: yv})
 			}
+		}
+	}
+}
+
+func (ta TileArea) DrawCorridors(corridorList []*corridor.Corridor) {
+	for _, v := range corridorList {
+		for _, w := range v.P {
+			ta[w[0]][w[1]].OverrideBits(v.Tile)
 		}
 	}
 }

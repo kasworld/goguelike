@@ -25,14 +25,6 @@ func (tr *Terrain) resource2View() {
 	}
 }
 
-func (tr *Terrain) drawCorridors() {
-	for _, v := range tr.corridorList {
-		for _, w := range v.P {
-			tr.tileArea[w[0]][w[1]].OverrideBits(v.Tile)
-		}
-	}
-}
-
 func (tr *Terrain) openBlockedDoor() {
 	for _, r := range tr.roomManager.GetRoomList() {
 		for _, connPos := range r.ConnectPos {
