@@ -126,10 +126,10 @@ func CityRoomsRand(roomCount int, intnfn func(int) int) []string {
 	return rtn
 }
 
-func CityRooms800x640(intnfn func(int) int) []string {
-	w, h := 800, 640
-	roomW, roomH := 12, 10
-	roadW := 5
+func CityRooms(floorW, floorH, roomW, roomH, roadW int, intnfn func(int) int) []string {
+	// w, h := 800, 640
+	// roomW, roomH := 12, 10
+	// roadW := 5
 	rtn := make([]string, 0)
 	var allRoomTile = []tile.Tile{
 		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
@@ -142,8 +142,8 @@ func CityRooms800x640(intnfn func(int) int) []string {
 		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
 	}
 
-	for x := 0; x < w-roomW; x += roomW + roadW {
-		for y := 0; y < h-roomH; y += roomH + roadW {
+	for x := 0; x < floorW-roomW; x += roomW + roadW {
+		for y := 0; y < floorH-roomH; y += roomH + roadW {
 			roomTile := allRoomTile[intnfn(len(allRoomTile))]
 			wallTile := allWallTile[intnfn(len(allWallTile))]
 			rtn = append(rtn, fmt.Sprintf(
@@ -152,10 +152,24 @@ func CityRooms800x640(intnfn func(int) int) []string {
 			))
 		}
 	}
-	roadTile := allRoadTile[intnfn(len(allRoadTile))]
-	rtn = append(rtn, fmt.Sprintf(
-		"ConnectRooms tile=%v connect=2 allconnect=true diagonal=false",
-		roadTile))
+	for x := roomW; x < floorW-roomW; x += roomW + roadW {
+		for dx := 0; dx < roadW; dx++ {
+			roadTile := allRoadTile[intnfn(len(allRoadTile))]
+			rtn = append(rtn, fmt.Sprintf(
+				"TileVLine tile=%v x=%v y=%v h=%v",
+				roadTile, x+dx, 0, floorH,
+			))
+		}
+	}
+	for y := roomH; y < floorH-roomH; y += roomH + roadW {
+		for dy := 0; dy < roadW; dy++ {
+			roadTile := allRoadTile[intnfn(len(allRoadTile))]
+			rtn = append(rtn, fmt.Sprintf(
+				"TileHLine tile=%v x=%v y=%v w=%v",
+				roadTile, 0, y+dy, floorW,
+			))
+		}
+	}
 
 	return rtn
 }
