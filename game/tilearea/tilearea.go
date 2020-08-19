@@ -17,8 +17,6 @@ import (
 	"image/color"
 
 	"github.com/kasworld/goguelike/enum/tile_flag"
-	"github.com/kasworld/goguelike/enum/tileoptype"
-	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/wrapper"
 )
 
@@ -67,7 +65,6 @@ func (ta TileArea) GetXYLen() (int, int) {
 
 // for draw2d
 func (ta TileArea) OpXY(x, y int, v tile_flag.TileTypeValue) {
-	// rv := v.(tile_flag.TileTypeValue)
 	ta[x][y].Op(v)
 }
 
@@ -77,20 +74,6 @@ func (ta TileArea) TotalPos() int {
 
 func (ta TileArea) GetByXY(x, y int) *tile_flag.TileFlag {
 	return &ta[x][y]
-}
-
-func (ta TileArea) DrawRoomsToFloor(rs []*room.Room) {
-	xWrap, yWrap := ta.GetXYWrapper()
-	for _, r := range rs {
-		roomRect := r.Area
-		for x, xv := range r.Tiles {
-			for y, yv := range xv {
-				tax, tay := xWrap(roomRect.X+x), yWrap(roomRect.Y+y)
-				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: r.BgTile})
-				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: yv})
-			}
-		}
-	}
 }
 
 func (ta TileArea) GetXYWrapper() (func(int) int, func(int) int) {
