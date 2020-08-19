@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/walk2d"
 )
 
-func (ta TileArea) DrawRoomsToFloor(rs []*room.Room) {
+func (ta TileArea) DrawRooms(rs []*room.Room) {
 	xWrap, yWrap := ta.GetXYWrapper()
 	for _, r := range rs {
 		roomRect := r.Area
@@ -97,7 +97,7 @@ func (ta TileArea) Ellipses(x, w, y, h int, tl tile.Tile) {
 	walk2d.Ellipses(x, y, x+w, y+h, fn)
 }
 
-func (ta TileArea) SetBoolMapTrue(xWrap, yWrap func(i int) int,
+func (ta TileArea) DrawBoolMapTrue(xWrap, yWrap func(i int) int,
 	maX, maY int, ma boolmatrix.BoolMatrix, tl tile.Tile) {
 	rv := tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl}
 	for x, xv := range ma {
@@ -109,7 +109,7 @@ func (ta TileArea) SetBoolMapTrue(xWrap, yWrap func(i int) int,
 	}
 }
 
-func (ta TileArea) SetBoolMapFalse(xWrap, yWrap func(i int) int,
+func (ta TileArea) DrawBoolMapFalse(xWrap, yWrap func(i int) int,
 	maX, maY int, ma boolmatrix.BoolMatrix, tl tile.Tile) {
 	rv := tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl}
 	for x, xv := range ma {

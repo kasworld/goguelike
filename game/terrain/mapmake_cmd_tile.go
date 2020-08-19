@@ -112,7 +112,7 @@ func cmdTileMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
 
-	tr.tileArea.SetBoolMapTrue(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
+	tr.tileArea.DrawBoolMapTrue(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
 	return nil
 }
 
@@ -130,6 +130,6 @@ func cmdTileMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
-	tr.tileArea.SetBoolMapFalse(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
+	tr.tileArea.DrawBoolMapFalse(tr.XWrap, tr.YWrap, maX, maY, ma, tl)
 	return nil
 }
