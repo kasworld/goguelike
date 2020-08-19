@@ -16,19 +16,24 @@ import (
 	"sync"
 
 	"github.com/kasworld/goguelike/game/terrain/room"
+	"github.com/kasworld/wrapper"
 )
 
 type RoomManager struct {
 	mutex sync.RWMutex `prettystring:"hide"`
 
-	roomList []*room.Room   `prettystring:"simple"`
-	roomArea [][]*room.Room `prettystring:"simple"`
+	roomList []*room.Room     `prettystring:"simple"`
+	roomArea [][]*room.Room   `prettystring:"simple"`
+	XWrapper *wrapper.Wrapper `prettystring:"simple"`
+	YWrapper *wrapper.Wrapper `prettystring:"simple"`
 }
 
 func New(w, h int) *RoomManager {
 	rm := &RoomManager{
 		roomList: make([]*room.Room, 0),
 		roomArea: make([][]*room.Room, w),
+		XWrapper: wrapper.New(w),
+		YWrapper: wrapper.New(h),
 	}
 	for x := range rm.roomArea {
 		rm.roomArea[x] = make([]*room.Room, h)
@@ -49,16 +54,17 @@ func (rm *RoomManager) GetRoomArea() [][]*room.Room {
 }
 
 func (rm *RoomManager) AddRoom(r *room.Room) error {
+	// check space to add
 	for x := r.Area.X; x < r.Area.X2(); x++ {
 		for y := r.Area.Y; y < r.Area.Y2(); y++ {
-			if rm.roomArea[x][y] != nil {
+			if rm.roomArea[rm.XWrapper.WrapSafe(x)][rm.YWrapper.WrapSafe(y)] != nil {
 				return fmt.Errorf("No space to add room")
 			}
 		}
 	}
 	for x := r.Area.X; x < r.Area.X2(); x++ {
 		for y := r.Area.Y; y < r.Area.Y2(); y++ {
-			rm.roomArea[x][y] = r
+			rm.roomArea[rm.XWrapper.WrapSafe(x)][rm.YWrapper.WrapSafe(y)] = r
 		}
 	}
 	rm.roomList = append(rm.roomList, r)
@@ -66,5 +72,5 @@ func (rm *RoomManager) AddRoom(r *room.Room) error {
 }
 
 func (rm *RoomManager) GetRoomByPos(x, y int) *room.Room {
-	return rm.roomArea[x][y]
+	return rm.roomArea[rm.XWrapper.WrapSafe(x)][rm.YWrapper.WrapSafe(y)]
 }

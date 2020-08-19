@@ -32,7 +32,15 @@ func New(name string) *towermake.Tower {
 	}
 
 	tw := towermake.New(name)
-	fm := tw.Add("ObjMax1", 800, 640, 8192, 0, 1.0).Appends(
+
+	fm := tw.Add("ObjMax0", 800, 640, 8192, 0, 1.0).Appends(
+		floortemplate.CityRooms800x640(rnd.Intn)...,
+	)
+	fm.Appends(
+		"ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=800 h=640",
+	)
+
+	fm = tw.Add("ObjMax1", 800, 640, 8192, 0, 1.0).Appends(
 		str...,
 	)
 	fm.Appends(
@@ -55,6 +63,7 @@ func New(name string) *towermake.Tower {
 		}
 	}
 	for i := 0; i < 1024; i++ {
+		tw.GetByName("ObjMax0").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax1"))
 		tw.GetByName("ObjMax1").ConnectStairUp("Rand", "Rand", tw.GetByName("ObjMax2"))
 	}
 
