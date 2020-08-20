@@ -22,8 +22,6 @@ import (
 type FieldObject struct {
 	FloorName   string
 	ID          string // uuid or from script id
-	X           int
-	Y           int
 	DisplayType fieldobjdisplaytype.FieldObjDisplayType
 	ActType     fieldobjacttype.FieldObjActType
 	Message     string
@@ -37,10 +35,9 @@ type FieldObject struct {
 
 func (p FieldObject) String() string {
 	return fmt.Sprintf(
-		"FieldObject[%v %v [%v %v] %v %v %v %v %v]",
+		"FieldObject[%v %v %v %v %v %v %v]",
 		p.FloorName,
 		p.ID,
-		p.X, p.Y,
 		p.ActType,
 		p.DisplayType,
 		p.Message,
@@ -51,12 +48,6 @@ func (p FieldObject) String() string {
 // IDPosI interface
 func (p *FieldObject) GetUUID() string {
 	return p.ID
-}
-func (p *FieldObject) GetPos() [2]int {
-	return [2]int{p.X, p.Y}
-}
-func (p *FieldObject) GetXY() (int, int) {
-	return p.X, p.Y
 }
 
 func (p *FieldObject) GetDisplayType() fieldobjdisplaytype.FieldObjDisplayType {

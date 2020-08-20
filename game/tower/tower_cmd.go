@@ -260,7 +260,14 @@ func (tw *Tower) Call_ActiveObjUsePortal(
 		return
 	}
 	tw.log.Debug("ActiveObjUsePortal %v %v to %v", ActiveObj, SrcFloor, dstFloor)
-	if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, P2.X, P2.Y); err != nil {
+
+	x, y, exist := dstFloor.GetFieldObjPosMan().GetXYByUUID(P2.GetUUID())
+	if !exist {
+		tw.log.Fatal("fieldobj not found %v", P2)
+		return
+	}
+
+	if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
 		tw.log.Fatal("%v", err)
 	}
 }

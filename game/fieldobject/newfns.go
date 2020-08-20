@@ -17,7 +17,7 @@ import (
 	"github.com/kasworld/uuidstr"
 )
 
-func NewPortal(floorname string, x, y int, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+func NewPortal(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
 	acttype fieldobjacttype.FieldObjActType,
 	portalID string,
 	dstPortalID string,
@@ -25,8 +25,6 @@ func NewPortal(floorname string, x, y int, displayType fieldobjdisplaytype.Field
 	return &FieldObject{
 		FloorName:   floorname,
 		ID:          portalID,
-		X:           x,
-		Y:           y,
 		ActType:     acttype,
 		DisplayType: displayType,
 		Message:     message,
@@ -34,27 +32,23 @@ func NewPortal(floorname string, x, y int, displayType fieldobjdisplaytype.Field
 	}
 }
 
-func NewRecycler(floorname string, x, y int, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+func NewRecycler(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
 ) *FieldObject {
 	return &FieldObject{
 		ID:          uuidstr.New(),
 		FloorName:   floorname,
-		X:           x,
-		Y:           y,
 		ActType:     fieldobjacttype.RecycleCarryObj,
 		DisplayType: displayType,
 		Message:     message,
 	}
 }
 
-func NewTrapTeleport(floorname string, x, y int, message string,
+func NewTrapTeleport(floorname string, message string,
 	dstFloorName string,
 ) *FieldObject {
 	return &FieldObject{
 		ID:           uuidstr.New(),
 		FloorName:    floorname,
-		X:            x,
-		Y:            y,
 		ActType:      fieldobjacttype.Teleport,
 		DisplayType:  fieldobjdisplaytype.None,
 		Message:      message,
@@ -62,14 +56,12 @@ func NewTrapTeleport(floorname string, x, y int, message string,
 	}
 }
 
-func NewTrapNoArg(floorname string, x, y int, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
 	acttype fieldobjacttype.FieldObjActType,
 ) *FieldObject {
 	return &FieldObject{
 		ID:          uuidstr.New(),
 		FloorName:   floorname,
-		X:           x,
-		Y:           y,
 		ActType:     acttype,
 		DisplayType: fieldobjdisplaytype.None,
 		Message:     message,

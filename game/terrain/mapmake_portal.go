@@ -75,7 +75,7 @@ func (tr *Terrain) addPortal(portalID string, dstPortalID string,
 	if !tr.canPlaceFieldObjAt(x, y) {
 		return fmt.Errorf("can not add portal at NonCharPlaceable tile %v %v", x, y)
 	}
-	po := fieldobject.NewPortal(tr.Name, x, y,
+	po := fieldobject.NewPortal(tr.Name,
 		dispType, message, acttype,
 		portalID, dstPortalID,
 	)

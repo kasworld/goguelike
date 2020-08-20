@@ -25,7 +25,7 @@ func (tr *Terrain) addTrap(x, y int, dispType fieldobjdisplaytype.FieldObjDispla
 	if !tr.canPlaceFieldObjAt(x, y) {
 		return fmt.Errorf("can not add Recycler at NonCharPlaceable tile %v %v", x, y)
 	}
-	po := fieldobject.NewTrapNoArg(tr.Name, x, y, dispType, message, actType)
+	po := fieldobject.NewTrapNoArg(tr.Name, dispType, message, actType)
 	tr.foPosMan.AddToXY(po, x, y)
 
 	if r := tr.roomManager.GetRoomByPos(x, y); r != nil {

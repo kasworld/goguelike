@@ -172,7 +172,12 @@ func (tr *Terrain) renderServiceTileArea() {
 			tr.log.Fatal("not *fieldobject.FieldObject %v", o)
 			continue
 		}
-		if !tr.serviceTileArea[iao.X][iao.Y].CharPlaceable() {
+		x, y, exist := tr.foPosMan.GetXYByUUID(o.GetUUID())
+		if !exist {
+			tr.log.Fatal("fieldobj not found %v", o)
+			continue
+		}
+		if !tr.serviceTileArea[x][y].CharPlaceable() {
 			tr.log.Fatal("iao placed at NonCharPlaceable tile %v", iao)
 		}
 	}
