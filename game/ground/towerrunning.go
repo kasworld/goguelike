@@ -75,10 +75,10 @@ func (tw *TowerRunning) Register(
 	tw.TowerInfo = *req.TI
 	tw.ServiceInfo = *req.SI
 	tw.TowerConfigRecv = *req.TC
-	tw.AdminURL = fmt.Sprintf("%s%s/",
+	tw.AdminURL = fmt.Sprintf("%s:%v/",
 		sconfig.TowerAdminHostBase, req.TC.AdminPort,
 	)
-	tw.ServiceURL = fmt.Sprintf("%s%s/",
+	tw.ServiceURL = fmt.Sprintf("%s:%v/",
 		sconfig.TowerServiceHostBase, req.TC.ServicePort,
 	)
 }
