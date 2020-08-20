@@ -269,14 +269,14 @@ const (
 	</tr>`
 	floor_HTML_row = `<tr>
 	<td>
-	<a href= "/floor?floorid={{$v.GetUUID}}" target="_blank">
+	<a href= "/floor?floorname={{$v.GetName}}" target="_blank">
 		{{$v.GetName}}
 	</a>
 	</td>
 	<td>{{$v.ReqState}} {{$v.GetCmdFloorActStat}}
 	</td>
 	<td>
-	<a href= "/terrain?floorid={{$v.GetUUID}}" target="_blank">
+	<a href= "/terrain?floorname={{$v.GetName}}" target="_blank">
 		{{$v.GetTerrain.AgeingCount}}/{{$v.GetTerrain.GetResetAfterNAgeing}}
 	</a>
 	</td>

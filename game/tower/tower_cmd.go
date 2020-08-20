@@ -42,7 +42,7 @@ func (tw *Tower) processCmd2Tower(data interface{}) {
 		pk.RspCh <- tw.Call_AdminFloorMove(pk.ActiveObj, pk.RecvPacket)
 
 	case *cmd2tower.FloorMove:
-		pk.RspCh <- tw.Call_FloorMove(pk.ActiveObj, pk.FloorUUID)
+		pk.RspCh <- tw.Call_FloorMove(pk.ActiveObj, pk.FloorName)
 
 	case *cmd2tower.AdminTowerCmd:
 		pk.RspCh <- tw.Call_AdminTowerCmd(pk.ActiveObj, pk.RecvPacket)
@@ -114,7 +114,7 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 		tw.log.Fatal("%v", err)
 	}
 	for _, f := range tw.floorMan.GetFloorList() {
-		va := ao.GetVisitFloor(f.GetUUID())
+		va := ao.GetVisitFloor(f.GetName())
 		if va == nil {
 			continue
 		}
@@ -162,7 +162,7 @@ func (tw *Tower) Call_AdminFloorMove(
 	switch cmd := RecvPacket.Floor; cmd {
 	case "Before":
 		aoFloor := tw.ao2Floor.GetFloorByActiveObjID(ActiveObj.GetUUID())
-		aoFloorIndex, err := tw.floorMan.GetFloorIndexByUUID(aoFloor.GetUUID())
+		aoFloorIndex, err := tw.floorMan.GetFloorIndexByName(aoFloor.GetName())
 		if err != nil {
 			tw.log.Error("floor not found %v", aoFloor)
 			return c2t_error.ObjectNotFound
@@ -180,7 +180,7 @@ func (tw *Tower) Call_AdminFloorMove(
 		return c2t_error.None
 	case "Next":
 		aoFloor := tw.ao2Floor.GetFloorByActiveObjID(ActiveObj.GetUUID())
-		aoFloorIndex, err := tw.floorMan.GetFloorIndexByUUID(aoFloor.GetUUID())
+		aoFloorIndex, err := tw.floorMan.GetFloorIndexByName(aoFloor.GetName())
 		if err != nil {
 			tw.log.Error("floor not found %v", aoFloor)
 			return c2t_error.ObjectNotFound
@@ -197,7 +197,7 @@ func (tw *Tower) Call_AdminFloorMove(
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
 		return c2t_error.None
 	default:
-		dstFloor := tw.floorMan.GetFloorByUUID(cmd)
+		dstFloor := tw.floorMan.GetFloorByName(cmd)
 		if dstFloor == nil {
 			tw.log.Error("floor not found %v", cmd)
 			return c2t_error.ObjectNotFound
@@ -216,11 +216,11 @@ func (tw *Tower) Call_AdminFloorMove(
 }
 
 func (tw *Tower) Call_FloorMove(
-	ActiveObj gamei.ActiveObjectI, FloorUUID string) c2t_error.ErrorCode {
+	ActiveObj gamei.ActiveObjectI, FloorName string) c2t_error.ErrorCode {
 
-	dstFloor := tw.floorMan.GetFloorByUUID(FloorUUID)
+	dstFloor := tw.floorMan.GetFloorByName(FloorName)
 	if dstFloor == nil {
-		tw.log.Error("floor not found %v", FloorUUID)
+		tw.log.Error("floor not found %v", FloorName)
 		return c2t_error.ObjectNotFound
 	}
 	x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()

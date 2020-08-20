@@ -34,7 +34,7 @@ func (cai *ClientAI) currentFloor() *clientfloor.ClientFloor {
 	if fi := cai.FloorInfo; fi == nil {
 		return nil
 	} else {
-		return cai.UUID2ClientFloor[fi.UUID]
+		return cai.Name2ClientFloor[fi.Name]
 	}
 }
 

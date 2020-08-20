@@ -34,9 +34,9 @@ func (vp *GameScene) ProcessNotiVPTiles(
 	path2dst [][2]int,
 ) error {
 
-	if cf.FloorInfo.UUID != taNoti.FloorUUID {
+	if cf.FloorInfo.Name != taNoti.FloorName {
 		return fmt.Errorf("vptile data floor not match %v %v",
-			cf.FloorInfo.UUID, taNoti.FloorUUID)
+			cf.FloorInfo.Name, taNoti.FloorName)
 
 	}
 	vp.makeClientTile4PlayView(cf, taNoti)

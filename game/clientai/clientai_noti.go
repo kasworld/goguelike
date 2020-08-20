@@ -97,11 +97,11 @@ func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []by
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 	cai.FloorInfo = pkbody.FI
-	cf, exist := cai.UUID2ClientFloor[pkbody.FI.UUID]
+	cf, exist := cai.Name2ClientFloor[pkbody.FI.Name]
 	if !exist {
 		// new floor
 		cf = clientfloor.New(pkbody.FI)
-		cai.UUID2ClientFloor[pkbody.FI.UUID] = cf
+		cai.Name2ClientFloor[pkbody.FI.Name] = cf
 	}
 	cf.EnterFloor()
 
@@ -211,16 +211,16 @@ func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []by
 		cai.log.Error("cai.FloorInfo not set")
 		return nil
 	}
-	if cai.FloorInfo.UUID != newOLNotiData.FloorUUID {
+	if cai.FloorInfo.Name != newOLNotiData.FloorName {
 		cai.log.Error("not current floor objlist data %v %v",
-			cai.currentFloor().FloorInfo.UUID, newOLNotiData.FloorUUID,
+			cai.currentFloor().FloorInfo.Name, newOLNotiData.FloorName,
 		)
 		return nil
 	}
 
-	cf, exist := cai.UUID2ClientFloor[newOLNotiData.FloorUUID]
+	cf, exist := cai.Name2ClientFloor[newOLNotiData.FloorName]
 	if !exist {
-		cai.log.Warn("floor not added %v", newOLNotiData.FloorUUID)
+		cai.log.Warn("floor not added %v", newOLNotiData.FloorName)
 		return nil
 	}
 	for _, v := range newOLNotiData.FieldObjList {
@@ -253,15 +253,15 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 		cai.log.Warn("OrangeRed cai.FloorInfo not set")
 		return nil
 	}
-	if cai.FloorInfo.UUID != pkbody.FloorUUID {
+	if cai.FloorInfo.Name != pkbody.FloorName {
 		cai.log.Warn("not current floor vptile data %v %v",
-			cai.currentFloor().FloorInfo.UUID, pkbody.FloorUUID,
+			cai.currentFloor().FloorInfo.Name, pkbody.FloorName,
 		)
 		return nil
 	}
-	cf, exist := cai.UUID2ClientFloor[pkbody.FloorUUID]
+	cf, exist := cai.Name2ClientFloor[pkbody.FloorName]
 	if !exist {
-		cai.log.Warn("floor not added %v", pkbody.FloorUUID)
+		cai.log.Warn("floor not added %v", pkbody.FloorName)
 		return nil
 	}
 
@@ -290,11 +290,11 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cf, exist := cai.UUID2ClientFloor[pkbody.FI.UUID]
+	cf, exist := cai.Name2ClientFloor[pkbody.FI.Name]
 	if !exist {
 		// new floor
 		cf = clientfloor.New(pkbody.FI)
-		cai.UUID2ClientFloor[pkbody.FI.UUID] = cf
+		cai.Name2ClientFloor[pkbody.FI.Name] = cf
 	}
 
 	oldComplete := cf.Visited.IsComplete()
@@ -318,7 +318,7 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	fromFloor, exist := cai.UUID2ClientFloor[pkbody.FloorUUID]
+	fromFloor, exist := cai.Name2ClientFloor[pkbody.FloorName]
 	if !exist {
 		cai.log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
 		return fmt.Errorf("FoundFieldObj unknonw floor %v", pkbody)
@@ -343,7 +343,7 @@ func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []b
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 
-	forgetFloor, exist := cai.UUID2ClientFloor[pkbody.FloorUUID]
+	forgetFloor, exist := cai.Name2ClientFloor[pkbody.FloorName]
 	if exist {
 		forgetFloor.Forget()
 	}

@@ -56,7 +56,7 @@ type WasmClient struct {
 
 	AOUUID2AOClient       map[string]*c2t_obj.ActiveObjClient
 	CaObjUUID2CaObjClient map[string]interface{}
-	UUID2ClientFloor      map[string]*clientfloor.ClientFloor
+	Name2ClientFloor      map[string]*clientfloor.ClientFloor
 	FloorInfo             *c2t_obj.FloorInfo
 	remainTurn2Rebirth    int
 
@@ -116,7 +116,7 @@ func InitPage() {
 
 	app := &WasmClient{
 		ServerJitter:     actjitter.New("Server"),
-		UUID2ClientFloor: make(map[string]*clientfloor.ClientFloor),
+		Name2ClientFloor: make(map[string]*clientfloor.ClientFloor),
 
 		systemMessage:      make(textncount.TextNCountList, 0),
 		KeyboardPressedMap: jskeypressmap.New(),

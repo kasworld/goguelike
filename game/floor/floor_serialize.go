@@ -20,7 +20,6 @@ import (
 func (f *Floor) ToPacket_FloorInfo() *c2t_obj.FloorInfo {
 	return &c2t_obj.FloorInfo{
 		Name:       f.terrain.GetName(),
-		UUID:       f.uuid,
 		W:          f.w,
 		H:          f.h,
 		Tiles:      f.terrain.GetTile2Discover(),
@@ -31,7 +30,7 @@ func (f *Floor) ToPacket_FloorInfo() *c2t_obj.FloorInfo {
 
 func (f *Floor) ToPacket_NotiAgeing() *c2t_obj.NotiAgeing_data {
 	return &c2t_obj.NotiAgeing_data{
-		UUID: f.uuid,
+		FloorName: f.GetName(),
 	}
 }
 
@@ -50,7 +49,7 @@ func (f *Floor) ToPacket_NotiObjectList(
 
 	return &c2t_obj.NotiObjectList_data{
 		Time:          turnTime,
-		FloorUUID:     f.uuid,
+		FloorName:     f.GetName(),
 		ActiveObjList: aOs,
 		CarryObjList:  pOs,
 		FieldObjList:  fOs,
@@ -65,7 +64,7 @@ func (f *Floor) ToPacket_NotiTileArea(
 	cstiles := f.makeViewportTiles2(x, y, sightMat, float32(sight))
 
 	return &c2t_obj.NotiVPTiles_data{
-		FloorUUID: f.uuid,
+		FloorName: f.GetName(),
 		VPX:       x,
 		VPY:       y,
 		VPTiles:   cstiles,

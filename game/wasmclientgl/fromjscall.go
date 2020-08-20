@@ -188,7 +188,7 @@ func (app *WasmClient) makePathToMouseClick() {
 			return
 		}
 		tand := app.taNotiData
-		if tand == nil || cf.FloorInfo.UUID != tand.FloorUUID {
+		if tand == nil || cf.FloorInfo.Name != tand.FloorName {
 			jslog.Error("invalid floor x,y")
 			return
 		}

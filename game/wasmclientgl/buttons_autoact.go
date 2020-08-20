@@ -121,7 +121,7 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		return false
 	}
 	cf := app.currentFloor()
-	if app.olNotiData.FloorUUID != cf.FloorInfo.UUID {
+	if app.olNotiData.FloorName != cf.FloorInfo.Name {
 		return false
 	}
 	playerX, playerY := app.GetPlayerXY()

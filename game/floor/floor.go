@@ -28,14 +28,13 @@ import (
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/intervalduration"
-	"github.com/kasworld/uuidstr"
 )
 
 var _ gamei.FloorI = &Floor{}
 
 func (f *Floor) String() string {
 	return fmt.Sprintf("Floor[%v %v/%v]",
-		f.uuid,
+		f.GetName(),
 		len(f.recvRequestCh), cap(f.recvRequestCh),
 	)
 }
@@ -51,7 +50,6 @@ type Floor struct {
 	log *g2log.LogBase `prettystring:"hide"`
 
 	tower       gamei.TowerI
-	uuid        string
 	w           int
 	h           int
 	bias        bias.Bias        `prettystring:"simple"`
@@ -80,20 +78,19 @@ func New(ts []string, tw gamei.TowerI) *Floor {
 	f := &Floor{
 		log:               tw.Log(),
 		tower:             tw,
-		uuid:              uuidstr.New(),
 		rnd:               g2rand.New(),
 		interDur:          intervalduration.New(""),
 		statPacketObjOver: actpersec.New(),
 		floorCmdActStat:   actpersec.New(),
 		recvRequestCh:     make(chan interface{}, queuesize),
 	}
-	f.terrain = terrain.New(ts, f.tower.Config().DataFolder, f.uuid, f.log)
+	f.terrain = terrain.New(ts, f.tower.Config().DataFolder, f.log)
 	return f
 }
 
 func (f *Floor) Cleanup() {
-	f.log.TraceService("Start Cleanup Floor %v", f.uuid)
-	defer func() { f.log.TraceService("End Cleanup Floor %v", f.uuid) }()
+	f.log.TraceService("Start Cleanup Floor %v", f.GetName())
+	defer func() { f.log.TraceService("End Cleanup Floor %v", f.GetName()) }()
 
 	f.aoPosMan.Cleanup()
 	f.poPosMan.Cleanup()
@@ -157,7 +154,7 @@ loop:
 			f.floorCmdActStat.UpdateLap()
 			if len(f.recvRequestCh) > cap(f.recvRequestCh)/2 {
 				f.log.Fatal("Floor %v %v reqch overloaded %v/%v",
-					f.terrain.Name, f.uuid,
+					f.terrain.Name, f.GetName(),
 					len(f.recvRequestCh), cap(f.recvRequestCh))
 			}
 			if len(f.recvRequestCh) >= cap(f.recvRequestCh) {

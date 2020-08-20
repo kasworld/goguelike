@@ -23,7 +23,7 @@ import (
 func (ao *ActiveObject) Noti_EnterFloor(f gamei.FloorI) {
 	ao.currrentFloor = f
 	ao.SetNeedTANoti()
-	if _, exist := ao.uuid2VisitArea.GetByID(f.GetUUID()); !exist {
+	if _, exist := ao.uuid2VisitArea.GetByID(f.GetName()); !exist {
 		ao.uuid2VisitArea.Add(f)
 	}
 	if aio := ao.ai; aio != nil {
@@ -34,9 +34,9 @@ func (ao *ActiveObject) Noti_EnterFloor(f gamei.FloorI) {
 func (ao *ActiveObject) UpdateBySightMat2(
 	f gamei.FloorI, vpCenterX, vpCenterY int,
 	sightMat *viewportdata.ViewportSight2, sight float32) {
-	va, exist := ao.uuid2VisitArea.GetByID(f.GetUUID())
+	va, exist := ao.uuid2VisitArea.GetByID(f.GetName())
 	if !exist {
-		ao.log.Fatal("floor not visited %v %v", ao, f.GetUUID())
+		ao.log.Fatal("floor not visited %v %v", ao, f.GetName())
 		va = ao.uuid2VisitArea.Add(f)
 	}
 	va.UpdateBySightMat2(
@@ -47,21 +47,21 @@ func (ao *ActiveObject) UpdateBySightMat2(
 }
 
 func (ao *ActiveObject) forgetAnyFloor() error {
-	for _, fuuid := range ao.uuid2VisitArea.GetIDList() {
-		return ao.ForgetFloorByUUID(fuuid)
+	for _, floorName := range ao.uuid2VisitArea.GetIDList() {
+		return ao.ForgetFloorByName(floorName)
 	}
 	return fmt.Errorf("no visit floor")
 }
 
-func (ao *ActiveObject) ForgetFloorByUUID(fuuid string) error {
-	if err := ao.uuid2VisitArea.Forget(fuuid); err != nil {
+func (ao *ActiveObject) ForgetFloorByName(floorName string) error {
+	if err := ao.uuid2VisitArea.Forget(floorName); err != nil {
 		return err
 	}
 	if aoconn := ao.clientConn; aoconn != nil {
 		return ao.clientConn.SendNotiPacket(
 			c2t_idnoti.ForgetFloor,
 			&c2t_obj.NotiForgetFloor_data{
-				FloorUUID: fuuid,
+				FloorName: floorName,
 			},
 		)
 	}
@@ -69,7 +69,7 @@ func (ao *ActiveObject) ForgetFloorByUUID(fuuid string) error {
 }
 
 func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
-	va, _ := ao.uuid2VisitArea.GetByID(f.GetUUID())
+	va, _ := ao.uuid2VisitArea.GetByID(f.GetName())
 	va.MakeComplete()
 
 	fi := f.ToPacket_FloorInfo()

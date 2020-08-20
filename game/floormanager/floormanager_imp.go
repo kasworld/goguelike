@@ -44,28 +44,16 @@ func (fm *FloorManager) GetFloorList() []gamei.FloorI {
 	return fm.floorList
 }
 
-func (fm *FloorManager) GetFloorIndexByUUID(id string) (int, error) {
+func (fm *FloorManager) GetFloorIndexByName(id string) (int, error) {
 	for i, v := range fm.floorList {
 		if v == nil {
 			continue
 		}
-		if v.GetUUID() == id {
+		if v.GetName() == id {
 			return i, nil
 		}
 	}
 	return 0, fmt.Errorf("Floor not found %v", id)
-}
-
-func (fm *FloorManager) GetFloorByUUID(id string) gamei.FloorI {
-	for _, v := range fm.floorList {
-		if v == nil {
-			continue
-		}
-		if v.GetUUID() == id {
-			return v
-		}
-	}
-	return nil
 }
 
 func (fm *FloorManager) GetFloorByName(name string) gamei.FloorI {

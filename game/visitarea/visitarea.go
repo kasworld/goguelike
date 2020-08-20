@@ -35,7 +35,6 @@ const PosShift = 3
 
 type floorI interface {
 	GetName() string
-	GetUUID() string
 	GetWidth() int
 	GetHeight() int
 	VisitableCount() int
@@ -59,7 +58,6 @@ type VisitArea struct {
 func NewVisitArea(fi floorI) *VisitArea {
 	va := &VisitArea{
 		name:              fi.GetName(),
-		uuid:              fi.GetUUID(),
 		w:                 fi.GetWidth(),
 		h:                 fi.GetHeight(),
 		completeTileCount: fi.VisitableCount(),

@@ -28,10 +28,6 @@ func (f *Floor) GetTower() gamei.TowerI {
 	return f.tower
 }
 
-func (f *Floor) GetUUID() string {
-	return f.uuid
-}
-
 func (f *Floor) GetName() string {
 	return f.terrain.GetName()
 }

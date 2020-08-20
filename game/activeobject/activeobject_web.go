@@ -199,7 +199,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		{{if $v}}
 			{{$i}} {{$v}}
 			<br/>
-			<img src="/ActiveObjVisitImgae?aoid={{$.GetUUID}}&floorid={{$v.GetUUID}}" >			
+			<img src="/ActiveObjVisitImgae?aoid={{$.GetUUID}}&floorname={{$v.GetName}}" >			
 			<br/>
 		{{end}}
 	{{end}}
@@ -220,7 +220,7 @@ func (ao *ActiveObject) GetVisitFloorList() []*visitarea.VisitArea {
 	return ao.uuid2VisitArea.GetList()
 }
 
-func (ao *ActiveObject) GetVisitFloor(floorid string) *visitarea.VisitArea {
-	r, _ := ao.uuid2VisitArea.GetByID(floorid)
+func (ao *ActiveObject) GetVisitFloor(floorname string) *visitarea.VisitArea {
+	r, _ := ao.uuid2VisitArea.GetByID(floorname)
 	return r
 }

@@ -127,8 +127,8 @@ type ActiveObjectI interface {
 	UpdateBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)
 
-	GetVisitFloor(floorid string) *visitarea.VisitArea
-	ForgetFloorByUUID(fuuid string) error
+	GetVisitFloor(floorname string) *visitarea.VisitArea
+	ForgetFloorByName(floorname string) error
 	MakeFloorComplete(f FloorI) error
 
 	DoAdminCmd(cmd, args string) c2t_error.ErrorCode

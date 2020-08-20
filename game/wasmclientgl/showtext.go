@@ -375,15 +375,15 @@ func (app *WasmClient) makeFieldObjListHTML() string {
 
 func (app *WasmClient) makeFloorListHTML() string {
 	var buf bytes.Buffer
-	if len(app.UUID2ClientFloor) == gInitData.TowerInfo.TotalFloorNum {
+	if len(app.Name2ClientFloor) == gInitData.TowerInfo.TotalFloorNum {
 		fmt.Fprintf(&buf, "Found All Floor %v<br/>",
-			len(app.UUID2ClientFloor))
+			len(app.Name2ClientFloor))
 	} else {
 		fmt.Fprintf(&buf, "Floor Found %v<br/>",
-			len(app.UUID2ClientFloor))
+			len(app.Name2ClientFloor))
 	}
 	cfList := make(clientfloor.ClientFloorList, 0)
-	for _, v := range app.UUID2ClientFloor {
+	for _, v := range app.Name2ClientFloor {
 		cfList = append(cfList, v)
 	}
 	cfList.Sort()
@@ -397,12 +397,12 @@ func (app *WasmClient) makeFloorListHTML() string {
 		if cf.Visited.CalcCompleteRate() >= 1.0 {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')">Teleport</button>`,
-				ftSize, cf.FloorInfo.UUID,
+				ftSize, cf.FloorInfo.Name,
 			)
 		} else {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')" disabled>Teleport</button>`,
-				ftSize, cf.FloorInfo.UUID,
+				ftSize, cf.FloorInfo.Name,
 			)
 		}
 		buf.WriteString("<br/>")

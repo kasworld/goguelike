@@ -107,7 +107,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			if p.DisplayType == fieldobjdisplaytype.None {
 				if err := aoconn.SendNotiPacket(c2t_idnoti.FoundFieldObj,
 					&c2t_obj.NotiFoundFieldObj_data{
-						FloorUUID: f.uuid,
+						FloorName: f.GetName(),
 						FieldObj:  p.ToPacket_FieldObjClient(aox, aoy),
 					},
 				); err != nil {
@@ -459,7 +459,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			f.log.Debug("manual in portal %v %v", f, ao)
 
 		case c2t_idcmd.ActTeleport:
-			if !ao.GetVisitFloor(f.uuid).IsComplete() {
+			if !ao.GetVisitFloor(f.GetName()).IsComplete() {
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
 					c2t_error.ActionProhibited)

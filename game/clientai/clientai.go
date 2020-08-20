@@ -44,7 +44,7 @@ type ClientAI struct {
 	TowerInfo         *c2t_obj.TowerInfo
 	ViewportXYLenList findnear.XYLenList
 	FloorInfo         *c2t_obj.FloorInfo
-	UUID2ClientFloor  map[string]*clientfloor.ClientFloor
+	Name2ClientFloor  map[string]*clientfloor.ClientFloor
 
 	wg       *sync.WaitGroup
 	pid2recv *c2t_pid2rspfn.PID2RspFn
@@ -68,7 +68,7 @@ func New(config ClientAIConfig, l *g2log.LogBase) *ClientAI {
 		log:               l,
 		ServerJitter:      actjitter.New("Server"),
 		wg:                new(sync.WaitGroup),
-		UUID2ClientFloor:  make(map[string]*clientfloor.ClientFloor),
+		Name2ClientFloor:  make(map[string]*clientfloor.ClientFloor),
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
@@ -91,11 +91,11 @@ func (cai *ClientAI) Cleanup() {
 		tc.Cleanup()
 	}
 	cai.ServerJitter = nil
-	for i, v := range cai.UUID2ClientFloor {
-		delete(cai.UUID2ClientFloor, i)
+	for i, v := range cai.Name2ClientFloor {
+		delete(cai.Name2ClientFloor, i)
 		v.Cleanup()
 	}
-	cai.UUID2ClientFloor = nil
+	cai.Name2ClientFloor = nil
 }
 
 func (cai *ClientAI) Run(mainctx context.Context) {

@@ -79,14 +79,14 @@ func (cet AdminFloorMove) String() string {
 
 type FloorMove struct {
 	ActiveObj gamei.ActiveObjectI
-	FloorUUID string
+	FloorName string
 	RspCh     chan<- c2t_error.ErrorCode
 }
 
 func (cet FloorMove) String() string {
 	return fmt.Sprintf("FloorMove[%v %v]",
 		cet.ActiveObj,
-		cet.FloorUUID,
+		cet.FloorName,
 	)
 }
 

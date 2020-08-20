@@ -19,16 +19,16 @@ import (
 )
 
 func (tw *Tower) getFloorFromHTTPArg(w http.ResponseWriter, r *http.Request) gamei.FloorI {
-	floorid := weblib.GetStringByName("floorid", "", w, r)
-	if floorid == "" {
-		tw.log.Warn("Invalid floorid")
-		http.Error(w, "Invalid floorid", 404)
+	floorname := weblib.GetStringByName("floorname", "", w, r)
+	if floorname == "" {
+		tw.log.Warn("Invalid floorname")
+		http.Error(w, "Invalid floorname", 404)
 		return nil
 	}
 
-	f := tw.floorMan.GetFloorByUUID(floorid)
+	f := tw.floorMan.GetFloorByName(floorname)
 	if f == nil {
-		tw.log.Warn("floor not found %v", floorid)
+		tw.log.Warn("floor not found %v", floorname)
 		http.Error(w, "floor not found", 404)
 		return nil
 	}
@@ -36,10 +36,10 @@ func (tw *Tower) getFloorFromHTTPArg(w http.ResponseWriter, r *http.Request) gam
 }
 
 func (tw *Tower) web_FloorInfo(w http.ResponseWriter, r *http.Request) {
-	floorid := weblib.GetStringByName("floorid", "", w, r)
-	if floorid == "" {
-		tw.log.Warn("Invalid floorid")
-		http.Error(w, "Invalid floorid", 404)
+	floorname := weblib.GetStringByName("floorname", "", w, r)
+	if floorname == "" {
+		tw.log.Warn("Invalid floorname")
+		http.Error(w, "Invalid floorname", 404)
 		return
 	}
 
@@ -49,13 +49,13 @@ func (tw *Tower) web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 	var f gamei.FloorI
 	switch move {
 	case "Before":
-		i, err = tw.floorMan.GetFloorIndexByUUID(floorid)
+		i, err = tw.floorMan.GetFloorIndexByName(floorname)
 		f = tw.floorMan.GetFloorByIndexWrap(i - 1)
 	case "Next":
-		i, err = tw.floorMan.GetFloorIndexByUUID(floorid)
+		i, err = tw.floorMan.GetFloorIndexByName(floorname)
 		f = tw.floorMan.GetFloorByIndexWrap(i + 1)
 	default:
-		f = tw.floorMan.GetFloorByUUID(floorid)
+		f = tw.floorMan.GetFloorByName(floorname)
 	}
 	if err != nil {
 		tw.log.Warn("floor not found %v", err)
@@ -64,7 +64,7 @@ func (tw *Tower) web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if f == nil {
-		tw.log.Warn("floor not found %v", floorid)
+		tw.log.Warn("floor not found %v", floorname)
 		http.Error(w, "floor not found", 404)
 		return
 	}

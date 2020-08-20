@@ -68,7 +68,7 @@ func (tr *Terrain) Web_TerrainInfo(w http.ResponseWriter, r *http.Request) {
 		pos = getCursorPos(img, e);
 		x = pos.x;
 		y = pos.y;
-		getTileInfo("/terraintile?floorid={{.FloorUUID}}&x="+x+"&y="+y);
+		getTileInfo("/terraintile?floorname={{.FloorName}}&x="+x+"&y="+y);
 	}
 	function getTileInfo(url) {
 		var xhttp;
@@ -89,20 +89,20 @@ func (tr *Terrain) Web_TerrainInfo(w http.ResponseWriter, r *http.Request) {
 	<body>
 	{{.}}
 	<br/>
-	<a href= "/floor?floorid={{$.FloorUUID}}" >
+	<a href= "/floor?floorname={{$.FloorName}}" >
 		[Goto Floor {{.GetName}}]
 	</a>
 	<br/>
-    <a href='/terrain?floorid={{.FloorUUID}}&move=Before'>[Before]</a>
-    <a href='/terrain?floorid={{.FloorUUID}}&move=Next'>[Next]</a>
-    <a href='/terrain?floorid={{.FloorUUID}}&cmd=Init'>[Init]</a>
-    <a href='/terrain?floorid={{.FloorUUID}}&cmd=Ageing'>[Ageing]</a>
-    <a href='/terrain?floorid={{.FloorUUID}}&cmd=ResetAgeing'>[ResetAgeing]</a>
-    <a href='/terrain?floorid={{.FloorUUID}}&cmd=AgeingNoCheck'>[AgeingNoCheck]</a>
+    <a href='/terrain?floorname={{.FloorName}}&move=Before'>[Before]</a>
+    <a href='/terrain?floorname={{.FloorName}}&move=Next'>[Next]</a>
+    <a href='/terrain?floorname={{.FloorName}}&cmd=Init'>[Init]</a>
+    <a href='/terrain?floorname={{.FloorName}}&cmd=Ageing'>[Ageing]</a>
+    <a href='/terrain?floorname={{.FloorName}}&cmd=ResetAgeing'>[ResetAgeing]</a>
+    <a href='/terrain?floorname={{.FloorName}}&cmd=AgeingNoCheck'>[AgeingNoCheck]</a>
 	<br/>
 	<span id="tileInfo"></span>
 	<br/>
-	<img src="/terrainimageautozoom?floorid={{.FloorUUID}}" id="terimg" onmousemove="showTile(this,event)">
+	<img src="/terrainimageautozoom?floorname={{.FloorName}}" id="terimg" onmousemove="showTile(this,event)">
 	<br/>
 
 	{{range $i,$v := .GetScript}}

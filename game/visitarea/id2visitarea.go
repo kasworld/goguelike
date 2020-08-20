@@ -62,7 +62,7 @@ func (i2v *ID2VisitArea) Add(fi floorI) *VisitArea {
 	i2v.mutex.Lock()
 	defer i2v.mutex.Unlock()
 	va := NewVisitArea(fi)
-	i2v.id2visit[fi.GetUUID()] = va
+	i2v.id2visit[fi.GetName()] = va
 	return va
 }
 

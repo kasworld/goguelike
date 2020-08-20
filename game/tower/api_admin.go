@@ -489,7 +489,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminForgetFloor(
 	if f == nil {
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
-	if err := ao.ForgetFloorByUUID(f.GetUUID()); err != nil {
+	if err := ao.ForgetFloorByName(f.GetName()); err != nil {
 		tw.log.Error("%v", err)
 	}
 

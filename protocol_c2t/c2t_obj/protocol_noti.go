@@ -38,7 +38,7 @@ type NotiLeaveFloor_data struct {
 }
 
 type NotiAgeing_data struct {
-	UUID string
+	FloorName string
 }
 
 type NotiDeath_data struct {
@@ -58,7 +58,7 @@ type NotiBroadcast_data struct {
 
 type NotiObjectList_data struct {
 	Time          time.Time `prettystring:"simple"`
-	FloorUUID     string
+	FloorName     string
 	ActiveObj     *PlayerActiveObjInfo
 	ActiveObjList []*ActiveObjClient
 	CarryObjList  []*CarryObjClientOnFloor
@@ -66,7 +66,7 @@ type NotiObjectList_data struct {
 }
 
 type NotiVPTiles_data struct {
-	FloorUUID string
+	FloorName string
 	VPX       int
 	VPY       int
 	VPTiles   *viewportdata.ViewportTileArea2
@@ -79,12 +79,12 @@ type NotiFloorTiles_data struct {
 }
 
 type NotiFoundFieldObj_data struct {
-	FloorUUID string
+	FloorName string
 	FieldObj  *FieldObjClient
 }
 
 type NotiForgetFloor_data struct {
-	FloorUUID string
+	FloorName string
 }
 
 type NotiActivateTrap_data struct {

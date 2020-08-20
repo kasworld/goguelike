@@ -78,7 +78,6 @@ type Terrain struct {
 	XWrap    func(i int) int
 	YWrap    func(i int) int
 
-	FloorUUID         string
 	Name              string
 	ActTurnBoost      float64
 	ActiveObjCount    int
@@ -88,11 +87,10 @@ type Terrain struct {
 	Tile2Discover     int
 }
 
-func New(script []string, dataDir string, u string, l *g2log.LogBase) *Terrain {
+func New(script []string, dataDir string, l *g2log.LogBase) *Terrain {
 	tr := &Terrain{
 		dataDir:       dataDir,
 		terrainScript: script,
-		FloorUUID:     u,
 		log:           l,
 	}
 	tr.viewportCache = viewportcache.New(tr)
@@ -101,8 +99,8 @@ func New(script []string, dataDir string, u string, l *g2log.LogBase) *Terrain {
 	return tr
 }
 func (tr *Terrain) Cleanup() {
-	tr.log.TraceService("Start Cleanup Terrain %v", tr.FloorUUID)
-	defer func() { tr.log.TraceService("End Cleanup Terrain %v", tr.FloorUUID) }()
+	tr.log.TraceService("Start Cleanup Terrain %v", tr.Name)
+	defer func() { tr.log.TraceService("End Cleanup Terrain %v", tr.Name) }()
 	tr.foPosMan.Cleanup()
 }
 

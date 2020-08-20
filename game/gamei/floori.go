@@ -27,7 +27,6 @@ type FloorI interface {
 	Initialized() bool
 	Cleanup()
 	GetActTurn() int
-	GetUUID() string
 	GetName() string
 	GetWidth() int
 	GetHeight() int

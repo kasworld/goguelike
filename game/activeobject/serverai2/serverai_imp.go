@@ -216,6 +216,6 @@ func (sai *ServerAI) overloadRate() float64 {
 }
 
 func (sai *ServerAI) floorDiscoverRate() float64 {
-	vf := sai.ao.GetVisitFloor(sai.currentFloor.GetUUID())
+	vf := sai.ao.GetVisitFloor(sai.currentFloor.GetName())
 	return vf.CalcCompleteRate()
 }

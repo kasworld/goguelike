@@ -140,10 +140,10 @@ func (tw *Tower) web_ActiveObjVisitFloorImage(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	visitfloorid := weblib.GetStringByName("floorid", "", w, r)
+	visitfloorid := weblib.GetStringByName("floorname", "", w, r)
 	if visitfloorid == "" {
-		tw.log.Warn("Invalid visitfloorid")
-		http.Error(w, "Invalid floor id", 404)
+		tw.log.Warn("Invalid visitfloorname")
+		http.Error(w, "Invalid floor name", 404)
 		return
 	}
 

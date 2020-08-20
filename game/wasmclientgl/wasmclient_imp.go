@@ -57,7 +57,7 @@ func (app *WasmClient) currentFloor() *clientfloor.ClientFloor {
 	if fi := app.FloorInfo; fi == nil {
 		return nil
 	} else {
-		return app.UUID2ClientFloor[fi.UUID]
+		return app.Name2ClientFloor[fi.Name]
 	}
 }
 

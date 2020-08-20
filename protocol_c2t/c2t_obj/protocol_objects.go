@@ -66,7 +66,6 @@ func (info *TowerInfo) StringForm() string {
 
 type FloorInfo struct {
 	Name       string
-	UUID       string
 	W          int
 	H          int
 	Tiles      int
@@ -76,9 +75,6 @@ type FloorInfo struct {
 
 func (fi FloorInfo) GetName() string {
 	return fi.Name
-}
-func (fi FloorInfo) GetUUID() string {
-	return fi.UUID
 }
 func (fi FloorInfo) GetWidth() int {
 	return fi.W

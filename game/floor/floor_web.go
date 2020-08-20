@@ -68,7 +68,7 @@ func (f *Floor) Web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 		pos = getCursorPos(img, e);
 		x = pos.x;
 		y = pos.y;
-		getTileInfo("/floortile?floorid={{.GetUUID}}&x="+x+"&y="+y);
+		getTileInfo("/floortile?floorname={{.GetName}}&x="+x+"&y="+y);
 	}
 	function getTileInfo(url) {
 		var xhttp;
@@ -89,17 +89,17 @@ func (f *Floor) Web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 	<body>
 	{{.}} {{.GetEnvBias}}
 	<br/>
-	<a href= "/terrain?floorid={{$.GetUUID}}" >
+	<a href= "/terrain?floorname={{$.GetName}}" >
 		[Goto Terrain {{.GetName}}]
 	</a>
 	<br/>
-    <a href='/floor?floorid={{.GetUUID}}&move=Before'>[Before]</a>
-	<a href='/floor?floorid={{.GetUUID}}&move=Next'>[Next]</a>
-    <a href='/floor?floorid={{.GetUUID}}&cmd=Ageing'>[ProcessAgeing]</a>
+    <a href='/floor?floorname={{.GetName}}&move=Before'>[Before]</a>
+	<a href='/floor?floorname={{.GetName}}&move=Next'>[Next]</a>
+    <a href='/floor?floorname={{.GetName}}&cmd=Ageing'>[ProcessAgeing]</a>
 	<br/>
 	<span id="tileInfo"></span>
 	<br/>
-	<img src="/floorimageautozoom?floorid={{.GetUUID}}" id="floorimg" onmousemove="showTile(this,event)" >
+	<img src="/floorimageautozoom?floorname={{.GetName}}" id="floorimg" onmousemove="showTile(this,event)" >
 
 	<table border=1 style="border-collapse:collapse;">` +
 		gamei.ActiveObjectI_HTML_tableheader + `

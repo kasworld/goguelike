@@ -254,7 +254,7 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 
 	tw.GetReqCh() <- &cmd2tower.FloorMove{
 		ActiveObj: ao,
-		FloorUUID: robj.UUID,
+		FloorName: robj.UUID,
 	}
 	return c2t_packet.Header{
 		ErrorCode: c2t_error.None,

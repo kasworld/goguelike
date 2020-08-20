@@ -18,7 +18,6 @@ type FloorManagerI interface {
 	GetStartFloor() FloorI
 	GetFloorCount() int
 	GetFloorList() []FloorI
-	GetFloorByUUID(id string) FloorI
 	GetFloorByName(name string) FloorI
 	FindPortalByID(id string) *fieldobject.FieldObject
 }
