@@ -12,18 +12,18 @@
 package towerdata
 
 type TowerData struct {
-	TowerName   string
+	TowerName      string
 	ScriptFilename string
-	TurnPerSec    float64
-	AutoStart     bool
+	TurnPerSec     float64
+	AutoStart      bool
 }
 
 var Default = []TowerData{
-	{"Roguelike1", "floor100", 1.0, false},
-	{"Roguelike2", "floor100", 2.0, false},
-	{"Roguelike3", "floor100", 3.0, true},
-	{"Roguelike4", "floor100", 4.0, false},
-	{"Roguelike5", "floor100", 5.0, false},
+	{"Roguelike1", "roguelike100", 1.0, false},
+	{"Roguelike2", "roguelike100", 2.0, false},
+	{"Roguelike3", "roguelike100", 3.0, true},
+	{"Roguelike4", "roguelike100", 4.0, false},
+	{"Roguelike5", "roguelike100", 5.0, false},
 	{"Goguelike1", "start", 1.0, false},
 	{"Goguelike2", "start", 2.0, false},
 	{"Goguelike3", "start", 3.0, true},
