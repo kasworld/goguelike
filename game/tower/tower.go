@@ -215,7 +215,6 @@ func (tw *Tower) ServiceInit() error {
 		StartTime:     tw.startTime,
 		UUID:          tw.uuid,
 		Name:          tw.sconfig.TowerName,
-		Number:        tw.sconfig.TowerNumber,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
 		TurnPerSec:    tw.sconfig.TurnPerSec,

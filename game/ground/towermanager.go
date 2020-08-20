@@ -46,11 +46,11 @@ func NewTowerManager(
 	}
 
 	for i, v := range towerdatalist {
-		towerNumber := i + 1
+		portIndex := i + 1
 		cu, err := towerwsurl.MakeWebsocketURL(
 			sconfig.TowerServiceHostBase,
 			sconfig.TowerServicePortBase,
-			towerNumber)
+			portIndex)
 		if err != nil {
 			tm.log.Fatal("fail to MakeWebsocketURL %v", err)
 		}
@@ -59,7 +59,7 @@ func NewTowerManager(
 			sconfig:    tm.sconfig,
 			ConnectURL: cu,
 			TowerConfigMade: *tm.sconfig.MakeTowerConfig(
-				towerNumber,
+				portIndex,
 				v.TowerName,
 				v.ScriptFilename,
 				v.TurnPerSec),

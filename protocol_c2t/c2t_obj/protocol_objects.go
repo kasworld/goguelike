@@ -53,7 +53,6 @@ type AccountInfo struct {
 type TowerInfo struct {
 	UUID          string
 	Name          string
-	Number        int
 	Factor        [3]int64 `prettystring:"simple"`
 	TotalFloorNum int
 	StartTime     time.Time `prettystring:"simple"`

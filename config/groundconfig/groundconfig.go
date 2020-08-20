@@ -52,7 +52,7 @@ type GroundConfig struct {
 }
 
 func (config *GroundConfig) MakeTowerConfig(
-	towerNumber int,
+	portIndex int,
 	displayName string,
 	towerFilename string,
 	turnPerSec float64,
@@ -62,7 +62,6 @@ func (config *GroundConfig) MakeTowerConfig(
 	tconfig := towerconfig.TowerConfig{}
 	ads.SetDefaultToNonZeroField(&tconfig)
 
-	tconfig.TowerNumber = towerNumber
 	tconfig.TowerName = displayName
 	tconfig.ScriptFilename = towerFilename
 	tconfig.TurnPerSec = turnPerSec
@@ -78,8 +77,8 @@ func (config *GroundConfig) MakeTowerConfig(
 		config.GroundHost,
 		config.GroundRPCPort)
 
-	tconfig.ServicePort = config.TowerServicePortBase + towerNumber
-	tconfig.AdminPort = config.TowerAdminWebPortBase + towerNumber
+	tconfig.ServicePort = config.TowerServicePortBase + portIndex
+	tconfig.AdminPort = config.TowerAdminWebPortBase + portIndex
 
 	tconfig.StandAlone = false
 	tconfig.WebAdminID = config.WebAdminID

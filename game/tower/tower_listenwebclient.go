@@ -186,9 +186,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 func (tw *Tower) json_TowerList(w http.ResponseWriter, r *http.Request) {
 	// baseurl := "http://localhost"
 	baseurl := tw.sconfig.ServiceHostBase
-	tn := tw.sconfig.TowerNumber
-
-	cu, err := towerwsurl.MakeWebsocketURL(baseurl, tw.sconfig.ServicePort, tn-1)
+	cu, err := towerwsurl.MakeWebsocketURL(baseurl, tw.sconfig.ServicePort, 0)
 	if err != nil {
 		tw.log.Warn("fail to MakeWebsocketURL %v", err)
 		http.Error(w, "fail to MakeWebsocketURL", 404)
