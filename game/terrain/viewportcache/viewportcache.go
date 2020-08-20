@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/lineofsight"
@@ -54,6 +55,17 @@ func (vpc *ViewportCache) Reset() {
 	vpc.RequireSightFromXY = make([][]*viewportdata.ViewportSight2, w)
 	for i := range vpc.RequireSightFromXY {
 		vpc.RequireSightFromXY[i] = make([]*viewportdata.ViewportSight2, h)
+	}
+}
+
+// ClearAt clear sight cache around x,y by xyl
+func (vpc *ViewportCache) ClearAt(x, y int, xyl findnear.XYLenList) {
+	vpc.mutex.Lock()
+	defer vpc.mutex.Unlock()
+	xWrap := vpc.terrain.GetXWrapper().GetWrapFn()
+	yWrap := vpc.terrain.GetYWrapper().GetWrapFn()
+	for _, v := range xyl {
+		vpc.RequireSightFromXY[xWrap(x+v.X)][yWrap(y+v.Y)] = nil
 	}
 }
 
