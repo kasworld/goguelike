@@ -197,7 +197,7 @@ func (tw *Tower) json_TowerList(w http.ResponseWriter, r *http.Request) {
 
 	tl := []towerlist4client.TowerInfo2Enter{
 		towerlist4client.TowerInfo2Enter{
-			Name:       tw.sconfig.DisplayName,
+			Name:       tw.sconfig.TowerName,
 			ConnectURL: cu,
 		},
 	}

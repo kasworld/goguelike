@@ -64,7 +64,7 @@ func (tw *TowerRunning) MakeTowerConfigDownURL() string {
 	return fmt.Sprintf(
 		"http://localhost:%d/TowerConfig?name=%s",
 		tw.sconfig.GroundAdminWebPort,
-		tw.TowerConfigMade.DisplayName,
+		tw.TowerConfigMade.TowerName,
 	)
 }
 
@@ -103,21 +103,21 @@ const (
 	</tr>`
 	TowerRunning_HTML_row = `<tr>
 	<td>
-	<a href="/TowerInfo?name={{$v.TowerConfigMade.DisplayName}}" target="_blank">{{$v.TowerConfigMade.DisplayName}}</a>
+	<a href="/TowerInfo?name={{$v.TowerConfigMade.TowerName}}" target="_blank">{{$v.TowerConfigMade.TowerName}}</a>
 	</td>
-	<td>{{$v.TowerConfigMade.TowerFilename}}</td>
+	<td>{{$v.TowerConfigMade.ScriptFilename}}</td>
 	<td> {{$v.IsPing}} </td>
 	<td> {{$v.IsAlive}} </td>
 	<td> {{$v.IsConfigSame}} </td>
 	<td>
     <a href="{{$v.AdminURL}}" target="_blank">[Admin]</a>
-	<a href="/ViewTowerOutfile?name={{$v.TowerConfigMade.DisplayName}}" target="_blank">
+	<a href="/ViewTowerOutfile?name={{$v.TowerConfigMade.TowerName}}" target="_blank">
 	[Outfile]</a>
 	</td>
 	<td>
-    <a href="/ControlTower?name={{$v.TowerConfigMade.DisplayName}}&cmd=start" target="_blank">[Start]</a>
-    <a href="/ControlTower?name={{$v.TowerConfigMade.DisplayName}}&cmd=stop" target="_blank">[Stop]</a>
-    <a href="/ControlTower?name={{$v.TowerConfigMade.DisplayName}}&cmd=forcestart" target="_blank">[ForceStart]</a>
+    <a href="/ControlTower?name={{$v.TowerConfigMade.TowerName}}&cmd=start" target="_blank">[Start]</a>
+    <a href="/ControlTower?name={{$v.TowerConfigMade.TowerName}}&cmd=stop" target="_blank">[Stop]</a>
+    <a href="/ControlTower?name={{$v.TowerConfigMade.TowerName}}&cmd=forcestart" target="_blank">[ForceStart]</a>
 	</td>
 	<td>{{$v.TowerInfo.UUID}}</td>
 	<td>	
@@ -131,20 +131,20 @@ const (
 func (tw *TowerRunning) Web_Info(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New("index").Parse(`
 	<html> <head>
-	<title>Tower {{.TowerConfigMade.DisplayName}} </title>
+	<title>Tower {{.TowerConfigMade.TowerName}} </title>
 	</head>
 	<body>
-	Tower {{.TowerConfigMade.DisplayName}}
+	Tower {{.TowerConfigMade.TowerName}}
 	<br/>
 	<br/>
     <a href="{{.AdminURL}}" target="_blank">[Admin]</a>
     <a href="{{.ServiceURL}}" target="_blank">[Service]</a>
-    <a href="/ViewTowerOutfile?name={{.TowerConfigMade.DisplayName}}" target="_blank">[ViewOutfile]</a>
-	<a href="/ViewTowerOutfile?name={{.TowerConfigMade.DisplayName}}" target="_blank">
+    <a href="/ViewTowerOutfile?name={{.TowerConfigMade.TowerName}}" target="_blank">[ViewOutfile]</a>
+	<a href="/ViewTowerOutfile?name={{.TowerConfigMade.TowerName}}" target="_blank">
 	[View {{.TowerConfigMade.MakeOutfileFullpath}}]</a>
-    <a href="/ControlTower?name={{.TowerConfigMade.DisplayName}}&cmd=start" target="_blank">[Start]</a>
-    <a href="/ControlTower?name={{.TowerConfigMade.DisplayName}}&cmd=stop" target="_blank">[Stop]</a>
-    <a href="/ControlTower?name={{.TowerConfigMade.DisplayName}}&cmd=forcestart" target="_blank">[ForceStart]</a>
+    <a href="/ControlTower?name={{.TowerConfigMade.TowerName}}&cmd=start" target="_blank">[Start]</a>
+    <a href="/ControlTower?name={{.TowerConfigMade.TowerName}}&cmd=stop" target="_blank">[Stop]</a>
+    <a href="/ControlTower?name={{.TowerConfigMade.TowerName}}&cmd=forcestart" target="_blank">[ForceStart]</a>
 	<br/>
 	<br/>
 	Ping alive : {{.IsPing}}

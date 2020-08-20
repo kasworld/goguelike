@@ -69,7 +69,7 @@ func main() {
 	}
 
 	twlog, err := g2log.NewWithDstDir(
-		config.DisplayName,
+		config.TowerName,
 		config.MakeLogDir(),
 		logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
 		config.LogLevel,

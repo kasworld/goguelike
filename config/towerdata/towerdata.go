@@ -12,8 +12,8 @@
 package towerdata
 
 type TowerData struct {
-	DisplayName   string
-	TowerFilename string
+	TowerName   string
+	ScriptFilename string
 	TurnPerSec    float64
 	AutoStart     bool
 }

@@ -200,10 +200,10 @@ func (grd *Ground) ServiceMain(mainctx context.Context) {
 	for _, v := range tw2autostart {
 		err := grd.ControlTower(v, "start")
 		if err != nil {
-			grd.log.Fatal("fail to start tower %v", v.TowerConfigMade.DisplayName)
+			grd.log.Fatal("fail to start tower %v", v.TowerConfigMade.TowerName)
 		} else {
-			grd.log.Debug("start tower %v", v.TowerConfigMade.DisplayName)
-			fmt.Printf("start tower %v\n", v.TowerConfigMade.DisplayName)
+			grd.log.Debug("start tower %v", v.TowerConfigMade.TowerName)
+			fmt.Printf("start tower %v\n", v.TowerConfigMade.TowerName)
 		}
 	}
 

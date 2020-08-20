@@ -60,8 +60,8 @@ func NewTowerManager(
 			ConnectURL: cu,
 			TowerConfigMade: *tm.sconfig.MakeTowerConfig(
 				towerNumber,
-				v.DisplayName,
-				v.TowerFilename,
+				v.TowerName,
+				v.ScriptFilename,
 				v.TurnPerSec),
 		}
 		tm.towerList = append(tm.towerList, tr)
@@ -80,7 +80,7 @@ func (tm *TowerManager) GetByTowerName(name string) *TowerRunning {
 	tm.mutex.RLock()
 	defer tm.mutex.RUnlock()
 	for _, v := range tm.towerList {
-		if v.TowerConfigMade.DisplayName == name {
+		if v.TowerConfigMade.TowerName == name {
 			return v
 		}
 	}
@@ -135,7 +135,7 @@ func (tm *TowerManager) MakeTowerListJSON4Client() []towerlist4client.TowerInfo2
 	tl := make([]towerlist4client.TowerInfo2Enter, 0)
 	for _, v := range tm.towerList {
 		te := towerlist4client.TowerInfo2Enter{
-			Name: v.TowerConfigMade.DisplayName,
+			Name: v.TowerConfigMade.TowerName,
 		}
 		if v.IsPing() {
 			te.ConnectURL = v.ConnectURL

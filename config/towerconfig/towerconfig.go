@@ -34,9 +34,9 @@ type TowerConfig struct {
 	// config for each tower
 	ServicePort           int     `default:"14101"  argname:""`
 	AdminPort             int     `default:"14201"  argname:""`
-	TowerFilename         string  `default:"start" argname:""`
+	ScriptFilename        string  `default:"start" argname:""`
 	TowerNumber           int     `default:"1" argname:""`
-	DisplayName           string  `default:"Default" argname:""`
+	TowerName             string  `default:"Default" argname:""`
 	ConcurrentConnections int     `default:"10000" argname:""`
 	TurnPerSec            float64 `default:"2.0" argname:""`
 	StandAlone            bool    `default:"true" argname:""`
@@ -70,7 +70,7 @@ func (config *TowerConfig) MakePIDFileFullpath() string {
 }
 func (config *TowerConfig) MakeTowerFileFullpath() string {
 	rstr := filepath.Join(config.DataFolder,
-		fmt.Sprintf("%v.tower", config.TowerFilename),
+		fmt.Sprintf("%v.tower", config.ScriptFilename),
 	)
 	rtn, err := filepath.Abs(rstr)
 	if err != nil {

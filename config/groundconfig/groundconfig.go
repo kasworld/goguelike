@@ -63,8 +63,8 @@ func (config *GroundConfig) MakeTowerConfig(
 	ads.SetDefaultToNonZeroField(&tconfig)
 
 	tconfig.TowerNumber = towerNumber
-	tconfig.DisplayName = displayName
-	tconfig.TowerFilename = towerFilename
+	tconfig.TowerName = displayName
+	tconfig.ScriptFilename = towerFilename
 	tconfig.TurnPerSec = turnPerSec
 
 	tconfig.LogLevel = config.LogLevel

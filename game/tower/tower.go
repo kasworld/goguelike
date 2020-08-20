@@ -59,7 +59,7 @@ var _ gamei.TowerI = &Tower{}
 
 func (tw *Tower) String() string {
 	return fmt.Sprintf("Tower_%v[%v %v %v/%v]",
-		tw.sconfig.DisplayName,
+		tw.sconfig.TowerName,
 		tw.uuid,
 		tw.biasFactor,
 		len(tw.recvRequestCh), cap(tw.recvRequestCh),
@@ -214,7 +214,7 @@ func (tw *Tower) ServiceInit() error {
 	tw.towerInfo = &c2t_obj.TowerInfo{
 		StartTime:     tw.startTime,
 		UUID:          tw.uuid,
-		Name:          tw.sconfig.DisplayName,
+		Name:          tw.sconfig.TowerName,
 		Number:        tw.sconfig.TowerNumber,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
