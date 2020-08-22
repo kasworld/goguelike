@@ -39,12 +39,12 @@ func StartByArgs(svr ServiceI) error {
 	default:
 		return fmt.Errorf("unknown service arg %v", *signalhandle_service)
 	case "start":
-		svr.GetLogger().Debug("Service Start %v", svr)
+		svr.GetLogger().(LoggerI).Debug("Service Start %v", svr)
 		RunWithSignalHandle(svr)
 	case "restart":
-		svr.GetLogger().Debug("Service ReStart %v", svr)
+		svr.GetLogger().(LoggerI).Debug("Service ReStart %v", svr)
 		if err := SignalToStopAndWaitServiceEnd(svr); err != nil {
-			svr.GetLogger().Debug("%v", err)
+			svr.GetLogger().(LoggerI).Debug("%v", err)
 		}
 		if !launcherlib.IsFileExist(svr.GetServiceLockFilename()) {
 			RunWithSignalHandle(svr)
@@ -52,9 +52,9 @@ func StartByArgs(svr ServiceI) error {
 		}
 		return fmt.Errorf("fail to stop service %v", svr)
 	case "forcestart":
-		svr.GetLogger().Debug("Service Force Start %v", svr)
+		svr.GetLogger().(LoggerI).Debug("Service Force Start %v", svr)
 		if err := SignalToStopAndWaitServiceEnd(svr); err != nil {
-			svr.GetLogger().Debug("%v", err)
+			svr.GetLogger().(LoggerI).Debug("%v", err)
 		}
 		if !launcherlib.IsFileExist(svr.GetServiceLockFilename()) {
 			RunWithSignalHandle(svr)
@@ -65,10 +65,10 @@ func StartByArgs(svr ServiceI) error {
 		RunWithSignalHandle(svr)
 		return nil
 	case "stop":
-		svr.GetLogger().Debug("Service Stop %v", svr)
+		svr.GetLogger().(LoggerI).Debug("Service Stop %v", svr)
 		return SignalToStopAndWaitServiceEnd(svr)
 	case "logreopen":
-		svr.GetLogger().Debug("Service log reopen %v", svr)
+		svr.GetLogger().(LoggerI).Debug("Service log reopen %v", svr)
 		launcherlib.SignalByPidFile(svr.GetServiceLockFilename(), syscall.SIGUSR1)
 		return nil
 	}
@@ -78,16 +78,16 @@ func StartByArgs(svr ServiceI) error {
 func SignalToStopAndWaitServiceEnd(svr ServiceI) error {
 	pid, err := launcherlib.GetPidIntFromPidFile(svr.GetServiceLockFilename())
 	if err != nil {
-		svr.GetLogger().Debug("%v", err)
+		svr.GetLogger().(LoggerI).Debug("%v", err)
 		return nil
 	}
 	p, err := os.FindProcess(pid)
 	if err != nil {
-		svr.GetLogger().Debug("%v", err)
+		svr.GetLogger().(LoggerI).Debug("%v", err)
 		return nil
 	}
 	if err := p.Signal(os.Interrupt); err != nil {
-		svr.GetLogger().Debug("%v", err)
+		svr.GetLogger().(LoggerI).Debug("%v", err)
 		return nil
 	}
 
@@ -96,7 +96,7 @@ func SignalToStopAndWaitServiceEnd(svr ServiceI) error {
 		if !launcherlib.IsFileExist(svr.GetServiceLockFilename()) {
 			return nil
 		}
-		svr.GetLogger().Debug("wait service end %v", i)
+		svr.GetLogger().(LoggerI).Debug("wait service end %v", i)
 		time.Sleep(1000 * time.Millisecond)
 	}
 	return fmt.Errorf("fail to stop service")

@@ -81,10 +81,10 @@ github.com/kasworld/recordduration
 # github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be
 ## explicit
 github.com/kasworld/rect
-# github.com/kasworld/signalhandle v0.0.0-20200408024356-5eb43fdac632
+# github.com/kasworld/signalhandle v0.0.0-20200822033537-32b4da0b570d
 ## explicit
 github.com/kasworld/signalhandle
-# github.com/kasworld/signalhandlewin v0.0.0-20200822024834-3b3a3e270e12
+# github.com/kasworld/signalhandlewin v0.0.0-20200822033615-47a1af25ab63
 ## explicit
 github.com/kasworld/signalhandlewin
 # github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a

@@ -28,8 +28,8 @@ require (
 	github.com/kasworld/rangestat v0.0.0-20190508031937-d4380fb43f7a
 	github.com/kasworld/recordduration v0.0.0-20190924031050-aa5da0a840f6
 	github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be
-	github.com/kasworld/signalhandle v0.0.0-20200408024356-5eb43fdac632
-	github.com/kasworld/signalhandlewin v0.0.0-20200822024834-3b3a3e270e12
+	github.com/kasworld/signalhandle v0.0.0-20200822033537-32b4da0b570d
+	github.com/kasworld/signalhandlewin v0.0.0-20200822033615-47a1af25ab63
 	github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a
 	github.com/kasworld/version v0.0.0-20190507052028-3d2e657a23f8
 	github.com/kasworld/walk2d v0.0.0-20190508054438-4e630929cb37

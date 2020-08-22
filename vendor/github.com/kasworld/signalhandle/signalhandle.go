@@ -34,38 +34,43 @@ type ServiceI interface {
 	ServiceInit() error
 	ServiceMain(ctx context.Context)
 	ServiceCleanup()
-	GetLogger() LoggerI
+	GetLogger() interface{} // cannot use LoggerI
 }
 
 func makeLockfile(svr ServiceI, filename string) (lockfile.Lockfile, error) {
 	lock, err := lockfile.New(filename)
 	if err != nil {
-		svr.GetLogger().Error("Cannot init lock. reason: %v\n", err)
+		svr.GetLogger().(LoggerI).Error("Cannot init lock. reason: %v\n", err)
 		return lock, err
 	}
 	// Error handling is essential, as we only try to get the lock.
 	if err := lock.TryLock(); err != nil {
-		svr.GetLogger().Error("Cannot lock \"%v\", reason: %v\n", lock, err)
+		svr.GetLogger().(LoggerI).Error("Cannot lock \"%v\", reason: %v\n", lock, err)
 		return lock, err
 	}
 	return lock, nil
 }
 
 func RunWithSignalHandle(svr ServiceI) error {
-	svr.GetLogger().Debug("Start RunWithSignalHandle %v", svr)
-	defer func() { svr.GetLogger().Debug("End RunWithSignalHandle %v", svr) }()
+	svr.GetLogger().(LoggerI).Debug("Start RunWithSignalHandle %v", svr)
+	defer func() { svr.GetLogger().(LoggerI).Debug("End RunWithSignalHandle %v", svr) }()
+
+	_, ok := svr.GetLogger().(LoggerI)
+	if !ok {
+		return fmt.Errorf("GetLogger return logger implement LoggerI")
+	}
 
 	if lockpfilename := svr.GetServiceLockFilename(); lockpfilename != "" {
 		lockfileobj, err := makeLockfile(svr, svr.GetServiceLockFilename())
 		if err != nil {
-			svr.GetLogger().Fatal("Make Lockfile fail, %v", err)
+			svr.GetLogger().(LoggerI).Fatal("Make Lockfile fail, %v", err)
 			return err
 		}
 		defer lockfileobj.Unlock()
 	}
 
 	if err := svr.ServiceInit(); err != nil {
-		svr.GetLogger().Fatal("Server Initialize Failed, %v", err)
+		svr.GetLogger().(LoggerI).Fatal("Server Initialize Failed, %v", err)
 		return err
 	}
 	var wg sync.WaitGroup
@@ -90,17 +95,17 @@ loop:
 		case <-ctxMain.Done():
 			wg.Wait()
 			svr.ServiceCleanup()
-			svr.GetLogger().Reload()
+			svr.GetLogger().(LoggerI).Reload()
 			break loop
 
 		case s := <-signalTermIntCh:
-			svr.GetLogger().Debug("Got signal: %v", s)
+			svr.GetLogger().(LoggerI).Debug("Got signal: %v", s)
 			signal.Stop(signalTermIntCh)
 			endService()
 
 		case <-sigUsr1Ch:
 			fmt.Println("Catch sigusr1, reopen logfile")
-			svr.GetLogger().Reload()
+			svr.GetLogger().(LoggerI).Reload()
 		}
 	}
 	return nil

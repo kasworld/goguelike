@@ -1,0 +1,6 @@
+github.com/kasworld/launcherlib v0.0.0-20190513092519-5ce52b882f53 h1:Tu6vg+sX+b9vvXwMy6AerskRMmiYPVurpvnB24pQy7c=
+github.com/kasworld/launcherlib v0.0.0-20190513092519-5ce52b882f53/go.mod h1:OQOF2YYISM79z+SNFcpYn1ZIZ+VrA/QqATXvZR63N7s=
+github.com/kasworld/log v0.0.0-20191101013826-9bd2997eac10 h1:meVP467OVoZus/N9IuCHo5FYfNOyEPsu9d64bN5a6F8=
+github.com/kasworld/log v0.0.0-20191101013826-9bd2997eac10/go.mod h1:WSMsaXwrnpX2wOa1+tXYCaUvZRedAA3JK0HtxajFO74=
+github.com/nightlyone/lockfile v1.0.0 h1:RHep2cFKK4PonZJDdEl4GmkabuhbsRMgk/k3uAmxBiA=
+github.com/nightlyone/lockfile v1.0.0/go.mod h1:rywoIealpdNse2r832aiD9jRk8ErCatROs6LzC841CI=

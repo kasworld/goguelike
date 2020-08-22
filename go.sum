@@ -52,10 +52,10 @@ github.com/kasworld/recordduration v0.0.0-20190924031050-aa5da0a840f6 h1:XK0zGfu
 github.com/kasworld/recordduration v0.0.0-20190924031050-aa5da0a840f6/go.mod h1:xha8AXX6gq182z+rOLnTlgGcdld565fgEa0GV+1KpcU=
 github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be h1:OImR6GlNcCh9PNErg1r5YCpvvWklGjZYsi719klPrqA=
 github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be/go.mod h1:Njh/AxseDDA/Rk7vRltS6t3zoahLDRwMZNPLbS43KY0=
-github.com/kasworld/signalhandle v0.0.0-20200408024356-5eb43fdac632 h1:5fTbYtAkRsaH0PtB22/K7qBbkQv0ApHb2qu9bJ7gTco=
-github.com/kasworld/signalhandle v0.0.0-20200408024356-5eb43fdac632/go.mod h1:kqr1uEa2r29JYirqJBrIa/eCwBvH6iEzHCx11OuUX/0=
-github.com/kasworld/signalhandlewin v0.0.0-20200822024834-3b3a3e270e12 h1:Je+6n2Ru9o6wfO2nAiK1U9MXVTOZwtQ34Noj66s8DG0=
-github.com/kasworld/signalhandlewin v0.0.0-20200822024834-3b3a3e270e12/go.mod h1:OT78W3x3cbKAHzCjlnK/UOuFp4IowsFFleOp6WqlEI0=
+github.com/kasworld/signalhandle v0.0.0-20200822033537-32b4da0b570d h1:SxYd0srXbsjL82VMVu5ZXt1pcm+oL5OVMC/jyTUrbrE=
+github.com/kasworld/signalhandle v0.0.0-20200822033537-32b4da0b570d/go.mod h1:xhD6vu7DcPv1MB/BdQYK0vr3DN8Un5agHcd9ndB09zI=
+github.com/kasworld/signalhandlewin v0.0.0-20200822033615-47a1af25ab63 h1:8BvG3mhYkvUgrZ+PJatECNbzzz1cFkYs4tM2q4IaSJk=
+github.com/kasworld/signalhandlewin v0.0.0-20200822033615-47a1af25ab63/go.mod h1:OT78W3x3cbKAHzCjlnK/UOuFp4IowsFFleOp6WqlEI0=
 github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a h1:zB+eA5R/ffX2bI6nz/rrviKLOOPJq5nDjLbNHfthm+w=
 github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a/go.mod h1:3Unt++NR6Watw5y+3TymsoCVwJrd0ofAkQ1zU251HSM=
 github.com/kasworld/version v0.0.0-20190507052028-3d2e657a23f8 h1:IE+DyRvObPl3hkWkUHMdq7BPFCFO3qmKMCpwqXi8CuA=
