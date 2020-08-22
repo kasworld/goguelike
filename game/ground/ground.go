@@ -41,7 +41,6 @@ import (
 	"github.com/kasworld/launcherlib"
 	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/recordduration"
-	"github.com/kasworld/signalhandle"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib/retrylistenandserve"
 )
@@ -111,7 +110,7 @@ func New(config *groundconfig.GroundConfig, log *g2log.LogBase) *Ground {
 	return &grd
 }
 
-func (grd *Ground) GetLogger() signalhandle.LoggerI {
+func (grd *Ground) GetLogger() interface{} {
 	return grd.log
 }
 
