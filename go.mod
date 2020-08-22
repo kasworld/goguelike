@@ -3,7 +3,6 @@ module github.com/kasworld/goguelike
 go 1.14
 
 require (
-	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gorilla/websocket v1.4.2
 	github.com/kasworld/actjitter v0.0.0-20191107220721-3c533f25bbd7
 	github.com/kasworld/actpersec v0.0.0-20191019021204-8c24cd60715c
@@ -30,15 +29,14 @@ require (
 	github.com/kasworld/recordduration v0.0.0-20190924031050-aa5da0a840f6
 	github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be
 	github.com/kasworld/signalhandle v0.0.0-20200408024356-5eb43fdac632
+	github.com/kasworld/signalhandlewin v0.0.0-20200822024834-3b3a3e270e12
 	github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a
 	github.com/kasworld/version v0.0.0-20190507052028-3d2e657a23f8
 	github.com/kasworld/walk2d v0.0.0-20190508054438-4e630929cb37
 	github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f
 	github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62
-	github.com/nightlyone/lockfile v1.0.0 // indirect
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/tinylib/msgp v1.1.2
-	golang.org/x/image v0.0.0-20200119044424-58c23975cae1
 	gopkg.in/ini.v1 v1.55.0 // indirect
 )

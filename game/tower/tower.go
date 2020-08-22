@@ -49,7 +49,6 @@ import (
 	"github.com/kasworld/goguelike/protocol_t2g/t2g_packet"
 	"github.com/kasworld/rangestat"
 	"github.com/kasworld/recordduration"
-	"github.com/kasworld/signalhandle"
 	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib/retrylistenandserve"
@@ -158,7 +157,8 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 	return tw
 }
 
-func (tw *Tower) GetLogger() signalhandle.LoggerI {
+// return implement signalhandle.LoggerI
+func (tw *Tower) GetLogger() interface{} {
 	return tw.log
 }
 
