@@ -21,7 +21,7 @@ ProtocolT2GFiles="protocol_t2g/*.enum \
 protocol_t2g/t2g_obj/protocol_noti.go \
 protocol_t2g/t2g_obj/protocol_cmd.go \
 "
-PROTOCOL_T2G_VERSION=`cat ${ProtocolT2GFiles}| sha256sum | awk '{print $1}'`
+PROTOCOL_T2G_VERSION=`makesha256sum ${ProtocolT2GFiles}`
 
 cd protocol_t2g
 genprotocol -ver=${PROTOCOL_T2G_VERSION} \
@@ -38,7 +38,7 @@ protocol_c2t/c2t_obj/protocol_admin.go \
 protocol_c2t/c2t_obj/protocol_aoact.go \
 protocol_c2t/c2t_obj/protocol_cmd.go \
 "
-PROTOCOL_C2T_VERSION=`cat ${ProtocolC2TFiles}| sha256sum | awk '{print $1}'`
+PROTOCOL_C2T_VERSION=`makesha256sum ${ProtocolC2TFiles}`
 
 cd protocol_c2t
 genprotocol -ver=${PROTOCOL_C2T_VERSION} \
@@ -114,7 +114,7 @@ config/gameconst/serviceconst.go \
 config/gamedata/*.go \
 enum/*.enum \
 "
-Data_VERSION=`cat ${GameDataFiles}| sha256sum | awk '{print $1}'`
+Data_VERSION=`makesha256sum ${GameDataFiles}`
 
 echo "
 package gameconst

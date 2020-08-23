@@ -2,8 +2,6 @@
 
 준비물 : linux(debian,ubuntu,mint) , chrome web brower , golang 
 
-버전 string 생성시 사용 : sha256sum, awk
-
 goimports : 소스 코드 정리, import 해결
 
     go get golang.org/x/tools/cmd/goimports
@@ -11,6 +9,10 @@ goimports : 소스 코드 정리, import 해결
 Packet serializer (MessagePack) : https://github.com/tinylib/msgp
 
     go get github.com/tinylib/msgp
+
+버전 string 생성시 사용 : windows, linux 간에 같은 string생성
+
+        go get github.com/kasworld/makesha256sum
 
 프로토콜 생성기 : https://github.com/kasworld/genprotocol
 
@@ -24,12 +26,6 @@ Log 패키지 및 커스텀 로그레벨 로거 생성기 : https://github.com/k
 
     go get github.com/kasworld/log
     install.sh 실행해서 genlog 생성 
-
-tilemaker로 새 타일(merged.json, merged.png)을 만드려면 (있는것을 그냥 사용할때는 필요없음)
-
-    NanumBarunGothic.ttf : /usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf
-    Symbola_hint.ttf : /usr/share/fonts/truetype/ancient-scripts/Symbola_hint.ttf
-    의 설치가 필요하다. 
 
 
 # 소스 코드 설치 
@@ -215,7 +211,7 @@ textclient : debug/test 용 ui없는 client
             start,stop,restart,forcestart,logreopen (default "start")
 
 
-wasmclient : webbrowser 용 GUI client 
+wasmclientgl : webbrowser 용 webgl client 
 
     browser 를 통해서 실행된다. 
     
@@ -235,10 +231,6 @@ wasmclient : webbrowser 용 GUI client
 makechatdata 
 
     fortune 데이터로 부터 chatdata.txt 를 생성 
-
-tilemaker
-
-    webclient 에서 사용할 merged.json, merged.png 를 생성 
 
 towermaker 
 
