@@ -18,10 +18,7 @@ genlog -leveldatafile ./g2log/g2log.data -packagename g2log
 cd ..
 
 ################################################################################
-ProtocolT2GFiles="protocol_t2g/*.enum \
-protocol_t2g/t2g_obj/protocol_noti.go \
-protocol_t2g/t2g_obj/protocol_cmd.go \
-"
+ProtocolT2GFiles="protocol_t2g/*.enum protocol_t2g/t2g_obj/protocol_*.go"
 PROTOCOL_T2G_VERSION=`makesha256sum ${ProtocolT2GFiles}`
 
 echo "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
@@ -31,13 +28,7 @@ goimports -w .
 cd ..
 
 ################################################################################
-ProtocolC2TFiles="protocol_c2t/*.enum \
-protocol_c2t/c2t_obj/protocol_objects.go \
-protocol_c2t/c2t_obj/protocol_noti.go \
-protocol_c2t/c2t_obj/protocol_admin.go \
-protocol_c2t/c2t_obj/protocol_aoact.go \
-protocol_c2t/c2t_obj/protocol_cmd.go \
-"
+ProtocolC2TFiles="protocol_c2t/*.enum protocol_c2t/c2t_obj/protocol_*.go"
 PROTOCOL_C2T_VERSION=`makesha256sum ${ProtocolC2TFiles}`
 
 echo "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
@@ -106,12 +97,7 @@ cd ..
 # GenMSGP "game/bias" bias
 # GenMSGP "game/tilearea" tilearea
 
-GameDataFiles="
-config/gameconst/gameconst.go \
-config/gameconst/serviceconst.go \
-config/gamedata/*.go \
-enum/*.enum \
-"
+GameDataFiles="config/gameconst/*.go config/gamedata/*.go enum/*.enum"
 Data_VERSION=`makesha256sum ${GameDataFiles}`
 
 echo "

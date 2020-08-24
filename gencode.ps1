@@ -5,22 +5,20 @@ genlog -leveldatafile ./g2log/g2log.data -packagename g2log
 cd ..
 
 ################################################################################
-$PROTOCOL_T2G_VERSION=makesha256sum protocol_t2g/*.enum protocol_t2g/t2g_obj/protocol_noti.go protocol_t2g/t2g_obj/protocol_cmd.go
+$PROTOCOL_T2G_VERSION=makesha256sum protocol_t2g/*.enum protocol_t2g/t2g_obj/protocol_*.go
 echo  "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
 genprotocol -ver="${PROTOCOL_T2G_VERSION}" -basedir=protocol_t2g -prefix=t2g -statstype=int
 cd protocol_t2g
 goimports -w .
 cd ..
-echo "Protocol T2G Version:" ${PROTOCOL_T2G_VERSION}
 
 ################################################################################
-$PROTOCOL_C2T_VERSION=makesha256sum protocol_c2t/*.enum protocol_c2t/c2t_obj/protocol_objects.go protocol_c2t/c2t_obj/protocol_noti.go protocol_c2t/c2t_obj/protocol_admin.go protocol_c2t/c2t_obj/protocol_aoact.go protocol_c2t/c2t_obj/protocol_cmd.go
+$PROTOCOL_C2T_VERSION=makesha256sum protocol_c2t/*.enum protocol_c2t/c2t_obj/protocol_*.go
 echo "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
 genprotocol -ver="${PROTOCOL_C2T_VERSION}" -basedir=protocol_c2t -prefix=c2t -statstype=int
 cd protocol_c2t
 goimports -w .
 cd ..
-echo "Protocol C2T Version:" ${PROTOCOL_C2T_VERSION}
 
 ################################################################################
 echo genenum
@@ -49,9 +47,10 @@ cd enum
 goimports -w .
 cd ..
 
-
-$Data_VERSION=makesha256sum config/gameconst/gameconst.go config/gameconst/serviceconst.go config/gamedata/*.go enum/*.enum
-
-echo "Data Version:" ${Data_VERSION}
+$Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
 
 ################################################################################
+echo "Protocol T2G Version:" ${PROTOCOL_T2G_VERSION}
+echo "Protocol C2T Version:" ${PROTOCOL_C2T_VERSION}
+echo "Data Version:" ${Data_VERSION}
+
