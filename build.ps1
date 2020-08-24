@@ -13,6 +13,8 @@ $SRC_DIR="rundriver"
 Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 
 # build bin here
+go build -o "${BIN_DIR}\towerserver.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserverwin.go"
+
 
 Set-Location rundriver
 ./genwasmclient.ps1 ${BUILD_VER}
