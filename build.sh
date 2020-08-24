@@ -31,7 +31,7 @@ echo "Build Version:" ${BUILD_VER}
 BIN_DIR="bin"
 SRC_DIR="rundriver"
 
-echo ${BUILD_VER} > ${BIN_DIR}/BUILD
+echo ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
 
 BuildBin ${SRC_DIR}/towerserver.go ${BIN_DIR} towerserver
 BuildBin ${SRC_DIR}/groundserver.go ${BIN_DIR} groundserver

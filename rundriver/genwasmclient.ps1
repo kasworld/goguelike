@@ -4,7 +4,7 @@ $BUILD_VER=$args[0]
 
 # build gl client
 
-Remove-Item wasmclientgl.wasm
+Remove-Item -ErrorAction SilentlyContinue wasmclientgl.wasm
 
 Write-Output "GOOS=js GOARCH=wasm go build -o wasmclientgl.wasm -ldflags -X main.Ver=${BUILD_VER}"
 $env:GOOS="js" 
@@ -14,4 +14,4 @@ $env:GOOS=""
 $env:GOARCH=""
 
 Write-Output "move files"
-Move-Item wasmclientgl.wasm clientdata/
+Move-Item -Force wasmclientgl.wasm clientdata/

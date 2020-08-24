@@ -49,7 +49,12 @@ Set-Location ..
 
 $Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
 
-################################################################################
+Write-Output "
+package dataversion
+
+const DataVersion = `"${Data_VERSION}`" 
+" > config/dataversion/dataversion_gen.go 
+
 Write-Output "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
 Write-Output "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
 Write-Output "Data Version: ${Data_VERSION}"
