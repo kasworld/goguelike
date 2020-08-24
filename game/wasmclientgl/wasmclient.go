@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/kasworld/actjitter"
-	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
@@ -243,9 +243,9 @@ func (app *WasmClient) enterTower(towerindex int) {
 	app.systemMessage.Append(wrapspan.ColorTextf("yellow",
 		"Welcome to Goguelike, %v!", gInitData.GetNickName()))
 
-	if gameconst.DataVersion != gInitData.ServiceInfo.DataVersion {
+	if dataversion.DataVersion != gInitData.ServiceInfo.DataVersion {
 		jslog.Errorf("DataVersion mismatch client %v server %v",
-			gameconst.DataVersion, gInitData.ServiceInfo.DataVersion)
+			dataversion.DataVersion, gInitData.ServiceInfo.DataVersion)
 	}
 	if c2t_version.ProtocolVersion != gInitData.ServiceInfo.ProtocolVersion {
 		jslog.Errorf("ProtocolVersion mismatch client %v server %v",

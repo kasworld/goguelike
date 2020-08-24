@@ -14,7 +14,7 @@ package clientai
 import (
 	"time"
 
-	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -49,9 +49,9 @@ func (cai *ClientAI) reqLogin(sessionUUID string, nickname string, authkey strin
 				cai.log.Error("Version mismatch client %v server %v",
 					version.GetVersion(), cai.ServiceInfo.Version)
 			}
-			if gameconst.DataVersion != cai.ServiceInfo.DataVersion {
+			if dataversion.DataVersion != cai.ServiceInfo.DataVersion {
 				cai.log.Error("DataVersion mismatch client %v server %v",
-					gameconst.DataVersion, cai.ServiceInfo.DataVersion)
+					dataversion.DataVersion, cai.ServiceInfo.DataVersion)
 			}
 			if c2t_version.ProtocolVersion != cai.ServiceInfo.ProtocolVersion {
 				cai.log.Error("ProtocolVersion mismatch client %v server %v",

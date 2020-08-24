@@ -17,7 +17,7 @@ import (
 
 	"github.com/kasworld/argdefault"
 	"github.com/kasworld/configutil"
-	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/groundconfig"
 	"github.com/kasworld/goguelike/game/ground"
 	"github.com/kasworld/goguelike/lib/g2log"
@@ -37,7 +37,7 @@ func init() {
 func printVersion() {
 	fmt.Println("Goguelike ground server")
 	fmt.Println("Build     ", version.GetVersion())
-	fmt.Println("Data      ", gameconst.DataVersion)
+	fmt.Println("Data      ", dataversion.DataVersion)
 	fmt.Println("Protocol  ", c2t_version.ProtocolVersion)
 	fmt.Println()
 }

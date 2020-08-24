@@ -25,6 +25,7 @@ import (
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/prettystring"
 
+	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/groundconfig"
 	"github.com/kasworld/goguelike/config/groundconst"
@@ -105,7 +106,7 @@ func New(config *groundconfig.GroundConfig, log *g2log.LogBase) *Ground {
 	grd.serviceInfo = c2t_obj.ServiceInfo{
 		Version:         version.GetVersion(),
 		ProtocolVersion: c2t_version.ProtocolVersion,
-		DataVersion:     gameconst.DataVersion,
+		DataVersion:     dataversion.DataVersion,
 	}
 	return &grd
 }

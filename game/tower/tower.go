@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/authdata"
-	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/gamedata"
 	"github.com/kasworld/goguelike/config/towerconfig"
 	"github.com/kasworld/goguelike/enum/towerachieve_vector"
@@ -151,7 +151,7 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 	tw.serviceInfo = &c2t_obj.ServiceInfo{
 		Version:         version.GetVersion(),
 		ProtocolVersion: c2t_version.ProtocolVersion,
-		DataVersion:     gameconst.DataVersion,
+		DataVersion:     dataversion.DataVersion,
 	}
 	authdata.AddAdminKey(config.AdminAuthKey)
 	return tw

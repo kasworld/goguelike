@@ -15,7 +15,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/moneycolor"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -39,7 +39,7 @@ func MakeClientInfoHTML() string {
 	buf.WriteString(`<table style="text-align: left;" border=2><tr><td>`)
 	fmt.Fprintf(&buf, "Goguelike webclient<br/>")
 	fmt.Fprintf(&buf, "Protocol %v<br/>", c2t_version.ProtocolVersion)
-	fmt.Fprintf(&buf, "Data %v<br/>", gameconst.DataVersion)
+	fmt.Fprintf(&buf, "Data %v<br/>", dataversion.DataVersion)
 	fmt.Fprintf(&buf, "Build %v<br/>", version.GetVersion())
 	fmt.Fprintf(&buf, "Build %v<br/>", version.GetBuildDate())
 	fmt.Fprintf(&buf, "%v<br/>", MsgCopyright)

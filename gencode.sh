@@ -115,10 +115,10 @@ enum/*.enum \
 Data_VERSION=`makesha256sum ${GameDataFiles}`
 
 echo "
-package gameconst
+package dataversion
 
 const DataVersion = \"${Data_VERSION}\"
-" > config/gameconst/dataversion_gen.go 
+" > config/dataversion/dataversion_gen.go 
 
 echo "Protocol T2G Version:" ${PROTOCOL_T2G_VERSION}
 echo "Protocol C2T Version:" ${PROTOCOL_C2T_VERSION}
