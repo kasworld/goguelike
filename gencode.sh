@@ -106,7 +106,7 @@ package dataversion
 const DataVersion = \"${Data_VERSION}\"
 " > config/dataversion/dataversion_gen.go 
 
-echo "Protocol T2G Version:" ${PROTOCOL_T2G_VERSION}
-echo "Protocol C2T Version:" ${PROTOCOL_C2T_VERSION}
-echo "Data Version:" ${Data_VERSION}
+echo "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
+echo "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
+echo "Data Version: ${Data_VERSION}"
 

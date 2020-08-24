@@ -24,7 +24,7 @@ BuildBin() {
 ################################################################################
 DATESTR=`date -Iseconds`
 GITSTR=`git rev-parse HEAD`
-BUILD_VER=${DATESTR}_${GITSTR}_release
+BUILD_VER=${DATESTR}_${GITSTR}_release_linux
 echo "Build Version:" ${BUILD_VER}
 
 

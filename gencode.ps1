@@ -1,27 +1,27 @@
 
 ################################################################################
-cd lib
+Set-Location lib
 genlog -leveldatafile ./g2log/g2log.data -packagename g2log 
-cd ..
+Set-Location ..
 
 ################################################################################
 $PROTOCOL_T2G_VERSION=makesha256sum protocol_t2g/*.enum protocol_t2g/t2g_obj/protocol_*.go
-echo  "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
+Write-Output  "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
 genprotocol -ver="${PROTOCOL_T2G_VERSION}" -basedir=protocol_t2g -prefix=t2g -statstype=int
-cd protocol_t2g
+Set-Location protocol_t2g
 goimports -w .
-cd ..
+Set-Location ..
 
 ################################################################################
 $PROTOCOL_C2T_VERSION=makesha256sum protocol_c2t/*.enum protocol_c2t/c2t_obj/protocol_*.go
-echo "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
+Write-Output "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
 genprotocol -ver="${PROTOCOL_C2T_VERSION}" -basedir=protocol_c2t -prefix=c2t -statstype=int
-cd protocol_c2t
+Set-Location protocol_c2t
 goimports -w .
-cd ..
+Set-Location ..
 
 ################################################################################
-echo genenum
+Write-Output genenum
 genenum -typename=Way9Type -packagename=way9type -basedir=enum 
 genenum -typename=ActiveObjType -packagename=aotype -basedir=enum -vectortype=int
 genenum -typename=CarryingObjectType -packagename=carryingobjecttype -basedir=enum -vectortype=int
@@ -43,14 +43,14 @@ genenum -typename=FactionType -packagename=factiontype -basedir=enum -vectortype
 genenum -typename=AIPlan -packagename=aiplan -basedir=enum -vectortype=int
 genenum -typename=TerrainCmd -packagename=terraincmd -basedir=enum -vectortype=int
 
-cd enum
+Set-Location enum
 goimports -w .
-cd ..
+Set-Location ..
 
 $Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
 
 ################################################################################
-echo "Protocol T2G Version:" ${PROTOCOL_T2G_VERSION}
-echo "Protocol C2T Version:" ${PROTOCOL_C2T_VERSION}
-echo "Data Version:" ${Data_VERSION}
+Write-Output "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
+Write-Output "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
+Write-Output "Data Version: ${Data_VERSION}"
 
