@@ -23,7 +23,6 @@ import (
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/prettystring"
-	"github.com/kasworld/signalhandle"
 	"github.com/kasworld/version"
 )
 
@@ -35,7 +34,6 @@ func init() {
 
 func main() {
 	configurl := flag.String("i", "", "client config file or url")
-	signalhandle.AddArgs()
 
 	ads := argdefault.New(&textclientconfig.TextClientConfig{})
 	ads.RegisterFlag()
