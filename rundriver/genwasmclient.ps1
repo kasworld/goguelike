@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
-BUILD_VER=${1}
+$BUILD_VER=$args[0]
 
 # build gl client
 
-rm wasmclientgl.wasm
+Remove-Item wasmclientgl.wasm
 
-echo "GOOS=js GOARCH=wasm go build -o wasmclientgl.wasm -ldflags -X main.Ver=${BUILD_VER}"
-GOOS=js GOARCH=wasm go build -o wasmclientgl.wasm -ldflags "-X main.Ver=${BUILD_VER}" wasmclientgl.go
+Write-Output "GOOS=js GOARCH=wasm go build -o wasmclientgl.wasm -ldflags -X main.Ver=${BUILD_VER}"
+$env:GOOS="js" 
+$env:GOARCH="wasm" 
+go build -o wasmclientgl.wasm -ldflags "-X main.Ver=${BUILD_VER}" wasmclientgl.go
+$env:GOOS=""
+$env:GOARCH=""
 
-echo "move files"
-mv wasmclientgl.wasm clientdata/
+Write-Output "move files"
+Move-Item wasmclientgl.wasm clientdata/
