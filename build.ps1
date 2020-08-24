@@ -14,7 +14,8 @@ Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 
 # build bin here
 go build -o "${BIN_DIR}\towerserver.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserverwin.go"
-
+go build -o "${BIN_DIR}\multiclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\multiclient.go"
+go build -o "${BIN_DIR}\textclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\textclient.go"
 
 Set-Location rundriver
 ./genwasmclient.ps1 ${BUILD_VER}
