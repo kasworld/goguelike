@@ -4,6 +4,7 @@
     
     linux(debian,ubuntu,mint) 
     또는 window (아마도 10) 제한적 지원(groundserver 미지원) + powershell(5.1, 7.x)
+        windows에서는 sig_usr1을 사용할수 없어서 logrotate가 불가능해 졌습니다.
     chrome web brower ( 또는 websocket, webassembly, webgl 을 지원하는 브라우저)
     golang
     webgl을 지원할 그래픽 카드 
