@@ -1,13 +1,14 @@
 
 ################################################################################
 Set-Location lib
+Write-Output "genlog -leveldatafile ./g2log/g2log.data -packagename g2log "
 genlog -leveldatafile ./g2log/g2log.data -packagename g2log 
 Set-Location ..
 
 ################################################################################
 $PROTOCOL_T2G_VERSION=makesha256sum protocol_t2g/*.enum protocol_t2g/t2g_obj/protocol_*.go
 Write-Output "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
-Write-Output  "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
+Write-Output "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
 genprotocol -ver="${PROTOCOL_T2G_VERSION}" -basedir=protocol_t2g -prefix=t2g -statstype=int
 Set-Location protocol_t2g
 goimports -w .
@@ -23,7 +24,8 @@ goimports -w .
 Set-Location ..
 
 ################################################################################
-Write-Output genenum
+# generate enum
+Write-Output "generate enums"
 genenum -typename=Way9Type -packagename=way9type -basedir=enum 
 genenum -typename=ActiveObjType -packagename=aotype -basedir=enum -vectortype=int
 genenum -typename=CarryingObjectType -packagename=carryingobjecttype -basedir=enum -vectortype=int
@@ -51,7 +53,7 @@ Set-Location ..
 
 $Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
 Write-Output "Data Version: ${Data_VERSION}"
-
+mkdir -ErrorAction SilentlyContinue config/dataversion
 Write-Output "package dataversion
 const DataVersion = `"${Data_VERSION}`" 
 " > config/dataversion/dataversion_gen.go 
@@ -69,6 +71,7 @@ Write-Output "Build Version: ${BUILD_VER}"
 $BIN_DIR="bin"
 $SRC_DIR="rundriver"
 
+mkdir -ErrorAction SilentlyContinue "${BIN_DIR}"
 Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 
 # build bin here

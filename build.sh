@@ -96,6 +96,7 @@ cd ..
 GameDataFiles="config/gameconst/*.go config/gamedata/*.go enum/*.enum"
 Data_VERSION=`makesha256sum ${GameDataFiles}`
 echo "Data Version: ${Data_VERSION}"
+mkdir -p config/dataversion
 echo "package dataversion
 const DataVersion = \"${Data_VERSION}\"
 " > config/dataversion/dataversion_gen.go 
@@ -130,6 +131,7 @@ echo "Build Version:" ${BUILD_VER}
 BIN_DIR="bin"
 SRC_DIR="rundriver"
 
+mkdir -p ${BIN_DIR}
 echo ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
 
 BuildBin ${SRC_DIR}/towerserver.go ${BIN_DIR} towerserver
