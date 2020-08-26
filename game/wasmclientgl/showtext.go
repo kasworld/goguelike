@@ -469,7 +469,7 @@ func (app *WasmClient) DisplayTextInfo() {
 		commandButtons.GetByIDBase("KillSelf").Enable()
 	}
 
-	envColor := app.GetEnvBias().ToHTMLColorString()
+	// envColor := app.GetEnvBias().ToHTMLColorString()
 	// jsobj.SetBGColor(GetElementById("body"), envColor)
 
 	app.updateLeftInfo()

@@ -666,7 +666,7 @@ func (f *Floor) sendViewportNoti(
 		if ao.GetAndClearNeedTANoti() {
 			sight := ao.GetTurnData().Sight
 			sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
-			ao.UpdateBySightMat2(f, aox, aoy, sightMat,
+			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat,
 				float32(sight))
 			if aoconn := ao.GetClientConn(); aoconn != nil {
 				notiTA := f.ToPacket_NotiTileArea(aox, aoy, sight)

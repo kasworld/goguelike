@@ -128,7 +128,7 @@ type ActiveObjectI interface {
 	GetActStat() *c2t_idcmd_stats.CommandIDStat
 	GetConditionStat() *condition_vector.ConditionVector
 
-	UpdateBySightMat2(f FloorI, vpCenterX, vpCenterY int,
+	UpdateVisitAreaBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)
 
 	GetVisitFloor(floorname string) *visitarea.VisitArea

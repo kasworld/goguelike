@@ -31,7 +31,7 @@ func (ao *ActiveObject) Noti_EnterFloor(f gamei.FloorI) {
 	}
 }
 
-func (ao *ActiveObject) UpdateBySightMat2(
+func (ao *ActiveObject) UpdateVisitAreaBySightMat2(
 	f gamei.FloorI, vpCenterX, vpCenterY int,
 	sightMat *viewportdata.ViewportSight2, sight float32) {
 	va, exist := ao.uuid2VisitArea.GetByID(f.GetName())
