@@ -14,7 +14,6 @@ package tile_flag
 import (
 	"bytes"
 	"fmt"
-	"math"
 
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -63,7 +62,7 @@ func (t TileFlag) calcTileValues() *tile.AttribEle {
 	}
 	rtn.Name = buf.String()
 	if t == 0 {
-		rtn.BlockSight = math.Inf(1)
+		// rtn.BlockSight = math.Inf(1)
 		rtn.ObjOnTile = tile.ObjOnTile_0
 	}
 	return &rtn
