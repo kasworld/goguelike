@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	DisplayLineLimit = 3*gameconst.ViewPortH - gameconst.ViewPortH/2
+	DisplayLineLimit = 70
 	DstCellSize      = 64.0
 	HelperSize       = DstCellSize * 32
 	UnitTileZ        = DstCellSize / 16

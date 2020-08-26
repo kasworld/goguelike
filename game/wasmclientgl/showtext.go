@@ -28,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/clientfloor"
-	"github.com/kasworld/goguelike/lib/jsobj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -471,7 +470,7 @@ func (app *WasmClient) DisplayTextInfo() {
 	}
 
 	envColor := app.GetEnvBias().ToHTMLColorString()
-	jsobj.SetBGColor(GetElementById("body"), envColor)
+	// jsobj.SetBGColor(GetElementById("body"), envColor)
 
 	app.updateLeftInfo()
 	app.updateRightInfo()
