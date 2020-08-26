@@ -215,7 +215,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
     <br/>
     <a href="/ActiveObjSuspendedList?page=0" target="_blank">{{.GetID2ActiveObjSuspend}}</a>
     <br/>
-    <a href="/ConnectionList?page=0" target="_blank">{{.GetConnManager}}</a>
+    <a href="/ConnectionList?page=0" target="_blank">Connections:{{.GetConnManager}}</a>
     <br/>
     <a href="/SessionList?page=0" target="_blank">{{.GetSessionManager}}</a>
     <br/>

@@ -122,8 +122,8 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 
 	tw := &Tower{
 		uuid:         uuidstr.New(),
-		id2ao:        aoid2activeobject.New("working"),
-		id2aoSuspend: aoid2activeobject.New("suspended"),
+		id2ao:        aoid2activeobject.New("ActiveObject working"),
+		id2aoSuspend: aoid2activeobject.New("ActiveObject suspended"),
 		recvRequestCh: make(chan interface{},
 			int(float64(config.ConcurrentConnections*2)*config.TurnPerSec)),
 

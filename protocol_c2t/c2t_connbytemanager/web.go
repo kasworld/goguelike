@@ -12,12 +12,17 @@
 package c2t_connbytemanager
 
 import (
+	"fmt"
 	"net/http"
 	"text/template"
 
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/weblib"
 )
+
+func (cm *Manager) String() string {
+	return fmt.Sprintf("Count[%v]", len(cm.id2Conn))
+}
 
 func (cman *Manager) ToWeb(w http.ResponseWriter, r *http.Request) {
 	weblib.WebFormBegin("client connection list", w, r)
