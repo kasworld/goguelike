@@ -22,6 +22,10 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/enum/achievetype"
+	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype"
+	"github.com/kasworld/goguelike/enum/potiontype"
+	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/clientcookie"
 	"github.com/kasworld/goguelike/lib/jsobj"
@@ -163,10 +167,30 @@ func (app *WasmClient) reqAchieveInfo() error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			rpk := rsp.(*c2t_obj.RspAchieveInfo_data)
 			app.systemMessage.Append(wrapspan.ColorText("Gold",
-				"== Achievement == "))
-			for i, v := range rpk.Achieve {
+				"== Achievement and stats == "))
+			for i, v := range rpk.AchieveStat {
 				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
 					"%v : %v ", achievetype.AchieveType(i).String(), v))
+			}
+			for i, v := range rpk.PotionStat {
+				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
+					"%v : %v ", potiontype.PotionType(i).String(), v))
+			}
+			for i, v := range rpk.ScrollStat {
+				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
+					"%v : %v ", scrolltype.ScrollType(i).String(), v))
+			}
+			for i, v := range rpk.FOActStat {
+				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
+					"%v : %v ", fieldobjacttype.FieldObjActType(i).String(), v))
+			}
+			for i, v := range rpk.AOActionStat {
+				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
+					"%v : %v ", c2t_idcmd.CommandID(i).String(), v))
+			}
+			for i, v := range rpk.ConditionStat {
+				app.systemMessage.Append(wrapspan.ColorTextf("Gold",
+					"%v : %v ", condition.Condition(i).String(), v))
 			}
 			return nil
 		},

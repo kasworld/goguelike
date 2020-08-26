@@ -23,6 +23,7 @@ import (
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/aotype"
+	"github.com/kasworld/goguelike/enum/condition_vector"
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike/enum/potiontype"
@@ -78,6 +79,7 @@ type ActiveObject struct {
 	scrollStat       scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
 	foActStat        fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
 	aoActionStat     c2t_idcmd_stats.CommandIDStat                `prettystring:"simple"`
+	conditionStat    condition_vector.ConditionVector             `prettystring:"simple"`
 
 	uuid2VisitArea     *visitarea.ID2VisitArea `prettystring:"simple"`
 	currrentFloor      gamei.FloorI

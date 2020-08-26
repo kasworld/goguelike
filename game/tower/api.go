@@ -205,11 +205,18 @@ func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
-	spacket := &c2t_obj.RspAchieveInfo_data{}
-
-	for i, v := range ao.GetAchieveStat() {
-		spacket.Achieve[i] = int64(v)
+	spacket := &c2t_obj.RspAchieveInfo_data{
+		AchieveStat:   *ao.GetAchieveStat(),
+		PotionStat:    *ao.GetPotionStat(),
+		ScrollStat:    *ao.GetScrollStat(),
+		FOActStat:     *ao.GetFieldObjActStat(),
+		AOActionStat:  *ao.GetActStat(),
+		ConditionStat: *ao.GetConditionStat(),
 	}
+
+	// for i, v := range ao.GetAchieveStat() {
+	// 	spacket.Achieve[i] = int64(v)
+	// }
 	return rhd, spacket, nil
 }
 

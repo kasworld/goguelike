@@ -18,6 +18,7 @@ import (
 
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
+	"github.com/kasworld/goguelike/enum/condition_vector"
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike/enum/potiontype_vector"
@@ -45,14 +46,6 @@ func (ao *ActiveObject) GetKill() int {
 	return int(ao.achieveStat.Get(achievetype.Kill))
 }
 
-func (ao *ActiveObject) GetActStats() *c2t_idcmd_stats.CommandIDStat {
-	return &ao.aoActionStat
-}
-
-func (ao *ActiveObject) GetPotionStat() *potiontype_vector.PotionTypeVector {
-	return &ao.potionStat
-}
-
 func (ao *ActiveObject) GetAIObj() *serverai2.ServerAI {
 	return ao.ai
 }
@@ -64,6 +57,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		potiontype_vector.IndexFn).Funcs(
 		scrolltype_vector.IndexFn).Funcs(
 		fieldobjacttype_vector.IndexFn).Funcs(
+		condition_vector.IndexFn).Funcs(
 		achievetype_vector.IndexFn).Parse(`
 	<html> <head>
 	<title>ActiveObject</title>
@@ -186,13 +180,22 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + fieldobjacttype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
-	{{with .GetActStats}}
+	{{with .GetActStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + c2t_idcmd_stats.HTML_tableheader + `
 		{{range $i, $v := .}}
 		` + c2t_idcmd_stats.HTML_row + `
 		{{end}}
 		` + c2t_idcmd_stats.HTML_tableheader + `
+		</table>
+	{{end}}
+	{{with .GetConditionStat}}
+		<table border=1 style="border-collapse:collapse;">
+		` + condition_vector.HTML_tableheader + `
+		{{range $i, $v := .}}
+		` + condition_vector.HTML_row + `
+		{{end}}
+		` + condition_vector.HTML_tableheader + `
 		</table>
 	{{end}}
 	{{range $i, $v := .GetVisitFloorList}}

@@ -18,7 +18,9 @@ import (
 
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/aotype"
+	"github.com/kasworld/goguelike/enum/condition_vector"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike/enum/potiontype_vector"
 	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
@@ -26,6 +28,7 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 )
 
@@ -35,6 +38,10 @@ func (ao *ActiveObject) GetUUID() string {
 
 func (ao *ActiveObject) GetHomeFloor() gamei.FloorI {
 	return ao.homefloor
+}
+
+func (ao *ActiveObject) GetCurrentFloor() gamei.FloorI {
+	return ao.currrentFloor
 }
 
 func (ao *ActiveObject) GetChat() string {
@@ -83,6 +90,9 @@ func (ao *ActiveObject) GetInven() gamei.InventoryI {
 	return ao.inven
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// stats, at least used for web
+
 func (ao *ActiveObject) GetAchieveStat() *achievetype_vector.AchieveTypeVector {
 	return &ao.achieveStat
 }
@@ -95,8 +105,16 @@ func (ao *ActiveObject) GetFieldObjActStat() *fieldobjacttype_vector.FieldObjAct
 	return &ao.foActStat
 }
 
-func (ao *ActiveObject) GetCurrentFloor() gamei.FloorI {
-	return ao.currrentFloor
+func (ao *ActiveObject) GetConditionStat() *condition_vector.ConditionVector {
+	return &ao.conditionStat
+}
+
+func (ao *ActiveObject) GetActStat() *c2t_idcmd_stats.CommandIDStat {
+	return &ao.aoActionStat
+}
+
+func (ao *ActiveObject) GetPotionStat() *potiontype_vector.PotionTypeVector {
+	return &ao.potionStat
 }
 
 ////////////////////////////////////////////////////////////////////////////////

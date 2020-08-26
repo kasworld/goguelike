@@ -140,6 +140,8 @@ func (ao *ActiveObject) applyOpArg(
 		newData.Sight += arg
 
 	case statusoptype.SetCondition:
-		newData.Condition.SetByCondition(oparg.Arg.(condition.Condition))
+		cnd := oparg.Arg.(condition.Condition)
+		newData.Condition.SetByCondition(cnd)
+		ao.conditionStat.Inc(cnd)
 	}
 }

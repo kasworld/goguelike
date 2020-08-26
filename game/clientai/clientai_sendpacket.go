@@ -84,7 +84,7 @@ func (cai *ClientAI) reqAchieveInfo() error {
 			}
 			rpk := robj.(*c2t_obj.RspAchieveInfo_data)
 			cai.log.Debug("=================================")
-			for i, v := range rpk.Achieve {
+			for i, v := range rpk.AchieveStat {
 				cai.log.Debug("%v : %v", achievetype.AchieveType(i).String(), v)
 			}
 			cai.log.Debug("Achieve list ====================")

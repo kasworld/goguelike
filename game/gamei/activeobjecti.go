@@ -17,7 +17,9 @@ import (
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/aotype"
+	"github.com/kasworld/goguelike/enum/condition_vector"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike/enum/potiontype_vector"
 	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
@@ -28,6 +30,7 @@ import (
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 )
@@ -120,9 +123,10 @@ type ActiveObjectI interface {
 
 	GetAchieveStat() *achievetype_vector.AchieveTypeVector
 	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector
-	// GetPotionStat() *potiontype_vector.PotionTypeVector
+	GetPotionStat() *potiontype_vector.PotionTypeVector
 	GetScrollStat() *scrolltype_vector.ScrollTypeVector
-	// GetActStats() *c2t_idcmd_stats.CommandIDStat
+	GetActStat() *c2t_idcmd_stats.CommandIDStat
+	GetConditionStat() *condition_vector.ConditionVector
 
 	UpdateBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)

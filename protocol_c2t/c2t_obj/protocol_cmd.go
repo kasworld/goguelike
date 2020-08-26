@@ -14,7 +14,12 @@ package c2t_obj
 import (
 	"time"
 
-	"github.com/kasworld/goguelike/enum/achievetype"
+	"github.com/kasworld/goguelike/enum/achievetype_vector"
+	"github.com/kasworld/goguelike/enum/condition_vector"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike/enum/potiontype_vector"
+	"github.com/kasworld/goguelike/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 )
 
 type ReqInvalid_data struct {
@@ -52,7 +57,12 @@ type ReqAchieveInfo_data struct {
 	Dummy uint8
 }
 type RspAchieveInfo_data struct {
-	Achieve [achievetype.AchieveType_Count]int64
+	AchieveStat   achievetype_vector.AchieveTypeVector         `prettystring:"simple"`
+	PotionStat    potiontype_vector.PotionTypeVector           `prettystring:"simple"`
+	ScrollStat    scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
+	FOActStat     fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
+	AOActionStat  c2t_idcmd_stats.CommandIDStat                `prettystring:"simple"`
+	ConditionStat condition_vector.ConditionVector             `prettystring:"simple"`
 }
 
 type ReqRebirth_data struct {
