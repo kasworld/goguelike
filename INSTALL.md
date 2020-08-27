@@ -1,6 +1,9 @@
 # 사전 준비 사항
 
-준비물 
+[google translated install.md](https://translate.google.co.kr/translate?sl=ko&tl=en&u=https://raw.githubusercontent.com/kasworld/goguelike/master/INSTALL.md)
+
+
+# 준비물 
     
     linux(debian,ubuntu,mint) 
     또는 window (아마도 10) 제한적 지원(groundserver 미지원) + powershell(5.1, 7.x)

@@ -1,6 +1,10 @@
 # 실행하려면 
 
+[google translated this doc](https://translate.google.co.kr/translate?sl=ko&tl=en&u=https%3A%2F%2Fraw.githubusercontent.com%2Fkasworld%2Fgoguelike%2Fmaster%2FREADME.md)
+
 설치 문서 INSTALL.md
+
+[google translated install.md](https://translate.google.co.kr/translate?sl=ko&tl=en&u=https://raw.githubusercontent.com/kasworld/goguelike/master/INSTALL.md)
 
 지형 스크립트 설명 towerscript.md
 
