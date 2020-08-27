@@ -152,7 +152,7 @@ func CityRooms(floorW, floorH, roomW, roomH, roadW int, intnfn func(int) int) []
 			))
 		}
 	}
-	for x := roomW; x < floorW-roomW; x += roomW + roadW {
+	for x := roomW; x < floorW; x += roomW + roadW {
 		for dx := 0; dx < roadW; dx++ {
 			roadTile := allRoadTile[intnfn(len(allRoadTile))]
 			rtn = append(rtn, fmt.Sprintf(
@@ -161,7 +161,7 @@ func CityRooms(floorW, floorH, roomW, roomH, roadW int, intnfn func(int) int) []
 			))
 		}
 	}
-	for y := roomH; y < floorH-roomH; y += roomH + roadW {
+	for y := roomH; y < floorH; y += roomH + roadW {
 		for dy := 0; dy < roadW; dy++ {
 			roadTile := allRoadTile[intnfn(len(allRoadTile))]
 			rtn = append(rtn, fmt.Sprintf(
