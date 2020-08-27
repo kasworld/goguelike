@@ -12,11 +12,16 @@
 package starttower
 
 import (
+	"fmt"
+
+	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
 
 func New(name string) *towermake.Tower {
+	var rnd = g2rand.New()
+
 	tw := towermake.New(name)
 	tw.Add("Practice", 64, 32, 0, 0, 0.7).Appends(
 		floortemplate.Practice64x32()...,
@@ -52,6 +57,28 @@ func New(name string) *towermake.Tower {
 	tw.Add("AgeingMaze", 256, 256, 256, 0, 1.0).Appends(
 		floortemplate.AgeingMaze256x256()...,
 	)
+
+	fm := tw.Add("BedTown", 256, 256, 128, 0, 1.0).Appends(
+		floortemplate.CityRooms(256, 256, 11, 11, 5, rnd.Intn)...,
+	)
+
+	fm = tw.Add("ResourceMazeFill", 256, 256, 128, 0, 1.0).Appends(
+		floortemplate.MixedResourceMaze(256, 256)...,
+	)
+	fm.Appends(
+		fmt.Sprintf("ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=%v h=%v", 256, 256),
+	)
+	fm.Appends(
+		floortemplate.CityRoomsRand(512, rnd.Intn)...,
+	)
+
+	fm = tw.Add("ResourceMaze", 256, 256, 128, 0, 1.0).Appends(
+		floortemplate.MixedResourceMaze(256, 256)...,
+	)
+	fm.Appends(
+		floortemplate.CityRoomsRand(512, rnd.Intn)...,
+	)
+
 	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
 		floortemplate.RogueLike80x43()...,
 	)
@@ -99,15 +126,18 @@ func New(name string) *towermake.Tower {
 
 	tw.GetByName("Practice").ConnectStairUp("InRoom", "InRoom", tw.GetByName("SoilPlant"))
 	tw.GetByName("SoilPlant").ConnectStairUp("InRoom", "InRoom", tw.GetByName("AgeingCity"))
-	tw.GetByName("AgeingCity").ConnectStairUp("InRoom", "InRoom", tw.GetByName("RogueLike"))
+	tw.GetByName("AgeingCity").ConnectStairUp("InRoom", "InRoom", tw.GetByName("BedTown"))
+	tw.GetByName("BedTown").ConnectStairUp("InRoom", "InRoom", tw.GetByName("RogueLike"))
 
 	tw.GetByName("RogueLike").ConnectStairUp("InRoom", "InRoom", tw.GetByName("SoilWater"))
 	tw.GetByName("SoilWater").ConnectStairUp("InRoom", "InRoom", tw.GetByName("AgeingField"))
-	tw.GetByName("AgeingField").ConnectStairUp("InRoom", "InRoom", tw.GetByName("GogueLike"))
+	tw.GetByName("AgeingField").ConnectStairUp("InRoom", "InRoom", tw.GetByName("ResourceMazeFill"))
+	tw.GetByName("ResourceMazeFill").ConnectStairUp("InRoom", "InRoom", tw.GetByName("GogueLike"))
 
 	tw.GetByName("GogueLike").ConnectStairUp("InRoom", "InRoom", tw.GetByName("SoilMagma"))
 	tw.GetByName("SoilMagma").ConnectStairUp("InRoom", "InRoom", tw.GetByName("AgeingMaze"))
-	tw.GetByName("AgeingMaze").ConnectStairUp("InRoom", "InRoom", tw.GetByName("Ghost"))
+	tw.GetByName("AgeingMaze").ConnectStairUp("InRoom", "InRoom", tw.GetByName("ResourceMaze"))
+	tw.GetByName("ResourceMaze").ConnectStairUp("InRoom", "InRoom", tw.GetByName("Ghost"))
 
 	tw.GetByName("Ghost").ConnectStairUp("InRoom", "Rand", tw.GetByName("SoilIce"))
 	tw.GetByName("SoilIce").ConnectStairUp("InRoom", "InRoom", tw.GetByName("MadeByImage"))
@@ -128,6 +158,9 @@ func New(name string) *towermake.Tower {
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("GogueLike"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("Ghost"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("FreeForAll"))
+	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("BedTown"))
+	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("ResourceMazeFill"))
+	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("ResourceMaze"))
 
 	for _, fm := range tw.GetList() {
 		randList := map[string]bool{

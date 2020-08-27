@@ -1,7 +1,7 @@
 [
     [
         "# tower sight, made by tower maker",
-        "# towermaker -towername=all"
+        "# towermaker.exe -towername all"
     ],
     [
         "NewTerrain w=128 h=128 name=SightTest ao=0 po=0 actturnboost=1",
