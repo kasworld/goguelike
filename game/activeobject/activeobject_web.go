@@ -144,6 +144,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	{{end}}
 
 	<br/>
+	Achieve stat<br/>
 	{{with .GetAchieveStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + achievetype_vector.HTML_tableheader + `
@@ -153,6 +154,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + achievetype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
+	Potion stat<br/>
 	{{with .GetPotionStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + potiontype_vector.HTML_tableheader + `
@@ -162,6 +164,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + potiontype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
+	Scroll stat<br/>
 	{{with .GetScrollStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + scrolltype_vector.HTML_tableheader + `
@@ -171,6 +174,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + scrolltype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
+	FieldObj stat<br/>
 	{{with .GetFieldObjActStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + fieldobjacttype_vector.HTML_tableheader + `
@@ -180,6 +184,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + fieldobjacttype_vector.HTML_tableheader + `
 		</table>
 	{{end}}
+	Action stat<br/>
 	{{with .GetActStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + c2t_idcmd_stats.HTML_tableheader + `
@@ -189,6 +194,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + c2t_idcmd_stats.HTML_tableheader + `
 		</table>
 	{{end}}
+	Condition stat<br/>
 	{{with .GetConditionStat}}
 		<table border=1 style="border-collapse:collapse;">
 		` + condition_vector.HTML_tableheader + `
