@@ -226,8 +226,8 @@ func initPlanMoveToRecycler(sai *ServerAI) int {
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
 		func(o uuidposman.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
-			if iao, ok := o.(*fieldobject.FieldObject); ok {
-				if iao.ActType != fieldobjacttype.RecycleCarryObj {
+			if fo, ok := o.(*fieldobject.FieldObject); ok {
+				if fo.ActType != fieldobjacttype.RecycleCarryObj {
 					return false
 				}
 				lastTime := sai.fieldObjUseTime[o.GetUUID()]

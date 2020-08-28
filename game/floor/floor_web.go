@@ -142,10 +142,10 @@ func (f *Floor) MakeImage(zoom int) *image.RGBA {
 				case gamei.MoneyI:
 					co = color.RGBA{0xff, 0xd7, 0x00, 0xff} // gold color
 				}
-			} else if iao := f.foPosMan.Get1stObjAt(srcX, srcY); iao != nil {
-				ww, ok := iao.(*fieldobject.FieldObject)
+			} else if fo := f.foPosMan.Get1stObjAt(srcX, srcY); fo != nil {
+				ww, ok := fo.(*fieldobject.FieldObject)
 				if !ok {
-					f.log.Fatal("not *fieldobject.FieldObject %v", iao)
+					f.log.Fatal("not *fieldobject.FieldObject %v", fo)
 					continue
 				}
 				oco := ww.GetActType().Color24()

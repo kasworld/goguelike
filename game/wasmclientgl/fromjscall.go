@@ -220,10 +220,10 @@ func (app *WasmClient) makePathToMouseClick() {
 }
 
 func (app *WasmClient) tryEnterPortal(x, y int) {
-	for _, iao := range app.olNotiData.FieldObjList {
-		if iao.X == x && iao.Y == y &&
-			(iao.ActType == fieldobjacttype.PortalIn || iao.ActType == fieldobjacttype.PortalInOut) {
-			// fmt.Printf("enter portal %v %v %v", x, y, iao)
+	for _, fo := range app.olNotiData.FieldObjList {
+		if fo.X == x && fo.Y == y &&
+			(fo.ActType == fieldobjacttype.PortalIn || fo.ActType == fieldobjacttype.PortalInOut) {
+			// fmt.Printf("enter portal %v %v %v", x, y, fo)
 			go app.sendPacket(c2t_idcmd.EnterPortal,
 				&c2t_obj.ReqEnterPortal_data{},
 			)

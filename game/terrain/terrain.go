@@ -167,7 +167,7 @@ func (tr *Terrain) renderServiceTileArea() {
 	tr.viewportCache.Reset()
 	tr.ta4ff = tilearea4pathfind.New(tr.GetTiles())
 	for _, o := range tr.foPosMan.GetAllList() {
-		iao, ok := o.(*fieldobject.FieldObject)
+		fo, ok := o.(*fieldobject.FieldObject)
 		if !ok {
 			tr.log.Fatal("not *fieldobject.FieldObject %v", o)
 			continue
@@ -178,7 +178,7 @@ func (tr *Terrain) renderServiceTileArea() {
 			continue
 		}
 		if !tr.serviceTileArea[x][y].CharPlaceable() {
-			tr.log.Fatal("iao placed at NonCharPlaceable tile %v", iao)
+			tr.log.Fatal("fieldobj placed at NonCharPlaceable tile %v", fo)
 		}
 	}
 }
