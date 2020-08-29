@@ -66,8 +66,8 @@ func (f *Floor) Web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 		e.preventDefault();
 		/*get the cursor's x and y positions:*/
 		pos = getCursorPos(img, e);
-		x = pos.x;
-		y = pos.y;
+		x = Math.round(pos.x);
+		y = Math.round(pos.y);
 		getTileInfo("/floortile?floorname={{.GetName}}&x="+x+"&y="+y);
 	}
 	function getTileInfo(url) {

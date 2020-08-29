@@ -66,8 +66,8 @@ func (tr *Terrain) Web_TerrainInfo(w http.ResponseWriter, r *http.Request) {
 		e.preventDefault();
 		/*get the cursor's x and y positions:*/
 		pos = getCursorPos(img, e);
-		x = pos.x;
-		y = pos.y;
+		x = Math.round(pos.x);
+		y = Math.round(pos.y);
 		getTileInfo("/terraintile?floorname={{.FloorName}}&x="+x+"&y="+y);
 	}
 	function getTileInfo(url) {
