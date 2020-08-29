@@ -62,6 +62,7 @@ type Floor struct {
 	aoPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 	poPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 	foPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
+	doPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 
 	interDur          *intervalduration.IntervalDuration `prettystring:"simple"`
 	statPacketObjOver *actpersec.ActPerSec               `prettystring:"simple"`

@@ -16,16 +16,14 @@ import (
 
 	"github.com/kasworld/goguelike/config/contagionarea"
 	"github.com/kasworld/goguelike/config/slippperydata"
-	"github.com/kasworld/goguelike/enum/equipslottype"
-	"github.com/kasworld/goguelike/enum/way9type"
-
-	"github.com/kasworld/goguelike/enum/condition"
-
 	"github.com/kasworld/goguelike/enum/achievetype"
+	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
+	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/cmd2tower"
