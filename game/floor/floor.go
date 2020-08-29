@@ -96,6 +96,7 @@ func (f *Floor) Cleanup() {
 	f.aoPosMan.Cleanup()
 	f.poPosMan.Cleanup()
 	f.terrain.Cleanup()
+	f.doPosMan.Cleanup()
 }
 
 func (f *Floor) Init() error {
@@ -112,6 +113,7 @@ func (f *Floor) Init() error {
 	f.aoPosMan = uuidposman.New(f.w, f.h)
 	f.poPosMan = uuidposman.New(f.w, f.h)
 	f.foPosMan = f.terrain.GetFieldObjPosMan()
+	f.doPosMan = uuidposman.New(f.w, f.h)
 	f.bias = bias.Bias{
 		f.rnd.Float64() - 0.5,
 		f.rnd.Float64() - 0.5,
