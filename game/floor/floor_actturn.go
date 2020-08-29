@@ -217,16 +217,49 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			turnmod := slippperydata.Drunken[f.rnd.Intn(len(slippperydata.Drunken))]
 			atkdir = atkdir.TurnDir(turnmod)
 		}
-		// add dopoaman
-		fx := aox + atkdir.Dx()
-		fy := aoy + atkdir.Dy()
-		if err := f.doPosMan.AddToXY(dangerobject.NewAOAttact(ao, fx, fy), fx, fy); err != nil {
+		// add dopoaman near attack
+
+		// check valid attack
+		if !atkdir.IsValid() || atkdir == way9type.Center {
+			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
+				c2t_error.InvalidDirection)
+			continue
+		}
+		srcTile := f.terrain.GetTiles()[aox][aoy]
+		if srcTile.NoBattle() {
+			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
+				c2t_error.ActionProhibited)
+			continue
+		}
+		dstX, dstY := aox+atkdir.Dx(), aoy+atkdir.Dy()
+		dstX, dstY = f.terrain.WrapXY(dstX, dstY)
+		dstTile := f.terrain.GetTiles()[dstX][dstY]
+		if dstTile.NoBattle() {
+			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
+				c2t_error.ActionProhibited)
+			continue
+		}
+		if err := f.doPosMan.AddToXY(dangerobject.NewAOAttact(ao, dstX, dstY), dstX, dstY); err != nil {
 			f.log.Fatal("fail to AddToXY %v", err)
+			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
+				c2t_error.ActionCanceled)
+			continue
 		}
 
-		dstao, srcTile, dstTile, ec := f.canActiveObjAttack2Dir(aox, aoy, atkdir)
-		if ec == c2t_error.None {
-			f.aoAttackActiveObj(ao, dstao, srcTile, dstTile)
+		// need change, old code
+		rtnEC := c2t_error.ObjectNotFound
+		var dstAO gamei.ActiveObjectI
+		for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
+			v := vv.(gamei.ActiveObjectI)
+			if v.IsAlive() {
+				dstAO, rtnEC = v, c2t_error.None
+				break
+			} else {
+				dstAO, rtnEC = v, c2t_error.FailByDeath
+			}
+		}
+		if rtnEC == c2t_error.None {
+			f.aoAttackActiveObj(ao, dstAO, srcTile, dstTile)
 			arr.SetDone(
 				aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 				c2t_error.None)
@@ -234,7 +267,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		arr.SetDone(
 			aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			ec)
+			rtnEC)
 	}
 
 	for _, ao := range aoListToProcessInTurn {

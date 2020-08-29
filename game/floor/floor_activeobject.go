@@ -306,36 +306,6 @@ func (f *Floor) aoTeleportInFloorRandom(ao gamei.ActiveObjectI) error {
 	return nil
 }
 
-func (f *Floor) canActiveObjAttack2Dir(aox, aoy int, dir way9type.Way9Type) (
-	gamei.ActiveObjectI, tile_flag.TileFlag, tile_flag.TileFlag, c2t_error.ErrorCode) {
-
-	if !dir.IsValid() || dir == way9type.Center {
-		return nil, 0, 0, c2t_error.InvalidDirection
-	}
-	srcTile := f.terrain.GetTiles()[aox][aoy]
-	if srcTile.NoBattle() {
-		return nil, 0, 0, c2t_error.ActionProhibited
-	}
-	newX, newY := aox+dir.Dx(), aoy+dir.Dy()
-	newX, newY = f.terrain.WrapXY(newX, newY)
-	dstTile := f.terrain.GetTiles()[newX][newY]
-	if dstTile.NoBattle() {
-		return nil, 0, 0, c2t_error.ActionProhibited
-	}
-	rtnEC := c2t_error.ObjectNotFound
-	var rtnActiveObj gamei.ActiveObjectI
-	for _, vv := range f.aoPosMan.GetObjListAt(newX, newY) {
-		v := vv.(gamei.ActiveObjectI)
-		if v.IsAlive() {
-			rtnActiveObj, rtnEC = v, c2t_error.None
-			break
-		} else {
-			rtnActiveObj, rtnEC = v, c2t_error.FailByDeath
-		}
-	}
-	return rtnActiveObj, srcTile, dstTile, rtnEC
-}
-
 func (f *Floor) aoAct_Move(
 	ao gamei.ActiveObjectI,
 	trydir way9type.Way9Type,
