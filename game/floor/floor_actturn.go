@@ -27,8 +27,10 @@ import (
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/cmd2tower"
+	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
@@ -215,6 +217,13 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			turnmod := slippperydata.Drunken[f.rnd.Intn(len(slippperydata.Drunken))]
 			atkdir = atkdir.TurnDir(turnmod)
 		}
+		// add dopoaman
+		fx := aox + atkdir.Dx()
+		fy := aoy + atkdir.Dy()
+		if err := f.doPosMan.AddToXY(dangerobject.NewAOAttact(ao, fx, fy), fx, fy); err != nil {
+			f.log.Fatal("fail to AddToXY %v", err)
+		}
+
 		dstao, srcTile, dstTile, ec := f.canActiveObjAttack2Dir(aox, aoy, atkdir)
 		if ec == c2t_error.None {
 			f.aoAttackActiveObj(ao, dstao, srcTile, dstTile)
@@ -567,6 +576,17 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 
 	f.processCarryObj2floor()
+	// clear dangerobj no remainturn
+	if err := f.doPosMan.DelByFilter(func(o uuidposman.UUIDPosI, x, y int) bool {
+		do := o.(*dangerobject.DangerObject)
+		do.RemainTurn--
+		if do.RemainTurn <= 0 {
+			return true // delete
+		}
+		return false
+	}); err != nil {
+		f.log.Fatal("fail to delete dangerobject %v", err)
+	}
 
 	// apply act result
 	for _, ao := range aoListToProcessInTurn {
