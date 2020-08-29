@@ -118,6 +118,12 @@ func (p *FieldObjClient) GetUUID() string {
 	return p.ID
 }
 
+type DangerObjClient struct {
+	OwnerID string
+	X       int
+	Y       int
+}
+
 type ActiveObjClient struct {
 	UUID       string
 	NickName   string

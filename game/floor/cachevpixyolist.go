@@ -25,13 +25,13 @@ import (
 // not inter-turn use
 type CacheVPIXYOList struct {
 	HitRate hitrate.HitRate
-	olist   map[[2]int][3][]uuidposman.VPIXYObj
+	olist   map[[2]int][4][]uuidposman.VPIXYObj
 	f       *Floor // for posman access
 }
 
 func (f *Floor) NewCacheVPIXYOList() *CacheVPIXYOList {
 	return &CacheVPIXYOList{
-		olist: make(map[[2]int][3][]uuidposman.VPIXYObj),
+		olist: make(map[[2]int][4][]uuidposman.VPIXYObj),
 		f:     f,
 	}
 }
@@ -43,10 +43,10 @@ func (cvpixyol *CacheVPIXYOList) String() string {
 }
 
 func (cvpixyol *CacheVPIXYOList) GetAtByCache(
-	x, y int) [3][]uuidposman.VPIXYObj {
+	x, y int) [4][]uuidposman.VPIXYObj {
 	rtn, exist := cvpixyol.olist[[2]int{x, y}]
 	if !exist {
-		rtn = [3][]uuidposman.VPIXYObj{
+		rtn = [4][]uuidposman.VPIXYObj{
 			cvpixyol.f.aoPosMan.GetVPIXYObjByXYLenList(
 				viewportdata.ViewportXYLenList,
 				x, y,
@@ -59,6 +59,10 @@ func (cvpixyol *CacheVPIXYOList) GetAtByCache(
 				viewportdata.ViewportXYLenList,
 				x, y,
 				gameconst.FieldObjCountInViewportLimit),
+			cvpixyol.f.doPosMan.GetVPIXYObjByXYLenList(
+				viewportdata.ViewportXYLenList,
+				x, y,
+				gameconst.DangerObjCountInViewportLimit),
 		}
 		cvpixyol.olist[[2]int{x, y}] = rtn
 		cvpixyol.HitRate.Miss()

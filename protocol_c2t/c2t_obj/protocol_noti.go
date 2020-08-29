@@ -63,6 +63,7 @@ type NotiObjectList_data struct {
 	ActiveObjList []*ActiveObjClient
 	CarryObjList  []*CarryObjClientOnFloor
 	FieldObjList  []*FieldObjClient
+	DangerObjList []*DangerObjClient
 }
 
 type NotiVPTiles_data struct {

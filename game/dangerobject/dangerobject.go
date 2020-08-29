@@ -9,11 +9,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package dangerobj
+package dangerobject
 
 import (
-	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 /*
@@ -41,7 +42,7 @@ RangedTile
 
 */
 
-type DangerObj struct {
+type DangerObject struct {
 	Owner             uuidposman.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
 	RemainTargetCount int                 // end life when 0
 	RemainTurn        int                 // remain turn to affect
@@ -50,18 +51,26 @@ type DangerObj struct {
 }
 
 // IDPosI interface
-func (p *DangerObj) GetUUID() string {
-	return p.owner.GetUUID()
+func (p *DangerObject) GetUUID() string {
+	return p.Owner.GetUUID()
 }
 
-func NewAOAttact(attacker uuidposman.UUIDPosI, dstx, dsty int) *DangerObj {
-	return &DangerObj{
-		Owner: attacker,
-		RemainTargetCount:1,
-		RemainTurn: 1,
-		TargetTileLen:1,
-		TargetTiles: []findnear.XYLenList{ findnear.XYLen{
-			X:dstx, Y: dsty, L: 1,
-		}}
+func NewAOAttact(attacker uuidposman.UUIDPosI, dstx, dsty int) *DangerObject {
+	return &DangerObject{
+		Owner:             attacker,
+		RemainTargetCount: 1,
+		RemainTurn:        1,
+		TargetTileLen:     1,
+		TargetTiles: findnear.XYLenList{findnear.XYLen{
+			X: dstx, Y: dsty, L: 1,
+		}},
+	}
+}
+
+func (p *DangerObject) ToPacket_DangerObjClient(x, y int) *c2t_obj.DangerObjClient {
+	return &c2t_obj.DangerObjClient{
+		OwnerID: p.Owner.GetUUID(),
+		X:       x,
+		Y:       y,
 	}
 }

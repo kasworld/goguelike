@@ -29,6 +29,7 @@ const (
 	ActiveObjCountInViewportLimit = 100
 	CarryObjCountInViewportLimit  = 100
 	FieldObjCountInViewportLimit  = 100
+	DangerObjCountInViewportLimit = 100
 
 	// turn to del in floor CarryObj
 	CarryingObjectLifeTurnInFloor = 400

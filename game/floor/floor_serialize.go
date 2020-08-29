@@ -46,6 +46,7 @@ func (f *Floor) ToPacket_NotiObjectList(
 	aOs := f.makeViewportActiveObjs2(vpixyolists[0], sightMat, float32(sight))
 	pOs := f.makeViewportCarryObjs2(vpixyolists[1], sightMat, float32(sight))
 	fOs := f.makeViewportFieldObjs2(vpixyolists[2], sightMat, float32(sight))
+	dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, float32(sight))
 
 	return &c2t_obj.NotiObjectList_data{
 		Time:          turnTime,
@@ -53,6 +54,7 @@ func (f *Floor) ToPacket_NotiObjectList(
 		ActiveObjList: aOs,
 		CarryObjList:  pOs,
 		FieldObjList:  fOs,
+		DangerObjList: dOs,
 	}
 }
 

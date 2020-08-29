@@ -17,6 +17,7 @@ import (
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/activeobject"
+	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/lib/uuidposman"
@@ -103,6 +104,27 @@ func (f *Floor) makeViewportFieldObjs2(
 			continue
 		}
 		rtn = append(rtn, ww.ToPacket_FieldObjClient(v.X, v.Y))
+		maxobj--
+		if maxobj < 0 {
+			f.statPacketObjOver.Inc()
+			break
+		}
+	}
+	return rtn
+}
+
+func (f *Floor) makeViewportDangerObjs2(
+	vpixyolist []uuidposman.VPIXYObj,
+	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.DangerObjClient {
+
+	maxobj := gameconst.DangerObjCountInViewportLimit
+	rtn := make([]*c2t_obj.DangerObjClient, 0, len(vpixyolist))
+	for _, v := range vpixyolist {
+		if sightMat[v.I] >= sight {
+			continue
+		}
+		ww := v.O.(*dangerobject.DangerObject)
+		rtn = append(rtn, ww.ToPacket_DangerObjClient(v.X, v.Y))
 		maxobj--
 		if maxobj < 0 {
 			f.statPacketObjOver.Inc()
