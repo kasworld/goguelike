@@ -260,6 +260,21 @@ func (fo *UUIDPosMan) addNolock(o UUIDPosI, x, y int) error {
 	return nil
 }
 
+// DelByFilter del obj if filter return true
+func (fo *UUIDPosMan) DelByFilter(filter func(o UUIDPosI, x, y int) bool) error {
+	fo.mutex.Lock()
+	defer fo.mutex.Unlock()
+	for id, o := range fo.uuid2obj {
+		pos := fo.uuid2pos[id]
+		if filter(o, pos[0], pos[1]) {
+			if err := fo.delNolock(o); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 func (fo *UUIDPosMan) Del(o UUIDPosI) error {
 	fo.mutex.Lock()
 	defer fo.mutex.Unlock()
