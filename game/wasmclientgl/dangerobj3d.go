@@ -13,7 +13,6 @@ package wasmclientgl
 
 import (
 	"fmt"
-	"math"
 	"sync"
 	"syscall/js"
 
@@ -90,17 +89,9 @@ func NewDangerObj3D(dangerType dangertype.DangerType) *DangerObj3D {
 }
 
 func MakeDanger3DGeo() js.Value {
-	matrix := ThreeJsNew("Matrix4")
-	geoLine := ThreeJsNew("CylinderGeometry", 1, 3, DstCellSize-2)
-	geoCone := ThreeJsNew("ConeGeometry", DstCellSize/6, DstCellSize/3)
-	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, DstCellSize/4, 0,
-	))
-	geoLine.Call("merge", geoCone, matrix)
-	geoCone.Call("dispose")
-	geoLine.Call("rotateX", math.Pi/2)
-	geoLine.Call("center")
-	return geoLine
+	geo := ThreeJsNew("TorusGeometry", DstCellSize/2, DstCellSize/16, 8, 4)
+	geo.Call("center")
+	return geo
 }
 
 func (aog *DangerObj3D) Visible(b bool) {
