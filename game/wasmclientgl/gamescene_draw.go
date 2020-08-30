@@ -46,6 +46,13 @@ func (vp *GameScene) animateFieldObj() {
 	}
 }
 
+func (vp *GameScene) animateDangerObj(frameProgress float64) {
+	for _, dao3d := range vp.jsSceneDOs {
+		dao3d.ScaleX(1 - frameProgress)
+		dao3d.ScaleY(1 - frameProgress)
+	}
+}
+
 // tile scroll list of animate
 // common to playview, floorview
 func (vp *GameScene) animateTile(envBias bias.Bias) {

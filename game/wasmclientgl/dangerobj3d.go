@@ -89,38 +89,48 @@ func NewDangerObj3D(dangerType dangertype.DangerType) *DangerObj3D {
 }
 
 func MakeDanger3DGeo() js.Value {
-	geo := ThreeJsNew("TorusGeometry", DstCellSize/2, DstCellSize/16, 8, 4)
+	geo := ThreeJsNew("TorusGeometry", DstCellSize/1.4, DstCellSize/16, 8, 4)
 	geo.Call("center")
 	return geo
 }
 
-func (aog *DangerObj3D) Visible(b bool) {
-	aog.Mesh.Set("visible", b)
+func (dao3d *DangerObj3D) Visible(b bool) {
+	dao3d.Mesh.Set("visible", b)
 }
 
-func (aog *DangerObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
+func (dao3d *DangerObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
-		aog.Mesh,
+		dao3d.Mesh,
 		shX+float64(fx)*DstCellSize+DstCellSize/2,
 		-shY-float64(fy)*DstCellSize-DstCellSize/2,
 		shZ+DstCellSize/2,
 	)
 }
 
-func (aog *DangerObj3D) RotateX(rad float64) {
-	aog.Mesh.Get("rotation").Set("x", rad)
+func (dao3d *DangerObj3D) RotateX(rad float64) {
+	dao3d.Mesh.Get("rotation").Set("x", rad)
 }
-func (aog *DangerObj3D) RotateY(rad float64) {
-	aog.Mesh.Get("rotation").Set("y", rad)
+func (dao3d *DangerObj3D) RotateY(rad float64) {
+	dao3d.Mesh.Get("rotation").Set("y", rad)
 }
-func (aog *DangerObj3D) RotateZ(rad float64) {
-	aog.Mesh.Get("rotation").Set("z", rad)
+func (dao3d *DangerObj3D) RotateZ(rad float64) {
+	dao3d.Mesh.Get("rotation").Set("z", rad)
 }
 
-func (aog *DangerObj3D) Dispose() {
+func (dao3d *DangerObj3D) ScaleX(x float64) {
+	dao3d.Mesh.Get("scale").Set("x", x)
+}
+func (dao3d *DangerObj3D) ScaleY(y float64) {
+	dao3d.Mesh.Get("scale").Set("y", y)
+}
+func (dao3d *DangerObj3D) ScaleZ(z float64) {
+	dao3d.Mesh.Get("scale").Set("z", z)
+}
+
+func (dao3d *DangerObj3D) Dispose() {
 	// mesh do not need dispose
-	aog.Mesh.Get("geometry").Call("dispose")
-	aog.Mesh.Get("material").Call("dispose")
-	aog.Mesh = js.Undefined()
+	dao3d.Mesh.Get("geometry").Call("dispose")
+	dao3d.Mesh.Get("material").Call("dispose")
+	dao3d.Mesh = js.Undefined()
 	// no need createElement canvas dom obj
 }
