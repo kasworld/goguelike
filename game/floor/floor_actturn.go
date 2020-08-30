@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/config/contagionarea"
-	"github.com/kasworld/goguelike/config/slippperydata"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -201,74 +200,29 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 	// handle attack
 	for ao, arr := range ao2ActReqRsp {
-		if arr.Acted() || arr.Req.Act != c2t_idcmd.Attack || !ao.IsAlive() {
+		if arr.Acted() || !ao.IsAlive() {
 			continue
 		}
-		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
-		if !exist {
-			f.log.Error("ao not in currentfloor %v %v", f, ao)
-			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-				c2t_error.ActionProhibited)
-			continue
+		switch arr.Req.Act {
+		case c2t_idcmd.Attack:
+			f.addBasicAttack(ao, arr)
 		}
-		atkdir := arr.Req.Dir
-		if ao.GetTurnData().Condition.TestByCondition(condition.Drunken) {
-			turnmod := slippperydata.Drunken[f.rnd.Intn(len(slippperydata.Drunken))]
-			atkdir = atkdir.TurnDir(turnmod)
-		}
-		// add dopoaman near attack
-
-		// check valid attack
-		if !atkdir.IsValid() || atkdir == way9type.Center {
-			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-				c2t_error.InvalidDirection)
-			continue
-		}
-		srcTile := f.terrain.GetTiles()[aox][aoy]
-		if srcTile.NoBattle() {
-			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-				c2t_error.ActionProhibited)
-			continue
-		}
-		dstX, dstY := aox+atkdir.Dx(), aoy+atkdir.Dy()
-		dstX, dstY = f.terrain.WrapXY(dstX, dstY)
-		dstTile := f.terrain.GetTiles()[dstX][dstY]
-		if dstTile.NoBattle() {
-			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-				c2t_error.ActionProhibited)
-			continue
-		}
-		if err := f.doPosMan.AddToXY(dangerobject.NewAOAttact(ao), dstX, dstY); err != nil {
-			f.log.Fatal("fail to AddToXY %v", err)
-			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-				c2t_error.ActionCanceled)
-			continue
-		}
-
-		// need change, old code
-		rtnEC := c2t_error.ObjectNotFound
-		var dstAO gamei.ActiveObjectI
+	}
+	// handle battle on danger obj
+	f.doPosMan.IterAll(func(o uuidposman.UUIDPosI, dstX, dstY int) bool {
+		do := o.(*dangerobject.DangerObject)
+		srcao := do.Owner.(gamei.ActiveObjectI)
 		for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
-			v := vv.(gamei.ActiveObjectI)
-			if v.IsAlive() {
-				dstAO, rtnEC = v, c2t_error.None
+			dstAO := vv.(gamei.ActiveObjectI)
+			if dstAO.IsAlive() {
+				srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
+				dstTile := f.terrain.GetTiles()[dstX][dstY]
+				f.aoAttackActiveObj(srcao, dstAO, srcTile, dstTile)
 				break
-			} else {
-				dstAO, rtnEC = v, c2t_error.FailByDeath
 			}
 		}
-		if rtnEC == c2t_error.None {
-			f.aoAttackActiveObj(ao, dstAO, srcTile, dstTile)
-			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-				c2t_error.None)
-			continue
-		}
-		arr.SetDone(
-			aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			rtnEC)
-	}
+		return false
+	})
 
 	for _, ao := range aoListToProcessInTurn {
 		if ao.ApplyDamageFromActiveObj() { // just killed

@@ -19,10 +19,12 @@ import (
 )
 
 type DangerObject struct {
-	UUID       string
-	Owner      uuidposman.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
-	DangerType dangertype.DangerType
-	RemainTurn int // remain turn to affect
+	UUID           string
+	Owner          uuidposman.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
+	OwnerX, OwnerY int                 // pos at make attack time
+	DangerType     dangertype.DangerType
+	RemainTurn     int // remain turn to affect
+
 }
 
 // IDPosI interface
@@ -30,11 +32,13 @@ func (p *DangerObject) GetUUID() string {
 	return p.UUID
 }
 
-func NewAOAttact(attacker uuidposman.UUIDPosI) *DangerObject {
+func NewBasicAttact(attacker uuidposman.UUIDPosI, srcx, srcy int) *DangerObject {
 	dt := dangertype.BasicAttack
 	return &DangerObject{
 		UUID:       uuidstr.New(),
 		Owner:      attacker,
+		OwnerX:     srcx,
+		OwnerY:     srcy,
 		DangerType: dt,
 		RemainTurn: dt.Turn2Live(),
 	}

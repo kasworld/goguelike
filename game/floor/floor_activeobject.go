@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
-	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
@@ -222,73 +221,6 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 	}
 
 	return nil
-}
-
-func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile tile_flag.TileFlag) {
-
-	// attack to invisible ao miss 50%
-	if dst.GetTurnData().Condition.TestByCondition(condition.Invisible) && f.rnd.Intn(2) == 0 {
-		src.GetAchieveStat().Inc(achievetype.AttackMiss)
-		return
-	}
-
-	// blind ao attack miss 50%
-	if src.GetTurnData().Condition.TestByCondition(condition.Blind) && f.rnd.Intn(2) == 0 {
-		src.GetAchieveStat().Inc(achievetype.AttackMiss)
-		return
-	}
-
-	envbias := f.GetEnvBias()
-	srcbias := src.GetTurnData().AttackBias.Add(envbias)
-	dstbias := dst.GetTurnData().DefenceBias.Add(envbias)
-
-	atkMod := srcTile.AtkMod()
-	defMod := dstTile.DefMod()
-	atkValue := srcbias.SelectSkill(f.rnd.Intn(3))
-	defValue := dstbias.SelectSkill(f.rnd.Intn(3))
-	diffValue := atkValue*atkMod - defValue*defMod +
-		src.GetTurnData().Level - dst.GetTurnData().Level +
-		f.rnd.NormFloat64Range(gameconst.ActiveObjBaseBiasLen, 0)
-	atkSuccess := diffValue > 0
-	atkCritical := false
-	rndValue := f.rnd.Intn(20)
-	if rndValue == 0 {
-		atkSuccess = false
-	} else if rndValue == 19 {
-		atkSuccess = true
-	}
-	if atkSuccess && f.rnd.Intn(20) == 19 {
-		atkCritical = true
-	}
-
-	src.GetAchieveStat().Inc(achievetype.Attack)
-	dst.GetAchieveStat().Inc(achievetype.Attacked)
-
-	if !atkSuccess {
-		src.GetAchieveStat().Inc(achievetype.AttackMiss)
-		return
-	}
-
-	src.GetAchieveStat().Inc(achievetype.AttackHit)
-	if diffValue < 0 {
-		diffValue = -diffValue
-	}
-
-	damage := diffValue
-
-	if atkCritical {
-		damage *= 2
-		src.GetAchieveStat().Inc(achievetype.AttackCritical)
-	}
-
-	src.AppendTurnResult(turnresult.New(turnresulttype.AttackTo, dst, damage))
-	src.GetAchieveStat().Add(achievetype.DamageTotalGive, damage)
-	src.GetAchieveStat().SetIfGt(achievetype.DamageMaxGive, damage)
-	dst.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, src, damage))
-	dst.GetAchieveStat().Add(achievetype.DamageTotalRecv, damage)
-	dst.GetAchieveStat().SetIfGt(achievetype.DamageMaxRecv, damage)
-
-	src.AddBattleExp(damage * gameconst.ActiveObjExp_Damage)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

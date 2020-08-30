@@ -92,6 +92,19 @@ func (fo *UUIDPosMan) GetAllList() UUIDPosIList {
 	return rtn
 }
 
+// IterAll stop obj if filter return true
+func (fo *UUIDPosMan) IterAll(iterfn func(o UUIDPosI, x, y int) bool) {
+	fo.mutex.RLock()
+	defer fo.mutex.RUnlock()
+	for id, o := range fo.uuid2obj {
+		pos := fo.uuid2pos[id]
+		if iterfn(o, pos[0], pos[1]) {
+			return
+		}
+	}
+	return
+}
+
 func (fo *UUIDPosMan) GetByUUID(id string) UUIDPosI {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
