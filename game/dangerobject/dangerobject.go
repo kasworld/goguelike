@@ -12,65 +12,40 @@
 package dangerobject
 
 import (
-	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/uuidstr"
 )
 
-/*
-attactype ?
-None make empty error
-BasicAttack
-ThrowAttack
-
-target type
-None
-FirstTaget stop at 1st target
-Split distribute to all target
-Full full to all target
-
-targer area
-None
-OneTile
-MoveAlongWithLineOfTile
-TileArea xylenlist
-
-distance
-None
-ContactTile
-RangedTile
-
-*/
-
 type DangerObject struct {
-	Owner             uuidposman.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
-	RemainTargetCount int                 // end life when 0
-	RemainTurn        int                 // remain turn to affect
-	TargetTileLen     int                 // effect len in targetTiles
-	TargetTiles       findnear.XYLenList  // absolute pos, cross len
+	UUID       string
+	Owner      uuidposman.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
+	DangerType dangertype.DangerType
+	RemainTurn int // remain turn to affect
 }
 
 // IDPosI interface
 func (p *DangerObject) GetUUID() string {
-	return p.Owner.GetUUID()
+	return p.UUID
 }
 
-func NewAOAttact(attacker uuidposman.UUIDPosI, dstx, dsty int) *DangerObject {
+func NewAOAttact(attacker uuidposman.UUIDPosI) *DangerObject {
+	dt := dangertype.BasicAttack
 	return &DangerObject{
-		Owner:             attacker,
-		RemainTargetCount: 1,
-		RemainTurn:        1,
-		TargetTileLen:     1,
-		TargetTiles: findnear.XYLenList{findnear.XYLen{
-			X: dstx, Y: dsty, L: 1,
-		}},
+		UUID:       uuidstr.New(),
+		Owner:      attacker,
+		DangerType: dt,
+		RemainTurn: dt.Turn2Live(),
 	}
 }
 
 func (p *DangerObject) ToPacket_DangerObjClient(x, y int) *c2t_obj.DangerObjClient {
 	return &c2t_obj.DangerObjClient{
-		OwnerID: p.Owner.GetUUID(),
-		X:       x,
-		Y:       y,
+		UUID:       p.UUID,
+		OwnerID:    p.Owner.GetUUID(),
+		DangerType: p.DangerType,
+		X:          x,
+		Y:          y,
 	}
 }

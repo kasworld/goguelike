@@ -239,7 +239,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				c2t_error.ActionProhibited)
 			continue
 		}
-		if err := f.doPosMan.AddToXY(dangerobject.NewAOAttact(ao, dstX, dstY), dstX, dstY); err != nil {
+		if err := f.doPosMan.AddToXY(dangerobject.NewAOAttact(ao), dstX, dstY); err != nil {
 			f.log.Fatal("fail to AddToXY %v", err)
 			arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 				c2t_error.ActionCanceled)

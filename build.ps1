@@ -46,6 +46,7 @@ genenum -typename=ClientControlType -packagename=clientcontroltype -basedir=enum
 genenum -typename=FactionType -packagename=factiontype -basedir=enum -vectortype=int
 genenum -typename=AIPlan -packagename=aiplan -basedir=enum -vectortype=int
 genenum -typename=TerrainCmd -packagename=terraincmd -basedir=enum -vectortype=int
+genenum -typename=DangerType -packagename=dangertype -basedir=enum -vectortype=int
 
 Set-Location enum
 goimports -w .

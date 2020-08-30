@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/enum/aiplan"
+	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/enum/way9type"
 
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
@@ -119,9 +120,11 @@ func (p *FieldObjClient) GetUUID() string {
 }
 
 type DangerObjClient struct {
-	OwnerID string
-	X       int
-	Y       int
+	UUID       string
+	OwnerID    string
+	DangerType dangertype.DangerType
+	X          int
+	Y          int
 }
 
 type ActiveObjClient struct {
