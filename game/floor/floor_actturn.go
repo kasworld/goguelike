@@ -198,6 +198,19 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				c2t_error.ActionCanceled)
 		}
 	}
+
+	// clear dangerobj no remainturn
+	if err := f.doPosMan.DelByFilter(func(o uuidposman.UUIDPosI, x, y int) bool {
+		do := o.(*dangerobject.DangerObject)
+		do.RemainTurn--
+		if do.RemainTurn <= 0 {
+			return true // delete
+		}
+		return false
+	}); err != nil {
+		f.log.Fatal("fail to delete dangerobject %v", err)
+	}
+
 	// handle attack
 	for ao, arr := range ao2ActReqRsp {
 		if arr.Acted() || !ao.IsAlive() {
@@ -563,17 +576,6 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 
 	f.processCarryObj2floor()
-	// clear dangerobj no remainturn
-	if err := f.doPosMan.DelByFilter(func(o uuidposman.UUIDPosI, x, y int) bool {
-		do := o.(*dangerobject.DangerObject)
-		do.RemainTurn--
-		if do.RemainTurn <= 0 {
-			return true // delete
-		}
-		return false
-	}); err != nil {
-		f.log.Fatal("fail to delete dangerobject %v", err)
-	}
 
 	// apply act result
 	for _, ao := range aoListToProcessInTurn {
