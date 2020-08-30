@@ -13,6 +13,7 @@ package dangertype
 
 import (
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/htmlcolors"
 )
 
 /*
@@ -46,6 +47,9 @@ func (dt DangerType) TargetCount() int {
 func (dt DangerType) Turn2Live() int {
 	return attrib[dt].turn2Live
 }
+func (dt DangerType) Color24() htmlcolors.Color24 {
+	return attrib[dt].color
+}
 func (dt DangerType) TargetArea() findnear.XYLenList {
 	return attrib[dt].targetArea
 }
@@ -53,8 +57,9 @@ func (dt DangerType) TargetArea() findnear.XYLenList {
 var attrib = [DangerType_Count]struct {
 	targetCount int
 	turn2Live   int
+	color       htmlcolors.Color24
 	targetArea  findnear.XYLenList // + pos + dir
 }{
-	None:        {0, 0, findnear.XYLenList{}},
-	BasicAttack: {1, 1, findnear.XYLenList{findnear.XYLen{0, 0, 1}}},
+	None:        {0, 0, htmlcolors.Black, findnear.XYLenList{}},
+	BasicAttack: {1, 1, htmlcolors.Red, findnear.XYLenList{findnear.XYLen{0, 0, 1}}},
 }

@@ -40,8 +40,9 @@ type GameScene struct {
 	SP *ColorBar3D
 	AP *ColorBar3D
 
-	jsSceneCOs map[string]*CarryObj3D  // in sight only  carryobj
+	jsSceneCOs map[string]*CarryObj3D  // in sight only carryobj
 	jsSceneAOs map[string]*ActiveObj3D // in sight only ao
+	jsSceneDOs map[string]*DangerObj3D // in sight only dangerobj
 	jsSceneFOs map[string]*FieldObj3D  // in clientview fieldobj
 
 	jsSceneMovePathArrows map[[2]int]*ColorArrow3D // in clientview move path arrow
@@ -59,6 +60,7 @@ func NewGameScene() *GameScene {
 	vp := &GameScene{
 		jsSceneCOs:            make(map[string]*CarryObj3D),
 		jsSceneAOs:            make(map[string]*ActiveObj3D),
+		jsSceneDOs:            make(map[string]*DangerObj3D),
 		jsSceneFOs:            make(map[string]*FieldObj3D),
 		jsSceneMovePathArrows: make(map[[2]int]*ColorArrow3D),
 

@@ -188,6 +188,30 @@ func (vp *GameScene) processNotiObjectList(
 			cr3d.Dispose()
 		}
 	}
+
+	// make dangerobj
+	addDOuuid := make(map[string]bool)
+	for _, dao := range olNoti.DangerObjList {
+		dao3d, exist := vp.jsSceneDOs[dao.UUID]
+		if !exist {
+			dao3d = gPoolDangerObj3D.Get(dao.DangerType)
+			vp.scene.Call("add", dao3d.Mesh)
+			vp.jsSceneDOs[dao.UUID] = dao3d
+		}
+
+		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, dao.X, dao.Y)
+		dao3d.SetFieldPosition(fx, fy, 0, 0, 0)
+		addDOuuid[dao.UUID] = true
+	}
+
+	for id, dao3d := range vp.jsSceneDOs {
+		if !addDOuuid[id] {
+			vp.scene.Call("remove", dao3d.Mesh)
+			delete(vp.jsSceneDOs, id)
+			gPoolDangerObj3D.Put(dao3d)
+		}
+	}
+
 }
 
 // update hp,ap,sp bar movearrow for player ao

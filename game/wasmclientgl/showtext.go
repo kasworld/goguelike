@@ -443,6 +443,7 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 	fmt.Fprintf(&buf, "%v<br/>", gPoolLabel3D)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolColorBar3D)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolCondition3D)
+	fmt.Fprintf(&buf, "%v<br/>", gPoolDangerObj3D)
 
 	// jslog.Infof("gColorMaterialCache %v", gColorMaterialCache)
 	return buf.String()

@@ -14,10 +14,8 @@ package wasmclientgl
 import (
 	"syscall/js"
 
-	"github.com/kasworld/goguelike/enum/condition_flag"
-
 	"github.com/kasworld/goguelike/enum/condition"
-
+	"github.com/kasworld/goguelike/enum/condition_flag"
 	"github.com/kasworld/goguelike/enum/factiontype"
 )
 
