@@ -184,11 +184,14 @@ func New(name string) *towermake.Tower {
 			recycleCount = 2
 		}
 
-		for i := -1; i < recycleCount/10; i++ {
-			fm.ConnectAutoInPortalTo(suffix, suffix, fm)
-			fm.AddTrapTeleportTo(suffix, fm)
+		fm.ConnectAutoInPortalTo(suffix, suffix, fm)
+		fm.AddTrapTeleportTo(suffix, fm)
+		for i := 0; i < recycleCount/10; i++ {
+			fm.ConnectAutoInPortalTo("Rand", "Rand", fm)
+			fm.AddTrapTeleportTo("Rand", fm)
 		}
-		fm.AddAllEffectTrap(suffix, recycleCount/40)
+		fm.AddAllEffectTrap(suffix, 1)
+		fm.AddAllEffectTrap("Rand", recycleCount/64)
 
 		if recycleCount > roomCount {
 			fm.AddRecycler(suffix, roomCount)
