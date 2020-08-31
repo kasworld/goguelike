@@ -53,3 +53,9 @@ func (p *DangerObject) ToPacket_DangerObjClient(x, y int) *c2t_obj.DangerObjClie
 		Y:          y,
 	}
 }
+
+// Live1Turn reduce remain turn and return alive
+func (p *DangerObject) Live1Turn() bool {
+	p.RemainTurn--
+	return p.RemainTurn > 0
+}

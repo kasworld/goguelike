@@ -202,11 +202,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	// clear dangerobj no remainturn
 	if err := f.doPosMan.DelByFilter(func(o uuidposman.UUIDPosI, x, y int) bool {
 		do := o.(*dangerobject.DangerObject)
-		do.RemainTurn--
-		if do.RemainTurn <= 0 {
-			return true // delete
-		}
-		return false
+		return !do.Live1Turn() // del if no remainturn
 	}); err != nil {
 		f.log.Fatal("fail to delete dangerobject %v", err)
 	}
