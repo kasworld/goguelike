@@ -191,16 +191,16 @@ func New(name string) *towermake.Tower {
 			fm.AddTrapTeleportTo("Rand", fm)
 		}
 		fm.AddAllEffectTrap(suffix, 1)
-		fm.AddAllEffectTrap("Rand", recycleCount/64)
-
-		if recycleCount > roomCount {
-			fm.AddRecycler(suffix, roomCount)
-			fm.AddRecycler("Rand", recycleCount-roomCount)
-		} else {
-			fm.AddRecycler(suffix, recycleCount)
+		if count := recycleCount / 64; count > 0 {
+			fm.AddAllEffectTrap("Rand", count)
 		}
 
+		if roomCount > 0 {
+			fm.AddRecycler(suffix, roomCount)
+		}
+		if recycleCount-roomCount > 0 {
+			fm.AddRecycler("Rand", recycleCount-roomCount)
+		}
 	}
-
 	return tw
 }

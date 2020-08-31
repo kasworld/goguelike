@@ -35,6 +35,12 @@ type Floor struct {
 }
 
 func NewFloor(name string, w, h int, ao, po int, turnBoost float64) *Floor {
+	if w <= 0 || h <= 0 {
+		fmt.Printf("%v w,h %v %v\n", name, w, h)
+	}
+	if ao < 0 || po < 0 {
+		fmt.Printf("%v ao,po %v %v\n", name, ao, po)
+	}
 	fm := &Floor{
 		rnd:    g2rand.New(),
 		Name:   name,
@@ -123,6 +129,10 @@ func (fm *Floor) ConnectAutoInPortalTo(suffix, suffix2 string, dstFloor *Floor) 
 
 // suffix "InRoom" or "Rand"
 func (fm *Floor) AddTeleportIn(suffix string, count int) *Floor {
+	if count <= 0 {
+		fmt.Printf("%v AddTeleportIn count %v\n", fm, count)
+		return fm
+	}
 	fm.Appendf(
 		"AddTrapTeleports%[1]v DstFloor=%[2]v count=%[3]v message=Teleport",
 		suffix, fm.Name, count)
@@ -131,6 +141,10 @@ func (fm *Floor) AddTeleportIn(suffix string, count int) *Floor {
 
 // suffix "InRoom" or "Rand"
 func (fm *Floor) AddRecycler(suffix string, count int) *Floor {
+	if count <= 0 {
+		fmt.Printf("%v AddRecycler count %v\n", fm, count)
+		return fm
+	}
 	fm.Appendf(
 		"AddRecycler%[1]v display=Recycler count=%[2]v message=Recycle",
 		suffix, count)
@@ -146,6 +160,11 @@ func (fm *Floor) AddTrapTeleportTo(suffix string, dstFloor *Floor) *Floor {
 
 // suffix "InRoom" or "Rand"
 func (fm *Floor) AddEffectTrap(suffix string, trapCount int) *Floor {
+	if trapCount <= 0 {
+		fmt.Printf("%v AddEffectTrap trapCount %v\n", fm, trapCount)
+		return fm
+	}
+
 	for trapMade := 0; trapMade < trapCount; {
 		j := fm.rnd.Intn(fieldobjacttype.FieldObjActType_Count)
 		ft := fieldobjacttype.FieldObjActType(j)
@@ -161,6 +180,10 @@ func (fm *Floor) AddEffectTrap(suffix string, trapCount int) *Floor {
 
 // suffix "InRoom" or "Rand"
 func (fm *Floor) AddAllEffectTrap(suffix string, countPerEffectTrapType int) *Floor {
+	if countPerEffectTrapType <= 0 {
+		fmt.Printf("%v AddAllEffectTrap countPerEffectTrapType %v\n", fm, countPerEffectTrapType)
+		return fm
+	}
 	for j := 0; j < fieldobjacttype.FieldObjActType_Count; j++ {
 		ft := fieldobjacttype.FieldObjActType(j)
 		if fieldobjacttype.GetBuffByFieldObjActType(ft) == nil {
