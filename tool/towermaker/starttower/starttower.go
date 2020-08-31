@@ -15,6 +15,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/g2rand"
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
@@ -175,22 +176,27 @@ func New(name string) *towermake.Tower {
 		if randList[fm.Name] {
 			suffix = "Rand"
 		}
-		fm.ConnectAutoInPortalTo(suffix, suffix, fm)
-		fm.AddTrapTeleportTo(suffix, fm)
-		fm.AddAllEffectTrap(suffix, 1)
 
 		roomCount := fm.CalcRoomCount()
 		// fmt.Printf("%v Room %v\n", fm, roomCount)
-		recycleCount := fm.W * fm.H / 512
+		recycleCount := fm.W * fm.H / gameconst.ViewPortWH
 		if recycleCount < 2 {
 			recycleCount = 2
 		}
+
+		for i := -1; i < recycleCount/10; i++ {
+			fm.ConnectAutoInPortalTo(suffix, suffix, fm)
+			fm.AddTrapTeleportTo(suffix, fm)
+		}
+		fm.AddAllEffectTrap(suffix, recycleCount/40)
+
 		if recycleCount > roomCount {
 			fm.AddRecycler(suffix, roomCount)
 			fm.AddRecycler("Rand", recycleCount-roomCount)
 		} else {
 			fm.AddRecycler(suffix, recycleCount)
 		}
+
 	}
 
 	return tw
