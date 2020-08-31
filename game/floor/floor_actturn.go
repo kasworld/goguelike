@@ -220,14 +220,18 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	// handle battle on danger obj
 	f.doPosMan.IterAll(func(o uuidposman.UUIDPosI, dstX, dstY int) bool {
 		do := o.(*dangerobject.DangerObject)
-		srcao := do.Owner.(gamei.ActiveObjectI)
-		for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
-			dstAO := vv.(gamei.ActiveObjectI)
-			if dstAO.IsAlive() {
-				srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
-				dstTile := f.terrain.GetTiles()[dstX][dstY]
-				f.aoAttackActiveObj(srcao, dstAO, srcTile, dstTile)
-				break
+		switch owner := do.Owner.(type) {
+		default:
+			f.log.Fatal("not supported type %v", owner)
+		case gamei.ActiveObjectI:
+			for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
+				dstAO := vv.(gamei.ActiveObjectI)
+				if dstAO.IsAlive() {
+					srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
+					dstTile := f.terrain.GetTiles()[dstX][dstY]
+					f.aoAttackActiveObj(owner, dstAO, srcTile, dstTile)
+					break
+				}
 			}
 		}
 		return false

@@ -45,7 +45,7 @@ type TerrainI interface {
 	GetXWrapper() *wrapper.Wrapper
 	GetYWrapper() *wrapper.Wrapper
 	WrapXY(x, y int) (int, int)
-
+	// GetTileWrapped(x, y int) tile_flag.TileFlag
 	GetTile2Discover() int
 	GetRcsTiles() resourcetilearea.ResourceTileArea
 

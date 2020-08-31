@@ -28,15 +28,14 @@ import (
 )
 
 func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
+	atkdir := arr.Req.Dir
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 	if !exist {
 		f.log.Error("ao not in currentfloor %v %v", f, ao)
-		arr.SetDone(
-			aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
+		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionProhibited)
 		return
 	}
-	atkdir := arr.Req.Dir
 	if ao.GetTurnData().Condition.TestByCondition(condition.Drunken) {
 		turnmod := slippperydata.Drunken[f.rnd.Intn(len(slippperydata.Drunken))]
 		atkdir = atkdir.TurnDir(turnmod)
@@ -49,16 +48,13 @@ func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 			c2t_error.InvalidDirection)
 		return
 	}
-	srcTile := f.terrain.GetTiles()[aox][aoy]
-	if srcTile.NoBattle() {
+	if f.terrain.GetTileWrapped(aox, aoy).NoBattle() {
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionProhibited)
 		return
 	}
-	dstX, dstY := aox+atkdir.Dx(), aoy+atkdir.Dy()
-	dstX, dstY = f.terrain.WrapXY(dstX, dstY)
-	dstTile := f.terrain.GetTiles()[dstX][dstY]
-	if dstTile.NoBattle() {
+	dstX, dstY := f.terrain.WrapXY(aox+atkdir.Dx(), aoy+atkdir.Dy())
+	if f.terrain.GetTiles()[dstX][dstY].NoBattle() {
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionProhibited)
 		return

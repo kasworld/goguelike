@@ -12,6 +12,7 @@
 package terrain
 
 import (
+	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
 	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/goguelike/game/terrain/viewportcache"
@@ -24,6 +25,11 @@ import (
 func (tr *Terrain) GetTiles() tilearea.TileArea {
 	return tr.serviceTileArea
 }
+
+func (tr *Terrain) GetTileWrapped(x, y int) tile_flag.TileFlag {
+	return tr.serviceTileArea[tr.XWrap(x)][tr.YWrap(y)]
+}
+
 func (tr *Terrain) GetName() string {
 	return tr.Name
 }
