@@ -54,10 +54,10 @@ var attrib = [FieldObjActType_Count]struct {
 	Color24     htmlcolors.Color24
 }{
 	None:            {"?", false, false, 1.0, false, false, htmlcolors.Black},
-	PortalInOut:     {"?", false, false, 1.0, false, false, htmlcolors.Cyan},
-	PortalIn:        {"?", false, false, 1.0, false, false, htmlcolors.Cyan},
-	PortalOut:       {"?", false, false, 1.0, false, false, htmlcolors.Cyan},
-	PortalAutoIn:    {"?", false, true, 1.0, true, true, htmlcolors.Cyan},
+	PortalInOut:     {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
+	PortalIn:        {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
+	PortalOut:       {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
+	PortalAutoIn:    {"?", false, true, 1.0, true, true, htmlcolors.MediumVioletRed},
 	RecycleCarryObj: {"?", false, false, 1.0, false, false, htmlcolors.Green},
 	Teleport:        {"?", true, true, 0.1, true, true, htmlcolors.Red},
 	ForgetFloor:     {"?", true, true, 0.2, false, true, htmlcolors.OrangeRed},

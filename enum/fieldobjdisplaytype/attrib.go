@@ -26,8 +26,8 @@ var attrib = [FieldObjDisplayType_Count]struct {
 	Color24 htmlcolors.Color24
 }{
 	None:         {"?", htmlcolors.Black},
-	StairUp:      {"<", htmlcolors.Black},
-	StairDn:      {">", htmlcolors.Black},
+	StairUp:      {"^", htmlcolors.Black},
+	StairDn:      {"v", htmlcolors.Black},
 	PortalIn:     {"[+]", htmlcolors.Black},
 	PortalAutoIn: {"{+}", htmlcolors.Black},
 	PortalOut:    {"[-]", htmlcolors.Black},
