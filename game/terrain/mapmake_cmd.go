@@ -13,6 +13,7 @@ package terrain
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
@@ -310,26 +311,26 @@ func cmdAddAreaAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var x, y int
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var acttype fieldobjacttype.FieldObjActType
-	var radian float64
+	var degree float64
 	var message string
-	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &radian, &message); err != nil {
+	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &degree, &message); err != nil {
 		return err
 	}
-	return tr.addAreaAttack(x, y, dispType, acttype, radian, message)
+	return tr.addAreaAttack(x, y, dispType, acttype, degree/180*math.Pi, message)
 }
 
 func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var acttype fieldobjacttype.FieldObjActType
-	var radian float64
+	var degree float64
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &acttype, &radian, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &acttype, &degree, &count, &message); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addAreaAttackRand(dispType, acttype, radian, message)
+		err := tr.addAreaAttackRand(dispType, acttype, degree/180*math.Pi, message)
 		if err == nil {
 			count--
 		} else {
@@ -345,15 +346,15 @@ func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var acttype fieldobjacttype.FieldObjActType
-	var radian float64
+	var degree float64
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &acttype, &radian, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &acttype, &degree, &count, &message); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addAreaAttackRandInRoom(dispType, acttype, radian, message)
+		err := tr.addAreaAttackRandInRoom(dispType, acttype, degree/180*math.Pi, message)
 		if err == nil {
 			count--
 		} else {
