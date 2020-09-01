@@ -27,14 +27,14 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
 
-func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
+func (f *Floor) checkAttackSrc(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) (int, int, way9type.Way9Type) {
 	atkdir := arr.Req.Dir
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 	if !exist {
 		f.log.Error("ao not in currentfloor %v %v", f, ao)
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionProhibited)
-		return
+		return aox, aoy, atkdir
 	}
 	if ao.GetTurnData().Condition.TestByCondition(condition.Drunken) {
 		turnmod := slippperydata.Drunken[f.rnd.Intn(len(slippperydata.Drunken))]
@@ -46,11 +46,65 @@ func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 	if !atkdir.IsValid() || atkdir == way9type.Center {
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.InvalidDirection)
-		return
+		return aox, aoy, atkdir
 	}
 	if f.terrain.GetTileWrapped(aox, aoy).NoBattle() {
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionProhibited)
+		return aox, aoy, atkdir
+	}
+	return aox, aoy, atkdir
+}
+
+func (f *Floor) addAttackWide(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
+	aox, aoy, atkdir := f.checkAttackSrc(ao, arr)
+	if arr.Acted() {
+		return
+	}
+
+	for _, dir := range []way9type.Way9Type{atkdir.TurnDir(-1), atkdir, atkdir.TurnDir(1)} {
+		dstX, dstY := f.terrain.WrapXY(aox+dir.Dx(), aoy+dir.Dy())
+		if f.terrain.GetTiles()[dstX][dstY].NoBattle() {
+			continue
+		}
+		if err := f.doPosMan.AddToXY(
+			dangerobject.NewBasicAttact(ao, aox, aoy),
+			dstX, dstY); err != nil {
+			f.log.Fatal("fail to AddToXY %v", err)
+			continue
+		}
+	}
+	arr.SetDone(
+		aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
+		c2t_error.None)
+}
+
+func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
+	aox, aoy, atkdir := f.checkAttackSrc(ao, arr)
+	if arr.Acted() {
+		return
+	}
+
+	for i := 0; i < 3; i++ {
+		dstX, dstY := f.terrain.WrapXY(aox+atkdir.Dx()*i, aoy+atkdir.Dy()*i)
+		if f.terrain.GetTiles()[dstX][dstY].NoBattle() {
+			continue
+		}
+		if err := f.doPosMan.AddToXY(
+			dangerobject.NewBasicAttact(ao, aox, aoy),
+			dstX, dstY); err != nil {
+			f.log.Fatal("fail to AddToXY %v", err)
+			continue
+		}
+	}
+	arr.SetDone(
+		aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
+		c2t_error.None)
+}
+
+func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
+	aox, aoy, atkdir := f.checkAttackSrc(ao, arr)
+	if arr.Acted() {
 		return
 	}
 	dstX, dstY := f.terrain.WrapXY(aox+atkdir.Dx(), aoy+atkdir.Dy())

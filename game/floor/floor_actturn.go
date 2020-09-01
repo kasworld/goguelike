@@ -216,7 +216,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case c2t_idcmd.Attack:
 			f.addBasicAttack(ao, arr)
 		case c2t_idcmd.AttackWide:
+			f.addAttackWide(ao, arr)
 		case c2t_idcmd.AttackLong:
+			f.addAttackLong(ao, arr)
 		}
 	}
 	// handle battle on danger obj
