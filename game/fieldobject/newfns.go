@@ -67,3 +67,25 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 		Message:     message,
 	}
 }
+
+func NewLightHouse(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+) *FieldObject {
+	return &FieldObject{
+		ID:          uuidstr.New(),
+		FloorName:   floorname,
+		ActType:     fieldobjacttype.LightHouse,
+		DisplayType: displayType,
+		Message:     message,
+	}
+}
+
+func NewGateKeeper(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+) *FieldObject {
+	return &FieldObject{
+		ID:          uuidstr.New(),
+		FloorName:   floorname,
+		ActType:     fieldobjacttype.GateKeeper,
+		DisplayType: displayType,
+		Message:     message,
+	}
+}

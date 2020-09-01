@@ -12,9 +12,15 @@
 package fieldobjacttype
 
 import (
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/statusoptype"
 	"github.com/kasworld/htmlcolors"
+)
+
+const (
+	LightHouseRadius = gameconst.ViewPortH / 2
+	GateKeeperLen    = gameconst.ViewPortH / 2
 )
 
 func (v FieldObjActType) Color24() htmlcolors.Color24 {
@@ -78,8 +84,8 @@ var attrib = [FieldObjActType_Count]struct {
 	Sleepy:    {"?", true, true, 0.1, false, false, condition.Sleep.Color()},
 	Contagion: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
 
-	LightHouse: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
-	GateKeeper: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
+	LightHouse: {"?", false, false, 0.0, false, false, htmlcolors.Lavender},
+	GateKeeper: {"?", false, false, 0.0, false, false, htmlcolors.LavenderBlush},
 }
 
 // try act on fieldobj
