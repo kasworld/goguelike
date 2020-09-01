@@ -85,7 +85,7 @@ func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 		return
 	}
 
-	for i := 0; i < 3; i++ {
+	for i := 1; i < 4; i++ {
 		dstX, dstY := f.terrain.WrapXY(aox+atkdir.Dx()*i, aoy+atkdir.Dy()*i)
 		if f.terrain.GetTiles()[dstX][dstY].NoBattle() {
 			continue

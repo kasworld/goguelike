@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/kasworld/actjitter"
+	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/enum/clientcontroltype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -44,6 +45,7 @@ import (
 )
 
 type WasmClient struct {
+	rnd *g2rand.G2Rand `prettystring:"hide"`
 	// app info
 	DoClose func()
 
@@ -115,6 +117,7 @@ func InitPage() {
 	)
 
 	app := &WasmClient{
+		rnd:              g2rand.New(),
 		ServerJitter:     actjitter.New("Server"),
 		Name2ClientFloor: make(map[string]*clientfloor.ClientFloor),
 

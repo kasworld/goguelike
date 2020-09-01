@@ -145,9 +145,20 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		isContact, dir := way9type.CalcContactDirWrappedXY(
 			playerX, playerY, ao.X, ao.Y, w, h)
 		if isContact && dir != way9type.Center {
-			go app.sendPacket(c2t_idcmd.Attack,
-				&c2t_obj.ReqAttack_data{Dir: dir},
-			)
+			switch app.rnd.Intn(3) {
+			case 0:
+				go app.sendPacket(c2t_idcmd.Attack,
+					&c2t_obj.ReqAttack_data{Dir: dir},
+				)
+			case 1:
+				go app.sendPacket(c2t_idcmd.AttackWide,
+					&c2t_obj.ReqAttackWide_data{Dir: dir},
+				)
+			case 2:
+				go app.sendPacket(c2t_idcmd.AttackLong,
+					&c2t_obj.ReqAttackLong_data{Dir: dir},
+				)
+			}
 			return true
 		}
 	}
