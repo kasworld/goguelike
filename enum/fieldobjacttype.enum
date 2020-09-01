@@ -1,4 +1,6 @@
 None
+
+# move ao position
 PortalInOut portal in/out
 PortalIn portal oneway
 PortalOut portal out only
@@ -6,14 +8,17 @@ PortalAutoIn portal auto in oneway
 RecycleCarryObj recycle carryobj to money
 Teleport teleport somewhere
 
+# change ao attrib
 ForgetFloor forget current floor
 ForgetOneFloor forget some floor you visited
 AlterFaction change faction randomly
 AllFaction rotate all faction
 
+# damage ao 
 Bleeding hp damage
 Chilly sp damage
 
+# affect condition 
 Blind sight 0
 Invisible other cannot see you
 Burden overload limit reduced
@@ -22,3 +27,7 @@ Greasy greasy body
 Drunken random direction
 Sleepy cannot act
 Contagion make contagion other, die or heal randomly
+
+# make moving dangerobj
+LightHouse rotate line of dangerobj
+GateKeeper blink vertical and horizontal dangerobj

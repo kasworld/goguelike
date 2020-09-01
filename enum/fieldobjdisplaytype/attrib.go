@@ -32,4 +32,6 @@ var attrib = [FieldObjDisplayType_Count]struct {
 	PortalAutoIn: {"{+}", htmlcolors.Black},
 	PortalOut:    {"[-]", htmlcolors.Black},
 	Recycler:     {"*", htmlcolors.Black},
+	LightHouse:   {"X", htmlcolors.Black},
+	GateKeeper:   {"-|-", htmlcolors.Black},
 }

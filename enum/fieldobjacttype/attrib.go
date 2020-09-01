@@ -53,27 +53,33 @@ var attrib = [FieldObjActType_Count]struct {
 	NeedTANoti  bool
 	Color24     htmlcolors.Color24
 }{
-	None:            {"?", false, false, 1.0, false, false, htmlcolors.Black},
+	None: {"?", false, false, 1.0, false, false, htmlcolors.Black},
+
 	PortalInOut:     {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
 	PortalIn:        {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
 	PortalOut:       {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
 	PortalAutoIn:    {"?", false, true, 1.0, true, true, htmlcolors.MediumVioletRed},
 	RecycleCarryObj: {"?", false, false, 1.0, false, false, htmlcolors.Green},
 	Teleport:        {"?", true, true, 0.1, true, true, htmlcolors.Red},
-	ForgetFloor:     {"?", true, true, 0.2, false, true, htmlcolors.OrangeRed},
-	ForgetOneFloor:  {"?", true, true, 0.3, false, true, htmlcolors.OrangeRed},
-	AlterFaction:    {"?", true, true, 0.5, false, false, htmlcolors.Red},
-	AllFaction:      {"?", true, true, 0.5, false, false, htmlcolors.Red},
-	Bleeding:        {"?", true, true, 0.2, false, false, htmlcolors.Crimson},
-	Chilly:          {"?", true, true, 0.2, false, false, htmlcolors.DarkTurquoise},
-	Blind:           {"?", true, true, 0.2, false, false, condition.Blind.Color()},
-	Invisible:       {"?", true, true, 0.5, false, false, condition.Invisible.Color()},
-	Burden:          {"?", true, true, 0.2, false, false, condition.Burden.Color()},
-	Float:           {"?", true, true, 0.3, false, false, condition.Float.Color()},
-	Greasy:          {"?", true, true, 0.5, false, false, condition.Greasy.Color()},
-	Drunken:         {"?", true, true, 0.5, false, false, condition.Drunken.Color()},
-	Sleepy:          {"?", true, true, 0.1, false, false, condition.Sleep.Color()},
-	Contagion:       {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
+
+	ForgetFloor:    {"?", true, true, 0.2, false, true, htmlcolors.OrangeRed},
+	ForgetOneFloor: {"?", true, true, 0.3, false, true, htmlcolors.OrangeRed},
+	AlterFaction:   {"?", true, true, 0.5, false, false, htmlcolors.Red},
+	AllFaction:     {"?", true, true, 0.5, false, false, htmlcolors.Red},
+	Bleeding:       {"?", true, true, 0.2, false, false, htmlcolors.Crimson},
+	Chilly:         {"?", true, true, 0.2, false, false, htmlcolors.DarkTurquoise},
+
+	Blind:     {"?", true, true, 0.2, false, false, condition.Blind.Color()},
+	Invisible: {"?", true, true, 0.5, false, false, condition.Invisible.Color()},
+	Burden:    {"?", true, true, 0.2, false, false, condition.Burden.Color()},
+	Float:     {"?", true, true, 0.3, false, false, condition.Float.Color()},
+	Greasy:    {"?", true, true, 0.5, false, false, condition.Greasy.Color()},
+	Drunken:   {"?", true, true, 0.5, false, false, condition.Drunken.Color()},
+	Sleepy:    {"?", true, true, 0.1, false, false, condition.Sleep.Color()},
+	Contagion: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
+
+	LightHouse: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
+	GateKeeper: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
 }
 
 // try act on fieldobj
@@ -102,6 +108,8 @@ var ClientData = [FieldObjActType_Count]struct {
 	Drunken:         {false, "random direction"},
 	Sleepy:          {false, "cannot act"},
 	Contagion:       {false, "make contagion other, die or heal randomly"},
+	LightHouse:      {false, "rotate line of dangerobj"},
+	GateKeeper:      {false, "blink vertical and horizontal dangerobj"},
 }
 
 func GetBuffByFieldObjActType(at FieldObjActType) []statusoptype.OpArg {
