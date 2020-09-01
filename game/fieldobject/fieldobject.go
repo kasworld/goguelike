@@ -32,8 +32,8 @@ type FieldObject struct {
 	// trapteleport
 	DstFloorName string
 
-	// LightHouse rad ,GateKeeper vert 0 , hori 1
-	LastState float64
+	// LightHouse ,GateKeeper radian
+	Radian float64
 }
 
 func (p FieldObject) String() string {

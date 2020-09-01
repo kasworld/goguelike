@@ -305,3 +305,63 @@ func cmdAddTrapRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	}
 	return nil
 }
+
+func cmdAddAreaAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var x, y int
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var radian float64
+	var message string
+	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &radian, &message); err != nil {
+		return err
+	}
+	return tr.addAreaAttack(x, y, dispType, acttype, radian, message)
+}
+
+func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var radian float64
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &radian, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addAreaAttackRand(dispType, acttype, radian, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddAreaAttackRand add insufficient")
+	}
+	return nil
+}
+
+func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var radian float64
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &radian, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addAreaAttackRandInRoom(dispType, acttype, radian, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddAreaAttackRand add insufficient")
+	}
+	return nil
+}

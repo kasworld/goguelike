@@ -48,3 +48,8 @@ AddTrapTeleportsInRoom  DstFloor:string count:int message:string
 AddTrap                 x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type message:string
 AddTrapsRand            display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
 AddTrapsInRoom          display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
+
+# add fieldobj LightHouse, GateKeeper
+AddAreaAttack           x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type radian:float message:string
+AddAreaAttackRand       display:FieldObjDisplay_Type acttype:FieldObjAct_Type radian:float count:int message:string
+AddAreaAttackInRoom     display:FieldObjDisplay_Type acttype:FieldObjAct_Type radian:float count:int message:string

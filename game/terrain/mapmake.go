@@ -73,6 +73,9 @@ var TerrainScriptFn = map[terraincmd.TerrainCmd]func(tr *Terrain, ca *scriptpars
 	terraincmd.AddTrap:                cmdAddTrap,
 	terraincmd.AddTrapsRand:           cmdAddTrapRand,
 	terraincmd.AddTrapsInRoom:         cmdAddTrapRandInRoom,
+	terraincmd.AddAreaAttack:          cmdAddAreaAttack,
+	terraincmd.AddAreaAttackRand:      cmdAddAreaAttackRand,
+	terraincmd.AddAreaAttackInRoom:    cmdAddAreaAttackRandInRoom,
 }
 
 func init() {

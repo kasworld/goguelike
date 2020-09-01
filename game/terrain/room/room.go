@@ -33,9 +33,10 @@ type Room struct {
 	Tiles      [][]tile.Tile
 	ConnectPos [][2]int // door outer pos , out of room area
 	// for sort
-	RecyclerCount int
-	PortalCount   int
-	TrapCount     int
+	RecyclerCount   int
+	PortalCount     int
+	TrapCount       int
+	AreaAttackCount int
 }
 
 func New(rt rect.Rect, bgTile tile.Tile) *Room {

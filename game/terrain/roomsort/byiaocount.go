@@ -70,3 +70,21 @@ func (rl ByTrapCount) Less(i, j int) bool {
 func (rl ByTrapCount) Sort() {
 	sort.Sort(rl)
 }
+
+type ByAreaAttackCount []*room.Room
+
+func (rl ByAreaAttackCount) Len() int { return len(rl) }
+func (rl ByAreaAttackCount) Swap(i, j int) {
+	rl[i], rl[j] = rl[j], rl[i]
+}
+func (rl ByAreaAttackCount) Less(i, j int) bool {
+	r1 := rl[i]
+	r2 := rl[j]
+	if r1.AreaAttackCount == r2.AreaAttackCount {
+		return r1.RecyclerCount < r2.RecyclerCount
+	}
+	return r1.AreaAttackCount < r2.AreaAttackCount
+}
+func (rl ByAreaAttackCount) Sort() {
+	sort.Sort(rl)
+}
