@@ -110,6 +110,60 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 	}, spacket, nil
 }
 
+func (tw *Tower) bytesAPIFn_ReqAttackWide(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	robj, ok := r.(*c2t_obj.ReqAttackWide_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
+	}
+	spacket := &c2t_obj.RspAttackWide_data{}
+
+	ao.SetReq2Handle(&aoactreqrsp.Act{
+		Act: c2t_idcmd.AttackWide,
+		Dir: robj.Dir,
+	})
+
+	return c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}, spacket, nil
+}
+
+func (tw *Tower) bytesAPIFn_ReqAttackLong(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	robj, ok := r.(*c2t_obj.ReqAttackLong_data)
+	if !ok {
+		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+	}
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
+	}
+	spacket := &c2t_obj.RspAttackLong_data{}
+
+	ao.SetReq2Handle(&aoactreqrsp.Act{
+		Act: c2t_idcmd.AttackLong,
+		Dir: robj.Dir,
+	})
+
+	return c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}, spacket, nil
+}
+
 func (tw *Tower) bytesAPIFn_ReqPickup(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {

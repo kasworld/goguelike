@@ -8,19 +8,22 @@ Rebirth
 MoveFloor tower cmd 
 AIPlay
 
-Meditate turn act 
-KillSelf turn act 
-Move turn act 
-Attack turn act 
-Pickup turn act 
-Drop turn act 
-Equip turn act 
-UnEquip turn act 
-DrinkPotion turn act 
-ReadScroll turn act 
-Recycle turn act 
-EnterPortal turn act 
-ActTeleport turn act 
+# ao action, need turn AP
+Meditate rest and recover HP,SP
+KillSelf
+Move move 8way near tile
+Attack attack near 1 tile 
+AttackWide attack near 3 tile 
+AttackLong attack 3 tile to direction
+Pickup pickup carryobj
+Drop drop carryobj
+Equip equip equipable carryobj
+UnEquip unequip equipable carryobj
+DrinkPotion
+ReadScroll
+Recycle sell carryobj 
+EnterPortal
+ActTeleport
 
 AdminTowerCmd generic cmd 
 AdminFloorCmd generic cmd 

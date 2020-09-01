@@ -43,6 +43,20 @@ type RspAttack_data struct {
 	Dummy uint8
 }
 
+type ReqAttackWide_data struct {
+	Dir way9type.Way9Type
+}
+type RspAttackWide_data struct {
+	Dummy uint8
+}
+
+type ReqAttackLong_data struct {
+	Dir way9type.Way9Type
+}
+type RspAttackLong_data struct {
+	Dummy uint8
+}
+
 type ReqPickup_data struct {
 	UUID string
 }

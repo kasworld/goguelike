@@ -70,6 +70,8 @@ func (tw *Tower) initServiceWeb(ctx context.Context) {
 		c2t_idcmd.KillSelf:          tw.bytesAPIFn_ReqKillSelf,          // KillSelf turn act
 		c2t_idcmd.Move:              tw.bytesAPIFn_ReqMove,              // Move turn act
 		c2t_idcmd.Attack:            tw.bytesAPIFn_ReqAttack,            // Attack turn act
+		c2t_idcmd.AttackWide:        tw.bytesAPIFn_ReqAttackWide,        // Attack turn act
+		c2t_idcmd.AttackLong:        tw.bytesAPIFn_ReqAttackLong,        // Attack turn act
 		c2t_idcmd.Pickup:            tw.bytesAPIFn_ReqPickup,            // Pickup turn act
 		c2t_idcmd.Drop:              tw.bytesAPIFn_ReqDrop,              // Drop turn act
 		c2t_idcmd.Equip:             tw.bytesAPIFn_ReqEquip,             // Equip turn act

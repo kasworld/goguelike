@@ -37,6 +37,8 @@ var attrib = [CommandID_Count]struct {
 	KillSelf:    {false, 1},
 	Move:        {true, 1},
 	Attack:      {true, 1.5},
+	AttackWide:  {true, 3},
+	AttackLong:  {true, 3},
 	Pickup:      {true, 1},
 	Drop:        {true, 1},
 	Equip:       {true, 1},

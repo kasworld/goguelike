@@ -47,6 +47,8 @@ var allAuthorizationSet = map[string]*c2t_authorize.AuthorizedCmds{
 		c2t_idcmd.KillSelf,
 		c2t_idcmd.Move,
 		c2t_idcmd.Attack,
+		c2t_idcmd.AttackWide,
+		c2t_idcmd.AttackLong,
 		c2t_idcmd.Pickup,
 		c2t_idcmd.Drop,
 		c2t_idcmd.Equip,
