@@ -240,6 +240,10 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				}
 			}
 		case *fieldobject.FieldObject: // attack area fieldobj
+			switch owner.ActType {
+			case fieldobjacttype.LightHouse:
+			case fieldobjacttype.GateKeeper:
+			}
 		}
 		return false
 	})
@@ -263,6 +267,19 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				)
 			}
 		case fieldobjacttype.GateKeeper:
+			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Radian)
+			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Radian)
+			fo.Radian += fo.RadPerTurn
+			xylenline := lineofsight.MakePosLenList(
+				float64(foX)-dx+0.5, float64(foY)-dy+0.5,
+				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
+			).ToCellLenList()
+			for _, v := range xylenline {
+				f.doPosMan.AddToXY(
+					dangerobject.NewFOAreaAttact(fo, v.L),
+					v.X, v.Y,
+				)
+			}
 		}
 		return false
 	})
