@@ -20,7 +20,7 @@ import (
 
 const (
 	LightHouseRadius = gameconst.ViewPortH / 2
-	GateKeeperLen    = gameconst.ViewPortH / 2
+	GateKeeperLen    = gameconst.ViewPortH / 4
 )
 
 func (v FieldObjActType) Color24() htmlcolors.Color24 {
