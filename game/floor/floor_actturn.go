@@ -12,6 +12,7 @@
 package floor
 
 import (
+	"math"
 	"time"
 
 	"github.com/kasworld/goguelike/config/contagionarea"
@@ -29,6 +30,7 @@ import (
 	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/lineofsight"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -237,6 +239,30 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 					break
 				}
 			}
+		case *fieldobject.FieldObject: // attack area fieldobj
+		}
+		return false
+	})
+
+	// handle area attack field obj danger obj
+	f.foPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+		fo := o.(*fieldobject.FieldObject)
+		switch fo.ActType {
+		case fieldobjacttype.LightHouse:
+			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Radian)
+			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Radian)
+			fo.Radian += fo.RadPerTurn
+			xylenline := lineofsight.MakePosLenList(
+				float64(foX)+0.5, float64(foY)+0.5,
+				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
+			).ToCellLenList()
+			for _, v := range xylenline {
+				f.doPosMan.AddToXY(
+					dangerobject.NewFOAreaAttact(fo, v.L),
+					v.X, v.Y,
+				)
+			}
+		case fieldobjacttype.GateKeeper:
 		}
 		return false
 	})

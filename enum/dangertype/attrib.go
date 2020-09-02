@@ -12,54 +12,21 @@
 package dangertype
 
 import (
-	"github.com/kasworld/findnear"
 	"github.com/kasworld/htmlcolors"
 )
 
-/*
-attactype ?
-None make empty error
-BasicAttack
-ThrowAttack
-
-target type
-None
-FirstTaget stop at 1st target
-Split distribute to all target
-Full full to all target
-
-targer area
-None
-OneTile
-MoveAlongWithLineOfTile
-TileArea xylenlist
-
-distance
-None
-ContactTile
-RangedTile
-
-*/
-
-func (dt DangerType) TargetCount() int {
-	return attrib[dt].targetCount
-}
 func (dt DangerType) Turn2Live() int {
 	return attrib[dt].turn2Live
 }
 func (dt DangerType) Color24() htmlcolors.Color24 {
 	return attrib[dt].color
 }
-func (dt DangerType) TargetArea() findnear.XYLenList {
-	return attrib[dt].targetArea
-}
 
 var attrib = [DangerType_Count]struct {
-	targetCount int
-	turn2Live   int
-	color       htmlcolors.Color24
-	targetArea  findnear.XYLenList // + pos + dir
+	turn2Live int
+	color     htmlcolors.Color24
 }{
-	None:        {0, 0, htmlcolors.Black, findnear.XYLenList{}},
-	BasicAttack: {1, 1, htmlcolors.Red, findnear.XYLenList{findnear.XYLen{0, 0, 1}}},
+	None:               {0, htmlcolors.Black},
+	BasicAttack:        {1, htmlcolors.Red},
+	FieldObjAreaAttack: {1, htmlcolors.Red},
 }

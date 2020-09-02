@@ -24,7 +24,7 @@ type DangerObject struct {
 	OwnerX, OwnerY int                 // pos at make attack time
 	DangerType     dangertype.DangerType
 	RemainTurn     int // remain turn to affect
-
+	AffectRate     float64
 }
 
 // IDPosI interface
@@ -41,6 +41,17 @@ func NewBasicAttact(attacker uuidposman.UUIDPosI, srcx, srcy int) *DangerObject 
 		OwnerY:     srcy,
 		DangerType: dt,
 		RemainTurn: dt.Turn2Live(),
+	}
+}
+
+func NewFOAreaAttact(attacker uuidposman.UUIDPosI, affectRate float64) *DangerObject {
+	dt := dangertype.FieldObjAreaAttack
+	return &DangerObject{
+		UUID:       uuidstr.New(),
+		Owner:      attacker,
+		DangerType: dt,
+		RemainTurn: dt.Turn2Live(),
+		AffectRate: affectRate,
 	}
 }
 
