@@ -20,7 +20,6 @@ import (
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/terrain"
@@ -99,7 +98,8 @@ func (f *Floor) Cleanup() {
 	f.doPosMan.Cleanup()
 }
 
-func (f *Floor) Init() error {
+// Init bi need for randomness
+func (f *Floor) Init(bi bias.Bias) error {
 	f.log.TraceService("Start Init %v", f)
 	defer func() { f.log.TraceService("End Init %v", f) }()
 
@@ -114,11 +114,7 @@ func (f *Floor) Init() error {
 	f.poPosMan = uuidposman.New(f.w, f.h)
 	f.foPosMan = f.terrain.GetFieldObjPosMan()
 	f.doPosMan = uuidposman.New(f.w, f.h)
-	f.bias = bias.Bias{
-		f.rnd.Float64() - 0.5,
-		f.rnd.Float64() - 0.5,
-		f.rnd.Float64() - 0.5,
-	}.MakeAbsSumTo(gameconst.FloorBaseBiasLen)
+	f.bias = bi // not use floor.rnd for randomness
 	f.initialized = true
 	return nil
 }

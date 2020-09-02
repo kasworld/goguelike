@@ -16,8 +16,11 @@ import (
 	"sync"
 	"unsafe"
 
+	"github.com/kasworld/g2rand"
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/tile_flag"
+	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/floor"
 	"github.com/kasworld/goguelike/game/gamei"
@@ -61,7 +64,7 @@ func New(terrainScript towerscript.TowerScript, tw gamei.TowerI) *FloorManager {
 func (fm *FloorManager) Cleanup() {
 }
 
-func (fm *FloorManager) Init() error {
+func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 	// make floor list order to terrainscript
 	tmpFloorList := make([]gamei.FloorI, len(fm.terrainScript))
 	var wg sync.WaitGroup
@@ -70,8 +73,12 @@ func (fm *FloorManager) Init() error {
 		go func(i int, v []string) {
 			defer wg.Done()
 			f := floor.New(v, fm.tower)
-			err := f.Init()
-			if err != nil {
+			bi := bias.Bias{
+				rnd.Float64() - 0.5,
+				rnd.Float64() - 0.5,
+				rnd.Float64() - 0.5,
+			}.MakeAbsSumTo(gameconst.FloorBaseBiasLen)
+			if err := f.Init(bi); err != nil {
 				fm.log.Fatal("floor init fail, %v", err)
 			}
 			tmpFloorList[i] = f

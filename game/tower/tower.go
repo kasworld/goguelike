@@ -207,7 +207,7 @@ func (tw *Tower) ServiceInit() error {
 	tw.biasFactor = tw.NewRandFactor()
 
 	tw.floorMan = floormanager.New(tScript, tw)
-	if err := tw.floorMan.Init(); err != nil {
+	if err := tw.floorMan.Init(tw.rnd); err != nil {
 		return err
 	}
 	tw.startTime = time.Now()
