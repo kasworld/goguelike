@@ -6,7 +6,7 @@ NewTerrain  name:string w:int h:int ao:int po:int actturnboost:float
 ResourceMazeWall        resource:TileRsc_Type amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
 ResourceMazeWalk        resource:TileRsc_Type amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
 ResourceRand            resource:TileRsc_Type mean:int stddev:int repeat:int
-ResourceAt                resource:TileRsc_Type amount:int x:int y:int
+ResourceAt              resource:TileRsc_Type amount:int x:int y:int
 ResourceHLine           resource:TileRsc_Type amount:int x:int w:int y:int
 ResourceVLine           resource:TileRsc_Type amount:int x:int y:int h:int
 ResourceLine            resource:TileRsc_Type amount:int x1:int y1:int x2:int y2:int
@@ -50,6 +50,6 @@ AddTrapsRand            display:FieldObjDisplay_Type acttype:FieldObjAct_Type co
 AddTrapsInRoom          display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
 
 # add fieldobj LightHouse, GateKeeper
-AddAreaAttack           x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float message:string
-AddAreaAttackRand       display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float count:int message:string
-AddAreaAttackInRoom     display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float count:int message:string
+AddAreaAttack           x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float perturn:float message:string
+AddAreaAttackRand       display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float perturn:float count:int message:string
+AddAreaAttackInRoom     display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float perturn:float count:int message:string

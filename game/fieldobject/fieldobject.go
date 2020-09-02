@@ -33,7 +33,7 @@ type FieldObject struct {
 	DstFloorName string
 
 	// LightHouse ,GateKeeper radian
-	Radian float64
+	Radian, RadPerTurn float64
 }
 
 func (p FieldObject) String() string {

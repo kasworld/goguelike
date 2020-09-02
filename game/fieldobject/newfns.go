@@ -69,7 +69,7 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 }
 
 func NewAreaAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
-	acttype fieldobjacttype.FieldObjActType, radian float64,
+	acttype fieldobjacttype.FieldObjActType, radian, radperturn float64,
 ) *FieldObject {
 	return &FieldObject{
 		ID:          uuidstr.New(),
@@ -78,5 +78,6 @@ func NewAreaAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDis
 		DisplayType: displayType,
 		Message:     message,
 		Radian:      radian,
+		RadPerTurn:  radperturn,
 	}
 }
