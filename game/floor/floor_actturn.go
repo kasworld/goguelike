@@ -227,23 +227,23 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	// handle battle on danger obj
 	f.doPosMan.IterAll(func(o uuidposman.UUIDPosI, dstX, dstY int) bool {
 		do := o.(*dangerobject.DangerObject)
-		switch owner := do.Owner.(type) {
-		default:
-			f.log.Fatal("not supported type %v", owner)
-		case gamei.ActiveObjectI:
-			for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
-				dstAO := vv.(gamei.ActiveObjectI)
-				if dstAO.IsAlive() {
-					srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
-					dstTile := f.terrain.GetTiles()[dstX][dstY]
-					f.aoAttackActiveObj(owner, dstAO, srcTile, dstTile)
-					break
-				}
+		for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
+			dstAO := vv.(gamei.ActiveObjectI)
+			if !dstAO.IsAlive() {
+				continue
 			}
-		case *fieldobject.FieldObject: // attack area fieldobj
-			switch owner.ActType {
-			case fieldobjacttype.LightHouse:
-			case fieldobjacttype.GateKeeper:
+			switch do.DangerType {
+			default:
+				f.log.Fatal("not supported type %v", do.DangerType)
+			case dangertype.BasicAttack, dangertype.LongAttack, dangertype.WideAttack:
+				owner := do.Owner.(gamei.ActiveObjectI)
+				srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
+				dstTile := f.terrain.GetTiles()[dstX][dstY]
+				f.aoAttackActiveObj(owner, dstAO, srcTile, dstTile)
+			case dangertype.LightHouseAreaAttack:
+				f.foLightHouseAttack(do, dstAO, dstX, dstY)
+			case dangertype.GateKeeperAreaAttack:
+				f.foGateKeeperAttack(do, dstAO, dstX, dstY)
 			}
 		}
 		return false

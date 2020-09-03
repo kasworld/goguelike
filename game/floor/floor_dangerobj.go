@@ -193,3 +193,11 @@ func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile
 
 	src.AddBattleExp(damage * gameconst.ActiveObjExp_Damage)
 }
+
+func (f *Floor) foLightHouseAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
+
+}
+
+func (f *Floor) foGateKeeperAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
+
+}
