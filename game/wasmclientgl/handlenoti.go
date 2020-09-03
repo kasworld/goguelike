@@ -473,6 +473,12 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 		app.systemMessage.Appendf("Kill %v", aostr)
 		app.NotiMessage.AppendTf(tcsInfo, "You kill %v", nickname)
 	case turnresulttype.AttackedFrom:
+		if o := app.currentFloor().FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
+			fo := o.(*c2t_obj.FieldObjClient)
+			app.systemMessage.Appendf("Killed by %v", fo.Message)
+			app.NotiMessage.AppendTf(tcsInfo, "Killed by %v", fo.Message)
+			return
+		}
 		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 		aostr := "??"
 		if exist {
@@ -482,6 +488,12 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 			wrapspan.ColorTextf("Red", "Damage %4.1f from", v.Arg),
 			aostr)
 	case turnresulttype.KilledBy:
+		if o := app.currentFloor().FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
+			fo := o.(*c2t_obj.FieldObjClient)
+			app.systemMessage.Appendf("Killed by %v", fo.Message)
+			app.NotiMessage.AppendTf(tcsInfo, "Killed by %v", fo.Message)
+			return
+		}
 		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
 		aostr := "??"
 		nickname := "??"

@@ -68,6 +68,7 @@ func (ao *ActiveObject) ApplyDamageFromDangerObj() bool {
 				case *ActiveObject:
 					o.Kill(ao)
 				case *fieldobject.FieldObject:
+					ao.AppendTurnResult(turnresult.New(turnresulttype.KilledBy, o, 0))
 				}
 			}
 		}

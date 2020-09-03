@@ -185,9 +185,10 @@ func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile
 	}
 
 	src.AppendTurnResult(turnresult.New(turnresulttype.AttackTo, dst, damage))
+	dst.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, src, damage))
+
 	src.GetAchieveStat().Add(achievetype.DamageTotalGive, damage)
 	src.GetAchieveStat().SetIfGt(achievetype.DamageMaxGive, damage)
-	dst.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, src, damage))
 	dst.GetAchieveStat().Add(achievetype.DamageTotalRecv, damage)
 	dst.GetAchieveStat().SetIfGt(achievetype.DamageMaxRecv, damage)
 
