@@ -21,6 +21,7 @@ import (
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
+	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/intervalduration"
@@ -198,14 +199,16 @@ func (sai *ServerAI) aoAttackLast() gamei.ActiveObjectI {
 	for _, v := range sai.ao.GetTurnResultList() {
 		if v.GetTurnResultType() == turnresulttype.AttackedFrom {
 			dstObj := v.GetDstObj()
-			if dstObj != nil {
-				dstActiveObj := dstObj.(gamei.ActiveObjectI)
-				if dstActiveObj.IsAlive() {
-					return dstActiveObj
+			switch o := dstObj.(type) {
+			default:
+				sai.log.Fatal("unknown dstao %v", v)
+			case gamei.ActiveObjectI:
+				if o.IsAlive() {
+					return o
 				}
-			} else {
-				sai.log.Fatal("dstao nil %v", v)
+			case *fieldobject.FieldObject:
 			}
+
 		}
 	}
 	return nil

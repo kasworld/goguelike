@@ -210,6 +210,42 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		f.log.Fatal("fail to delete dangerobject %v", err)
 	}
 
+	// add areaattack fieldobj dangerobj
+	f.foPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+		fo := o.(*fieldobject.FieldObject)
+		switch fo.ActType {
+		case fieldobjacttype.LightHouse:
+			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Radian)
+			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Radian)
+			fo.Radian += fo.RadPerTurn
+			xylenline := lineofsight.MakePosLenList(
+				float64(foX)+0.5, float64(foY)+0.5,
+				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
+			).ToCellLenList()
+			for _, v := range xylenline {
+				f.doPosMan.AddToXY(
+					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, v.L),
+					v.X, v.Y,
+				)
+			}
+		case fieldobjacttype.GateKeeper:
+			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Radian)
+			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Radian)
+			fo.Radian += fo.RadPerTurn
+			xylenline := lineofsight.MakePosLenList(
+				float64(foX)-dx+0.5, float64(foY)-dy+0.5,
+				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
+			).ToCellLenList()
+			for _, v := range xylenline {
+				f.doPosMan.AddToXY(
+					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L),
+					v.X, v.Y,
+				)
+			}
+		}
+		return false
+	})
+
 	// handle attack
 	for ao, arr := range ao2ActReqRsp {
 		if arr.Acted() || !ao.IsAlive() {
@@ -249,44 +285,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		return false
 	})
 
-	// handle area attack field obj danger obj
-	f.foPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
-		fo := o.(*fieldobject.FieldObject)
-		switch fo.ActType {
-		case fieldobjacttype.LightHouse:
-			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Radian)
-			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Radian)
-			fo.Radian += fo.RadPerTurn
-			xylenline := lineofsight.MakePosLenList(
-				float64(foX)+0.5, float64(foY)+0.5,
-				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
-			).ToCellLenList()
-			for _, v := range xylenline {
-				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, v.L),
-					v.X, v.Y,
-				)
-			}
-		case fieldobjacttype.GateKeeper:
-			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Radian)
-			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Radian)
-			fo.Radian += fo.RadPerTurn
-			xylenline := lineofsight.MakePosLenList(
-				float64(foX)-dx+0.5, float64(foY)-dy+0.5,
-				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
-			).ToCellLenList()
-			for _, v := range xylenline {
-				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L),
-					v.X, v.Y,
-				)
-			}
-		}
-		return false
-	})
-
 	for _, ao := range aoListToProcessInTurn {
-		if ao.ApplyDamageFromActiveObj() { // just killed
+		if ao.ApplyDamageFromDangerObj() { // just killed
 			// do nothing here
 		}
 	}

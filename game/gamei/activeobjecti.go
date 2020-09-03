@@ -103,7 +103,7 @@ type ActiveObjectI interface {
 	ApplyTurnAct()
 	AppendTurnResult(turnResult turnresult.TurnResult)
 
-	ApplyDamageFromActiveObj() bool
+	ApplyDamageFromDangerObj() bool
 	ApplyHPSPDecByActOnTile(hp, sp float64)
 	Kill(dst ActiveObjectI)
 

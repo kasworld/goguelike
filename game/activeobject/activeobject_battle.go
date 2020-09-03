@@ -16,6 +16,7 @@ import (
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
+	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
 )
 
@@ -54,17 +55,19 @@ func (ao *ActiveObject) ApplyHPSPDecByActOnTile(hp, sp float64) {
 	}
 }
 
-func (ao *ActiveObject) ApplyDamageFromActiveObj() bool {
+func (ao *ActiveObject) ApplyDamageFromDangerObj() bool {
 	before := ao.IsAlive()
 	for _, v := range ao.turnResultList {
 		if v.GetTurnResultType() == turnresulttype.AttackedFrom {
 			ao.ReduceHP(v.GetDamage())
 			if before && !ao.IsAlive() { // just killed
 				dstObj := v.GetDstObj()
-				if dstObj != nil {
-					dstObj.(*ActiveObject).Kill(ao)
-				} else {
-					ao.log.Fatal("dstao nil %v", v)
+				switch o := dstObj.(type) {
+				default:
+					ao.log.Fatal("unknown dstao %v", v)
+				case *ActiveObject:
+					o.Kill(ao)
+				case *fieldobject.FieldObject:
 				}
 			}
 		}
