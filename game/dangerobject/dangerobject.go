@@ -32,8 +32,8 @@ func (p *DangerObject) GetUUID() string {
 	return p.UUID
 }
 
-func NewBasicAttact(attacker uuidposman.UUIDPosI, srcx, srcy int) *DangerObject {
-	dt := dangertype.BasicAttack
+func NewAOAttact(
+	attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
 	return &DangerObject{
 		UUID:       uuidstr.New(),
 		Owner:      attacker,
@@ -44,8 +44,7 @@ func NewBasicAttact(attacker uuidposman.UUIDPosI, srcx, srcy int) *DangerObject 
 	}
 }
 
-func NewFOAreaAttact(attacker uuidposman.UUIDPosI, affectRate float64) *DangerObject {
-	dt := dangertype.FieldObjAreaAttack
+func NewFOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, affectRate float64) *DangerObject {
 	return &DangerObject{
 		UUID:       uuidstr.New(),
 		Owner:      attacker,

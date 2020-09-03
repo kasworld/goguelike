@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike/config/contagionarea"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
@@ -262,7 +263,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			).ToCellLenList()
 			for _, v := range xylenline {
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAreaAttact(fo, v.L),
+					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, v.L),
 					v.X, v.Y,
 				)
 			}
@@ -276,7 +277,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			).ToCellLenList()
 			for _, v := range xylenline {
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAreaAttact(fo, v.L),
+					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L),
 					v.X, v.Y,
 				)
 			}

@@ -26,7 +26,10 @@ var attrib = [DangerType_Count]struct {
 	turn2Live int
 	color     htmlcolors.Color24
 }{
-	None:               {0, htmlcolors.Black},
-	BasicAttack:        {1, htmlcolors.Red},
-	FieldObjAreaAttack: {1, htmlcolors.Red},
+	None:                 {0, htmlcolors.Black},
+	BasicAttack:          {1, htmlcolors.Red},
+	WideAttack:           {1, htmlcolors.Crimson},
+	LongAttack:           {1, htmlcolors.FireBrick},
+	LightHouseAreaAttack: {1, htmlcolors.DeepPink},
+	GateKeeperAreaAttack: {1, htmlcolors.OrangeRed},
 }

@@ -1,3 +1,6 @@
 None empty error
 BasicAttack from ao 
-FieldObjAreaAttack from field obj
+WideAttack from ao 
+LongAttack from ao
+LightHouseAreaAttack from field obj
+GateKeeperAreaAttack from field obj

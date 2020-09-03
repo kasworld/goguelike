@@ -16,6 +16,7 @@ import (
 	"github.com/kasworld/goguelike/config/slippperydata"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -68,7 +69,7 @@ func (f *Floor) addAttackWide(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 			continue
 		}
 		if err := f.doPosMan.AddToXY(
-			dangerobject.NewBasicAttact(ao, aox, aoy),
+			dangerobject.NewAOAttact(ao, dangertype.WideAttack, aox, aoy),
 			dstX, dstY); err != nil {
 			f.log.Fatal("fail to AddToXY %v", err)
 			continue
@@ -91,7 +92,7 @@ func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 			continue
 		}
 		if err := f.doPosMan.AddToXY(
-			dangerobject.NewBasicAttact(ao, aox, aoy),
+			dangerobject.NewAOAttact(ao, dangertype.LongAttack, aox, aoy),
 			dstX, dstY); err != nil {
 			f.log.Fatal("fail to AddToXY %v", err)
 			continue
@@ -114,7 +115,7 @@ func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 		return
 	}
 	if err := f.doPosMan.AddToXY(
-		dangerobject.NewBasicAttact(ao, aox, aoy),
+		dangerobject.NewAOAttact(ao, dangertype.BasicAttack, aox, aoy),
 		dstX, dstY); err != nil {
 		f.log.Fatal("fail to AddToXY %v", err)
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
