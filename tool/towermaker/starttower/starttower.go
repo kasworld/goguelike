@@ -179,24 +179,26 @@ func New(name string) *towermake.Tower {
 
 		roomCount := fm.CalcRoomCount()
 		// fmt.Printf("%v Room %v\n", fm, roomCount)
-		recycleCount := fm.W * fm.H / gameconst.ViewPortWH
+		recycleCount := fm.W * fm.H / gameconst.ViewPortWH / 8
 		if recycleCount < 2 {
 			recycleCount = 2
 		}
 
 		fm.ConnectAutoInPortalTo(suffix, suffix, fm)
 		fm.AddTrapTeleportTo(suffix, fm)
-		for i := 0; i < recycleCount/10; i++ {
+		for i := 0; i < recycleCount/8; i++ {
 			fm.ConnectAutoInPortalTo("Rand", "Rand", fm)
 			fm.AddTrapTeleportTo("Rand", fm)
 		}
 		fm.AddAllEffectTrap(suffix, 1)
-		if count := recycleCount / 64; count > 0 {
+		if count := recycleCount / 32; count > 0 {
 			fm.AddAllEffectTrap("Rand", count)
 		}
 
-		if roomCount > 0 {
+		if recycleCount > roomCount {
 			fm.AddRecycler(suffix, roomCount)
+		} else {
+			fm.AddRecycler(suffix, recycleCount)
 		}
 		if recycleCount-roomCount > 0 {
 			fm.AddRecycler("Rand", recycleCount-roomCount)
