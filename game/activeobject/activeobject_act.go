@@ -22,7 +22,6 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
-	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
@@ -48,12 +47,8 @@ func (ao *ActiveObject) PrepareNewTurn(turnTime time.Time) {
 
 // SetTurnActReqRsp set turn act result
 func (ao *ActiveObject) SetTurnActReqRsp(actrsp *aoactreqrsp.ActReqRsp) {
-	if actrsp.Req.Act.NeedTurn() > 0 {
-		needTurn := actrsp.Req.Act.NeedTurn()
-		if actrsp.Req.Dir != way9type.Center {
-			needTurn *= actrsp.Req.Dir.Len()
-		}
-		ao.remainTurn2Act += needTurn - 1
+	if turn2need := actrsp.Req.CalcNeedTurnByCondition(ao.AOTurnData.Condition); turn2need > 0 {
+		ao.remainTurn2Act += turn2need - 1
 	}
 	ao.turnActReqRsp = actrsp
 	if actrsp.IsSuccess() {

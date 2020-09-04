@@ -293,7 +293,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// handle ao action except attack
 	for ao, arr := range ao2ActReqRsp {
-		if arr.Acted() || arr.Req.Act == c2t_idcmd.Attack || !ao.IsAlive() {
+		if arr.Acted() || !ao.IsAlive() {
 			continue
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
@@ -307,7 +307,11 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 		switch arr.Req.Act {
 		default:
-			f.log.Error("unknown aoact %v %v", f, arr)
+			f.log.Fatal("unknown aoact %v %v", f, arr)
+
+		case c2t_idcmd.Attack, c2t_idcmd.AttackWide, c2t_idcmd.AttackLong:
+			// must be acted
+			f.log.Fatal("already acted %v %v", f, arr)
 
 		case c2t_idcmd.Meditate:
 			arr.SetDone(

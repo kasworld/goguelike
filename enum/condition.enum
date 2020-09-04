@@ -6,3 +6,5 @@ Greasy drop equiped carryobj randomly
 Drunken move/attack dir changed randomly
 Sleep cannot act except killself
 Contagion make contagion other contacted, die or heal randomly
+Slow act need turn doubled
+Haste act need turn halfed

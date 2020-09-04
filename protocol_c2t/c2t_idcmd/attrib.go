@@ -12,16 +12,16 @@
 package c2t_idcmd
 
 func (cmd CommandID) SleepCancel() bool {
-	return attrib[cmd].SleepCancel
+	return attrib[cmd].sleepCancel
 }
 
 func (cmd CommandID) NeedTurn() float64 {
-	return attrib[cmd].NeedTurn
+	return attrib[cmd].needTurn
 }
 
 var attrib = [CommandID_Count]struct {
-	SleepCancel bool
-	NeedTurn    float64
+	sleepCancel bool
+	needTurn    float64
 }{
 	Invalid:     {false, 0},
 	Login:       {false, 0},

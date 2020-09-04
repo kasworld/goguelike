@@ -14,6 +14,8 @@ package aoactreqrsp
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/condition_flag"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -23,6 +25,20 @@ type Act struct {
 	Act  c2t_idcmd.CommandID
 	Dir  way9type.Way9Type
 	UUID string
+}
+
+func (act Act) CalcNeedTurnByCondition(cndflag condition_flag.ConditionFlag) float64 {
+	turn2need := act.Act.NeedTurn()
+	if cndflag.TestByCondition(condition.Slow) {
+		turn2need *= 2
+	}
+	if cndflag.TestByCondition(condition.Haste) {
+		turn2need /= 2
+	}
+	if act.Act == c2t_idcmd.Move && act.Dir != way9type.Center {
+		turn2need *= act.Dir.Len()
+	}
+	return turn2need
 }
 
 type ActReqRsp struct {
