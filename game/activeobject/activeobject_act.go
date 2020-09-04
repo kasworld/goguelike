@@ -50,6 +50,9 @@ func (ao *ActiveObject) SetTurnActReqRsp(actrsp *aoactreqrsp.ActReqRsp) {
 	if turn2need := actrsp.Req.CalcNeedTurnByCondition(ao.AOTurnData.Condition); turn2need > 0 {
 		ao.remainTurn2Act += turn2need - 1
 	}
+	if ao.remainTurn2Act < -1 {
+		ao.remainTurn2Act = -1
+	}
 	ao.turnActReqRsp = actrsp
 	if actrsp.IsSuccess() {
 		ao.aoActionStat.Inc(actrsp.Done.Act)
