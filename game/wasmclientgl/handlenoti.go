@@ -475,8 +475,8 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 	case turnresulttype.AttackedFrom:
 		if o := app.currentFloor().FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
 			fo := o.(*c2t_obj.FieldObjClient)
-			app.systemMessage.Appendf("Damage %v from %v", v.Arg, fo.Message)
-			app.NotiMessage.AppendTf(tcsInfo, "Damage %v from %v", v.Arg, fo.Message)
+			app.systemMessage.Appendf("Damage %4.1f from %v", v.Arg, fo.Message)
+			app.NotiMessage.AppendTf(tcsInfo, "Damage %4.1f from %v", v.Arg, fo.Message)
 			return
 		}
 		dstao, exist := app.AOUUID2AOClient[v.DstUUID]
