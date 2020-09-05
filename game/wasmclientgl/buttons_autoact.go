@@ -350,44 +350,44 @@ func (app *WasmClient) needUseScroll(po *c2t_obj.ScrollClient) bool {
 func (app *WasmClient) needUsePotion(po *c2t_obj.PotionClient) bool {
 	pao := app.olNotiData.ActiveObj
 	switch po.PotionType {
-	case potiontype.MinorHealing:
+	case potiontype.RecoverHP10:
 		return pao.HPMax-pao.HP > 10
-	case potiontype.MajorHealing:
+	case potiontype.RecoverHP50:
 		return pao.HPMax-pao.HP > 50
-	case potiontype.GreatHealing:
+	case potiontype.RecoverHP100:
 		return pao.HPMax-pao.HP > 100
 
-	case potiontype.MinorActing:
+	case potiontype.RecoverSP10:
 		return pao.SPMax-pao.SP > 10
-	case potiontype.MajorActing:
+	case potiontype.RecoverSP50:
 		return pao.SPMax-pao.SP > 50
-	case potiontype.GreatActing:
+	case potiontype.RecoverSP100:
 		return pao.SPMax-pao.SP > 100
 
-	case potiontype.MinorHeal:
+	case potiontype.RecoverHPRate10:
 		return pao.HPMax-pao.HP > pao.HPMax/10
-	case potiontype.MajorHeal:
+	case potiontype.RecoverHPRate50:
 		return pao.HPMax/2 > pao.HP
-	case potiontype.CompleteHeal:
+	case potiontype.RecoverHPFull:
 		return pao.HPMax/10 > pao.HP
 
-	case potiontype.MinorAct:
+	case potiontype.RecoverSPRate10:
 		return pao.SPMax-pao.SP > pao.SPMax/10
-	case potiontype.MajorAct:
+	case potiontype.RecoverSPRate50:
 		return pao.SPMax/2 > pao.SP
-	case potiontype.CompleteAct:
+	case potiontype.RecoverSPFull:
 		return pao.SPMax/10 > pao.SP
 
-	case potiontype.MinorSpanHealing:
+	case potiontype.BuffRecoverHP1:
 		return pao.HPMax/2 > pao.HP
-	case potiontype.MinorSpanActing:
+	case potiontype.BuffRecoverSP1:
 		return pao.SPMax/2 > pao.SP
 
-	case potiontype.MinorSpanVision:
+	case potiontype.BuffSight1:
 		return pao.Sight <= leveldata.Sight(app.level)
-	case potiontype.MajorSpanVision:
+	case potiontype.BuffSight5:
 		return pao.Sight <= leveldata.Sight(app.level)
-	case potiontype.PerfectSpanVision:
+	case potiontype.BuffSightMax:
 		return pao.Sight <= leveldata.Sight(app.level)
 	}
 	return false

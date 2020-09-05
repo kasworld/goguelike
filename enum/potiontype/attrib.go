@@ -36,24 +36,24 @@ var attrib = [PotionType_Count]struct {
 	Color    htmlcolors.Color24
 	MakeRate int
 }{
-	Empty:             {"!", htmlcolors.Black, 10},
-	MinorHealing:      {"!", htmlcolors.Red, 10},
-	MinorHeal:         {"!", htmlcolors.Red, 5},
-	MajorHealing:      {"!", htmlcolors.Red, 10},
-	MajorHeal:         {"!", htmlcolors.Red, 3},
-	GreatHealing:      {"!", htmlcolors.Red, 10},
-	CompleteHeal:      {"!", htmlcolors.Red, 1},
-	MinorSpanHealing:  {"!", htmlcolors.Red, 10},
-	MinorActing:       {"!", htmlcolors.Lime, 10},
-	MinorAct:          {"!", htmlcolors.Lime, 5},
-	MajorActing:       {"!", htmlcolors.Lime, 10},
-	MajorAct:          {"!", htmlcolors.Lime, 3},
-	GreatActing:       {"!", htmlcolors.Lime, 10},
-	CompleteAct:       {"!", htmlcolors.Lime, 1},
-	MinorSpanActing:   {"!", htmlcolors.Lime, 10},
-	MinorSpanVision:   {"!", htmlcolors.Blue, 10},
-	MajorSpanVision:   {"!", htmlcolors.Blue, 5},
-	PerfectSpanVision: {"!", htmlcolors.Blue, 1},
+	Empty:           {"!", htmlcolors.Black, 10},
+	RecoverHP10:     {"!", htmlcolors.Red, 10},
+	RecoverHPRate10: {"!", htmlcolors.Red, 5},
+	RecoverHP50:     {"!", htmlcolors.Red, 10},
+	RecoverHPRate50: {"!", htmlcolors.Red, 3},
+	RecoverHP100:    {"!", htmlcolors.Red, 10},
+	RecoverHPFull:   {"!", htmlcolors.Red, 1},
+	BuffRecoverHP1:  {"!", htmlcolors.Red, 10},
+	RecoverSP10:     {"!", htmlcolors.Lime, 10},
+	RecoverSPRate10: {"!", htmlcolors.Lime, 5},
+	RecoverSP50:     {"!", htmlcolors.Lime, 10},
+	RecoverSPRate50: {"!", htmlcolors.Lime, 3},
+	RecoverSP100:    {"!", htmlcolors.Lime, 10},
+	RecoverSPFull:   {"!", htmlcolors.Lime, 1},
+	BuffRecoverSP1:  {"!", htmlcolors.Lime, 10},
+	BuffSight1:      {"!", htmlcolors.Blue, 10},
+	BuffSight5:      {"!", htmlcolors.Blue, 5},
+	BuffSightMax:    {"!", htmlcolors.Blue, 1},
 }
 
 func init() {
@@ -70,80 +70,80 @@ func GetBuffByPotionType(pt PotionType) []statusoptype.OpArg {
 
 var potion2BuffList = [PotionType_Count][]statusoptype.OpArg{
 	// one time buff
-	MinorHealing: []statusoptype.OpArg{
+	RecoverHP10: []statusoptype.OpArg{
 		{statusoptype.AddHP, 10.0},
 	},
-	MinorHeal: []statusoptype.OpArg{
+	RecoverHPRate10: []statusoptype.OpArg{
 		{statusoptype.AddHPRate, 0.10},
 	},
-	MinorActing: []statusoptype.OpArg{
+	RecoverSP10: []statusoptype.OpArg{
 		{statusoptype.AddSP, 10.0},
 	},
-	MinorAct: []statusoptype.OpArg{
+	RecoverSPRate10: []statusoptype.OpArg{
 		{statusoptype.AddSPRate, 0.10},
 	},
-	MajorHealing: []statusoptype.OpArg{
+	RecoverHP50: []statusoptype.OpArg{
 		{statusoptype.AddHP, 50.0},
 	},
-	MajorHeal: []statusoptype.OpArg{
+	RecoverHPRate50: []statusoptype.OpArg{
 		{statusoptype.AddHPRate, 0.50},
 	},
-	MajorActing: []statusoptype.OpArg{
+	RecoverSP50: []statusoptype.OpArg{
 		{statusoptype.AddSP, 50.0},
 	},
-	MajorAct: []statusoptype.OpArg{
+	RecoverSPRate50: []statusoptype.OpArg{
 		{statusoptype.AddSPRate, 0.50},
 	},
-	GreatHealing: []statusoptype.OpArg{
+	RecoverHP100: []statusoptype.OpArg{
 		{statusoptype.AddHP, 100.0},
 	},
-	GreatActing: []statusoptype.OpArg{
+	RecoverSP100: []statusoptype.OpArg{
 		{statusoptype.AddSP, 100.0},
 	},
-	CompleteHeal: []statusoptype.OpArg{
+	RecoverHPFull: []statusoptype.OpArg{
 		{statusoptype.AddHPRate, 1.00},
 	},
-	CompleteAct: []statusoptype.OpArg{
+	RecoverSPFull: []statusoptype.OpArg{
 		{statusoptype.AddSPRate, 1.00},
 	},
 
 	// repeating buff
-	MinorSpanHealing: statusoptype.Repeat(300,
+	BuffRecoverHP1: statusoptype.Repeat(300,
 		statusoptype.OpArg{statusoptype.AddHP, 1.0},
 	),
-	MinorSpanActing: statusoptype.Repeat(300,
+	BuffRecoverSP1: statusoptype.Repeat(300,
 		statusoptype.OpArg{statusoptype.AddSP, 1.0},
 	),
 
-	MinorSpanVision: statusoptype.Repeat(300,
+	BuffSight1: statusoptype.Repeat(300,
 		statusoptype.OpArg{statusoptype.ModSight, 1.0},
 	),
 
-	MajorSpanVision: statusoptype.Repeat(300,
+	BuffSight5: statusoptype.Repeat(300,
 		statusoptype.OpArg{statusoptype.ModSight, 5.0},
 	),
-	PerfectSpanVision: statusoptype.Repeat(300,
+	BuffSightMax: statusoptype.Repeat(300,
 		statusoptype.OpArg{statusoptype.ModSight, gameconst.SightXray},
 	),
 }
 
 var AIRecycleMap = map[PotionType]bool{
-	Empty:             true,
-	MinorHealing:      false,
-	MinorHeal:         false,
-	MinorActing:       false,
-	MinorAct:          false,
-	MajorHealing:      false,
-	MajorHeal:         false,
-	MajorActing:       false,
-	MajorAct:          false,
-	GreatHealing:      false,
-	GreatActing:       false,
-	CompleteHeal:      false,
-	CompleteAct:       false,
-	MinorSpanHealing:  false,
-	MinorSpanActing:   false,
-	MinorSpanVision:   false,
-	MajorSpanVision:   false,
-	PerfectSpanVision: false,
+	Empty:           true,
+	RecoverHP10:     false,
+	RecoverHPRate10: false,
+	RecoverSP10:     false,
+	RecoverSPRate10: false,
+	RecoverHP50:     false,
+	RecoverHPRate50: false,
+	RecoverSP50:     false,
+	RecoverSPRate50: false,
+	RecoverHP100:    false,
+	RecoverSP100:    false,
+	RecoverHPFull:   false,
+	RecoverSPFull:   false,
+	BuffRecoverHP1:  false,
+	BuffRecoverSP1:  false,
+	BuffSight1:      false,
+	BuffSight5:      false,
+	BuffSightMax:    false,
 }
