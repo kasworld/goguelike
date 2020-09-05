@@ -83,6 +83,8 @@ var attrib = [FieldObjActType_Count]struct {
 	Drunken:   {"?", true, true, 0.5, false, false, condition.Drunken.Color()},
 	Sleepy:    {"?", true, true, 0.1, false, false, condition.Sleep.Color()},
 	Contagion: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
+	Slow:      {"?", true, true, 0.1, false, false, condition.Slow.Color()},
+	Haste:     {"?", true, true, 0.1, false, false, condition.Haste.Color()},
 
 	LightHouse: {"?", false, false, 0.0, false, false, htmlcolors.Lavender},
 	GateKeeper: {"?", false, false, 0.0, false, false, htmlcolors.LavenderBlush},
@@ -170,5 +172,11 @@ var foAct2BuffList = [FieldObjActType_Count][]statusoptype.OpArg{
 	),
 	Contagion: statusoptype.RepeatShift(400, 4,
 		statusoptype.OpArg{statusoptype.SetCondition, condition.Contagion},
+	),
+	Slow: statusoptype.RepeatShift(200, 1,
+		statusoptype.OpArg{statusoptype.SetCondition, condition.Slow},
+	),
+	Haste: statusoptype.RepeatShift(200, 1,
+		statusoptype.OpArg{statusoptype.SetCondition, condition.Haste},
 	),
 }

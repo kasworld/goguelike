@@ -27,6 +27,8 @@ Greasy greasy body
 Drunken random direction
 Sleepy cannot act
 Contagion make contagion other, die or heal randomly
+Slow act need turn doubled
+Haste act need turn halfed
 
 # make moving dangerobj
 LightHouse rotate line of dangerobj

@@ -43,4 +43,6 @@ var attrib = [Condition_Count]struct {
 	Drunken:   {"dr", false, false, htmlcolors.Plum},
 	Sleep:     {"sl", false, false, htmlcolors.LightCoral},
 	Contagion: {"cn", false, false, htmlcolors.DarkGreen},
+	Slow:      {"sl", false, false, htmlcolors.DarkBlue},
+	Haste:     {"ha", false, false, htmlcolors.LightBlue},
 }
