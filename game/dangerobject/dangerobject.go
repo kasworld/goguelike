@@ -41,6 +41,7 @@ func NewAOAttact(
 		OwnerY:     srcy,
 		DangerType: dt,
 		RemainTurn: dt.Turn2Live(),
+		AffectRate: 1,
 	}
 }
 
@@ -61,6 +62,7 @@ func (p *DangerObject) ToPacket_DangerObjClient(x, y int) *c2t_obj.DangerObjClie
 		DangerType: p.DangerType,
 		X:          x,
 		Y:          y,
+		AffectRate: p.AffectRate,
 	}
 }
 

@@ -125,6 +125,7 @@ type DangerObjClient struct {
 	DangerType dangertype.DangerType
 	X          int
 	Y          int
+	AffectRate float64
 }
 
 type ActiveObjClient struct {
