@@ -145,7 +145,7 @@ func (app *WasmClient) makeBaseInfoHTML() string {
 	}
 	buf.WriteString("<br/>")
 
-	fmt.Fprintf(&buf, "%s  %.2f", wrapspan.ColorTextf("Lime", "Delay"), pao.RemainTurn2Act)
+	fmt.Fprintf(&buf, "%s  %.2f", wrapspan.ColorTextf("Lime", "AP"), pao.AP)
 	buf.WriteString("<br/>")
 
 	if autoActs.GetByIDBase("AutoPlay").State == 0 {

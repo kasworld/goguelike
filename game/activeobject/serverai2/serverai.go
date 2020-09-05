@@ -111,7 +111,7 @@ func (sai *ServerAI) actTurn(turnTime time.Time) {
 		sai.planRemainCount = 0
 	}
 
-	if sai.ao.GetRemainTurn2Act() > 0 { // skip
+	if sai.ao.GetAP() < 0 { // skip
 		return
 	}
 

@@ -76,7 +76,7 @@ type ActiveObjectI interface {
 	GetTurnActReqRsp() *aoactreqrsp.ActReqRsp
 	SetNeedTANoti()
 	GetAndClearNeedTANoti() bool
-	GetRemainTurn2Act() float64
+	GetAP() float64
 
 	SetReq2Handle(req *aoactreqrsp.Act)
 	GetClearReq2Handle() *aoactreqrsp.Act

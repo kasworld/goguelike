@@ -84,11 +84,11 @@ type ActiveObject struct {
 	uuid2VisitArea     *visitarea.ID2VisitArea `prettystring:"simple"`
 	currrentFloor      gamei.FloorI
 	remainTurn2Rebirth int
-	remainTurn2Act     float64
 
 	chat     string
 	chatTime time.Time `prettystring:"simple"`
 
+	ap float64 // action point to use,  -inf ~ 1
 	// battle relate
 	battleExp    float64
 	currentBias  bias.Bias `prettystring:"simple"`

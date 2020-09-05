@@ -139,8 +139,8 @@ func (ao *ActiveObject) GetRemainTurn2Rebirth() int {
 	return ao.remainTurn2Rebirth
 }
 
-func (ao *ActiveObject) GetRemainTurn2Act() float64 {
-	return ao.remainTurn2Act
+func (ao *ActiveObject) GetAP() float64 {
+	return ao.ap
 }
 
 func (ao *ActiveObject) GetTurnResultList() []turnresult.TurnResult {

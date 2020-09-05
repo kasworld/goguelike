@@ -420,7 +420,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 		jslog.Warnf("ao pos out of floor %v [%v %v]", cf, playerX, playerY)
 		return nil
 	}
-	if newOLNotiData.ActiveObj.RemainTurn2Act <= 0 {
+	if newOLNotiData.ActiveObj.AP > 0 {
 		app.actByControlMode()
 	}
 

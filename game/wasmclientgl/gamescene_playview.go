@@ -227,9 +227,8 @@ func (vp *GameScene) UpdatePlayerAO(
 	if ao.Alive {
 		_, hpw = vp.HP.SetWH(aop.HP, aop.HPMax)
 		_, spw = vp.SP.SetWH(aop.SP, aop.SPMax)
-		if aop.RemainTurn2Act > 0 {
-		} else {
-			vp.AP.ScaleX(-aop.RemainTurn2Act)
+		if aop.AP < 0 {
+			vp.AP.ScaleX(-aop.AP)
 		}
 	} else {
 		_, hpw = vp.HP.SetWH(0, aop.HPMax)
@@ -265,9 +264,9 @@ func (vp *GameScene) UpdatePlayViewFrame(
 		aod.ResetMatrix()
 		if ao.UUID == playerUUID {
 			// player
-			if lastOLNoti.ActiveObj.RemainTurn2Act > 0 {
+			if lastOLNoti.ActiveObj.AP < 0 {
 				aod.RotateY(CalcRotateFrameProgress(frameProgress))
-				vp.AP.ScaleX(frameProgress)
+				vp.AP.ScaleX(-frameProgress)
 			}
 		}
 		if ao.DamageTake > 0 {

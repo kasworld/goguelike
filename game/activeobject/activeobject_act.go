@@ -40,18 +40,18 @@ func (ao *ActiveObject) PrepareNewTurn(turnTime time.Time) {
 		ao.chat = ""
 	}
 	ao.achieveStat.Inc(achievetype.Turn)
-	if ao.remainTurn2Act > 0 {
-		ao.remainTurn2Act--
+	if ao.ap <= 0 { // inc ap every turn if cannot act
+		ao.ap++
 	}
 }
 
 // SetTurnActReqRsp set turn act result
 func (ao *ActiveObject) SetTurnActReqRsp(actrsp *aoactreqrsp.ActReqRsp) {
-	if turn2need := actrsp.Req.CalcNeedTurnByCondition(ao.AOTurnData.Condition); turn2need > 0 {
-		ao.remainTurn2Act += turn2need - 1
+	if needAP := actrsp.Req.CalcAPByActAndCondition(ao.AOTurnData.Condition); needAP > 0 {
+		ao.ap += -needAP + 1
 	}
-	if ao.remainTurn2Act < -1 {
-		ao.remainTurn2Act = -1
+	if ao.ap > 1 { // limit max ap
+		ao.ap = 1
 	}
 	ao.turnActReqRsp = actrsp
 	if actrsp.IsSuccess() {
@@ -124,7 +124,7 @@ func (ao *ActiveObject) ApplyTurnAct() {
 			ao.sp += -ao.AOTurnData.LoadRate
 		} else {
 			// add no act/ no interaction hp/sp recover bonus
-			if len(ao.turnResultList) == 0 && ao.remainTurn2Act <= 0 {
+			if len(ao.turnResultList) == 0 && ao.ap > 0 {
 				ao.hp += hpLvMax / 100
 				ao.sp += apLvMax / 100
 			}

@@ -86,8 +86,8 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjI
 
 		AIPlan: ao.ai.GetPlan(),
 
-		Act:            ao.turnActReqRsp,
-		RemainTurn2Act: ao.remainTurn2Act,
+		Act: ao.turnActReqRsp,
+		AP:  ao.ap,
 	}
 	rtn.Wealth = int(ao.inven.GetTotalValue())
 	rtn.EquippedPo, rtn.EquipBag, rtn.PotionBag, rtn.ScrollBag, rtn.Wallet = ao.inven.ToPacket_InvenInfos()

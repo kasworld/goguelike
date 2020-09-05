@@ -147,26 +147,26 @@ type ActiveObjClient struct {
 }
 
 type PlayerActiveObjInfo struct {
-	Bias           bias.Bias
-	Conditions     condition_flag.ConditionFlag
-	Exp            int
-	Ranking        int
-	Death          int
-	Kill           int
-	Sight          float64
-	HP             int
-	HPMax          int
-	SP             int
-	SPMax          int
-	AIPlan         aiplan.AIPlan
-	EquippedPo     []*EquipClient
-	EquipBag       []*EquipClient
-	PotionBag      []*PotionClient
-	ScrollBag      []*ScrollClient
-	Wallet         int
-	Wealth         int
-	ActiveBuff     []*ActiveObjBuff
-	RemainTurn2Act float64
+	Bias       bias.Bias
+	Conditions condition_flag.ConditionFlag
+	Exp        int
+	Ranking    int
+	Death      int
+	Kill       int
+	Sight      float64
+	HP         int
+	HPMax      int
+	SP         int
+	SPMax      int
+	AIPlan     aiplan.AIPlan
+	EquippedPo []*EquipClient
+	EquipBag   []*EquipClient
+	PotionBag  []*PotionClient
+	ScrollBag  []*ScrollClient
+	Wallet     int
+	Wealth     int
+	ActiveBuff []*ActiveObjBuff
+	AP         float64
 
 	Act        *aoactreqrsp.ActReqRsp
 	TurnResult []TurnResultClient

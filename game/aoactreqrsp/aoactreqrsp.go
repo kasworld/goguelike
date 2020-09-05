@@ -27,7 +27,7 @@ type Act struct {
 	UUID string
 }
 
-func (act Act) CalcNeedTurnByCondition(cndflag condition_flag.ConditionFlag) float64 {
+func (act Act) CalcAPByActAndCondition(cndflag condition_flag.ConditionFlag) float64 {
 	turn2need := act.Act.NeedTurn()
 	if cndflag.TestByCondition(condition.Slow) {
 		turn2need *= 2

@@ -60,7 +60,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		aoListToProcessInTurn = append(aoListToProcessInTurn, ao)
 		if ao.IsAlive() {
 			aoAliveInFloorAtStart = append(aoAliveInFloorAtStart, ao)
-			if ao.GetRemainTurn2Act() <= 0 {
+			if ao.GetAP() > 0 {
 				req := ao.GetClearReq2Handle()
 				if req != nil {
 					ao2ActReqRsp[ao] = &aoactreqrsp.ActReqRsp{
@@ -195,7 +195,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		if arr.Acted() {
 			continue
 		}
-		if ao.GetRemainTurn2Act() > 0 {
+		if ao.GetAP() < 0 {
 			arr.SetDone(
 				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
 				c2t_error.ActionCanceled)
