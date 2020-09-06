@@ -16,6 +16,8 @@ import (
 	"sync"
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+
 	"github.com/kasworld/goguelike/enum/dangertype"
 )
 
@@ -41,16 +43,16 @@ func (p *PoolDangerObj3D) String() string {
 	)
 }
 
-func (p *PoolDangerObj3D) Get(dangerType dangertype.DangerType) *DangerObj3D {
+func (p *PoolDangerObj3D) Get(Dao *c2t_obj.DangerObjClient) *DangerObj3D {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	var rtn *DangerObj3D
-	if l := len(p.poolData[dangerType]); l > 0 {
-		rtn = p.poolData[dangerType][l-1]
-		p.poolData[dangerType] = p.poolData[dangerType][:l-1]
+	if l := len(p.poolData[Dao.DangerType]); l > 0 {
+		rtn = p.poolData[Dao.DangerType][l-1]
+		p.poolData[Dao.DangerType] = p.poolData[Dao.DangerType][:l-1]
 		p.getCount++
 	} else {
-		rtn = NewDangerObj3D(dangerType)
+		rtn = NewDangerObj3D(Dao)
 		p.newCount++
 	}
 	return rtn
@@ -59,19 +61,19 @@ func (p *PoolDangerObj3D) Get(dangerType dangertype.DangerType) *DangerObj3D {
 func (p *PoolDangerObj3D) Put(pb *DangerObj3D) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.poolData[pb.DangerType] = append(p.poolData[pb.DangerType], pb)
+	p.poolData[pb.Dao.DangerType] = append(p.poolData[pb.Dao.DangerType], pb)
 	p.putCount++
 }
 
 type DangerObj3D struct {
-	DangerType dangertype.DangerType
-	ColorStr   string
-	GeoInfo    GeoInfo
-	Mesh       js.Value
+	Dao      *c2t_obj.DangerObjClient
+	ColorStr string
+	GeoInfo  GeoInfo
+	Mesh     js.Value
 }
 
-func NewDangerObj3D(dangerType dangertype.DangerType) *DangerObj3D {
-	colorstr := dangerType.Color24().ToHTMLColorString()
+func NewDangerObj3D(Dao *c2t_obj.DangerObjClient) *DangerObj3D {
+	colorstr := Dao.DangerType.Color24().ToHTMLColorString()
 	mat := ThreeJsNew("MeshStandardMaterial",
 		map[string]interface{}{
 			"color": colorstr,
@@ -82,9 +84,9 @@ func NewDangerObj3D(dangerType dangertype.DangerType) *DangerObj3D {
 	geo := MakeDanger3DGeo()
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	return &DangerObj3D{
-		DangerType: dangerType,
-		GeoInfo:    GetGeoInfo(geo),
-		Mesh:       mesh,
+		Dao:     Dao,
+		GeoInfo: GetGeoInfo(geo),
+		Mesh:    mesh,
 	}
 }
 
@@ -132,5 +134,6 @@ func (dao3d *DangerObj3D) Dispose() {
 	dao3d.Mesh.Get("geometry").Call("dispose")
 	dao3d.Mesh.Get("material").Call("dispose")
 	dao3d.Mesh = js.Undefined()
+	dao3d.Dao = nil
 	// no need createElement canvas dom obj
 }

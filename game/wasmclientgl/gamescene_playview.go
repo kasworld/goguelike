@@ -194,7 +194,7 @@ func (vp *GameScene) processNotiObjectList(
 	for _, dao := range olNoti.DangerObjList {
 		dao3d, exist := vp.jsSceneDOs[dao.UUID]
 		if !exist {
-			dao3d = gPoolDangerObj3D.Get(dao.DangerType)
+			dao3d = gPoolDangerObj3D.Get(dao)
 			vp.scene.Call("add", dao3d.Mesh)
 			vp.jsSceneDOs[dao.UUID] = dao3d
 		}
