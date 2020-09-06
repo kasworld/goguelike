@@ -53,6 +53,9 @@ const (
 	SPBase     = 100.0
 	SPPerLevel = 10.0
 
+	APBase     = 1.0
+	APPerLevel = 0.1
+
 	SightBase     = 10
 	SightXray     = math.MaxFloat32
 	SightBlock    = SightXray / ViewPortWH

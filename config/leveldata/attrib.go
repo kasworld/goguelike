@@ -22,6 +22,7 @@ var attrib = [gameconst.MaxLevel + 1]struct {
 	WeightLimit float64
 	MaxHP       float64
 	MaxSP       float64
+	MaxAP       float64
 	Sight       float64
 }{}
 
@@ -37,6 +38,10 @@ func MaxHP(lv int) float64 {
 func MaxSP(lv int) float64 {
 	return attrib[lv].MaxSP
 }
+func MaxAP(lv int) float64 {
+	return attrib[lv].MaxAP
+}
+
 func Sight(lv int) float64 {
 	return attrib[lv].Sight
 }
@@ -48,6 +53,7 @@ func init() {
 		attrib[lv].Sight = calcSightByLevel(lv)
 		attrib[lv].MaxHP = gameconst.HPBase + gameconst.HPPerLevel*(float64(lv)-1)
 		attrib[lv].MaxSP = gameconst.SPBase + gameconst.SPPerLevel*(float64(lv)-1)
+		attrib[lv].MaxAP = gameconst.APBase + gameconst.APPerLevel*(float64(lv)-1)
 		// fmt.Printf("%v %v\n", lv, attrib[lv])
 	}
 }

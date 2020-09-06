@@ -109,9 +109,10 @@ func (ao *ActiveObject) updateActiveObjTurnData() {
 // can die ao
 func (ao *ActiveObject) ApplyTurnAct() {
 	ao.updateActiveObjTurnData()
+	intLv := int(ao.AOTurnData.Level)
 	if ao.IsAlive() {
-		hpLvMax := leveldata.MaxHP(int(ao.AOTurnData.Level))
-		apLvMax := leveldata.MaxSP(int(ao.AOTurnData.Level))
+		hpLvMax := leveldata.MaxHP(intLv)
+		apLvMax := leveldata.MaxSP(intLv)
 		if ao.AOTurnData.LoadRate > 1 {
 			// overload penalty
 			ao.hp += -ao.AOTurnData.LoadRate
@@ -131,8 +132,8 @@ func (ao *ActiveObject) ApplyTurnAct() {
 	if ao.sp > ao.AOTurnData.SPMax {
 		ao.sp = ao.AOTurnData.SPMax
 	}
-	if ao.ap > 1 { // limit max ap
-		ao.ap = 1
+	if ao.ap > leveldata.MaxAP(intLv) { // limit max ap
+		ao.ap = leveldata.MaxAP(intLv)
 	}
 
 	if ao.remainTurn2Rebirth > 0 {

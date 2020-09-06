@@ -139,13 +139,13 @@ func (app *WasmClient) makeBaseInfoHTML() string {
 	}
 	buf.WriteString("<br/>")
 
-	fmt.Fprintf(&buf, "%s  %v/%v", wrapspan.ColorTextf("Yellow", "SP"), pao.SP, pao.SPMax)
+	fmt.Fprintf(&buf, "%s %v/%v", wrapspan.ColorTextf("Yellow", "SP"), pao.SP, pao.SPMax)
 	if tlAp != 0 {
 		buf.WriteString(wrapspan.ColorTextf("red", " -%.0f", tlAp))
 	}
 	buf.WriteString("<br/>")
 
-	fmt.Fprintf(&buf, "%s  %.2f", wrapspan.ColorTextf("Lime", "AP"), pao.AP)
+	fmt.Fprintf(&buf, "%s %.2f/%.2f", wrapspan.ColorTextf("Lime", "AP"), pao.AP, leveldata.MaxAP(int(lv)))
 	buf.WriteString("<br/>")
 
 	if autoActs.GetByIDBase("AutoPlay").State == 0 {
