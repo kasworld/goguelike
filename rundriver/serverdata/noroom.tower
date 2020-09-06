@@ -1,0 +1,17 @@
+[
+    [
+        "# tower noroom, made by tower maker",
+        "# towermaker.exe -towername noroom"
+    ],
+    [
+        "NewTerrain w=64 h=64 name=SightTest ao=0 po=0 actturnboost=1",
+        "ResourceFillRect resource=Soil amount=1  x=0 y=0  w=64 h=64",
+        "FinalizeTerrain",
+        "",
+        "AddAreaAttackRand display=LightHouse acttype=LightHouse degree=0 perturn=10 count=1 message=LightHouse",
+        "AddAreaAttackRand display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=1 message=GateKeeper"
+    ],
+    [
+        "#tower noroom, made by tower maker"
+    ]
+]
