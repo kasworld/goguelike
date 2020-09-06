@@ -268,7 +268,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	totalaocount := 0
 	for _, f := range tw.floorMan.GetFloorList() {
 		for i := 0; i < f.GetTerrain().GetActiveObjCount(); i++ {
-			ao := activeobject.NewSystemActiveObj(f, tw.log, tw.towerAchieveStat)
+			ao := activeobject.NewSystemActiveObj(tw.rnd.Int63(), f, tw.log, tw.towerAchieveStat)
 			if err := tw.ao2Floor.ActiveObjEnterTower(f, ao); err != nil {
 				tw.log.Error("%v", err)
 				continue

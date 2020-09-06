@@ -109,6 +109,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 			homeFloor = tw.GetFloorManager().GetStartFloor()
 		}
 		newAO := activeobject.NewUserActiveObj(
+			tw.rnd.Int63(),
 			homeFloor,
 			connData.Session.NickName,
 			tw.log,

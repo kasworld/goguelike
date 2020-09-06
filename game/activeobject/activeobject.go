@@ -109,13 +109,14 @@ type ActiveObject struct {
 }
 
 func newActiveObj(
+	seed int64,
 	homefloor gamei.FloorI,
 	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
 
 	ao := &ActiveObject{
-		rnd:              g2rand.New(),
+		rnd:              g2rand.NewWithSeed(seed),
 		log:              l,
 		towerAchieveStat: towerAchieveStat,
 		uuid:             uuidstr.New(),
@@ -134,12 +135,12 @@ func newActiveObj(
 	return ao
 }
 
-func NewUserActiveObj(homefloor gamei.FloorI, nickname string,
+func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 	conn *c2t_serveconnbyte.ServeConnByte) *ActiveObject {
 
-	ao := newActiveObj(homefloor, l, towerAchieveStat)
+	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
 	ao.nickName = nickname
 	ao.isAIInUse = false
 	ao.aoType = aotype.User
@@ -152,11 +153,11 @@ func NewUserActiveObj(homefloor gamei.FloorI, nickname string,
 	return ao
 }
 
-func NewSystemActiveObj(homefloor gamei.FloorI,
+func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
-	ao := newActiveObj(homefloor, l, towerAchieveStat)
+	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]
 	ao.isAIInUse = true
 	ao.aoType = aotype.System
