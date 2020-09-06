@@ -20,6 +20,7 @@ import (
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/terrain"
@@ -73,18 +74,18 @@ type Floor struct {
 	aiWG sync.WaitGroup // for ai run
 }
 
-func New(ts []string, tw gamei.TowerI) *Floor {
+func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 	queuesize := int(float64(tw.Config().ConcurrentConnections) * tw.Config().TurnPerSec)
 	f := &Floor{
 		log:               tw.Log(),
 		tower:             tw,
-		rnd:               g2rand.New(),
+		rnd:               g2rand.NewWithSeed(seed),
 		interDur:          intervalduration.New(""),
 		statPacketObjOver: actpersec.New(),
 		floorCmdActStat:   actpersec.New(),
 		recvRequestCh:     make(chan interface{}, queuesize),
 	}
-	f.terrain = terrain.New(ts, f.tower.Config().DataFolder, f.log)
+	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder, f.log)
 	return f
 }
 
@@ -99,7 +100,7 @@ func (f *Floor) Cleanup() {
 }
 
 // Init bi need for randomness
-func (f *Floor) Init(bi bias.Bias) error {
+func (f *Floor) Init() error {
 	f.log.TraceService("Start Init %v", f)
 	defer func() { f.log.TraceService("End Init %v", f) }()
 
@@ -114,7 +115,12 @@ func (f *Floor) Init(bi bias.Bias) error {
 	f.poPosMan = uuidposman.New(f.w, f.h)
 	f.foPosMan = f.terrain.GetFieldObjPosMan()
 	f.doPosMan = uuidposman.New(f.w, f.h)
-	f.bias = bi // not use floor.rnd for randomness
+	f.bias = bias.Bias{
+		f.rnd.Float64() - 0.5,
+		f.rnd.Float64() - 0.5,
+		f.rnd.Float64() - 0.5,
+	}.MakeAbsSumTo(gameconst.FloorBaseBiasLen)
+
 	f.initialized = true
 	return nil
 }

@@ -65,9 +65,9 @@ func (sai *ServerAI) String() string {
 	)
 }
 
-func New(ao gamei.ActiveObjectI, l *g2log.LogBase) *ServerAI {
+func New(seed int64, ao gamei.ActiveObjectI, l *g2log.LogBase) *ServerAI {
 	sai := &ServerAI{
-		rnd:    g2rand.New(),
+		rnd:    g2rand.NewWithSeed(seed),
 		ao:     ao,
 		log:    l,
 		aouuid: ao.GetUUID(),

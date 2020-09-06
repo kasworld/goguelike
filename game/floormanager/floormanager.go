@@ -17,10 +17,8 @@ import (
 	"unsafe"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/tile_flag"
-	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/floor"
 	"github.com/kasworld/goguelike/game/gamei"
@@ -72,13 +70,8 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 		wg.Add(1)
 		go func(i int, v []string) {
 			defer wg.Done()
-			f := floor.New(v, fm.tower)
-			bi := bias.Bias{
-				rnd.Float64() - 0.5,
-				rnd.Float64() - 0.5,
-				rnd.Float64() - 0.5,
-			}.MakeAbsSumTo(gameconst.FloorBaseBiasLen)
-			if err := f.Init(bi); err != nil {
+			f := floor.New(rnd.Int63(), v, fm.tower)
+			if err := f.Init(); err != nil {
 				fm.log.Fatal("floor init fail, %v", err)
 			}
 			tmpFloorList[i] = f

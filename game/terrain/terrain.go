@@ -87,15 +87,14 @@ type Terrain struct {
 	Tile2Discover     int
 }
 
-func New(script []string, dataDir string, l *g2log.LogBase) *Terrain {
+func New(seed int64, script []string, dataDir string, l *g2log.LogBase) *Terrain {
 	tr := &Terrain{
 		dataDir:       dataDir,
 		terrainScript: script,
 		log:           l,
 	}
 	tr.viewportCache = viewportcache.New(tr)
-	tr.rnd = g2rand.New()
-
+	tr.rnd = g2rand.NewWithSeed(seed)
 	return tr
 }
 func (tr *Terrain) Cleanup() {

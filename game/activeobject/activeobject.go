@@ -144,7 +144,7 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	ao.nickName = nickname
 	ao.isAIInUse = false
 	ao.aoType = aotype.User
-	ao.ai = serverai2.New(ao, ao.log)
+	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
 	ao.clientConn = conn
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount*2)
 	ao.addRandPotion(gameconst.InitPotionCount * 2)
@@ -161,7 +161,7 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]
 	ao.isAIInUse = true
 	ao.aoType = aotype.System
-	ao.ai = serverai2.New(ao, ao.log)
+	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount)
 	ao.addRandPotion(gameconst.InitPotionCount)
 	ao.addRandScroll(gameconst.InitScrollCount)
