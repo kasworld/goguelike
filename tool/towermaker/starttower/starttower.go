@@ -81,12 +81,12 @@ func New(name string) *towermake.Tower {
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
 	)
 
-	lhSize := fieldobjacttype.LightHouseRadius * 10
+	lhSize := fieldobjacttype.LightHouseRadius * 22
 	fm = tw.Add("MovingDanger1", lhSize, lhSize, 0, 0, 1.0).Appendf(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
 		lhSize, lhSize,
 	)
-	gkSize := fieldobjacttype.GateKeeperLen * 20
+	gkSize := fieldobjacttype.GateKeeperLen * 22
 	fm = tw.Add("MovingDanger2", gkSize, gkSize, 0, 0, 1.0).Appendf(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
 		gkSize, gkSize,
@@ -179,21 +179,24 @@ func New(name string) *towermake.Tower {
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("ResourceMaze"))
 
 	fm = tw.GetByName("MovingDanger1")
-	for x := 0; x < fm.W; x += fieldobjacttype.LightHouseRadius {
-		for y := 0; y < fm.H; y += fieldobjacttype.LightHouseRadius {
+	perturn := 10
+	for x := 0; x < fm.W; x += fieldobjacttype.LightHouseRadius * 2 {
+		for y := 0; y < fm.H; y += fieldobjacttype.LightHouseRadius * 2 {
 			fm.Appendf(
-				"AddAreaAttack x=%v y=%v display=LightHouse acttype=LightHouse degree=0 perturn=10 message=LightHouse",
-				x, y,
+				"AddAreaAttack x=%v y=%v display=LightHouse acttype=LightHouse degree=0 perturn=%v message=LightHouse",
+				x, y, perturn,
 			)
+			perturn = -perturn
 		}
 	}
 	fm = tw.GetByName("MovingDanger2")
 	for x := 0; x < fm.W; x += fieldobjacttype.GateKeeperLen * 2 {
 		for y := 0; y < fm.H; y += fieldobjacttype.GateKeeperLen * 2 {
 			fm.Appendf(
-				"AddAreaAttack x=%v y=%v display=GateKeeper acttype=GateKeeper degree=0 perturn=10 message=GateKeeper",
-				x, y,
+				"AddAreaAttack x=%v y=%v display=GateKeeper acttype=GateKeeper degree=0 perturn=%v message=GateKeeper",
+				x, y, perturn,
 			)
+			perturn = -perturn
 		}
 	}
 
