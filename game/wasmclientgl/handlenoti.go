@@ -619,7 +619,6 @@ func (app *WasmClient) moveByUserInput() bool {
 					app.Path2dst = nil
 					app.vp.ClearMovePath()
 					app.ClientColtrolMode = clientcontroltype.Keyboard
-					app.vp.ClearMovePath()
 					return false
 				} else {
 					go app.sendPacket(c2t_idcmd.Move,
