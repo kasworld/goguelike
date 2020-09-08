@@ -81,12 +81,12 @@ func New(name string) *towermake.Tower {
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
 	)
 
-	lhSize := fieldobjacttype.LightHouseRadius * 22
+	lhSize := fieldobjacttype.LightHouseRadius * 10
 	fm = tw.Add("MovingDanger1", lhSize, lhSize, 0, 0, 1.0).Appendf(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
 		lhSize, lhSize,
 	)
-	gkSize := fieldobjacttype.GateKeeperLen * 22
+	gkSize := fieldobjacttype.GateKeeperLen * 18
 	fm = tw.Add("MovingDanger2", gkSize, gkSize, 0, 0, 1.0).Appendf(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
 		gkSize, gkSize,
@@ -236,23 +236,11 @@ func New(name string) *towermake.Tower {
 
 		if recycleCount > roomCount {
 			fm.AddRecycler(suffix, roomCount)
-			fm.Appendf(
-				"AddMine%v display=None count=%v message=Mine",
-				suffix, roomCount,
-			)
 		} else {
 			fm.AddRecycler(suffix, recycleCount)
-			fm.Appendf(
-				"AddMine%v display=None count=%v message=Mine",
-				suffix, recycleCount,
-			)
 		}
 		if recycleCount-roomCount > 0 {
 			fm.AddRecycler("Rand", recycleCount-roomCount)
-			fm.Appendf(
-				"AddMine%v display=None count=%v message=Mine",
-				suffix, recycleCount-roomCount,
-			)
 		}
 
 		fm.Appendf(
@@ -261,6 +249,10 @@ func New(name string) *towermake.Tower {
 		)
 		fm.Appendf(
 			"AddAreaAttack%v display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=%v message=GateKeeper",
+			"Rand", 1,
+		)
+		fm.Appendf(
+			"AddMine%v display=None count=%v message=Mine",
 			"Rand", 1,
 		)
 
