@@ -15,7 +15,7 @@ import "github.com/kasworld/goguelike/tool/towermaker/towermake"
 
 func New(name string) *towermake.Tower {
 	tw := towermake.New(name)
-	tw.Add("SightTest", 64, 64, 0, 0, 1.0).Appends(
+	tw.Add("SightTest", 64, 64, 64, 0, 1.0).Appends(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=64 h=64",
 	)
 
@@ -33,6 +33,10 @@ func New(name string) *towermake.Tower {
 		fm.Appendf(
 			"AddAreaAttack%v display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=%v message=GateKeeper",
 			"Rand", 1,
+		)
+		fm.Appendf(
+			"AddMine%v display=None count=%v message=Mine",
+			"Rand", 2,
 		)
 	}
 	return tw

@@ -256,7 +256,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				for _, v := range minedata.MineData[int(fo.Radius)] {
 					f.doPosMan.AddToXY(
 						dangerobject.NewFOAttact(fo, dangertype.MineExplode, 1),
-						v.X, v.Y,
+						foX+v.X, foY+v.Y,
 					)
 				}
 				// inc next
