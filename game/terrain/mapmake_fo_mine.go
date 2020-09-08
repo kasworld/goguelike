@@ -14,32 +14,32 @@ package terrain
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
-func cmdAddTrapTeleport(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdAddMine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var x, y int
-	var DstFloorName string
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var message string
-	if err := ca.GetArgs(&x, &y, &DstFloorName, &message); err != nil {
+	if err := ca.GetArgs(&x, &y, &dispType, &message); err != nil {
 		return err
 	}
-	return tr.addTrapTeleport(x, y, DstFloorName, message)
+	return tr.addMine(x, y, dispType, message)
 }
 
-func cmdAddTrapTeleportRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var DstFloorName string
+func cmdAddMineRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&DstFloorName, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
 		return err
 	}
-
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addTrapTeleportRand(DstFloorName, message)
+		err := tr.addMineRand(dispType, message)
 		if err == nil {
 			count--
 		} else {
@@ -47,22 +47,21 @@ func cmdAddTrapTeleportRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddTrapTeleportRand add insufficient")
+		tr.log.Warn("AddMineRand add insufficient")
 	}
 	return nil
 }
 
-func cmdAddTrapTeleportRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var DstFloorName string
+func cmdAddMineRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&DstFloorName, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
 		return err
 	}
-
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addTrapTeleportRandInRoom(DstFloorName, message)
+		err := tr.addMineRandInRoom(dispType, message)
 		if err == nil {
 			count--
 		} else {
@@ -70,49 +69,51 @@ func cmdAddTrapTeleportRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddTrapTeleportRandInRoom add insufficient")
+		tr.log.Warn("AddMineRand add insufficient")
 	}
 	return nil
 }
 
-func (tr *Terrain) addTrapTeleport(x, y int, dstFloorName string, message string) error {
+func (tr *Terrain) addMine(
+	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen
 	if !tr.canPlaceFieldObjAt(x, y) {
-		return fmt.Errorf("can not add Recycler at NonCharPlaceable tile %v %v", x, y)
+		return fmt.Errorf("can not add Mine at NonCharPlaceable tile %v %v", x, y)
 	}
-	po := fieldobject.NewTrapTeleport(tr.Name, message, dstFloorName)
+	po := fieldobject.NewMine(tr.Name, dispType, message)
 	tr.foPosMan.AddToXY(po, x, y)
 
 	if r := tr.roomManager.GetRoomByPos(x, y); r != nil {
-		r.TrapCount++
+		r.MineCount++
 	}
 	return nil
 }
 
-func (tr *Terrain) addTrapTeleportRand(dstFloorName string, message string) error {
+func (tr *Terrain) addMineRand(
+	dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
+
 	for try := 10; try > 0; try-- {
 		x, y := tr.rnd.Intn(tr.Xlen), tr.rnd.Intn(tr.Ylen)
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		if tr.isBlockWay(x, y) {
-			continue
-		}
-		return tr.addTrapTeleport(x, y, dstFloorName, message)
+		return tr.addMine(x, y, dispType, message)
 	}
-	return fmt.Errorf("fail to addTrapTeleportRand at NonCharPlaceable tile")
+	return fmt.Errorf("fail to addMineRand at NonCharPlaceable tile")
 }
 
-func (tr *Terrain) addTrapTeleportRandInRoom(dstFloorName string, message string) error {
+func (tr *Terrain) addMineRandInRoom(
+	dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
+
 	if tr.roomManager.GetCount() == 0 {
-		return fmt.Errorf("no room to add trap")
+		return fmt.Errorf("no room to add Mine")
 	}
 	roomList := tr.roomManager.GetRoomList()
 	for try := 100; try > 0; try-- {
 		tr.rnd.Shuffle(len(roomList), func(i, j int) {
 			roomList[i], roomList[j] = roomList[j], roomList[i]
 		})
-		rList := roomsort.ByTrapCount(roomList)
+		rList := roomsort.ByMineCount(roomList)
 		rList.Sort()
 		r := rList[0]
 		x := tr.rnd.IntRange(r.Area.X, r.Area.X+r.Area.W)
@@ -120,10 +121,7 @@ func (tr *Terrain) addTrapTeleportRandInRoom(dstFloorName string, message string
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		if tr.isBlockWay(x, y) {
-			continue
-		}
-		return tr.addTrapTeleport(x, y, dstFloorName, message)
+		return tr.addMine(x, y, dispType, message)
 	}
 	return fmt.Errorf("cannot find pos in room")
 }

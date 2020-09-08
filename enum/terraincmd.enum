@@ -53,3 +53,8 @@ AddTrapsInRoom          display:FieldObjDisplay_Type acttype:FieldObjAct_Type co
 AddAreaAttack           x:int y:int display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float perturn:float message:string
 AddAreaAttackRand       display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float perturn:float count:int message:string
 AddAreaAttackInRoom     display:FieldObjDisplay_Type acttype:FieldObjAct_Type degree:float perturn:float count:int message:string
+
+# add Mine
+AddMine           x:int y:int display:FieldObjDisplay_Type message:string
+AddMineRand       display:FieldObjDisplay_Type count:int message:string
+AddMineInRoom     display:FieldObjDisplay_Type count:int message:string

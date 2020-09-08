@@ -18,7 +18,65 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 )
+
+func cmdAddTrap(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var x, y int
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var message string
+	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &message); err != nil {
+		return err
+	}
+	return tr.addTrap(x, y, dispType, acttype, message)
+}
+
+func cmdAddTrapRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addTrapRand(dispType, acttype, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddTrapRand add insufficient")
+	}
+	return nil
+}
+
+func cmdAddTrapRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addTrapRandInRoom(dispType, acttype, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddTrapRand add insufficient")
+	}
+	return nil
+}
 
 func (tr *Terrain) addTrap(x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, actType fieldobjacttype.FieldObjActType, message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen

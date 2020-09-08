@@ -33,3 +33,4 @@ Haste act need turn halfed
 # make moving dangerobj
 LightHouse rotate line of dangerobj
 GateKeeper blink vertical and horizontal dangerobj
+Mine explode on trigger

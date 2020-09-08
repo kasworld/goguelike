@@ -81,3 +81,15 @@ func NewAreaAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDis
 		RadPerTurn:  radperturn,
 	}
 }
+
+func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+) *FieldObject {
+	return &FieldObject{
+		ID:          uuidstr.New(),
+		FloorName:   floorname,
+		ActType:     fieldobjacttype.Mine,
+		DisplayType: displayType,
+		Message:     message,
+		Radius:      -1, // not triggered
+	}
+}

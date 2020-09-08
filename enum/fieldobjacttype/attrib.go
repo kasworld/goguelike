@@ -52,20 +52,20 @@ func (v FieldObjActType) NeedTANoti() bool {
 
 var attrib = [FieldObjActType_Count]struct {
 	Rune        string
-	TrapNoti    bool
+	TrapNoti    bool // send noti on step
 	AutoTrigger bool
-	TriggerRate float64
+	TriggerRate float64 // if AutoTrigger true
 	SkipAOAct   bool
-	NeedTANoti  bool
+	NeedTANoti  bool // if pos changed
 	Color24     htmlcolors.Color24
 }{
 	None: {"?", false, false, 1.0, false, false, htmlcolors.Black},
 
-	PortalInOut:     {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
-	PortalIn:        {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
-	PortalOut:       {"?", false, false, 1.0, false, false, htmlcolors.MediumVioletRed},
+	PortalInOut:     {"?", false, false, 0.0, false, false, htmlcolors.MediumVioletRed},
+	PortalIn:        {"?", false, false, 0.0, false, false, htmlcolors.MediumVioletRed},
+	PortalOut:       {"?", false, false, 0.0, false, false, htmlcolors.MediumVioletRed},
 	PortalAutoIn:    {"?", false, true, 1.0, true, true, htmlcolors.MediumVioletRed},
-	RecycleCarryObj: {"?", false, false, 1.0, false, false, htmlcolors.Green},
+	RecycleCarryObj: {"?", false, false, 0.0, false, false, htmlcolors.Green},
 	Teleport:        {"?", true, true, 0.1, true, true, htmlcolors.Red},
 
 	ForgetFloor:    {"?", true, true, 0.2, false, true, htmlcolors.OrangeRed},
@@ -88,6 +88,7 @@ var attrib = [FieldObjActType_Count]struct {
 
 	LightHouse: {"?", false, false, 0.0, false, false, htmlcolors.Lavender},
 	GateKeeper: {"?", false, false, 0.0, false, false, htmlcolors.LavenderBlush},
+	Mine:       {"?", true, true, 1.0, false, false, htmlcolors.Orange},
 }
 
 // try act on fieldobj
@@ -118,6 +119,7 @@ var ClientData = [FieldObjActType_Count]struct {
 	Contagion:       {false, "make contagion other, die or heal randomly"},
 	LightHouse:      {false, "rotate line of dangerobj"},
 	GateKeeper:      {false, "blink vertical and horizontal dangerobj"},
+	Mine:            {false, "explode on step"},
 }
 
 func GetBuffByFieldObjActType(at FieldObjActType) []statusoptype.OpArg {

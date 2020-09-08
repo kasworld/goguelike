@@ -15,12 +15,47 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
 )
+
+func cmdAddPortal(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var x, y int
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var PortalID, DstPortalID string
+	var acttype fieldobjacttype.FieldObjActType
+	var message string
+	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &PortalID, &DstPortalID, &message); err != nil {
+		return err
+	}
+	return tr.addPortal(PortalID, DstPortalID, x, y, dispType, acttype, message)
+}
+
+func cmdAddPortalRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var PortalID, DstPortalID string
+	var acttype fieldobjacttype.FieldObjActType
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &PortalID, &DstPortalID, &message); err != nil {
+		return err
+	}
+	return tr.addPortalRand(PortalID, DstPortalID, dispType, acttype, message)
+}
+
+func cmdAddPortalRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var PortalID, DstPortalID string
+	var acttype fieldobjacttype.FieldObjActType
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &PortalID, &DstPortalID, &message); err != nil {
+		return err
+	}
+	return tr.addPortalRandInRoom(PortalID, DstPortalID, dispType, acttype, message)
+}
 
 func (tr *Terrain) isPlaceableWithVt(x, y int, vx, vy int) bool {
 	tx, ty := tr.WrapXY(x+vx, y+vy)

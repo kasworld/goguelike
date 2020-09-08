@@ -17,7 +17,62 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 )
+
+func cmdAddRecycler(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var x, y int
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var message string
+	if err := ca.GetArgs(&x, &y, &dispType, &message); err != nil {
+		return err
+	}
+	return tr.addRecycler(x, y, dispType, message)
+}
+
+func cmdAddRecyclerRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addRecyclerRand(dispType, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddRecyclerRand add insufficient")
+	}
+	return nil
+}
+
+func cmdAddRecyclerRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addRecyclerRandInRoom(dispType, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddRecyclerRand add insufficient")
+	}
+	return nil
+}
 
 func (tr *Terrain) addRecycler(x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen

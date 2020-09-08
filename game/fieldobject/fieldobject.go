@@ -34,6 +34,10 @@ type FieldObject struct {
 
 	// LightHouse ,GateKeeper radian
 	Radian, RadPerTurn float64
+
+	// Mine, -1 on not triggered
+	// on trigger inc every turn, start 0 to Viewport size, end.
+	Radius float64
 }
 
 func (p FieldObject) String() string {

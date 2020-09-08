@@ -37,6 +37,7 @@ type Room struct {
 	PortalCount     int
 	TrapCount       int
 	AreaAttackCount int
+	MineCount       int
 }
 
 func New(rt rect.Rect, bgTile tile.Tile) *Room {

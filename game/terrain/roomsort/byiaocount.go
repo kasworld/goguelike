@@ -88,3 +88,21 @@ func (rl ByAreaAttackCount) Less(i, j int) bool {
 func (rl ByAreaAttackCount) Sort() {
 	sort.Sort(rl)
 }
+
+type ByMineCount []*room.Room
+
+func (rl ByMineCount) Len() int { return len(rl) }
+func (rl ByMineCount) Swap(i, j int) {
+	rl[i], rl[j] = rl[j], rl[i]
+}
+func (rl ByMineCount) Less(i, j int) bool {
+	r1 := rl[i]
+	r2 := rl[j]
+	if r1.MineCount == r2.MineCount {
+		return r1.RecyclerCount < r2.RecyclerCount
+	}
+	return r1.MineCount < r2.MineCount
+}
+func (rl ByMineCount) Sort() {
+	sort.Sort(rl)
+}

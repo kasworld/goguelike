@@ -13,12 +13,74 @@ package terrain
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 )
+
+func cmdAddAreaAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var x, y int
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var degree, perturn float64
+	var message string
+	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &degree, &perturn, &message); err != nil {
+		return err
+	}
+	return tr.addAreaAttack(x, y, dispType, acttype, degree/180*math.Pi, perturn/180*math.Pi, message)
+}
+
+func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var degree, perturn float64
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &degree, &perturn, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addAreaAttackRand(dispType, acttype, degree/180*math.Pi, perturn/180*math.Pi, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddAreaAttackRand add insufficient")
+	}
+	return nil
+}
+
+func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var acttype fieldobjacttype.FieldObjActType
+	var degree, perturn float64
+	var count int
+	var message string
+	if err := ca.GetArgs(&dispType, &acttype, &degree, &perturn, &count, &message); err != nil {
+		return err
+	}
+	try := count
+	for count > 0 && try > 0 {
+		err := tr.addAreaAttackRandInRoom(dispType, acttype, degree/180*math.Pi, perturn/180*math.Pi, message)
+		if err == nil {
+			count--
+		} else {
+			try--
+		}
+	}
+	if try == 0 {
+		tr.log.Warn("AddAreaAttackRand add insufficient")
+	}
+	return nil
+}
 
 func (tr *Terrain) addAreaAttack(
 	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
