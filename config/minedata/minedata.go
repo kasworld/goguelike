@@ -9,28 +9,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package dangertype
+package minedata
 
 import (
-	"github.com/kasworld/htmlcolors"
+	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/config/gameconst"
 )
 
-func (dt DangerType) Turn2Live() int {
-	return attrib[dt].turn2Live
-}
-func (dt DangerType) Color24() htmlcolors.Color24 {
-	return attrib[dt].color
-}
+var MineData [gameconst.ViewPortW]findnear.XYLenList
 
-var attrib = [DangerType_Count]struct {
-	turn2Live int
-	color     htmlcolors.Color24
-}{
-	None:                 {0, htmlcolors.Black},
-	BasicAttack:          {1, htmlcolors.Red},
-	WideAttack:           {1, htmlcolors.Crimson},
-	LongAttack:           {1, htmlcolors.FireBrick},
-	LightHouseAreaAttack: {1, htmlcolors.DeepPink},
-	GateKeeperAreaAttack: {1, htmlcolors.OrangeRed},
-	MineExplode:          {1, htmlcolors.Orange},
+func init() {
+	fullData := findnear.NewXYLenList(
+		gameconst.ClientViewPortW, gameconst.ClientViewPortH)[:gameconst.ViewPortWH]
+
+	st := 0
+	curRadius := 1.0
+	for i, v := range fullData {
+		if v.L > curRadius {
+			MineData[int(curRadius)-1] = fullData[st:i]
+			st = i
+			curRadius++
+		}
+	}
+	MineData[int(curRadius)-1] = fullData[st:]
+	// fmt.Printf("%v", MineData)
 }

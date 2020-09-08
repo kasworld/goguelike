@@ -236,11 +236,23 @@ func New(name string) *towermake.Tower {
 
 		if recycleCount > roomCount {
 			fm.AddRecycler(suffix, roomCount)
+			fm.Appendf(
+				"AddMine%v display=None count=%v message=Mine",
+				suffix, roomCount,
+			)
 		} else {
 			fm.AddRecycler(suffix, recycleCount)
+			fm.Appendf(
+				"AddMine%v display=None count=%v message=Mine",
+				suffix, recycleCount,
+			)
 		}
 		if recycleCount-roomCount > 0 {
 			fm.AddRecycler("Rand", recycleCount-roomCount)
+			fm.Appendf(
+				"AddMine%v display=None count=%v message=Mine",
+				suffix, recycleCount-roomCount,
+			)
 		}
 
 		fm.Appendf(
@@ -251,6 +263,7 @@ func New(name string) *towermake.Tower {
 			"AddAreaAttack%v display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=%v message=GateKeeper",
 			"Rand", 1,
 		)
+
 	}
 	return tw
 }

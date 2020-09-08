@@ -204,3 +204,8 @@ func (f *Floor) foGateKeeperAttack(do *dangerobject.DangerObject, dstao gamei.Ac
 	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax / 3
 	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
 }
+
+func (f *Floor) foMineExplodeAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
+	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax / 2
+	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
+}

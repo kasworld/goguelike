@@ -16,6 +16,8 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/config/contagionarea"
+	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/config/minedata"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/dangertype"
@@ -161,6 +163,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				ActiveObj:    ao,
 				DstFloorName: p.DstFloorName,
 			}
+		case fieldobjacttype.Mine:
+			// start explode
+			p.Radius = 0
 		}
 		if p.ActType.SkipAOAct() {
 			aoMapSkipTurn[ao.GetUUID()] = true
@@ -242,6 +247,21 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 					v.X, v.Y,
 				)
 			}
+		case fieldobjacttype.Mine:
+			if fo.Radius >= gameconst.ViewPortW { // end explode
+				fo.Radius = -1
+			}
+			if fo.Radius >= 0 { //  active
+				// add do
+				for _, v := range minedata.MineData[int(fo.Radius)] {
+					f.doPosMan.AddToXY(
+						dangerobject.NewFOAttact(fo, dangertype.MineExplode, 1),
+						v.X, v.Y,
+					)
+				}
+				// inc next
+				fo.Radius++
+			}
 		}
 		return false
 	})
@@ -280,6 +300,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				f.foLightHouseAttack(do, dstAO, dstX, dstY)
 			case dangertype.GateKeeperAreaAttack:
 				f.foGateKeeperAttack(do, dstAO, dstX, dstY)
+			case dangertype.MineExplode:
+				f.foMineExplodeAttack(do, dstAO, dstX, dstY)
 			}
 		}
 		return false
