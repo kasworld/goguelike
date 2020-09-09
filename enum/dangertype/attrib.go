@@ -22,15 +22,20 @@ func (dt DangerType) Color24() htmlcolors.Color24 {
 	return attrib[dt].color
 }
 
+func (dt DangerType) Scale4UI() float64 {
+	return attrib[dt].scale4ui
+}
+
 var attrib = [DangerType_Count]struct {
 	turn2Live int
+	scale4ui  float64
 	color     htmlcolors.Color24
 }{
-	None:                 {0, htmlcolors.Black},
-	BasicAttack:          {1, htmlcolors.Red},
-	WideAttack:           {1, htmlcolors.Crimson},
-	LongAttack:           {1, htmlcolors.FireBrick},
-	LightHouseAreaAttack: {1, htmlcolors.DeepPink},
-	GateKeeperAreaAttack: {1, htmlcolors.OrangeRed},
-	MineExplode:          {1, htmlcolors.Orange},
+	None:                 {0, 1.0, htmlcolors.Black},
+	BasicAttack:          {1, 1.0, htmlcolors.Red},
+	WideAttack:           {1, 1.0, htmlcolors.Crimson},
+	LongAttack:           {1, 1.0, htmlcolors.FireBrick},
+	LightHouseAreaAttack: {1, 2.0, htmlcolors.DeepPink},
+	GateKeeperAreaAttack: {1, 2.0, htmlcolors.OrangeRed},
+	MineExplode:          {1, 2.0, htmlcolors.Orange},
 }
