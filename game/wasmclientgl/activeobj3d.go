@@ -73,21 +73,24 @@ func NewActiveObj3D(aoc *c2t_obj.ActiveObjClient) *ActiveObj3D {
 	return ao3d
 }
 
-// return changed
-func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) (js.Value, bool) {
-	if newaoc.Faction == ao3d.AOC.Faction {
-		ao3d.AOC = newaoc
-		return ao3d.Mesh, false
-	}
+// return toaddmesh, toremove mesh
+func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value, []js.Value) {
+	var toadds []js.Value
+	var todels []js.Value
+
+	oldaoc := ao3d.AOC
 	ao3d.AOC = newaoc
-	oldmesh := ao3d.Mesh
-	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
-	mat := gPoolColorMaterial.Get(ao3d.AOC.Faction.Color24().ToHTMLColorString())
-	mat.Set("opacity", 1)
-	geo := gActiveObj3DGeo[ao3d.AOC.Faction].Geo
-	mesh := ThreeJsNew("Mesh", geo, mat)
-	ao3d.Mesh = mesh
-	return oldmesh, true
+	if newaoc.Faction != oldaoc.Faction {
+		todels = append(todels, ao3d.Mesh)
+		gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
+		mat := gPoolColorMaterial.Get(newaoc.Faction.Color24().ToHTMLColorString())
+		mat.Set("opacity", 1)
+		geo := gActiveObj3DGeo[newaoc.Faction].Geo
+		mesh := ThreeJsNew("Mesh", geo, mat)
+		ao3d.Mesh = mesh
+		toadds = append(toadds, ao3d.Mesh)
+	}
+	return toadds, todels
 }
 
 func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {

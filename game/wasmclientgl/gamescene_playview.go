@@ -69,9 +69,12 @@ func (vp *GameScene) processNotiObjectList(
 				vp.scene.Call("add", v.Mesh)
 			}
 		}
-		if oldmesh, changed := ao3d.UpdateAOC(ao); changed {
-			vp.scene.Call("remove", oldmesh)
-			vp.scene.Call("add", ao3d.Mesh)
+		toadds, todels := ao3d.UpdateAOC(ao)
+		for _, v := range toadds {
+			vp.scene.Call("add", v)
+		}
+		for _, v := range todels {
+			vp.scene.Call("remove", v)
 		}
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
