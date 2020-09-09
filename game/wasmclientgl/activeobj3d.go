@@ -90,6 +90,28 @@ func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value,
 		ao3d.Mesh = mesh
 		toadds = append(toadds, ao3d.Mesh)
 	}
+	if len(ao3d.AOC.Chat) == 0 {
+		if ao3d.Chat != nil {
+			todels = append(todels, ao3d.Chat.Mesh)
+			ao3d.Chat.Dispose()
+			ao3d.Chat = nil
+		}
+	} else {
+		if ao3d.Chat == nil {
+			// add new chat
+			ao3d.Chat = NewLabel3D(ao3d.AOC.Chat)
+			toadds = append(toadds, ao3d.Chat.Mesh)
+		} else {
+			if ao3d.AOC.Chat != ao3d.Chat.Str {
+				// remove old chat , add new chat
+				todels = append(todels, ao3d.Chat.Mesh)
+				ao3d.Chat.Dispose()
+				ao3d.Chat = NewLabel3D(ao3d.AOC.Chat)
+				toadds = append(toadds, ao3d.Chat.Mesh)
+			}
+		}
+	}
+
 	return toadds, todels
 }
 
@@ -111,6 +133,10 @@ func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 			shY+DstCellSize+DstCellSize/2,
 			shZ+DstCellSize+2)
 		v.Visible(ao3d.AOC.Conditions.TestByCondition(condition.Condition(i)))
+	}
+	if ao3d.Chat != nil {
+		ao3d.Chat.SetFieldPosition(fx, fy,
+			shX+0, shY-DstCellSize/2, shZ+DstCellSize+2)
 	}
 }
 

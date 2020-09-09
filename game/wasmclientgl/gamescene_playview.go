@@ -83,31 +83,6 @@ func (vp *GameScene) processNotiObjectList(
 		ao3d.SetFieldPosition(fx, fy, 0, 0, shZ)
 
 		addAOuuid[ao.UUID] = true
-		if len(ao.Chat) == 0 {
-			if ao3d.Chat != nil {
-				vp.scene.Call("remove", ao3d.Chat.Mesh)
-				ao3d.Chat.Dispose()
-				ao3d.Chat = nil
-			}
-		} else {
-			if ao3d.Chat == nil {
-				// add new chat
-				ao3d.Chat = NewLabel3D(ao.Chat)
-				vp.scene.Call("add", ao3d.Chat.Mesh)
-			} else {
-				if ao.Chat != ao3d.Chat.Str {
-					// remove old chat , add new chat
-					vp.scene.Call("remove", ao3d.Chat.Mesh)
-					ao3d.Chat.Dispose()
-					ao3d.Chat = NewLabel3D(ao.Chat)
-					vp.scene.Call("add", ao3d.Chat.Mesh)
-				}
-			}
-		}
-		if ao3d.Chat != nil {
-			ao3d.Chat.SetFieldPosition(fx, fy,
-				0, -DstCellSize/2, DstCellSize+2+shZ)
-		}
 
 		if ao.UUID == playerUUID { // player ao
 			aop := olNoti.ActiveObj
@@ -146,13 +121,13 @@ func (vp *GameScene) processNotiObjectList(
 			}
 			vp.scene.Call("remove", ao3d.Name.Mesh)
 			vp.scene.Call("remove", ao3d.Mesh)
-			delete(vp.jsSceneAOs, id)
-			ao3d.Dispose()
 			if ao3d.Chat != nil {
 				vp.scene.Call("remove", ao3d.Chat.Mesh)
 				ao3d.Chat.Dispose()
 				ao3d.Chat = nil
 			}
+			delete(vp.jsSceneAOs, id)
+			ao3d.Dispose()
 		}
 	}
 
