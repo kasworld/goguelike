@@ -51,6 +51,7 @@ func (p *PoolDangerObj3D) Get(Dao *c2t_obj.DangerObjClient) *DangerObj3D {
 		rtn = p.poolData[Dao.DangerType][l-1]
 		p.poolData[Dao.DangerType] = p.poolData[Dao.DangerType][:l-1]
 		p.getCount++
+		rtn.Dao = Dao
 	} else {
 		rtn = NewDangerObj3D(Dao)
 		p.newCount++

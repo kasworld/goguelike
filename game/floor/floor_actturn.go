@@ -223,7 +223,6 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Degree/180*math.Pi)
 			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Degree/180*math.Pi)
 			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
-			// fmt.Printf("%v %v\n", fo, xylenline)
 			for i, v := range xylenline {
 				rr := v.L / float64(i+1)
 				f.doPosMan.AddToXY(
