@@ -82,14 +82,12 @@ func New(name string) *towermake.Tower {
 	)
 
 	lhSize := fieldobjacttype.LightHouseRadius * 10
-	fm = tw.Add("MovingDanger1", lhSize, lhSize, 0, 0, 1.0).Appendf(
+	fm = tw.Add("MovingDanger", lhSize, lhSize, 0, 0, 1.0).Appendf(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
 		lhSize, lhSize,
 	)
-	gkSize := fieldobjacttype.GateKeeperLen * 18
-	fm = tw.Add("MovingDanger2", gkSize, gkSize, 0, 0, 1.0).Appendf(
-		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
-		gkSize, gkSize,
+	fm.Appends(
+		floortemplate.MixedResourceMaze(lhSize, lhSize)...,
 	)
 
 	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
@@ -145,8 +143,8 @@ func New(name string) *towermake.Tower {
 	tw.GetByName("RogueLike").ConnectStairUp("InRoom", "InRoom", tw.GetByName("SoilWater"))
 	tw.GetByName("SoilWater").ConnectStairUp("InRoom", "InRoom", tw.GetByName("AgeingField"))
 	tw.GetByName("AgeingField").ConnectStairUp("InRoom", "InRoom", tw.GetByName("ResourceMazeFill"))
-	tw.GetByName("ResourceMazeFill").ConnectStairUp("InRoom", "Rand", tw.GetByName("MovingDanger2"))
-	tw.GetByName("MovingDanger2").ConnectStairUp("Rand", "InRoom", tw.GetByName("GogueLike"))
+	tw.GetByName("ResourceMazeFill").ConnectStairUp("InRoom", "Rand", tw.GetByName("MovingDanger"))
+	tw.GetByName("MovingDanger").ConnectStairUp("Rand", "InRoom", tw.GetByName("GogueLike"))
 
 	tw.GetByName("GogueLike").ConnectStairUp("InRoom", "InRoom", tw.GetByName("SoilMagma"))
 	tw.GetByName("SoilMagma").ConnectStairUp("InRoom", "InRoom", tw.GetByName("AgeingMaze"))
@@ -156,9 +154,7 @@ func New(name string) *towermake.Tower {
 	tw.GetByName("Ghost").ConnectStairUp("InRoom", "Rand", tw.GetByName("SoilIce"))
 	tw.GetByName("SoilIce").ConnectStairUp("InRoom", "InRoom", tw.GetByName("MadeByImage"))
 	tw.GetByName("MadeByImage").ConnectStairUp("InRoom", "Rand", tw.GetByName("FreeForAll"))
-
-	tw.GetByName("FreeForAll").ConnectStairUp("Rand", "Rand", tw.GetByName("MovingDanger1"))
-	tw.GetByName("MovingDanger1").ConnectStairUp("Rand", "InRoom", tw.GetByName("Practice"))
+	tw.GetByName("FreeForAll").ConnectStairUp("Rand", "InRoom", tw.GetByName("Practice"))
 
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("Practice"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("SoilPlant"))
@@ -173,13 +169,15 @@ func New(name string) *towermake.Tower {
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("GogueLike"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("Ghost"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("FreeForAll"))
-	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("MovingDanger1"))
+	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("MovingDanger"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("BedTown"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("ResourceMazeFill"))
 	tw.GetByName("ManyPortals").ConnectStairUp("Rand", "Rand", tw.GetByName("ResourceMaze"))
 
-	fm = tw.GetByName("MovingDanger1")
+	fm = tw.GetByName("MovingDanger")
 	perturn := 10
+	lhCount := 0
+	gwCount := 0
 	for x := 0; x < fm.W; x += fieldobjacttype.LightHouseRadius * 2 {
 		for y := 0; y < fm.H; y += fieldobjacttype.LightHouseRadius * 2 {
 			fm.Appendf(
@@ -187,29 +185,33 @@ func New(name string) *towermake.Tower {
 				x, y, perturn,
 			)
 			perturn = -perturn
+			lhCount++
 		}
 	}
-	fm = tw.GetByName("MovingDanger2")
-	for x := 0; x < fm.W; x += fieldobjacttype.GateKeeperLen * 2 {
-		for y := 0; y < fm.H; y += fieldobjacttype.GateKeeperLen * 2 {
+	for x := fieldobjacttype.LightHouseRadius; x < fm.W; x += fieldobjacttype.LightHouseRadius * 2 {
+		for y := fieldobjacttype.LightHouseRadius; y < fm.H; y += fieldobjacttype.LightHouseRadius * 2 {
 			fm.Appendf(
 				"AddAreaAttack x=%v y=%v display=GateKeeper acttype=GateKeeper degree=0 perturn=%v message=GateKeeper",
 				x, y, perturn,
 			)
 			perturn = -perturn
+			gwCount++
 		}
 	}
+	fm.Appendf(
+		"AddMine%v display=None count=%v message=Mine",
+		"Rand", (lhCount+gwCount)/2,
+	)
 
 	for _, fm := range tw.GetList() {
 		noRoomFloorNames := map[string]bool{
-			"FreeForAll":    true,
-			"MovingDanger1": true,
-			"MovingDanger2": true,
-			"PortalMaze":    true,
-			"MazeRooms1":    true,
-			"MazeRooms2":    true,
-			"MazeRooms3":    true,
-			"MazeWalk":      true,
+			"FreeForAll":   true,
+			"MovingDanger": true,
+			"PortalMaze":   true,
+			"MazeRooms1":   true,
+			"MazeRooms2":   true,
+			"MazeRooms3":   true,
+			"MazeWalk":     true,
 		}
 		suffix := "InRoom"
 		if noRoomFloorNames[fm.Name] {
