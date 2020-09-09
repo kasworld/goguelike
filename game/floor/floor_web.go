@@ -203,6 +203,7 @@ func (f *Floor) Web_TileInfo(w http.ResponseWriter, r *http.Request) {
 	zoom := f.calcZoom()
 	x /= zoom
 	y /= zoom
+	x, y = f.terrain.WrapXY(x, y)
 	tl := f.terrain.GetTiles()[x][y]
 	rtl := f.terrain.GetRcsTiles().GetXY(x, y)
 	fmt.Fprintf(w, "[%v %v] %v %v", x, y, tl, rtl)

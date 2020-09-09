@@ -184,6 +184,7 @@ func (tr *Terrain) Web_TileInfo(w http.ResponseWriter, r *http.Request) {
 	zoom := tr.calcZoom()
 	x /= zoom
 	y /= zoom
+	x, y = tr.WrapXY(x, y)
 	tl := tr.serviceTileArea.GetByXY(x, y)
 	rtl := tr.resourceTileArea.GetXY(x, y)
 	fmt.Fprintf(w, "[%v %v] %v %v", x, y, tl, rtl)
