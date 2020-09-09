@@ -14,8 +14,9 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+
 	"github.com/kasworld/goguelike/enum/condition"
-	"github.com/kasworld/goguelike/enum/condition_flag"
 	"github.com/kasworld/goguelike/enum/factiontype"
 )
 
@@ -46,26 +47,24 @@ func preMakeActiveObj3DGeo() {
 }
 
 type ActiveObj3D struct {
-	Faction   factiontype.FactionType
+	AOC       *c2t_obj.ActiveObjClient
 	Condition [condition.Condition_Count]*Condition3D
-	MoveArrow *ColorArrow3D
 	Name      *Label3D
 	Chat      *Label3D
 	Mesh      js.Value
 }
 
-func NewActiveObj3D(ft factiontype.FactionType, name string) *ActiveObj3D {
-	mat := gPoolColorMaterial.Get(ft.Color24().ToHTMLColorString())
+func NewActiveObj3D(aoc *c2t_obj.ActiveObjClient) *ActiveObj3D {
+	mat := gPoolColorMaterial.Get(aoc.Faction.Color24().ToHTMLColorString())
 	// mat.Set("transparent", true)
 	mat.Set("opacity", 1)
 
-	geo := gActiveObj3DGeo[ft].Geo
+	geo := gActiveObj3DGeo[aoc.Faction].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	ao3d := &ActiveObj3D{
-		MoveArrow: gPoolColorArrow3D.Get("#ffffff"),
-		Name:      gPoolLabel3D.Get(name),
-		Faction:   ft,
-		Mesh:      mesh,
+		AOC:  aoc,
+		Name: gPoolLabel3D.Get(aoc.NickName),
+		Mesh: mesh,
 	}
 	for i := range ao3d.Condition {
 		ao3d.Condition[i] = gPoolCondition3D.Get(condition.Condition(i))
@@ -75,34 +74,40 @@ func NewActiveObj3D(ft factiontype.FactionType, name string) *ActiveObj3D {
 }
 
 // return changed
-func (ao3d *ActiveObj3D) ChangeFaction(ft factiontype.FactionType) (js.Value, bool) {
-	if ft == ao3d.Faction {
+func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) (js.Value, bool) {
+	if newaoc.Faction == ao3d.AOC.Faction {
+		ao3d.AOC = newaoc
 		return ao3d.Mesh, false
 	}
+	ao3d.AOC = newaoc
 	oldmesh := ao3d.Mesh
 	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
-	mat := gPoolColorMaterial.Get(ft.Color24().ToHTMLColorString())
+	mat := gPoolColorMaterial.Get(ao3d.AOC.Faction.Color24().ToHTMLColorString())
 	mat.Set("opacity", 1)
-	geo := gActiveObj3DGeo[ft].Geo
+	geo := gActiveObj3DGeo[ao3d.AOC.Faction].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
-	ao3d.Faction = ft
 	ao3d.Mesh = mesh
 	return oldmesh, true
 }
 
-func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shZ float64, cnf condition_flag.ConditionFlag) {
-	geoinfo := gActiveObj3DGeo[ao3d.Faction].GeoInfo
+func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
+	geoinfo := gActiveObj3DGeo[ao3d.AOC.Faction].GeoInfo
+	if ao3d.AOC.Conditions.TestByCondition(condition.Float) {
+		shZ += DstCellSize
+	}
 	SetPosition(
 		ao3d.Mesh,
-		float64(fx)*DstCellSize+DstCellSize/2,
-		-float64(fy)*DstCellSize-DstCellSize/2,
-		geoinfo.Len[2]/2+1+shZ,
+		shX+float64(fx)*DstCellSize+DstCellSize/2,
+		-shY+-float64(fy)*DstCellSize-DstCellSize/2,
+		shZ+geoinfo.Len[2]/2+1,
 	)
-	ao3d.Name.SetFieldPosition(fx, fy, 0, DstCellSize, DstCellSize+2+shZ)
+	ao3d.Name.SetFieldPosition(fx, fy, shX, shY+DstCellSize, shZ+DstCellSize+2)
 	for i, v := range ao3d.Condition {
 		v.SetFieldPosition(fx, fy,
-			float64(i)*DstCellSize/8, DstCellSize+DstCellSize/2, DstCellSize+2+shZ)
-		v.Visible(cnf.TestByCondition(condition.Condition(i)))
+			shX+float64(i)*DstCellSize/8,
+			shY+DstCellSize+DstCellSize/2,
+			shZ+DstCellSize+2)
+		v.Visible(ao3d.AOC.Conditions.TestByCondition(condition.Condition(i)))
 	}
 }
 
@@ -146,14 +151,10 @@ func (ao3d *ActiveObj3D) Dispose() {
 	}
 
 	// mesh do not need dispose
-	// ao3d.Mesh.Get("geometry").Call("dispose")
-	// ao3d.Mesh.Get("material").Call("dispose")
 	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
 	ao3d.Mesh = js.Undefined()
-
-	gPoolColorArrow3D.Put(ao3d.MoveArrow)
-	ao3d.MoveArrow = nil
 	gPoolLabel3D.Put(ao3d.Name)
 	ao3d.Name = nil
+	ao3d.AOC = nil
 	// no need createElement canvas dom obj
 }

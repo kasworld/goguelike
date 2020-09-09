@@ -22,8 +22,8 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-// animate move arrow
-func (vp *GameScene) animateMoveArrow(
+// animate active obj
+func (vp *GameScene) animateActiveObj(
 	cf *clientfloor.ClientFloor, ao3d *ActiveObj3D,
 	fx, fy int, dir way9type.Way9Type, frameProgress float64) {
 
@@ -33,7 +33,7 @@ func (vp *GameScene) animateMoveArrow(
 		shX := DstCellSize * frameProgress * float64(dx)
 		shY := DstCellSize * frameProgress * float64(dy)
 		shZ := CalcTile3DStepOn(tl)
-		ao3d.MoveArrow.SetFieldPosition(fx, fy, shX, shY, shZ)
+		ao3d.SetFieldPosition(fx, fy, shX, shY, shZ)
 	}
 }
 

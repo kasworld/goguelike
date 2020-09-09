@@ -61,16 +61,15 @@ func (vp *GameScene) processNotiObjectList(
 	for _, ao := range olNoti.ActiveObjList {
 		ao3d, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
-			ao3d = NewActiveObj3D(ao.Faction, ao.NickName)
+			ao3d = NewActiveObj3D(ao)
 			vp.scene.Call("add", ao3d.Mesh)
 			vp.jsSceneAOs[ao.UUID] = ao3d
 			vp.scene.Call("add", ao3d.Name.Mesh)
-			vp.scene.Call("add", ao3d.MoveArrow.Mesh)
 			for _, v := range ao3d.Condition {
 				vp.scene.Call("add", v.Mesh)
 			}
 		}
-		if oldmesh, changed := ao3d.ChangeFaction(ao.Faction); changed {
+		if oldmesh, changed := ao3d.UpdateAOC(ao); changed {
 			vp.scene.Call("remove", oldmesh)
 			vp.scene.Call("add", ao3d.Mesh)
 		}
@@ -78,17 +77,7 @@ func (vp *GameScene) processNotiObjectList(
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, ao.X, ao.Y)
 		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
 		shZ := CalcTile3DStepOn(tl)
-		if ao.Conditions.TestByCondition(condition.Float) {
-			ao3d.SetFieldPosition(fx, fy, shZ+DstCellSize, ao.Conditions)
-		} else {
-			ao3d.SetFieldPosition(fx, fy, shZ, ao.Conditions)
-		}
-		if ao.Dir != way9type.Center {
-			ao3d.MoveArrow.Visible(true)
-			ao3d.MoveArrow.SetDir(ao.Dir)
-		} else {
-			ao3d.MoveArrow.Visible(false)
-		}
+		ao3d.SetFieldPosition(fx, fy, 0, 0, shZ)
 
 		addAOuuid[ao.UUID] = true
 		if len(ao.Chat) == 0 {
@@ -153,7 +142,6 @@ func (vp *GameScene) processNotiObjectList(
 				vp.scene.Call("remove", v.Mesh)
 			}
 			vp.scene.Call("remove", ao3d.Name.Mesh)
-			vp.scene.Call("remove", ao3d.MoveArrow.Mesh)
 			vp.scene.Call("remove", ao3d.Mesh)
 			delete(vp.jsSceneAOs, id)
 			ao3d.Dispose()
@@ -201,8 +189,6 @@ func (vp *GameScene) processNotiObjectList(
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, dao.X, dao.Y)
 		dao3d.SetFieldPosition(fx, fy, 0, 0, 0)
-		// dao3d.ScaleX(dao3d.Dao.AffectRate)
-		// dao3d.ScaleY(dao3d.Dao.AffectRate)
 		addDOuuid[dao.UUID] = true
 	}
 
@@ -278,7 +264,9 @@ func (vp *GameScene) UpdatePlayViewFrame(
 				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
 			}
 		}
-		vp.animateMoveArrow(cf, aod, ao.X, ao.Y, ao.Dir, frameProgress)
+		// if ao.Act == c2t_idcmd.Move && ao.Result == c2t_error.None {
+		// 	vp.animateActiveObj(cf, aod, ao.X, ao.Y, ao.Dir, frameProgress)
+		// }
 	}
 
 	vp.animateFieldObj()
