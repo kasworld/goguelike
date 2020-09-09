@@ -196,16 +196,16 @@ func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile
 }
 
 func (f *Floor) foLightHouseAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
-	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax / 2
+	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax
 	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
 }
 
 func (f *Floor) foGateKeeperAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
-	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax / 3
+	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax
 	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
 }
 
 func (f *Floor) foMineExplodeAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
-	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax / 2
+	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax
 	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
 }

@@ -222,31 +222,29 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case fieldobjacttype.LightHouse:
 			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Radian)
 			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Radian)
-			fo.Radian += fo.RadPerTurn
-			xylenline := lineofsight.MakePosLenList(
-				float64(foX)+0.5, float64(foY)+0.5,
-				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
-			).ToCellLenList()
-			for _, v := range xylenline {
+			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+			for i, v := range xylenline {
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, v.L),
-					v.X, v.Y,
+					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, v.L/float64(i+1)),
+					foX+v.X, foY+v.Y,
 				)
 			}
+			fo.Radian += fo.RadPerTurn
 		case fieldobjacttype.GateKeeper:
 			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Radian)
 			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Radian)
-			fo.Radian += fo.RadPerTurn
-			xylenline := lineofsight.MakePosLenList(
-				float64(foX)-dx+0.5, float64(foY)-dy+0.5,
-				float64(foX)+dx+0.5, float64(foY)+dy+0.5,
-			).ToCellLenList()
-			for _, v := range xylenline {
+			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+			for i, v := range xylenline {
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L),
-					v.X, v.Y,
+					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L/float64(i+1)),
+					foX+v.X, foY+v.Y,
+				)
+				f.doPosMan.AddToXY(
+					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L/float64(i+1)),
+					foX-v.X, foY-v.Y,
 				)
 			}
+			fo.Radian += fo.RadPerTurn
 		case fieldobjacttype.Mine:
 			if fo.Radius >= gameconst.ViewPortW { // end explode
 				fo.Radius = -1
@@ -255,7 +253,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				// add do
 				for _, v := range minedata.MineData[int(fo.Radius)] {
 					f.doPosMan.AddToXY(
-						dangerobject.NewFOAttact(fo, dangertype.MineExplode, 1),
+						dangerobject.NewFOAttact(fo, dangertype.MineExplode, 1/(fo.Radius+1)),
 						foX+v.X, foY+v.Y,
 					)
 				}

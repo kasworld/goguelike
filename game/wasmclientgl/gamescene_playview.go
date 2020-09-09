@@ -280,7 +280,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	}
 
 	vp.animateFieldObj()
-	vp.animateDangerObj(frameProgress)
+	// vp.animateDangerObj(frameProgress)
 	vp.animateTile(envBias)
 	vp.moveCameraLight(
 		cf, taNoti.VPX, taNoti.VPY,
