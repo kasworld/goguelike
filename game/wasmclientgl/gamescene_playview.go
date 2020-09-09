@@ -201,6 +201,8 @@ func (vp *GameScene) processNotiObjectList(
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, dao.X, dao.Y)
 		dao3d.SetFieldPosition(fx, fy, 0, 0, 0)
+		dao3d.ScaleX(dao3d.Dao.AffectRate)
+		dao3d.ScaleY(dao3d.Dao.AffectRate)
 		addDOuuid[dao.UUID] = true
 	}
 
@@ -280,7 +282,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	}
 
 	vp.animateFieldObj()
-	// vp.animateDangerObj(frameProgress)
+	vp.animateDangerObj(frameProgress)
 	vp.animateTile(envBias)
 	vp.moveCameraLight(
 		cf, taNoti.VPX, taNoti.VPY,

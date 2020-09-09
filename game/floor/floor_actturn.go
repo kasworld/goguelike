@@ -220,31 +220,34 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		fo := o.(*fieldobject.FieldObject)
 		switch fo.ActType {
 		case fieldobjacttype.LightHouse:
-			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Radian)
-			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Radian)
+			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Degree/180*math.Pi)
+			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Degree/180*math.Pi)
 			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+			// fmt.Printf("%v %v\n", fo, xylenline)
 			for i, v := range xylenline {
+				rr := v.L / float64(i+1)
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, v.L/float64(i+1)),
+					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, rr),
 					foX+v.X, foY+v.Y,
 				)
 			}
-			fo.Radian += fo.RadPerTurn
+			fo.Degree += fo.DegreePerTurn
 		case fieldobjacttype.GateKeeper:
-			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Radian)
-			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Radian)
+			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Degree/180*math.Pi)
+			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Degree/180*math.Pi)
 			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
 			for i, v := range xylenline {
+				rr := v.L / float64(i+1)
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L/float64(i+1)),
+					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, rr),
 					foX+v.X, foY+v.Y,
 				)
 				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, v.L/float64(i+1)),
+					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, rr),
 					foX-v.X, foY-v.Y,
 				)
 			}
-			fo.Radian += fo.RadPerTurn
+			fo.Degree += fo.DegreePerTurn
 		case fieldobjacttype.Mine:
 			if fo.Radius >= gameconst.ViewPortW { // end explode
 				fo.Radius = -1

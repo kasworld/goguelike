@@ -13,7 +13,6 @@ package terrain
 
 import (
 	"fmt"
-	"math"
 
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
@@ -31,7 +30,7 @@ func cmdAddAreaAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &degree, &perturn, &message); err != nil {
 		return err
 	}
-	return tr.addAreaAttack(x, y, dispType, acttype, degree/180*math.Pi, perturn/180*math.Pi, message)
+	return tr.addAreaAttack(x, y, dispType, acttype, degree, perturn, message)
 }
 
 func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
@@ -45,7 +44,7 @@ func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addAreaAttackRand(dispType, acttype, degree/180*math.Pi, perturn/180*math.Pi, message)
+		err := tr.addAreaAttackRand(dispType, acttype, degree, perturn, message)
 		if err == nil {
 			count--
 		} else {
@@ -69,7 +68,7 @@ func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addAreaAttackRandInRoom(dispType, acttype, degree/180*math.Pi, perturn/180*math.Pi, message)
+		err := tr.addAreaAttackRandInRoom(dispType, acttype, degree, perturn, message)
 		if err == nil {
 			count--
 		} else {
@@ -84,12 +83,12 @@ func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 
 func (tr *Terrain) addAreaAttack(
 	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
-	radian, perturnrad float64, message string) error {
+	degree, perturn float64, message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen
 	if !tr.canPlaceFieldObjAt(x, y) {
 		return fmt.Errorf("can not add AreaAttack at NonCharPlaceable tile %v %v", x, y)
 	}
-	po := fieldobject.NewAreaAttack(tr.Name, dispType, message, acttype, radian, perturnrad)
+	po := fieldobject.NewAreaAttack(tr.Name, dispType, message, acttype, degree, perturn)
 	tr.foPosMan.AddToXY(po, x, y)
 
 	if r := tr.roomManager.GetRoomByPos(x, y); r != nil {
@@ -100,21 +99,21 @@ func (tr *Terrain) addAreaAttack(
 
 func (tr *Terrain) addAreaAttackRand(
 	dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
-	radian, perturnrad float64, message string) error {
+	degree, perturn float64, message string) error {
 
 	for try := 10; try > 0; try-- {
 		x, y := tr.rnd.Intn(tr.Xlen), tr.rnd.Intn(tr.Ylen)
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		return tr.addAreaAttack(x, y, dispType, acttype, radian, perturnrad, message)
+		return tr.addAreaAttack(x, y, dispType, acttype, degree, perturn, message)
 	}
 	return fmt.Errorf("fail to addAreaAttackRand at NonCharPlaceable tile")
 }
 
 func (tr *Terrain) addAreaAttackRandInRoom(
 	dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
-	radian, perturnrad float64, message string) error {
+	degree, perturn float64, message string) error {
 
 	if tr.roomManager.GetCount() == 0 {
 		return fmt.Errorf("no room to add AreaAttack")
@@ -132,7 +131,7 @@ func (tr *Terrain) addAreaAttackRandInRoom(
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		return tr.addAreaAttack(x, y, dispType, acttype, radian, perturnrad, message)
+		return tr.addAreaAttack(x, y, dispType, acttype, degree, perturn, message)
 	}
 	return fmt.Errorf("cannot find pos in room")
 }

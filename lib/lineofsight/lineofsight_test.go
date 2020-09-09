@@ -13,19 +13,20 @@ package lineofsight
 
 import (
 	"fmt"
+	"math"
 	"testing"
 
 	"github.com/kasworld/goguelike/config/viewportdata"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 )
 
 func TestMakePosLenList(t *testing.T) {
-	pll := MakePosLenList(0.5, 0.5, 1.5, 0.5)
-	for i, v := range pll {
-		fmt.Printf("%v %v\n", i, v)
-	}
-	pll2 := pll.ToCellLenList()
-	for i, v := range pll2 {
-		fmt.Printf("%v %v\n", i, v)
+	for deg := 0.0; deg < 360; deg += 10 {
+		rad := deg / 180 * math.Pi
+		dx := fieldobjacttype.LightHouseRadius * math.Cos(rad)
+		dy := fieldobjacttype.LightHouseRadius * math.Sin(rad)
+		xylenline := MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+		fmt.Printf("%v %v\n", deg, xylenline)
 	}
 }
 
