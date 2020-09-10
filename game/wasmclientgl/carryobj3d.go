@@ -151,6 +151,7 @@ func (aog *CarryObj3D) Dispose() {
 	// mesh do not need dispose
 	// aog.Mesh.Get("geometry").Call("dispose")
 	gPoolCarryObj3DGeo.Put(aog.Mesh.Get("geometry"), aog.Str)
+	gPoolColorMaterial.Put(aog.Mesh.Get("material"))
 	// aog.Mesh.Get("material").Call("dispose")
 	aog.Mesh = js.Undefined()
 	// no need createElement canvas dom obj

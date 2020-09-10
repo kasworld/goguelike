@@ -153,10 +153,10 @@ func (aog *FieldObj3D) RotateZ(rad float64) {
 	aog.Mesh.Get("rotation").Set("z", rad)
 }
 
-func (aog *FieldObj3D) Dispose() {
-	// mesh do not need dispose
-	// aog.Mesh.Get("geometry").Call("dispose")
-	// aog.Mesh.Get("material").Call("dispose")
-	aog.Mesh = js.Undefined()
-	// no need createElement canvas dom obj
-}
+// func (aog *FieldObj3D) Dispose() {
+// 	// mesh do not need dispose
+// 	// aog.Mesh.Get("geometry").Call("dispose")
+// 	// aog.Mesh.Get("material").Call("dispose")
+// 	aog.Mesh = js.Undefined()
+// 	// no need createElement canvas dom obj
+// }
