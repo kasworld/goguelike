@@ -12,15 +12,9 @@
 package fieldobjacttype
 
 import (
-	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/statusoptype"
 	"github.com/kasworld/htmlcolors"
-)
-
-const (
-	LightHouseRadius = gameconst.ViewPortH / 2
-	GateKeeperLen    = gameconst.ViewPortH / 4
 )
 
 func (v FieldObjActType) Color24() htmlcolors.Color24 {
@@ -86,9 +80,8 @@ var attrib = [FieldObjActType_Count]struct {
 	Slow:      {"?", true, true, 0.1, false, false, condition.Slow.Color()},
 	Haste:     {"?", true, true, 0.1, false, false, condition.Haste.Color()},
 
-	LightHouse: {"?", false, false, 0.0, false, false, htmlcolors.Lavender},
-	GateKeeper: {"?", false, false, 0.0, false, false, htmlcolors.LavenderBlush},
-	Mine:       {"?", true, true, 1.0, false, false, htmlcolors.Orange},
+	RotateLineAttack: {"?", false, false, 0.0, false, false, htmlcolors.Lavender},
+	Mine:             {"?", true, true, 1.0, false, false, htmlcolors.Orange},
 }
 
 // try act on fieldobj
@@ -96,30 +89,29 @@ var ClientData = [FieldObjActType_Count]struct {
 	ActOn bool
 	Text  string
 }{
-	None:            {true, ""},
-	PortalInOut:     {true, "portal in/out"},
-	PortalIn:        {true, "portal oneway"},
-	PortalOut:       {true, "portal out only"},
-	PortalAutoIn:    {false, "portal auto in oneway"},
-	RecycleCarryObj: {true, "recycle carryobj to money"},
-	Teleport:        {false, "teleport somewhere"},
-	ForgetFloor:     {false, "forget current floor"},
-	ForgetOneFloor:  {false, "forget some floor you visited"},
-	AlterFaction:    {false, "change faction randomly"},
-	AllFaction:      {false, "rotate all faction"},
-	Bleeding:        {false, "hp damage"},
-	Chilly:          {false, "sp damage"},
-	Blind:           {false, "sight 0"},
-	Invisible:       {false, "other cannot see you"},
-	Burden:          {false, "overload limit reduced"},
-	Float:           {false, "float in air"},
-	Greasy:          {false, "greasy body"},
-	Drunken:         {false, "random direction"},
-	Sleepy:          {false, "cannot act"},
-	Contagion:       {false, "make contagion other, die or heal randomly"},
-	LightHouse:      {false, "rotate line of dangerobj"},
-	GateKeeper:      {false, "blink vertical and horizontal dangerobj"},
-	Mine:            {false, "explode on step"},
+	None:             {true, ""},
+	PortalInOut:      {true, "portal in/out"},
+	PortalIn:         {true, "portal oneway"},
+	PortalOut:        {true, "portal out only"},
+	PortalAutoIn:     {false, "portal auto in oneway"},
+	RecycleCarryObj:  {true, "recycle carryobj to money"},
+	Teleport:         {false, "teleport somewhere"},
+	ForgetFloor:      {false, "forget current floor"},
+	ForgetOneFloor:   {false, "forget some floor you visited"},
+	AlterFaction:     {false, "change faction randomly"},
+	AllFaction:       {false, "rotate all faction"},
+	Bleeding:         {false, "hp damage"},
+	Chilly:           {false, "sp damage"},
+	Blind:            {false, "sight 0"},
+	Invisible:        {false, "other cannot see you"},
+	Burden:           {false, "overload limit reduced"},
+	Float:            {false, "float in air"},
+	Greasy:           {false, "greasy body"},
+	Drunken:          {false, "random direction"},
+	Sleepy:           {false, "cannot act"},
+	Contagion:        {false, "make contagion other, die or heal randomly"},
+	RotateLineAttack: {false, "rotate line of dangerobj"},
+	Mine:             {false, "explode on step"},
 }
 
 func GetBuffByFieldObjActType(at FieldObjActType) []statusoptype.OpArg {

@@ -8,9 +8,9 @@
         "ResourceFillRect resource=Soil amount=1  x=0 y=0  w=64 h=64",
         "FinalizeTerrain",
         "",
-        "AddAreaAttackRand display=LightHouse acttype=LightHouse degree=0 perturn=10 count=1 message=LightHouse",
-        "AddAreaAttackRand display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=1 message=GateKeeper",
-        "AddMineRand display=None count=2 message=Mine"
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=1 degree=0 perturn=10 count=5 message=RotDanger1",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=4 wingcount=2 degree=0 perturn=10 count=5 message=RotDanger2",
+        "AddMineRand display=None count=10 message=Mine"
     ],
     [
         "#tower noroom, made by tower maker"

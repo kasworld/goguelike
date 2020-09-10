@@ -219,32 +219,20 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	f.foPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
 		fo := o.(*fieldobject.FieldObject)
 		switch fo.ActType {
-		case fieldobjacttype.LightHouse:
-			dx := fieldobjacttype.LightHouseRadius * math.Cos(fo.Degree/180*math.Pi)
-			dy := fieldobjacttype.LightHouseRadius * math.Sin(fo.Degree/180*math.Pi)
-			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
-			for i, v := range xylenline {
-				rr := v.L / float64(i+1)
-				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.LightHouseAreaAttack, rr),
-					foX+v.X, foY+v.Y,
-				)
-			}
-			fo.Degree += fo.DegreePerTurn
-		case fieldobjacttype.GateKeeper:
-			dx := fieldobjacttype.GateKeeperLen * math.Cos(fo.Degree/180*math.Pi)
-			dy := fieldobjacttype.GateKeeperLen * math.Sin(fo.Degree/180*math.Pi)
-			xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
-			for i, v := range xylenline {
-				rr := v.L / float64(i+1)
-				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, rr),
-					foX+v.X, foY+v.Y,
-				)
-				f.doPosMan.AddToXY(
-					dangerobject.NewFOAttact(fo, dangertype.GateKeeperAreaAttack, rr),
-					foX-v.X, foY-v.Y,
-				)
+		case fieldobjacttype.RotateLineAttack:
+			wingdeg := 360.0 / float64(fo.WingCount)
+			for wing := 0; wing < fo.WingCount; wing++ {
+				rad := (float64(wing)*wingdeg + fo.Degree) / 180 * math.Pi
+				dx := float64(fo.WingLen) * math.Cos(rad)
+				dy := float64(fo.WingLen) * math.Sin(rad)
+				xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+				for i, v := range xylenline {
+					rr := v.L / float64(i+1)
+					f.doPosMan.AddToXY(
+						dangerobject.NewFOAttact(fo, dangertype.RotateLineAttack, rr),
+						foX+v.X, foY+v.Y,
+					)
+				}
 			}
 			fo.Degree += fo.DegreePerTurn
 		case fieldobjacttype.Mine:
@@ -296,10 +284,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
 				dstTile := f.terrain.GetTiles()[dstX][dstY]
 				f.aoAttackActiveObj(owner, dstAO, srcTile, dstTile)
-			case dangertype.LightHouseAreaAttack:
-				f.foLightHouseAttack(do, dstAO, dstX, dstY)
-			case dangertype.GateKeeperAreaAttack:
-				f.foGateKeeperAttack(do, dstAO, dstX, dstY)
+			case dangertype.RotateLineAttack:
+				f.foRotateLineAttack(do, dstAO, dstX, dstY)
 			case dangertype.MineExplode:
 				f.foMineExplodeAttack(do, dstAO, dstX, dstY)
 			}

@@ -36,7 +36,7 @@ type Room struct {
 	RecyclerCount   int
 	PortalCount     int
 	TrapCount       int
-	AreaAttackCount int
+	RotateLineAttackCount int
 	MineCount       int
 }
 

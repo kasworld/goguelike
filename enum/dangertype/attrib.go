@@ -31,11 +31,10 @@ var attrib = [DangerType_Count]struct {
 	scale4ui  float64
 	color     htmlcolors.Color24
 }{
-	None:                 {0, 1.0, htmlcolors.Black},
-	BasicAttack:          {1, 1.0, htmlcolors.Red},
-	WideAttack:           {1, 1.0, htmlcolors.Crimson},
-	LongAttack:           {1, 1.0, htmlcolors.FireBrick},
-	LightHouseAreaAttack: {1, 2.0, htmlcolors.DeepPink},
-	GateKeeperAreaAttack: {1, 2.0, htmlcolors.OrangeRed},
-	MineExplode:          {1, 2.0, htmlcolors.Orange},
+	None:             {0, 1.0, htmlcolors.Black},
+	BasicAttack:      {1, 1.0, htmlcolors.Red},
+	WideAttack:       {1, 1.0, htmlcolors.Crimson},
+	LongAttack:       {1, 1.0, htmlcolors.FireBrick},
+	RotateLineAttack: {1, 2.0, htmlcolors.DeepPink},
+	MineExplode:      {1, 2.0, htmlcolors.Orange},
 }

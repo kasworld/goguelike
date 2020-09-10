@@ -25,13 +25,12 @@ var attrib = [FieldObjDisplayType_Count]struct {
 	Rune    string
 	Color24 htmlcolors.Color24
 }{
-	None:         {"?", htmlcolors.Black},
-	StairUp:      {"/\\", htmlcolors.Black},
-	StairDn:      {"\\/", htmlcolors.Black},
-	PortalIn:     {"[+]", htmlcolors.Black},
-	PortalAutoIn: {"{+}", htmlcolors.Black},
-	PortalOut:    {"[-]", htmlcolors.Black},
-	Recycler:     {"*", htmlcolors.Black},
-	LightHouse:   {"X", htmlcolors.Black},
-	GateKeeper:   {"-|-", htmlcolors.Black},
+	None:             {"?", htmlcolors.Black},
+	StairUp:          {"/\\", htmlcolors.Black},
+	StairDn:          {"\\/", htmlcolors.Black},
+	PortalIn:         {"[+]", htmlcolors.Black},
+	PortalAutoIn:     {"{+}", htmlcolors.Black},
+	PortalOut:        {"[-]", htmlcolors.Black},
+	Recycler:         {"*", htmlcolors.Black},
+	RotateLineAttack: {"-|-", htmlcolors.Black},
 }

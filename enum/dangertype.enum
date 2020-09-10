@@ -2,6 +2,5 @@ None empty error
 BasicAttack from ao 
 WideAttack from ao 
 LongAttack from ao
-LightHouseAreaAttack from field obj
-GateKeeperAreaAttack from field obj
+RotateLineAttack from field obj
 MineExplode from field obj

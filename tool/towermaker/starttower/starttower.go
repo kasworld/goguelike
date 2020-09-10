@@ -16,7 +16,6 @@ import (
 
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
 	"github.com/kasworld/goguelike/tool/towermaker/towermake"
 )
@@ -81,7 +80,7 @@ func New(name string) *towermake.Tower {
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
 	)
 
-	lhSize := fieldobjacttype.LightHouseRadius * 10
+	lhSize := gameconst.ViewPortW * 10
 	fm = tw.Add("MovingDanger", lhSize, lhSize, 0, 0, 1.0).Appendf(
 		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
 		lhSize, lhSize,
@@ -178,21 +177,22 @@ func New(name string) *towermake.Tower {
 	perturn := 10
 	lhCount := 0
 	gwCount := 0
-	for x := 0; x < fm.W; x += fieldobjacttype.LightHouseRadius * 2 {
-		for y := 0; y < fm.H; y += fieldobjacttype.LightHouseRadius * 2 {
+	lhlen := gameconst.ViewPortW / 2
+	for x := 0; x < fm.W; x += lhlen * 2 {
+		for y := 0; y < fm.H; y += lhlen * 2 {
 			fm.Appendf(
-				"AddAreaAttack x=%v y=%v display=LightHouse acttype=LightHouse degree=0 perturn=%v message=LightHouse",
-				x, y, perturn,
+				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=%v message=RotDanger1",
+				x, y, lhlen, perturn,
 			)
 			perturn = -perturn
 			lhCount++
 		}
 	}
-	for x := fieldobjacttype.LightHouseRadius; x < fm.W; x += fieldobjacttype.LightHouseRadius * 2 {
-		for y := fieldobjacttype.LightHouseRadius; y < fm.H; y += fieldobjacttype.LightHouseRadius * 2 {
+	for x := lhlen; x < fm.W; x += lhlen * 2 {
+		for y := lhlen; y < fm.H; y += lhlen * 2 {
 			fm.Appendf(
-				"AddAreaAttack x=%v y=%v display=GateKeeper acttype=GateKeeper degree=0 perturn=%v message=GateKeeper",
-				x, y, perturn,
+				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=%v message=RotDanger2",
+				x, y, lhlen/2, perturn,
 			)
 			perturn = -perturn
 			gwCount++
@@ -246,12 +246,12 @@ func New(name string) *towermake.Tower {
 		}
 
 		fm.Appendf(
-			"AddAreaAttack%v display=LightHouse acttype=LightHouse degree=0 perturn=10 count=%v message=LightHouse",
-			"Rand", 1,
+			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 count=%v message=RotDanger1",
+			"Rand", lhlen, 1,
 		)
 		fm.Appendf(
-			"AddAreaAttack%v display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=%v message=GateKeeper",
-			"Rand", 1,
+			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 count=%v message=RotDanger2",
+			"Rand", lhlen/2, 1,
 		)
 		fm.Appendf(
 			"AddMine%v display=None count=%v message=Mine",

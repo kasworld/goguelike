@@ -34,6 +34,7 @@ type FieldObject struct {
 
 	// LightHouse ,GateKeeper radian
 	Degree, DegreePerTurn float64
+	WingLen, WingCount    int
 
 	// Mine, -1 on not triggered
 	// on trigger inc every turn, start 0 to Viewport size, end.
@@ -42,14 +43,16 @@ type FieldObject struct {
 
 func (p FieldObject) String() string {
 	return fmt.Sprintf(
-		"FieldObject[Floor:%v ID:%v %v %v %v %v %v Degree:%v PerTurn:%v R:%v]",
+		"FieldObject[Floor:%v ID:%v %v %v %v %v %v Degree:%v PerTurn:%v WingLen:%v WingCount:%v R:%v]",
 		p.FloorName,
 		p.ID,
 		p.ActType,
 		p.DisplayType,
 		p.Message,
 		p.DstPortalID, p.DstFloorName,
-		p.Degree, p.DegreePerTurn, p.Radius,
+		p.Degree, p.DegreePerTurn,
+		p.WingLen, p.WingCount,
+		p.Radius,
 	)
 }
 

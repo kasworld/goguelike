@@ -11,7 +11,10 @@
 
 package noroomtower
 
-import "github.com/kasworld/goguelike/tool/towermaker/towermake"
+import (
+	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/tool/towermaker/towermake"
+)
 
 func New(name string) *towermake.Tower {
 	tw := towermake.New(name)
@@ -27,16 +30,16 @@ func New(name string) *towermake.Tower {
 
 	for _, fm := range tw.GetList() {
 		fm.Appendf(
-			"AddAreaAttack%v display=LightHouse acttype=LightHouse degree=0 perturn=10 count=%v message=LightHouse",
-			"Rand", 1,
+			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 count=%v message=RotDanger1",
+			"Rand", gameconst.ViewPortW/2, 5,
 		)
 		fm.Appendf(
-			"AddAreaAttack%v display=GateKeeper acttype=GateKeeper degree=0 perturn=10 count=%v message=GateKeeper",
-			"Rand", 1,
+			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 count=%v message=RotDanger2",
+			"Rand", gameconst.ViewPortW/4, 5,
 		)
 		fm.Appendf(
 			"AddMine%v display=None count=%v message=Mine",
-			"Rand", 2,
+			"Rand", 10,
 		)
 	}
 	return tw

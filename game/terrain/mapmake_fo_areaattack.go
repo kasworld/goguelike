@@ -14,37 +14,36 @@ package terrain
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
-func cmdAddAreaAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdAddRotateLineAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var x, y int
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
-	var acttype fieldobjacttype.FieldObjActType
 	var degree, perturn float64
+	var winglen, wingcount int
 	var message string
-	if err := ca.GetArgs(&x, &y, &dispType, &acttype, &degree, &perturn, &message); err != nil {
+	if err := ca.GetArgs(&x, &y, &dispType, &winglen, &wingcount, &degree, &perturn, &message); err != nil {
 		return err
 	}
-	return tr.addAreaAttack(x, y, dispType, acttype, degree, perturn, message)
+	return tr.addRotateLineAttack(x, y, dispType, winglen, wingcount, degree, perturn, message)
 }
 
-func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdAddRotateLineAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
-	var acttype fieldobjacttype.FieldObjActType
 	var degree, perturn float64
+	var winglen, wingcount int
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &acttype, &degree, &perturn, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &winglen, &wingcount, &degree, &perturn, &count, &message); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addAreaAttackRand(dispType, acttype, degree, perturn, message)
+		err := tr.addRotateLineAttackRand(dispType, winglen, wingcount, degree, perturn, message)
 		if err == nil {
 			count--
 		} else {
@@ -52,23 +51,23 @@ func cmdAddAreaAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddAreaAttackRand add insufficient")
+		tr.log.Warn("AddRotateLineAttackRand add insufficient")
 	}
 	return nil
 }
 
-func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdAddRotateLineAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
-	var acttype fieldobjacttype.FieldObjActType
 	var degree, perturn float64
+	var winglen, wingcount int
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &acttype, &degree, &perturn, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &winglen, &wingcount, &degree, &perturn, &count, &message); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addAreaAttackRandInRoom(dispType, acttype, degree, perturn, message)
+		err := tr.addRotateLineAttackRandInRoom(dispType, winglen, wingcount, degree, perturn, message)
 		if err == nil {
 			count--
 		} else {
@@ -76,54 +75,57 @@ func cmdAddAreaAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddAreaAttackRand add insufficient")
+		tr.log.Warn("AddRotateLineAttackRand add insufficient")
 	}
 	return nil
 }
 
-func (tr *Terrain) addAreaAttack(
-	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
-	degree, perturn float64, message string) error {
+func (tr *Terrain) addRotateLineAttack(
+	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType,
+	winglen, wingcount int, degree, perturn float64,
+	message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen
 	if !tr.canPlaceFieldObjAt(x, y) {
-		return fmt.Errorf("can not add AreaAttack at NonCharPlaceable tile %v %v", x, y)
+		return fmt.Errorf("can not add RotateLineAttack at NonCharPlaceable tile %v %v", x, y)
 	}
-	po := fieldobject.NewAreaAttack(tr.Name, dispType, message, acttype, degree, perturn)
+	po := fieldobject.NewRotateLineAttack(tr.Name, dispType, winglen, wingcount, degree, perturn, message)
 	tr.foPosMan.AddToXY(po, x, y)
 
 	if r := tr.roomManager.GetRoomByPos(x, y); r != nil {
-		r.AreaAttackCount++
+		r.RotateLineAttackCount++
 	}
 	return nil
 }
 
-func (tr *Terrain) addAreaAttackRand(
-	dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
-	degree, perturn float64, message string) error {
+func (tr *Terrain) addRotateLineAttackRand(
+	dispType fieldobjdisplaytype.FieldObjDisplayType,
+	winglen, wingcount int, degree, perturn float64,
+	message string) error {
 
 	for try := 10; try > 0; try-- {
 		x, y := tr.rnd.Intn(tr.Xlen), tr.rnd.Intn(tr.Ylen)
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		return tr.addAreaAttack(x, y, dispType, acttype, degree, perturn, message)
+		return tr.addRotateLineAttack(x, y, dispType, winglen, wingcount, degree, perturn, message)
 	}
-	return fmt.Errorf("fail to addAreaAttackRand at NonCharPlaceable tile")
+	return fmt.Errorf("fail to addRotateLineAttackRand at NonCharPlaceable tile")
 }
 
-func (tr *Terrain) addAreaAttackRandInRoom(
-	dispType fieldobjdisplaytype.FieldObjDisplayType, acttype fieldobjacttype.FieldObjActType,
-	degree, perturn float64, message string) error {
+func (tr *Terrain) addRotateLineAttackRandInRoom(
+	dispType fieldobjdisplaytype.FieldObjDisplayType,
+	winglen, wingcount int, degree, perturn float64,
+	message string) error {
 
 	if tr.roomManager.GetCount() == 0 {
-		return fmt.Errorf("no room to add AreaAttack")
+		return fmt.Errorf("no room to add RotateLineAttack")
 	}
 	roomList := tr.roomManager.GetRoomList()
 	for try := 100; try > 0; try-- {
 		tr.rnd.Shuffle(len(roomList), func(i, j int) {
 			roomList[i], roomList[j] = roomList[j], roomList[i]
 		})
-		rList := roomsort.ByAreaAttackCount(roomList)
+		rList := roomsort.ByRotateLineAttackCount(roomList)
 		rList.Sort()
 		r := rList[0]
 		x := tr.rnd.IntRange(r.Area.X, r.Area.X+r.Area.W)
@@ -131,7 +133,7 @@ func (tr *Terrain) addAreaAttackRandInRoom(
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		return tr.addAreaAttack(x, y, dispType, acttype, degree, perturn, message)
+		return tr.addRotateLineAttack(x, y, dispType, winglen, wingcount, degree, perturn, message)
 	}
 	return fmt.Errorf("cannot find pos in room")
 }

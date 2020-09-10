@@ -68,17 +68,21 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 	}
 }
 
-func NewAreaAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
-	acttype fieldobjacttype.FieldObjActType, degree, degreeperturn float64,
+// NewRotateLineAttack arg order follow terraincmdenum
+func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
+	winglen, wingcount int, degree, degreeperturn float64,
+	message string,
 ) *FieldObject {
 	return &FieldObject{
 		ID:            uuidstr.New(),
 		FloorName:     floorname,
-		ActType:       acttype,
+		ActType:       fieldobjacttype.RotateLineAttack,
 		DisplayType:   displayType,
 		Message:       message,
 		Degree:        degree,
 		DegreePerTurn: degreeperturn,
+		WingLen:       winglen,
+		WingCount:     wingcount,
 	}
 }
 

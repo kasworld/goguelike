@@ -5,5 +5,4 @@ PortalIn in only
 PortalAutoIn auto in 
 PortalOut out only 
 Recycler sell item 
-LightHouse rotate line of dangerobj
-GateKeeper blink vertical and horizontal dangerobj
+RotateLineAttack rotate line of dangerobj

@@ -195,12 +195,7 @@ func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile
 	src.AddBattleExp(damage * gameconst.ActiveObjExp_Damage)
 }
 
-func (f *Floor) foLightHouseAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
-	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax
-	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
-}
-
-func (f *Floor) foGateKeeperAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
+func (f *Floor) foRotateLineAttack(do *dangerobject.DangerObject, dstao gamei.ActiveObjectI, dstx, dsty int) {
 	hpdamage := do.AffectRate * dstao.GetTurnData().HPMax
 	dstao.AppendTurnResult(turnresult.New(turnresulttype.AttackedFrom, do.Owner, hpdamage))
 }

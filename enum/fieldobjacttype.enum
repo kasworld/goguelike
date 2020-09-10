@@ -31,6 +31,5 @@ Slow act need turn doubled
 Haste act need turn halfed
 
 # make moving dangerobj
-LightHouse rotate line of dangerobj
-GateKeeper blink vertical and horizontal dangerobj
+RotateLineAttack rotate line of dangerobj
 Mine explode on trigger
