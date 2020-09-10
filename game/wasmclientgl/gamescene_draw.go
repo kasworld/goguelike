@@ -98,7 +98,8 @@ func (vp *GameScene) moveCameraLight(
 	cameraR := float64(HelperSize)
 
 	carmeraDy := float64(
-		(2-gameOptions.GetByIDBase("Zoom").State)*gameOptions.GetByIDBase("Angle").State) * DstCellSize
+		gameOptions.GetByIDBase("Angle").State) * DstCellSize * 2
+	// (2-gameOptions.GetByIDBase("Zoom").State)*gameOptions.GetByIDBase("Angle").State) * DstCellSize
 
 	cameraRad := []float64{
 		math.Pi / 2,
