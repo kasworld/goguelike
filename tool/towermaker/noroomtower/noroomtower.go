@@ -29,14 +29,13 @@ func New(name string) *towermake.Tower {
 	}
 
 	for _, fm := range tw.GetList() {
-		fm.Appendf(
-			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 count=%v message=RotDanger1",
-			"Rand", gameconst.ViewPortW/2, 5,
-		)
-		fm.Appendf(
-			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 count=%v message=RotDanger2",
-			"Rand", gameconst.ViewPortW/4, 5,
-		)
+
+		for wingC := 1; wingC <= 8; wingC++ {
+			fm.Appendf(
+				"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=%v degree=0 perturn=10 count=%v message=RotDanger%v",
+				"Rand", gameconst.ViewPortW/2, wingC, 2, wingC,
+			)
+		}
 		fm.Appendf(
 			"AddMine%v display=None count=%v message=Mine",
 			"Rand", 10,

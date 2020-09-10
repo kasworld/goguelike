@@ -8,8 +8,14 @@
         "ResourceFillRect resource=Soil amount=1  x=0 y=0  w=64 h=64",
         "FinalizeTerrain",
         "",
-        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=1 degree=0 perturn=10 count=5 message=RotDanger1",
-        "AddRotateLineAttackRand display=RotateLineAttack winglen=4 wingcount=2 degree=0 perturn=10 count=5 message=RotDanger2",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=1 degree=0 perturn=10 count=2 message=RotDanger1",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=2 degree=0 perturn=10 count=2 message=RotDanger2",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=3 degree=0 perturn=10 count=2 message=RotDanger3",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=4 degree=0 perturn=10 count=2 message=RotDanger4",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=5 degree=0 perturn=10 count=2 message=RotDanger5",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=6 degree=0 perturn=10 count=2 message=RotDanger6",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=7 degree=0 perturn=10 count=2 message=RotDanger7",
+        "AddRotateLineAttackRand display=RotateLineAttack winglen=9 wingcount=8 degree=0 perturn=10 count=2 message=RotDanger8",
         "AddMineRand display=None count=10 message=Mine"
     ],
     [
