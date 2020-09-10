@@ -203,3 +203,36 @@ func cmdToggleSound(obj interface{}, v *htmlbutton.HTMLButton) {
 	}
 	v.Blur()
 }
+
+func (app *WasmClient) reset2Default() {
+	btn := gameOptions.GetByIDBase("LeftInfo")
+	btn.State = 1
+	btn.UpdateButtonText()
+
+	btn = gameOptions.GetByIDBase("CenterInfo")
+	btn.State = 0
+	btn.UpdateButtonText()
+
+	btn = gameOptions.GetByIDBase("RightInfo")
+	btn.State = 1
+	btn.UpdateButtonText()
+
+	btn = gameOptions.GetByIDBase("ViewMode")
+	btn.State = 0
+	btn.UpdateButtonText()
+
+	btn = gameOptions.GetByIDBase("Zoom")
+	btn.State = 1
+	btn.UpdateButtonText()
+	cmdToggleZoom(app, btn)
+
+	btn = gameOptions.GetByIDBase("Angle")
+	btn.State = 1
+	btn.UpdateButtonText()
+	cmdToggleAngle(app, btn)
+
+	btn = gameOptions.GetByIDBase("Sound")
+	btn.State = 1
+	btn.UpdateButtonText()
+	cmdToggleSound(app, btn)
+}
