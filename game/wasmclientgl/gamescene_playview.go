@@ -106,6 +106,12 @@ func (vp *GameScene) processNotiObjectList(
 			for _, v := range ao3d.Condition {
 				vp.scene.Call("remove", v.Mesh)
 			}
+			for _, v := range ao3d.Co3d {
+				if v == nil {
+					continue
+				}
+				vp.scene.Call("remove", v.Mesh)
+			}
 			vp.scene.Call("remove", ao3d.Name.Mesh)
 			vp.scene.Call("remove", ao3d.Mesh)
 			if ao3d.Chat != nil {
