@@ -99,19 +99,6 @@ func (vp *GameScene) processNotiObjectList(
 			ao3d.ScaleY(0.5)
 			ao3d.ScaleZ(0.5)
 		}
-
-		for _, eqo := range ao.EquippedPo {
-			cr3d, exist := vp.jsSceneCOs[eqo.UUID]
-			if !exist {
-				str, color := Equiped2StrColor(eqo)
-				cr3d = NewCarryObj3D(str, color)
-				vp.scene.Call("add", cr3d.Mesh)
-				vp.jsSceneCOs[eqo.UUID] = cr3d
-			}
-			shInfo := aoEqPosShift[eqo.EquipType]
-			cr3d.SetFieldPosition(fx, fy, shInfo)
-			addCOuuid[eqo.UUID] = true
-		}
 	}
 
 	for id, ao3d := range vp.jsSceneAOs {

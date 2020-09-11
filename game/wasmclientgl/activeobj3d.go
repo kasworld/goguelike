@@ -14,6 +14,10 @@ package wasmclientgl
 import (
 	"syscall/js"
 
+	"github.com/kasworld/gowasmlib/jslog"
+
+	"github.com/kasworld/goguelike/enum/equipslottype"
+
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 
 	"github.com/kasworld/goguelike/enum/condition"
@@ -48,6 +52,7 @@ func preMakeActiveObj3DGeo() {
 
 type ActiveObj3D struct {
 	AOC       *c2t_obj.ActiveObjClient
+	Co3d      [equipslottype.EquipSlotType_Count]*CarryObj3D
 	Condition [condition.Condition_Count]*Condition3D
 	Name      *Label3D
 	Chat      *Label3D
@@ -69,30 +74,55 @@ func NewActiveObj3D(aoc *c2t_obj.ActiveObjClient) *ActiveObj3D {
 	for i := range ao3d.Condition {
 		ao3d.Condition[i] = gPoolCondition3D.Get(condition.Condition(i))
 	}
-
 	return ao3d
 }
 
 // return toaddmesh, toremove mesh
 func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value, []js.Value) {
-	var toadds []js.Value
-	var todels []js.Value
+	var toaddMeshs []js.Value
+	var todelMeshs []js.Value
 
 	oldaoc := ao3d.AOC
 	ao3d.AOC = newaoc
 	if newaoc.Faction != oldaoc.Faction {
-		todels = append(todels, ao3d.Mesh)
+		todelMeshs = append(todelMeshs, ao3d.Mesh)
 		gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
 		mat := gPoolColorMaterial.Get(newaoc.Faction.Color24().ToHTMLColorString())
 		mat.Set("opacity", 1)
 		geo := gActiveObj3DGeo[newaoc.Faction].Geo
 		mesh := ThreeJsNew("Mesh", geo, mat)
 		ao3d.Mesh = mesh
-		toadds = append(toadds, ao3d.Mesh)
+		toaddMeshs = append(toaddMeshs, ao3d.Mesh)
 	}
+
+	if oldaoc == newaoc { // just made
+		for _, v := range newaoc.EquippedPo {
+			str, color := Equiped2StrColor(v)
+			toaddco3d := NewCarryObj3D(str, color)
+			toaddMeshs = append(toaddMeshs, toaddco3d.Mesh)
+			ao3d.Co3d[v.EquipType] = toaddco3d
+		}
+
+	} else { // handle changed equipped carryobj
+		coadded, codel := findEqChanged(oldaoc.EquippedPo, newaoc.EquippedPo)
+		for _, v := range codel {
+			todelco3d := ao3d.Co3d[v.EquipType]
+			ao3d.Co3d[v.EquipType] = nil
+			todelMeshs = append(todelMeshs, todelco3d.Mesh)
+			todelco3d.Dispose()
+		}
+		for _, v := range coadded {
+			str, color := Equiped2StrColor(v)
+			toaddco3d := NewCarryObj3D(str, color)
+			toaddMeshs = append(toaddMeshs, toaddco3d.Mesh)
+			ao3d.Co3d[v.EquipType] = toaddco3d
+		}
+
+	}
+
 	if len(ao3d.AOC.Chat) == 0 {
 		if ao3d.Chat != nil {
-			todels = append(todels, ao3d.Chat.Mesh)
+			todelMeshs = append(todelMeshs, ao3d.Chat.Mesh)
 			ao3d.Chat.Dispose()
 			ao3d.Chat = nil
 		}
@@ -100,19 +130,19 @@ func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value,
 		if ao3d.Chat == nil {
 			// add new chat
 			ao3d.Chat = NewLabel3D(ao3d.AOC.Chat)
-			toadds = append(toadds, ao3d.Chat.Mesh)
+			toaddMeshs = append(toaddMeshs, ao3d.Chat.Mesh)
 		} else {
 			if ao3d.AOC.Chat != ao3d.Chat.Str {
 				// remove old chat , add new chat
-				todels = append(todels, ao3d.Chat.Mesh)
+				todelMeshs = append(todelMeshs, ao3d.Chat.Mesh)
 				ao3d.Chat.Dispose()
 				ao3d.Chat = NewLabel3D(ao3d.AOC.Chat)
-				toadds = append(toadds, ao3d.Chat.Mesh)
+				toaddMeshs = append(toaddMeshs, ao3d.Chat.Mesh)
 			}
 		}
 	}
 
-	return toadds, todels
+	return toaddMeshs, todelMeshs
 }
 
 func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
@@ -133,6 +163,14 @@ func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 			shY+DstCellSize+DstCellSize/2,
 			shZ+DstCellSize+2)
 		v.Visible(ao3d.AOC.Conditions.TestByCondition(condition.Condition(i)))
+	}
+	for _, v := range ao3d.AOC.EquippedPo {
+		if ao3d.Co3d[v.EquipType] == nil {
+			jslog.Errorf("%v", v)
+			continue
+		}
+		shInfo := aoEqPosShift[v.EquipType]
+		ao3d.Co3d[v.EquipType].SetFieldPosition(fx, fy, shInfo)
 	}
 	if ao3d.Chat != nil {
 		ao3d.Chat.SetFieldPosition(fx, fy,
@@ -178,7 +216,12 @@ func (ao3d *ActiveObj3D) Dispose() {
 		gPoolCondition3D.Put(ao3d.Condition[i])
 		ao3d.Condition[i] = nil
 	}
-
+	for _, v := range ao3d.Co3d {
+		if v == nil {
+			continue
+		}
+		v.Dispose()
+	}
 	// mesh do not need dispose
 	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
 	ao3d.Mesh = js.Undefined()
@@ -186,4 +229,29 @@ func (ao3d *ActiveObj3D) Dispose() {
 	ao3d.Name = nil
 	ao3d.AOC = nil
 	// no need createElement canvas dom obj
+}
+
+// return added, deleted
+func findEqChanged(old, new []*c2t_obj.EquipClient) (added, deleted []*c2t_obj.EquipClient) {
+	var oldmap [equipslottype.EquipSlotType_Count]*c2t_obj.EquipClient
+	var newmap [equipslottype.EquipSlotType_Count]*c2t_obj.EquipClient
+	for _, v := range old {
+		oldmap[v.EquipType] = v
+	}
+	for _, v := range new {
+		newmap[v.EquipType] = v
+	}
+	for eqpos := 0; eqpos < equipslottype.EquipSlotType_Count; eqpos++ {
+		if oldmap[eqpos] == nil && newmap[eqpos] != nil {
+			added = append(added, newmap[eqpos])
+		}
+		if oldmap[eqpos] != nil && newmap[eqpos] == nil {
+			deleted = append(deleted, oldmap[eqpos])
+		}
+		if oldmap[eqpos] != nil && newmap[eqpos] != nil && oldmap[eqpos].UUID != newmap[eqpos].UUID {
+			deleted = append(deleted, oldmap[eqpos])
+			added = append(added, newmap[eqpos])
+		}
+	}
+	return
 }
