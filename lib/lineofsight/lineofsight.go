@@ -99,7 +99,7 @@ func (pll PosLenList) delDup() PosLenList {
 	return rtn
 }
 
-// ToCellLenList fromsrclen to in square len
+// ToCellLenList calc from-srclen to cell-cross-len
 func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	if len(pll) == 0 {
 		return nil
@@ -117,7 +117,7 @@ func (pll PosLenList) ToCellLenList() findnear.XYLenList {
 	return rtn
 }
 
-// MakeSightlinesByXYLenList make sighit lines 0,0 to all xyLenList dst
+// MakeSightlinesByXYLenList make sight lines 0,0 to all xyLenList dst
 func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, len(xyLenList))
 	for i, v := range xyLenList {
