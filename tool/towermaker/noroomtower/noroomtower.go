@@ -32,12 +32,12 @@ func New(name string) *towermake.Tower {
 
 		for wingC := 1; wingC <= 8; wingC++ {
 			fm.Appendf(
-				"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=%v degree=0 perturn=10 count=%v message=RotDanger%v",
+				"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=%v degree=0 perturn=10 decay=Decrease count=%v message=RotDanger%v",
 				"Rand", gameconst.ViewPortW/2, wingC, 2, wingC,
 			)
 		}
 		fm.Appendf(
-			"AddMine%v display=None count=%v message=Mine",
+			"AddMine%v display=None decay=Decrease count=%v message=Mine",
 			"Rand", 10,
 		)
 	}

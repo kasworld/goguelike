@@ -181,7 +181,7 @@ func New(name string) *towermake.Tower {
 	for x := 0; x < fm.W; x += lhlen * 2 {
 		for y := 0; y < fm.H; y += lhlen * 2 {
 			fm.Appendf(
-				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=%v message=RotDanger1",
+				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=%v decay=Decrease message=RotDanger1",
 				x, y, lhlen, perturn,
 			)
 			perturn = -perturn
@@ -191,7 +191,7 @@ func New(name string) *towermake.Tower {
 	for x := lhlen; x < fm.W; x += lhlen * 2 {
 		for y := lhlen; y < fm.H; y += lhlen * 2 {
 			fm.Appendf(
-				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=%v message=RotDanger2",
+				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=%v decay=Decrease message=RotDanger2",
 				x, y, lhlen/2, perturn,
 			)
 			perturn = -perturn
@@ -199,7 +199,7 @@ func New(name string) *towermake.Tower {
 		}
 	}
 	fm.Appendf(
-		"AddMine%v display=None count=%v message=Mine",
+		"AddMine%v display=None decay=Decrease count=%v message=Mine",
 		"Rand", (lhCount+gwCount)/2,
 	)
 
@@ -246,15 +246,15 @@ func New(name string) *towermake.Tower {
 		}
 
 		fm.Appendf(
-			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 count=%v message=RotDanger1",
+			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 decay=Decrease count=%v message=RotDanger1",
 			"Rand", lhlen, 1,
 		)
 		fm.Appendf(
-			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 count=%v message=RotDanger2",
+			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 decay=Decrease count=%v message=RotDanger2",
 			"Rand", lhlen/2, 1,
 		)
 		fm.Appendf(
-			"AddMine%v display=None count=%v message=Mine",
+			"AddMine%v display=None decay=Decrease count=%v message=Mine",
 			"Rand", 1,
 		)
 

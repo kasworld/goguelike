@@ -14,6 +14,7 @@ package terrain
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terrain/roomsort"
@@ -23,23 +24,25 @@ import (
 func cmdAddMine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var x, y int
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var decay decaytype.DecayType
 	var message string
-	if err := ca.GetArgs(&x, &y, &dispType, &message); err != nil {
+	if err := ca.GetArgs(&x, &y, &dispType, &decay, &message); err != nil {
 		return err
 	}
-	return tr.addMine(x, y, dispType, message)
+	return tr.addMine(x, y, dispType, decay, message)
 }
 
 func cmdAddMineRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var decay decaytype.DecayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &decay, &count, &message); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addMineRand(dispType, message)
+		err := tr.addMineRand(dispType, decay, message)
 		if err == nil {
 			count--
 		} else {
@@ -54,14 +57,15 @@ func cmdAddMineRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 
 func cmdAddMineRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
+	var decay decaytype.DecayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
+	if err := ca.GetArgs(&dispType, &decay, &count, &message); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		err := tr.addMineRandInRoom(dispType, message)
+		err := tr.addMineRandInRoom(dispType, decay, message)
 		if err == nil {
 			count--
 		} else {
@@ -74,13 +78,13 @@ func cmdAddMineRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	return nil
 }
 
-func (tr *Terrain) addMine(
-	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
+func (tr *Terrain) addMine(x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType, decay decaytype.DecayType,
+	message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen
 	if !tr.canPlaceFieldObjAt(x, y) {
 		return fmt.Errorf("can not add Mine at NonCharPlaceable tile %v %v", x, y)
 	}
-	po := fieldobject.NewMine(tr.Name, dispType, message)
+	po := fieldobject.NewMine(tr.Name, dispType, decay, message)
 	tr.foPosMan.AddToXY(po, x, y)
 
 	if r := tr.roomManager.GetRoomByPos(x, y); r != nil {
@@ -89,21 +93,21 @@ func (tr *Terrain) addMine(
 	return nil
 }
 
-func (tr *Terrain) addMineRand(
-	dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
+func (tr *Terrain) addMineRand(dispType fieldobjdisplaytype.FieldObjDisplayType, decay decaytype.DecayType,
+	message string) error {
 
 	for try := 10; try > 0; try-- {
 		x, y := tr.rnd.Intn(tr.Xlen), tr.rnd.Intn(tr.Ylen)
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		return tr.addMine(x, y, dispType, message)
+		return tr.addMine(x, y, dispType, decay, message)
 	}
 	return fmt.Errorf("fail to addMineRand at NonCharPlaceable tile")
 }
 
-func (tr *Terrain) addMineRandInRoom(
-	dispType fieldobjdisplaytype.FieldObjDisplayType, message string) error {
+func (tr *Terrain) addMineRandInRoom(dispType fieldobjdisplaytype.FieldObjDisplayType, decay decaytype.DecayType,
+	message string) error {
 
 	if tr.roomManager.GetCount() == 0 {
 		return fmt.Errorf("no room to add Mine")
@@ -121,7 +125,7 @@ func (tr *Terrain) addMineRandInRoom(
 		if !tr.canPlaceFieldObjAt(x, y) {
 			continue
 		}
-		return tr.addMine(x, y, dispType, message)
+		return tr.addMine(x, y, dispType, decay, message)
 	}
 	return fmt.Errorf("cannot find pos in room")
 }

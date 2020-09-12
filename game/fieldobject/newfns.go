@@ -14,6 +14,7 @@ package fieldobject
 import (
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/lineattackdata"
+	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/uuidstr"
@@ -72,7 +73,7 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 
 // NewRotateLineAttack arg order follow terraincmdenum
 func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
-	winglen, wingcount int, degree, degreeperturn int,
+	winglen, wingcount int, degree, degreeperturn int, decay decaytype.DecayType,
 	message string,
 ) *FieldObject {
 	lineattackdata.UpdateCache360Line(winglen)
@@ -105,7 +106,8 @@ func wrapInt(v, l int) int {
 	return (v%l + l) % l
 }
 
-func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
+func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
+	decay decaytype.DecayType, message string,
 ) *FieldObject {
 	return &FieldObject{
 		ID:          uuidstr.New(),
