@@ -82,7 +82,7 @@ func (vpc *ViewportCache) GetByCache(x, y int) *viewportdata.ViewportSight2 {
 	return vpc.RequireSightFromXY[x][y]
 }
 
-var sightlinesByXYLenList = lineofsight.MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
+var sightlinesByXYLenList = MakeSightlinesByXYLenList(viewportdata.ViewportXYLenList)
 
 // make visible map, lineofsight
 func (vpc *ViewportCache) makeAt3(centerX, centerY int) *viewportdata.ViewportSight2 {
@@ -104,4 +104,30 @@ func (vpc *ViewportCache) makeAt3(centerX, centerY int) *viewportdata.ViewportSi
 		vpSightMat[i] = float32(needSight)
 	}
 	return &vpSightMat
+}
+
+// MakeSightlinesByXYLenList make sight lines 0,0 to all xyLenList dst
+func MakeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
+	rtn := make([]findnear.XYLenList, len(xyLenList))
+	for i, v := range xyLenList {
+		// calc to dst near point
+		shiftx := 0.5
+		shifty := 0.5
+		if v.X > 0 {
+			shiftx = 0
+		} else if v.X < 0 {
+			shiftx = 1
+		}
+		if v.Y > 0 {
+			shifty = 0
+		} else if v.Y < 0 {
+			shifty = 1
+		}
+		rtn[i] = lineofsight.MakePosLenList(
+			0+0.5, 0+0.5, // from src center
+			float64(v.X)+shiftx,
+			float64(v.Y)+shifty,
+		).ToCellLenList()
+	}
+	return rtn
 }

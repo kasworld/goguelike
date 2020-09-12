@@ -16,7 +16,6 @@ import (
 	"math"
 	"testing"
 
-	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 )
 
@@ -30,10 +29,10 @@ func TestMakePosLenList(t *testing.T) {
 	}
 }
 
-func TestMakeSightlinesByXYLenList(t *testing.T) {
-	vp := viewportdata.ViewportXYLenList[:9]
-	sightlinesByXYLenList := MakeSightlinesByXYLenList(vp)
-	for i, v := range sightlinesByXYLenList {
-		fmt.Printf("%v %v\n", vp[i], v)
-	}
-}
+// func TestMakeSightlinesByXYLenList(t *testing.T) {
+// 	vp := viewportdata.ViewportXYLenList[:9]
+// 	sightlinesByXYLenList := MakeSightlinesByXYLenList(vp)
+// 	for i, v := range sightlinesByXYLenList {
+// 		fmt.Printf("%v %v\n", vp[i], v)
+// 	}
+// }
