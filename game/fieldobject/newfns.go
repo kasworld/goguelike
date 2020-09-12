@@ -12,6 +12,8 @@
 package fieldobject
 
 import (
+	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/config/lineattackdata"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/uuidstr"
@@ -73,7 +75,7 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 	winglen, wingcount int, degree, degreeperturn int,
 	message string,
 ) *FieldObject {
-	updateCache360Line(winglen)
+	lineattackdata.UpdateCache360Line(winglen)
 	return &FieldObject{
 		ID:            uuidstr.New(),
 		FloorName:     floorname,
@@ -85,6 +87,22 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 		WingLen:       winglen,
 		WingCount:     wingcount,
 	}
+}
+
+// GetLineAttack calc dangerobj wingcount * line
+func (fo *FieldObject) GetLineAttack() []findnear.XYLenList {
+	rtn := make([]findnear.XYLenList, fo.WingCount)
+	cache := lineattackdata.GetWingLines(fo.WingLen)
+	wingdeg := 360.0 / float64(fo.WingCount)
+	for wing := 0; wing < fo.WingCount; wing++ {
+		deg := int(float64(wing)*wingdeg + float64(fo.Degree))
+		rtn[wing] = cache[wrapInt(deg, 360)]
+	}
+	return rtn
+}
+
+func wrapInt(v, l int) int {
+	return (v%l + l) % l
 }
 
 func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,

@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package fieldobject
+package lineattackdata
 
 import (
 	"math"
@@ -27,7 +27,7 @@ var wingCache = struct {
 	data: make(map[int][360]findnear.XYLenList),
 }
 
-func updateCache360Line(winglen int) {
+func UpdateCache360Line(winglen int) {
 	wingCache.mutex.Lock()
 	defer wingCache.mutex.Unlock()
 	if _, exist := wingCache.data[winglen]; exist {
@@ -43,18 +43,6 @@ func updateCache360Line(winglen int) {
 	wingCache.data[winglen] = rtn
 }
 
-// GetLineAttack calc dangerobj wingcount * line
-func (fo *FieldObject) GetLineAttack() []findnear.XYLenList {
-	rtn := make([]findnear.XYLenList, fo.WingCount)
-	cache := wingCache.data[fo.WingLen]
-	wingdeg := 360.0 / float64(fo.WingCount)
-	for wing := 0; wing < fo.WingCount; wing++ {
-		deg := int(float64(wing)*wingdeg + float64(fo.Degree))
-		rtn[wing] = cache[wrapInt(deg, 360)]
-	}
-	return rtn
-}
-
-func wrapInt(v, l int) int {
-	return (v%l + l) % l
+func GetWingLines(winglen int) [360]findnear.XYLenList {
+	return wingCache.data[winglen]
 }
