@@ -14,6 +14,7 @@ package fieldobject
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -32,7 +33,9 @@ type FieldObject struct {
 	// trapteleport
 	DstFloorName string
 
-	// LightHouse ,GateKeeper radian
+	// common mine, rotatelineattack
+	Decay decaytype.DecayType
+	// rotatelineattack radian
 	Degree, DegreePerTurn int
 	WingLen, WingCount    int
 

@@ -50,11 +50,11 @@ AddTrapsRand            display:FieldObjDisplayType acttype:FieldObjActType coun
 AddTrapsInRoom          display:FieldObjDisplayType acttype:FieldObjActType count:int message:string
 
 # add fieldobj LightHouse, GateKeeper
-AddRotateLineAttack           x:int y:int display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int message:string
-AddRotateLineAttackRand       display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int count:int message:string
-AddRotateLineAttackInRoom     display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int count:int message:string
+AddRotateLineAttack           x:int y:int display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType message:string
+AddRotateLineAttackRand       display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int count:int decay:DecayType message:string
+AddRotateLineAttackInRoom     display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int count:int decay:DecayType message:string
 
 # add Mine
-AddMine           x:int y:int display:FieldObjDisplayType message:string
-AddMineRand       display:FieldObjDisplayType count:int message:string
-AddMineInRoom     display:FieldObjDisplayType count:int message:string
+AddMine           x:int y:int display:FieldObjDisplayType decay:DecayType message:string
+AddMineRand       display:FieldObjDisplayType count:int decay:DecayType message:string
+AddMineInRoom     display:FieldObjDisplayType count:int decay:DecayType message:string

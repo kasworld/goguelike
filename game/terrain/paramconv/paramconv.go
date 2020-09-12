@@ -9,17 +9,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package terraincmd
+package paramconv
 
 import (
 	"fmt"
 	"strconv"
 
+	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/resourcetype"
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/enum/wingdecaytype"
 )
 
 func SetFloat(valStr string, dstValue interface{}) error {
@@ -122,14 +122,14 @@ func SetResourceType(valStr string, dstValue interface{}) error {
 	return nil
 }
 
-func SetWingDecayType(valStr string, dstValue interface{}) error {
-	iv, ok := dstValue.(*wingdecaytype.WingDecayType)
+func SetDecayType(valStr string, dstValue interface{}) error {
+	iv, ok := dstValue.(*decaytype.DecayType)
 	if !ok {
-		return fmt.Errorf("fail to cast WingDecayType %v", valStr)
+		return fmt.Errorf("fail to cast DecayType %v", valStr)
 	}
-	rsctl, exist := wingdecaytype.String2WingDecayType(valStr)
+	rsctl, exist := decaytype.String2DecayType(valStr)
 	if !exist {
-		return fmt.Errorf("unknown WingDecayType %v", valStr)
+		return fmt.Errorf("unknown DecayType %v", valStr)
 	}
 	*iv = rsctl
 	return nil
@@ -144,5 +144,5 @@ var Type2ConvFn = map[string]func(valStr string, dstValue interface{}) error{
 	"FieldObjDisplayType": SetFieldObjDisplayType,
 	"TileType":            SetTileType,
 	"ResourceType":        SetResourceType,
-	"WingDecayType":       SetWingDecayType,
+	"DecayType":           SetDecayType,
 }

@@ -17,6 +17,7 @@ import (
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/terraincmd"
+	"github.com/kasworld/goguelike/game/terrain/paramconv"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
@@ -216,7 +217,7 @@ func (fm *Floor) CalcRoomCount() int {
 			continue
 		}
 		ca := &scriptparse.CmdArgs{
-			Type2ConvFn: terraincmd.Type2ConvFn,
+			Type2ConvFn: paramconv.Type2ConvFn,
 			Cmd:         cmdstr,
 			Name2Value:  name2value,
 			NameList:    nameList,
