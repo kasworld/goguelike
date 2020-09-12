@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/resourcetype"
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/wingdecaytype"
 )
 
 func SetFloat(valStr string, dstValue interface{}) error {
@@ -69,65 +70,79 @@ func SetString(valStr string, dstValue interface{}) error {
 	return nil
 }
 
-func SetFieldObjAct_Type(valStr string, dstValue interface{}) error {
+func SetFieldObjActType(valStr string, dstValue interface{}) error {
 	iv, ok := dstValue.(*fieldobjacttype.FieldObjActType)
 	if !ok {
-		return fmt.Errorf("fail to cast FieldObjAct_Type %v", valStr)
+		return fmt.Errorf("fail to cast FieldObjActType %v", valStr)
 	}
 	portalact, exist := fieldobjacttype.String2FieldObjActType(valStr)
 	if !exist {
-		return fmt.Errorf("unknown FieldObjAct_Type %v", valStr)
+		return fmt.Errorf("unknown FieldObjActType %v", valStr)
 	}
 	*iv = portalact
 	return nil
 }
 
-func SetFieldObjDisplay_Type(valStr string, dstValue interface{}) error {
+func SetFieldObjDisplayType(valStr string, dstValue interface{}) error {
 	iv, ok := dstValue.(*fieldobjdisplaytype.FieldObjDisplayType)
 	if !ok {
-		return fmt.Errorf("fail to cast FieldObjDisplay_Type %v", valStr)
+		return fmt.Errorf("fail to cast FieldObjDisplayType %v", valStr)
 	}
 	portaldisp, exist := fieldobjdisplaytype.String2FieldObjDisplayType(valStr)
 	if !exist {
-		return fmt.Errorf("unknown FieldObjDisplay_Type %v", valStr)
+		return fmt.Errorf("unknown FieldObjDisplayType %v", valStr)
 	}
 	*iv = portaldisp
 	return nil
 }
 
-func SetTile_Type(valStr string, dstValue interface{}) error {
+func SetTileType(valStr string, dstValue interface{}) error {
 	iv, ok := dstValue.(*tile.Tile)
 	if !ok {
-		return fmt.Errorf("fail to cast Tile_Type %v", valStr)
+		return fmt.Errorf("fail to cast TileType %v", valStr)
 	}
 	tl, exist := tile.String2Tile(valStr)
 	if !exist {
-		return fmt.Errorf("unknown Tile_Type %v", valStr)
+		return fmt.Errorf("unknown TileType %v", valStr)
 	}
 	*iv = tl
 	return nil
 }
 
-func SetTileRsc_Type(valStr string, dstValue interface{}) error {
+func SetResourceType(valStr string, dstValue interface{}) error {
 	iv, ok := dstValue.(*resourcetype.ResourceType)
 	if !ok {
-		return fmt.Errorf("fail to cast TileRsc_Type %v", valStr)
+		return fmt.Errorf("fail to cast ResourceType %v", valStr)
 	}
 	rsctl, exist := resourcetype.String2ResourceType(valStr)
 	if !exist {
-		return fmt.Errorf("unknown TileRsc_Type %v", valStr)
+		return fmt.Errorf("unknown ResourceType %v", valStr)
+	}
+	*iv = rsctl
+	return nil
+}
+
+func SetWingDecayType(valStr string, dstValue interface{}) error {
+	iv, ok := dstValue.(*wingdecaytype.WingDecayType)
+	if !ok {
+		return fmt.Errorf("fail to cast WingDecayType %v", valStr)
+	}
+	rsctl, exist := wingdecaytype.String2WingDecayType(valStr)
+	if !exist {
+		return fmt.Errorf("unknown WingDecayType %v", valStr)
 	}
 	*iv = rsctl
 	return nil
 }
 
 var Type2ConvFn = map[string]func(valStr string, dstValue interface{}) error{
-	"float":                SetFloat,
-	"int":                  SetInt,
-	"bool":                 SetBool,
-	"string":               SetString,
-	"FieldObjAct_Type":     SetFieldObjAct_Type,
-	"FieldObjDisplay_Type": SetFieldObjDisplay_Type,
-	"Tile_Type":            SetTile_Type,
-	"TileRsc_Type":         SetTileRsc_Type,
+	"float":               SetFloat,
+	"int":                 SetInt,
+	"bool":                SetBool,
+	"string":              SetString,
+	"FieldObjActType":     SetFieldObjActType,
+	"FieldObjDisplayType": SetFieldObjDisplayType,
+	"TileType":            SetTileType,
+	"ResourceType":        SetResourceType,
+	"WingDecayType":       SetWingDecayType,
 }

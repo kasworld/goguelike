@@ -53,6 +53,7 @@ genenum -typename=FactionType -packagename=factiontype -basedir=enum -vectortype
 genenum -typename=AIPlan -packagename=aiplan -basedir=enum -vectortype=int
 genenum -typename=TerrainCmd -packagename=terraincmd -basedir=enum -vectortype=int
 genenum -typename=DangerType -packagename=dangertype -basedir=enum -vectortype=int
+genenum -typename=WingDecayType -packagename=wingdecaytype -basedir=enum
 
 cd enum
 goimports -w .
