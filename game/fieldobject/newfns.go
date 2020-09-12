@@ -73,6 +73,7 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 	winglen, wingcount int, degree, degreeperturn int,
 	message string,
 ) *FieldObject {
+	updateCache360Line(winglen)
 	return &FieldObject{
 		ID:            uuidstr.New(),
 		FloorName:     floorname,

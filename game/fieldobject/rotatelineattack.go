@@ -13,20 +13,48 @@ package fieldobject
 
 import (
 	"math"
+	"sync"
 
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/lib/lineofsight"
 )
 
+// wingCache hold cache winglen wingangle to line
+var wingCache = struct {
+	data  map[int][360]findnear.XYLenList
+	mutex sync.Mutex
+}{
+	data: make(map[int][360]findnear.XYLenList),
+}
+
+func updateCache360Line(winglen int) {
+	wingCache.mutex.Lock()
+	defer wingCache.mutex.Unlock()
+	if _, exist := wingCache.data[winglen]; exist {
+		return
+	}
+	var rtn [360]findnear.XYLenList
+	for deg := range rtn {
+		rad := float64(deg) / 180.0 * math.Pi
+		dx := float64(winglen) * math.Cos(rad)
+		dy := float64(winglen) * math.Sin(rad)
+		rtn[deg] = lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+	}
+	wingCache.data[winglen] = rtn
+}
+
 // GetLineAttack calc dangerobj wingcount * line
 func (fo *FieldObject) GetLineAttack() []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, fo.WingCount)
+	cache := wingCache.data[fo.WingLen]
 	wingdeg := 360.0 / float64(fo.WingCount)
 	for wing := 0; wing < fo.WingCount; wing++ {
-		rad := (float64(wing)*wingdeg + float64(fo.Degree)) / 180.0 * math.Pi
-		dx := float64(fo.WingLen) * math.Cos(rad)
-		dy := float64(fo.WingLen) * math.Sin(rad)
-		rtn[wing] = lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+		deg := int(float64(wing)*wingdeg + float64(fo.Degree))
+		rtn[wing] = cache[wrapInt(deg, 360)]
 	}
 	return rtn
+}
+
+func wrapInt(v, l int) int {
+	return (v%l + l) % l
 }
