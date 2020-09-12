@@ -12,7 +12,6 @@
 package floor
 
 import (
-	"math"
 	"time"
 
 	"github.com/kasworld/goguelike/config/contagionarea"
@@ -33,7 +32,6 @@ import (
 	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/lineofsight"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -220,13 +218,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		fo := o.(*fieldobject.FieldObject)
 		switch fo.ActType {
 		case fieldobjacttype.RotateLineAttack:
-			wingdeg := 360.0 / float64(fo.WingCount)
-			for wing := 0; wing < fo.WingCount; wing++ {
-				rad := (float64(wing)*wingdeg + fo.Degree) / 180 * math.Pi
-				dx := float64(fo.WingLen) * math.Cos(rad)
-				dy := float64(fo.WingLen) * math.Sin(rad)
-				xylenline := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
-				for i, v := range xylenline {
+			wings := fo.GetLineAttack()
+			for _, line := range wings {
+				for i, v := range line {
 					rr := v.L / float64(i+1)
 					f.doPosMan.AddToXY(
 						dangerobject.NewFOAttact(fo, dangertype.RotateLineAttack, rr),
