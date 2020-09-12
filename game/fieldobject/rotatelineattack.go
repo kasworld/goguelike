@@ -23,7 +23,7 @@ func (fo *FieldObject) GetLineAttack() []findnear.XYLenList {
 	rtn := make([]findnear.XYLenList, fo.WingCount)
 	wingdeg := 360.0 / float64(fo.WingCount)
 	for wing := 0; wing < fo.WingCount; wing++ {
-		rad := (float64(wing)*wingdeg + fo.Degree) / 180 * math.Pi
+		rad := (float64(wing)*wingdeg + float64(fo.Degree)) / 180.0 * math.Pi
 		dx := float64(fo.WingLen) * math.Cos(rad)
 		dy := float64(fo.WingLen) * math.Sin(rad)
 		rtn[wing] = lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()

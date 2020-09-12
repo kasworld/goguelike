@@ -33,7 +33,7 @@ type FieldObject struct {
 	DstFloorName string
 
 	// LightHouse ,GateKeeper radian
-	Degree, DegreePerTurn float64
+	Degree, DegreePerTurn int
 	WingLen, WingCount    int
 
 	// Mine, -1 on not triggered

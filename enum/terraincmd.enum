@@ -50,9 +50,9 @@ AddTrapsRand            display:FieldObjDisplay_Type acttype:FieldObjAct_Type co
 AddTrapsInRoom          display:FieldObjDisplay_Type acttype:FieldObjAct_Type count:int message:string
 
 # add fieldobj LightHouse, GateKeeper
-AddRotateLineAttack           x:int y:int display:FieldObjDisplay_Type winglen:int wingcount:int degree:float perturn:float message:string
-AddRotateLineAttackRand       display:FieldObjDisplay_Type winglen:int wingcount:int degree:float perturn:float count:int message:string
-AddRotateLineAttackInRoom     display:FieldObjDisplay_Type winglen:int wingcount:int degree:float perturn:float count:int message:string
+AddRotateLineAttack           x:int y:int display:FieldObjDisplay_Type winglen:int wingcount:int degree:int perturn:int message:string
+AddRotateLineAttackRand       display:FieldObjDisplay_Type winglen:int wingcount:int degree:int perturn:int count:int message:string
+AddRotateLineAttackInRoom     display:FieldObjDisplay_Type winglen:int wingcount:int degree:int perturn:int count:int message:string
 
 # add Mine
 AddMine           x:int y:int display:FieldObjDisplay_Type message:string

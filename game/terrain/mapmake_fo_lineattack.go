@@ -23,7 +23,7 @@ import (
 func cmdAddRotateLineAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var x, y int
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
-	var degree, perturn float64
+	var degree, perturn int
 	var winglen, wingcount int
 	var message string
 	if err := ca.GetArgs(&x, &y, &dispType, &winglen, &wingcount, &degree, &perturn, &message); err != nil {
@@ -34,7 +34,7 @@ func cmdAddRotateLineAttack(tr *Terrain, ca *scriptparse.CmdArgs) error {
 
 func cmdAddRotateLineAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
-	var degree, perturn float64
+	var degree, perturn int
 	var winglen, wingcount int
 	var count int
 	var message string
@@ -58,7 +58,7 @@ func cmdAddRotateLineAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 
 func cmdAddRotateLineAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
-	var degree, perturn float64
+	var degree, perturn int
 	var winglen, wingcount int
 	var count int
 	var message string
@@ -82,7 +82,7 @@ func cmdAddRotateLineAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) erro
 
 func (tr *Terrain) addRotateLineAttack(
 	x, y int, dispType fieldobjdisplaytype.FieldObjDisplayType,
-	winglen, wingcount int, degree, perturn float64,
+	winglen, wingcount int, degree, perturn int,
 	message string) error {
 	x, y = x%tr.Xlen, y%tr.Ylen
 	if !tr.canPlaceFieldObjAt(x, y) {
@@ -99,7 +99,7 @@ func (tr *Terrain) addRotateLineAttack(
 
 func (tr *Terrain) addRotateLineAttackRand(
 	dispType fieldobjdisplaytype.FieldObjDisplayType,
-	winglen, wingcount int, degree, perturn float64,
+	winglen, wingcount int, degree, perturn int,
 	message string) error {
 
 	for try := 10; try > 0; try-- {
@@ -114,7 +114,7 @@ func (tr *Terrain) addRotateLineAttackRand(
 
 func (tr *Terrain) addRotateLineAttackRandInRoom(
 	dispType fieldobjdisplaytype.FieldObjDisplayType,
-	winglen, wingcount int, degree, perturn float64,
+	winglen, wingcount int, degree, perturn int,
 	message string) error {
 
 	if tr.roomManager.GetCount() == 0 {

@@ -70,7 +70,7 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 
 // NewRotateLineAttack arg order follow terraincmdenum
 func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
-	winglen, wingcount int, degree, degreeperturn float64,
+	winglen, wingcount int, degree, degreeperturn int,
 	message string,
 ) *FieldObject {
 	return &FieldObject{
