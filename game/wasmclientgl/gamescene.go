@@ -23,7 +23,7 @@ type GameScene struct {
 
 	// from client floor gl
 
-	light     [3]js.Value // rgb light
+	lightRGB  [3]js.Value // rgb light
 	lightW    js.Value    // white light
 	scene     js.Value
 	camera    js.Value
@@ -103,10 +103,19 @@ func NewGameScene() *GameScene {
 	// vp.scene.Call("add", ThreeJsNew("DirectionalLight", 0xffffff))
 
 	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
-		vp.light[i] = ThreeJsNew("PointLight", co, 0.5)
-		vp.scene.Call("add", vp.light[i])
-		lightHelper := ThreeJsNew("PointLightHelper", vp.light[i], 2)
-		vp.scene.Call("add", lightHelper)
+		vp.lightRGB[i] = ThreeJsNew("PointLight", co, 0.5)
+		geo := ThreeJsNew("SphereGeometry", DstCellSize/4, DstCellSize, DstCellSize)
+		mat := ThreeJsNew("MeshStandardMaterial",
+			map[string]interface{}{
+				"emissive":          co,
+				"emissiveIntensity": 1.0,
+				"color":             co,
+			},
+		)
+		mat.Set("transparent", true)
+		mat.Set("opacity", 0.5)
+		vp.lightRGB[i].Call("add", ThreeJsNew("Mesh", geo, mat))
+		vp.scene.Call("add", vp.lightRGB[i])
 	}
 
 	axisSize := HelperSize

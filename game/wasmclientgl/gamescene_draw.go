@@ -118,11 +118,11 @@ func (vp *GameScene) moveCameraLight(
 		r = cy
 	}
 	r *= 0.7
-	for i := range vp.light {
+	for i := range vp.lightRGB {
 		rad := envBias[i] * 2 * math.Pi
 		x := cx + r*math.Sin(rad)
 		y := cy + r*math.Cos(rad)
-		SetPosition(vp.light[i],
+		SetPosition(vp.lightRGB[i],
 			x, -y, DstCellSize*8,
 		)
 	}
