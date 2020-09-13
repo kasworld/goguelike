@@ -48,7 +48,10 @@ func (vp *GameScene) animateFieldObj() {
 
 func (vp *GameScene) animateDangerObj(frameProgress float64) {
 	for _, dao3d := range vp.jsSceneDOs {
-		rr := dao3d.Dao.AffectRate * dao3d.Dao.DangerType.Scale4UI()
+		rr := dao3d.Dao.AffectRate
+		if rr < 0.2 {
+			rr = 0.2
+		}
 		dao3d.ScaleX((1 - frameProgress) * rr)
 		dao3d.ScaleY((1 - frameProgress) * rr)
 	}

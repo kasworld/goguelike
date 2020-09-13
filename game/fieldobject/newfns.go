@@ -15,6 +15,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/lineattackdata"
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
@@ -116,7 +117,7 @@ func (fo *FieldObject) CalcLineAttackAffectRate(rate float64, i int) float64 {
 	case decaytype.Decrease:
 		return rate / float64(i+1)
 	case decaytype.Even:
-		return rate
+		return rate / (float64(fo.WingLen) / 2.0)
 	case decaytype.Increase:
 		return rate / float64(fo.WingLen-i)
 	}
@@ -143,8 +144,8 @@ func (fo *FieldObject) CalcMineAffectRate() float64 {
 	case decaytype.Decrease:
 		return 1 / float64(fo.Radius+1)
 	case decaytype.Even:
-		return 1
+		return 1 / (gameconst.ViewPortW / 2.0)
 	case decaytype.Increase:
-		return float64(fo.Radius + 1)
+		return 1 / float64(gameconst.ViewPortW-fo.Radius)
 	}
 }
