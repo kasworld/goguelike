@@ -110,16 +110,16 @@ func wrapInt(v, l int) int {
 	return (v%l + l) % l
 }
 
-func (fo *FieldObject) CalcLineAttackAffectRate(rate float64, i int) float64 {
+func (fo *FieldObject) CalcLineAttackAffectRate(rate float64, i, max int) float64 {
 	switch fo.Decay {
 	default:
 		panic(fmt.Sprintf("invalid decaytype %v", fo))
 	case decaytype.Decrease:
 		return rate / float64(i+1)
 	case decaytype.Even:
-		return rate / (float64(fo.WingLen) / 2.0)
+		return rate / (float64(max) / 2.0)
 	case decaytype.Increase:
-		return rate / float64(fo.WingLen-i)
+		return rate / float64(max-i)
 	}
 }
 

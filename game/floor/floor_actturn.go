@@ -221,7 +221,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			wings := fo.GetLineAttack()
 			for _, line := range wings {
 				for i, v := range line {
-					rr := fo.CalcLineAttackAffectRate(v.L, i)
+					rr := fo.CalcLineAttackAffectRate(v.L, i, len(line))
 					// rr := v.L / float64(i+1)
 					f.doPosMan.AddToXY(
 						dangerobject.NewFOAttact(fo, dangertype.RotateLineAttack, rr),
