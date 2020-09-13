@@ -221,7 +221,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			wings := fo.GetLineAttack()
 			for _, line := range wings {
 				for i, v := range line {
-					rr := v.L / float64(i+1)
+					rr := fo.CalcLineAttackAffectRate(v.L, i)
+					// rr := v.L / float64(i+1)
 					f.doPosMan.AddToXY(
 						dangerobject.NewFOAttact(fo, dangertype.RotateLineAttack, rr),
 						foX+v.X, foY+v.Y,
@@ -235,8 +236,9 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			if fo.Radius >= 0 { //  active
 				// add do
+				rr := fo.CalcMineAffectRate()
 				for _, v := range minedata.MineData[int(fo.Radius)] {
-					rr := 1 / (fo.Radius + 1)
+					// rr := 1 / (fo.Radius + 1)
 					f.doPosMan.AddToXY(
 						dangerobject.NewFOAttact(fo, dangertype.MineExplode, rr),
 						foX+v.X, foY+v.Y,

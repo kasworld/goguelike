@@ -12,6 +12,8 @@
 package fieldobject
 
 import (
+	"fmt"
+
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/lineattackdata"
 	"github.com/kasworld/goguelike/enum/decaytype"
@@ -106,6 +108,19 @@ func wrapInt(v, l int) int {
 	return (v%l + l) % l
 }
 
+func (fo *FieldObject) CalcLineAttackAffectRate(rate float64, i int) float64 {
+	switch fo.Decay {
+	default:
+		panic(fmt.Sprintf("invalid decaytype %v", fo))
+	case decaytype.Decrease:
+		return rate / float64(i+1)
+	case decaytype.Even:
+		return rate
+	case decaytype.Increase:
+		return rate / float64(fo.WingLen-i)
+	}
+}
+
 func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
 	decay decaytype.DecayType, message string,
 ) *FieldObject {
@@ -116,5 +131,18 @@ func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayTy
 		DisplayType: displayType,
 		Message:     message,
 		Radius:      -1, // not triggered
+	}
+}
+
+func (fo *FieldObject) CalcMineAffectRate() float64 {
+	switch fo.Decay {
+	default:
+		panic(fmt.Sprintf("invalid decaytype %v", fo))
+	case decaytype.Decrease:
+		return 1 / float64(fo.Radius+1)
+	case decaytype.Even:
+		return 1
+	case decaytype.Increase:
+		return float64(fo.Radius + 1)
 	}
 }
