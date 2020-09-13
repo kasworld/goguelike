@@ -89,6 +89,7 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 		DegreePerTurn: degreeperturn,
 		WingLen:       winglen,
 		WingCount:     wingcount,
+		Decay:         decay,
 	}
 }
 
@@ -131,6 +132,7 @@ func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayTy
 		DisplayType: displayType,
 		Message:     message,
 		Radius:      -1, // not triggered
+		Decay:       decay,
 	}
 }
 
