@@ -14,6 +14,8 @@ package starttower
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/enum/decaytype"
+
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/tool/towermaker/floortemplate"
@@ -178,11 +180,13 @@ func New(name string) *towermake.Tower {
 	lhCount := 0
 	gwCount := 0
 	lhlen := gameconst.ViewPortW / 2
+
 	for x := 0; x < fm.W; x += lhlen * 2 {
 		for y := 0; y < fm.H; y += lhlen * 2 {
+			decay := decaytype.DecayType(rnd.Intn(decaytype.DecayType_Count))
 			fm.Appendf(
-				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=%v decay=Decrease message=RotDanger1",
-				x, y, lhlen, perturn,
+				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=%v decay=%v message=RotDanger1",
+				x, y, lhlen, perturn, decay,
 			)
 			perturn = -perturn
 			lhCount++
@@ -190,17 +194,26 @@ func New(name string) *towermake.Tower {
 	}
 	for x := lhlen; x < fm.W; x += lhlen * 2 {
 		for y := lhlen; y < fm.H; y += lhlen * 2 {
+			decay := decaytype.DecayType(rnd.Intn(decaytype.DecayType_Count))
 			fm.Appendf(
-				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=%v decay=Decrease message=RotDanger2",
-				x, y, lhlen/2, perturn,
+				"AddRotateLineAttack x=%v y=%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=%v decay=%v message=RotDanger2",
+				x, y, lhlen/2, perturn, decay,
 			)
 			perturn = -perturn
 			gwCount++
 		}
 	}
 	fm.Appendf(
-		"AddMine%v display=None decay=Decrease count=%v message=Mine",
-		"Rand", (lhCount+gwCount)/2,
+		"AddMine%v display=None decay=%v count=%v message=Mine",
+		"Rand", "Decrease", (lhCount+gwCount)/3,
+	)
+	fm.Appendf(
+		"AddMine%v display=None decay=%v count=%v message=Mine",
+		"Rand", "Even", (lhCount+gwCount)/3,
+	)
+	fm.Appendf(
+		"AddMine%v display=None decay=%v count=%v message=Mine",
+		"Rand", "Increase", (lhCount+gwCount)/3,
 	)
 
 	for _, fm := range tw.GetList() {
@@ -244,19 +257,21 @@ func New(name string) *towermake.Tower {
 		if recycleCount-roomCount > 0 {
 			fm.AddRecycler("Rand", recycleCount-roomCount)
 		}
-
-		fm.Appendf(
-			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 decay=Decrease count=%v message=RotDanger1",
-			"Rand", lhlen, 1,
-		)
-		fm.Appendf(
-			"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 decay=Decrease count=%v message=RotDanger2",
-			"Rand", lhlen/2, 1,
-		)
-		fm.Appendf(
-			"AddMine%v display=None decay=Decrease count=%v message=Mine",
-			"Rand", 1,
-		)
+		for j := 0; j < decaytype.DecayType_Count; j++ {
+			decay := decaytype.DecayType(j)
+			fm.Appendf(
+				"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=1 degree=0 perturn=10 decay=%v count=%v message=RotDanger1",
+				"Rand", lhlen, decay, 1,
+			)
+			fm.Appendf(
+				"AddRotateLineAttack%v display=RotateLineAttack winglen=%v wingcount=2 degree=0 perturn=10 decay=%v count=%v message=RotDanger2",
+				"Rand", lhlen/2, decay, 1,
+			)
+			fm.Appendf(
+				"AddMine%v display=None decay=%v count=%v message=Mine",
+				"Rand", decay, 1,
+			)
+		}
 
 	}
 	return tw
