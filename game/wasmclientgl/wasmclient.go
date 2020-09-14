@@ -215,6 +215,8 @@ func (app *WasmClient) enterTower(towerindex int) {
 	GetElementById("centerinfo").Set("innerHTML", "")
 	jsobj.Show(GetElementById("cmdrow"))
 
+	GetElementById("body").Get("style").Set("overflow", "hidden")
+
 	GetElementById("leftinfo").Set("style",
 		"color: white; position: fixed; top: 0; left: 0; overflow: hidden;")
 	GetElementById("rightinfo").Set("style",
