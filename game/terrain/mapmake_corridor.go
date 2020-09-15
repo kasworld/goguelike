@@ -17,7 +17,20 @@ import (
 	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/game/terrain/corridor"
 	"github.com/kasworld/goguelike/game/terrain/room"
+	"github.com/kasworld/goguelike/lib/scriptparse"
 )
+
+func cmdConnectRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var tl tile.Tile
+	var connectCount int
+	var allconnect bool
+	var diagonal bool
+	if err := ca.GetArgs(&tl, &connectCount, &allconnect, &diagonal); err != nil {
+		return err
+	}
+	tr.connectRooms(connectCount, allconnect, tl, diagonal)
+	return nil
+}
 
 func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile.Tile, way8 bool) {
 	roomGraph := make(map[string]map[string]bool)
