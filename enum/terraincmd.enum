@@ -19,7 +19,7 @@ ResourceAgeing          initrun:int msper:int resetaftern:int
 # add room
 AddRoom                 bgtile:TileType walltile:TileType terrace:bool x:int y:int w:int h:int
 AddRoomMaze             bgtile:TileType walltile:TileType terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
-AddRoomsRand            bgtile:TileType walltile:TileType terrace:bool align:int count:int mean:int stddev:int min:int
+AddRoomsRand            bgtile:TileType walltile:TileType terrace:bool align:int count:int mean:int stddev:int
 ConnectRooms            tile:TileType connect:int allconnect:bool diagonal:bool
 
 # add tile

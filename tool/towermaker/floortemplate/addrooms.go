@@ -32,18 +32,18 @@ func TileRooms64x32() []string {
 
 func GogueLike() []string {
 	return []string{
-		"AddRoomsRand bgtile=Swamp walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Soil walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Stone walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Sand walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Sea walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Magma walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Ice walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Grass walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Tree walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Room walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Road walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4 min=4",
-		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Swamp walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Soil walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Stone walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Sand walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Sea walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Magma walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Ice walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Grass walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Tree walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Room walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Road walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
 		"ConnectRooms tile=Fog connect=1 allconnect=true diagonal=false",
 		"ConnectRooms tile=Sand connect=1 allconnect=true diagonal=false",
 	}
@@ -51,21 +51,21 @@ func GogueLike() []string {
 
 func Practice64x32() []string {
 	return []string{
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4 min=4",
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4",
 		"ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
 	}
 }
 
 func RogueLike80x43() []string {
 	return []string{
-		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4",
 		"ConnectRooms tile=Soil connect=2 allconnect=true diagonal=false",
 	}
 }
 
 func Ghost80x43() []string {
 	return []string{
-		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4 min=4",
+		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4",
 		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
 	}
 }
@@ -86,7 +86,7 @@ func RoguelikeRand(roomCount int, intnfn func(int) int) []string {
 		roomTile := allRoomTile[intnfn(len(allRoomTile))]
 		wallTile := allWallTile[intnfn(len(allWallTile))]
 		rtn = append(rtn, fmt.Sprintf(
-			"AddRoomsRand bgtile=%v walltile=%v terrace=false align=1 count=1 mean=8 stddev=2 min=6",
+			"AddRoomsRand bgtile=%v walltile=%v terrace=false align=1 count=1 mean=8 stddev=2",
 			roomTile, wallTile))
 
 	}
@@ -114,7 +114,7 @@ func CityRoomsRand(roomCount int, intnfn func(int) int) []string {
 		roomTile := allRoomTile[intnfn(len(allRoomTile))]
 		wallTile := allWallTile[intnfn(len(allWallTile))]
 		rtn = append(rtn, fmt.Sprintf(
-			"AddRoomsRand bgtile=%v walltile=%v terrace=false align=16 count=1 mean=16 stddev=2 min=8",
+			"AddRoomsRand bgtile=%v walltile=%v terrace=false align=16 count=1 mean=16 stddev=2",
 			roomTile, wallTile))
 
 	}

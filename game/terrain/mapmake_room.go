@@ -53,13 +53,13 @@ func cmdAddRandRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var bgtile, walltile tile.Tile
 	var terrace bool
 	var align int
-	var count, mean, stddev, min int
-	if err := ca.GetArgs(&bgtile, &walltile, &terrace, &align, &count, &mean, &stddev, &min); err != nil {
+	var count, mean, stddev int
+	if err := ca.GetArgs(&bgtile, &walltile, &terrace, &align, &count, &mean, &stddev); err != nil {
 		return err
 	}
 	try := count
 	for count > 0 && try > 0 {
-		rt := tr.randRoomRect2(align, mean, stddev, min)
+		rt := tr.randRoomRect2(align, mean, stddev, terrace)
 		if err := tr.addRoomManual(rt, bgtile, walltile, terrace); err == nil {
 			count--
 		} else {
@@ -73,20 +73,29 @@ func cmdAddRandRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	return nil
 }
 
-func (tr *Terrain) randRoomRect2(align, RoomMeanSize, Stddev, Min int) rect.Rect {
+func (tr *Terrain) roomRandPosSize(align, mean, stddev, trlen int, terrace bool) (int, int) {
+	size := tr.rnd.NormIntRange(mean, stddev)
+	size = size/align*align + 1
+	if size < mean/2 {
+		size = mean / 2
+	}
+	if size < 4 {
+		size = 4
+	}
+	if terrace && size < 6 {
+		size = 6
+	}
+	if size > mean*2 {
+		size = mean * 2
+	}
+	pos := tr.rnd.Intn((trlen-size)/align) * align
+	return pos, size
+}
 
-	roomW, roomH := tr.rnd.NormIntRange(RoomMeanSize, Stddev), tr.rnd.NormIntRange(RoomMeanSize, Stddev)
-	roomW = roomW/align*align + 1
-	roomH = roomH/align*align + 1
-	if roomW < Min {
-		roomW = Min
-	}
-	if roomH < Min {
-		roomH = Min
-	}
-	roomX := tr.rnd.Intn((tr.Xlen-roomW)/align) * align
-	roomY := tr.rnd.Intn((tr.Ylen-roomH)/align) * align
-	return rect.Rect{roomX, roomY, roomW, roomH}
+func (tr *Terrain) randRoomRect2(align, mean, stddev int, terrace bool) rect.Rect {
+	x, w := tr.roomRandPosSize(align, mean, stddev, tr.Xlen, terrace)
+	y, h := tr.roomRandPosSize(align, mean, stddev, tr.Ylen, terrace)
+	return rect.Rect{x, y, w, h}
 }
 func (tr *Terrain) addRoomManual(rt rect.Rect, bgtile, walltile tile.Tile, terrace bool) error {
 	r := room.New(rt, bgtile)

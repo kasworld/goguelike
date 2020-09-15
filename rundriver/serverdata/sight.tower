@@ -6,10 +6,10 @@
     [
         "NewTerrain w=128 h=128 name=SightTest ao=0 po=0 actturnboost=1",
         "ResourceFillRect resource=Soil amount=1  x=0 y=0  w=128 h=128",
-        "AddRoomsRand bgtile=Room  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
-        "AddRoomsRand bgtile=Fog   walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
-        "AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
-        "AddRoomsRand bgtile=Tree  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1 min=8",
+        "AddRoomsRand bgtile=Room  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1",
+        "AddRoomsRand bgtile=Fog   walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1",
+        "AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1",
+        "AddRoomsRand bgtile=Tree  walltile=Wall terrace=false align=1 count=3 mean=20 stddev=1",
         "FinalizeTerrain",
         ""
     ],

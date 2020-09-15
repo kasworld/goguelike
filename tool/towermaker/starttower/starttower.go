@@ -48,7 +48,7 @@ func New(name string) *towermake.Tower {
 		"ResourceFromPNG name=imagefloor.png",
 		"ResourceRand resource=Plant mean=100000000 stddev=65535 repeat=256",
 		"ResourceAgeing initrun=0 msper=64000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=32 mean=6 stddev=4 min=4",
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=32 mean=6 stddev=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 	)
 	tw.Add("AgeingCity", 256, 256, 256, 0, 1.0).Appends(
