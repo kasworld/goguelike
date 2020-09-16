@@ -12,6 +12,7 @@
 package wasmclientgl
 
 import (
+	"github.com/kasworld/go-abs"
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -132,6 +133,8 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		return false
 	}
 	w, h := cf.Tiles.GetXYLen()
+
+	// attack basic
 	for _, ao := range app.olNotiData.ActiveObjList {
 		if !ao.Alive {
 			continue
@@ -148,25 +151,44 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 			go app.sendPacket(c2t_idcmd.Attack,
 				&c2t_obj.ReqAttack_data{Dir: dir},
 			)
-			// TODO when to use extended attack
-			// switch app.rnd.Intn(3) {
-			// case 0:
-			// 	go app.sendPacket(c2t_idcmd.Attack,
-			// 		&c2t_obj.ReqAttack_data{Dir: dir},
-			// 	)
-			// case 1:
-			// 	go app.sendPacket(c2t_idcmd.AttackWide,
-			// 		&c2t_obj.ReqAttackWide_data{Dir: dir},
-			// 	)
-			// case 2:
-			// 	go app.sendPacket(c2t_idcmd.AttackLong,
-			// 		&c2t_obj.ReqAttackLong_data{Dir: dir},
-			// 	)
-			// }
 			return true
 		}
 	}
+
+	// attack long
+	for _, ao := range app.olNotiData.ActiveObjList {
+		if !ao.Alive {
+			continue
+		}
+		if ao.UUID == gInitData.AccountInfo.ActiveObjUUID {
+			continue
+		}
+		if !cf.Tiles[ao.X][ao.Y].CanBattle() {
+			continue
+		}
+		isWay9, dir := isInLongAttack(
+			playerX, playerY, ao.X, ao.Y, w, h)
+		if isWay9 && dir != way9type.Center {
+			go app.sendPacket(c2t_idcmd.AttackLong,
+				&c2t_obj.ReqAttackLong_data{Dir: dir},
+			)
+			return true
+		}
+	}
+
 	return false
+}
+
+func isInLongAttack(x1, y1, x2, y2, w, h int) (bool, way9type.Way9Type) {
+	absx := abs.Absi(x1 - x2)
+	absy := abs.Absi(y1 - y2)
+	if absx > 3 || absy > 3 {
+		return false, way9type.Center
+	}
+	isWay9 := absx == 0 || absy == 0 || absx == absy
+	dx, dy := way9type.CalcDxDyWrapped(x2-x1, y2-y1, w, h)
+	way := way9type.RemoteDxDy2Way9(dx, dy)
+	return isWay9, way
 }
 
 func tryAutoPickup(app *WasmClient, v *htmlbutton.HTMLButton) bool {
