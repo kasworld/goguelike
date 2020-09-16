@@ -80,6 +80,8 @@ const (
 	CarryObjRecycleRate = 0.5
 
 	MaxChatLen = 80
+
+	AttackLongLen = 4
 )
 
 // activeobject experience constant

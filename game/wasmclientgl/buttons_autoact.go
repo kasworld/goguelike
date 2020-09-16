@@ -13,6 +13,7 @@ package wasmclientgl
 
 import (
 	"github.com/kasworld/go-abs"
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -182,7 +183,7 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 func isInLongAttack(x1, y1, x2, y2, w, h int) (bool, way9type.Way9Type) {
 	absx := abs.Absi(x1 - x2)
 	absy := abs.Absi(y1 - y2)
-	if absx > 3 || absy > 3 {
+	if absx >= gameconst.AttackLongLen || absy >= gameconst.AttackLongLen {
 		return false, way9type.Center
 	}
 	isWay9 := absx == 0 || absy == 0 || absx == absy
