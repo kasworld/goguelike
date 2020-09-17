@@ -40,7 +40,7 @@ func New(name string, floorCount int) *towermake.Tower {
 				roomCount = 2
 			}
 			fm := tw.Add(floorName, w, h, 1.0)
-			fm.Appendf("AddActiveObjectRand count=%v", roomCount/2)
+			fm.Appendf("ActiveObjectsRand count=%v", roomCount/2)
 			fm.Appends(
 				floortemplate.RoguelikeRand(roomCount, rnd.Intn)...,
 			)
@@ -48,23 +48,23 @@ func New(name string, floorCount int) *towermake.Tower {
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingCity256x256()...,
 			)
-			fm.Appendf("AddActiveObjectRand count=%v", 256)
+			fm.Appendf("ActiveObjectsRand count=%v", 256)
 
 		case 3:
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingField256x256()...,
 			)
-			fm.Appendf("AddActiveObjectRand count=%v", 256)
+			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		case 5:
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingMaze256x256()...,
 			)
-			fm.Appendf("AddActiveObjectRand count=%v", 256)
+			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		case 7:
 			fm := tw.Add(floorName, 64, 64, 1.0).Appends(
 				floortemplate.FreeForAll64x64()...,
 			)
-			fm.Appendf("AddActiveObjectRand count=%v", 16)
+			fm.Appendf("ActiveObjectsRand count=%v", 16)
 
 		case 9:
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
@@ -74,7 +74,7 @@ func New(name string, floorCount int) *towermake.Tower {
 				"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=32 mean=6 stddev=4",
 				"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 			)
-			fm.Appendf("AddActiveObjectRand count=%v", 256)
+			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		}
 	}
 

@@ -32,7 +32,7 @@ func cmdNewTerrain(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	return tr.execNewTerrain(name, w, h, actTurnBoost)
 }
 
-func cmdAddActiveObjectRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdActiveObjectsRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var aocount int
 	if err := ca.GetArgs(&aocount); err != nil {
 		return err
@@ -41,7 +41,7 @@ func cmdAddActiveObjectRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	return nil
 }
 
-func cmdAddCarryObjectRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+func cmdCarryObjectsRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var cocount int
 	if err := ca.GetArgs(&cocount); err != nil {
 		return err

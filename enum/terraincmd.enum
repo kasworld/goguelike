@@ -3,10 +3,10 @@
 NewTerrain  name:string w:int h:int actturnboost:float
 
 # initial ao count 
-AddActiveObjectRand count:int
+ActiveObjectsRand count:int
 
 # minimum co count on floor
-AddCarryObjectRand count:int
+CarryObjectsRand count:int
 
 # add resource  
 ResourceMazeWall        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool

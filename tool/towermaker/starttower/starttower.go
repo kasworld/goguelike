@@ -31,43 +31,43 @@ func New(name string) *towermake.Tower {
 	)
 	tw.Add("SoilPlant", 64, 64, 1.0).Appends(
 		floortemplate.SoilPlant64x64()...,
-	).Appendf("AddActiveObjectRand count=%v", 16)
+	).Appendf("ActiveObjectsRand count=%v", 16)
 	tw.Add("ManyPortals", 128, 128, 1.0).Appends(
 		floortemplate.BGTile9Rooms128x128()...,
-	).Appendf("AddActiveObjectRand count=%v", 64)
+	).Appendf("ActiveObjectsRand count=%v", 64)
 	tw.Add("SoilWater", 128, 128, 1.0).Appends(
 		floortemplate.SoilWater128x128()...,
-	).Appendf("AddActiveObjectRand count=%v", 64)
+	).Appendf("ActiveObjectsRand count=%v", 64)
 	tw.Add("SoilMagma", 128, 128, 1.0).Appends(
 		floortemplate.SoilMagma128x128()...,
-	).Appendf("AddActiveObjectRand count=%v", 64)
+	).Appendf("ActiveObjectsRand count=%v", 64)
 	tw.Add("SoilIce", 128, 128, 1.0).Appends(
 		floortemplate.SoilIce128x128()...,
-	).Appendf("AddActiveObjectRand count=%v", 64)
+	).Appendf("ActiveObjectsRand count=%v", 64)
 	tw.Add("MadeByImage", 256, 256, 1.0).Appends(
 		"ResourceFromPNG name=imagefloor.png",
 		"ResourceRand resource=Plant mean=100000000 stddev=65535 repeat=256",
 		"ResourceAgeing initrun=0 msper=64000 resetaftern=1440",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=32 mean=6 stddev=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
-	).Appendf("AddActiveObjectRand count=%v", 256)
+	).Appendf("ActiveObjectsRand count=%v", 256)
 	tw.Add("AgeingCity", 256, 256, 1.0).Appends(
 		floortemplate.AgeingCity256x256()...,
-	).Appendf("AddActiveObjectRand count=%v", 256)
+	).Appendf("ActiveObjectsRand count=%v", 256)
 	tw.Add("AgeingField", 256, 256, 1.0).Appends(
 		floortemplate.AgeingField256x256()...,
-	).Appendf("AddActiveObjectRand count=%v", 256)
+	).Appendf("ActiveObjectsRand count=%v", 256)
 	tw.Add("AgeingMaze", 256, 256, 1.0).Appends(
 		floortemplate.AgeingMaze256x256()...,
-	).Appendf("AddActiveObjectRand count=%v", 256)
+	).Appendf("ActiveObjectsRand count=%v", 256)
 
 	fm := tw.Add("BedTown", 256, 256, 1.0).Appends(
 		floortemplate.CityRooms(256, 256, 11, 11, 5, rnd.Intn)...,
-	).Appendf("AddActiveObjectRand count=%v", 128)
+	).Appendf("ActiveObjectsRand count=%v", 128)
 
 	fm = tw.Add("ResourceMazeFill", 256, 256, 1.0).Appends(
 		floortemplate.MixedResourceMaze(256, 256)...,
-	).Appendf("AddActiveObjectRand count=%v", 128)
+	).Appendf("ActiveObjectsRand count=%v", 128)
 	fm.Appends(
 		fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
 	)
@@ -77,7 +77,7 @@ func New(name string) *towermake.Tower {
 
 	fm = tw.Add("ResourceMaze", 256, 256, 1.0).Appends(
 		floortemplate.MixedResourceMaze(256, 256)...,
-	).Appendf("AddActiveObjectRand count=%v", 128)
+	).Appendf("ActiveObjectsRand count=%v", 128)
 	fm.Appends(
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
 	)
@@ -93,16 +93,16 @@ func New(name string) *towermake.Tower {
 
 	tw.Add("RogueLike", 80, 43, 1.0).Appends(
 		floortemplate.RogueLike80x43()...,
-	).Appendf("AddActiveObjectRand count=%v", 16)
+	).Appendf("ActiveObjectsRand count=%v", 16)
 	tw.Add("GogueLike", 80, 43, 1.0).Appends(
 		floortemplate.GogueLike()...,
-	).Appendf("AddActiveObjectRand count=%v", 32)
+	).Appendf("ActiveObjectsRand count=%v", 32)
 	tw.Add("Ghost", 80, 43, 1.0).Appends(
 		floortemplate.Ghost80x43()...,
-	).Appendf("AddActiveObjectRand count=%v", 16)
+	).Appendf("ActiveObjectsRand count=%v", 16)
 	tw.Add("FreeForAll", 64, 64, 1.0).Appends(
 		floortemplate.FreeForAll64x64()...,
-	).Appendf("AddActiveObjectRand count=%v", 16)
+	).Appendf("ActiveObjectsRand count=%v", 16)
 	tw.Add("TileRooms", 64, 32, 1.5).Appends(
 		floortemplate.TileRooms64x32()...,
 	)

@@ -22,8 +22,8 @@ import (
 var TerrainScriptFn = map[terraincmd.TerrainCmd]func(tr *Terrain, ca *scriptparse.CmdArgs) error{
 	terraincmd.NewTerrain: cmdNewTerrain,
 
-	terraincmd.AddActiveObjectRand: cmdAddActiveObjectRand,
-	terraincmd.AddCarryObjectRand:  cmdAddCarryObjectRand,
+	terraincmd.ActiveObjectsRand: cmdActiveObjectsRand,
+	terraincmd.CarryObjectsRand:  cmdCarryObjectsRand,
 
 	terraincmd.ResourceMazeWall:     cmdResourceMazeWall,
 	terraincmd.ResourceMazeWalk:     cmdResourceMazeWalk,

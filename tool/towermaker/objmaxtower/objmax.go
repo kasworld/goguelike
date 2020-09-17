@@ -32,12 +32,12 @@ func New(name string) *towermake.Tower {
 	fm := tw.Add("ObjMax0", floorW, floorH, 1.0).Appends(
 		floortemplate.CityRooms(floorW, floorH, 12, 10, 5, rnd.Intn)...,
 	)
-	fm.Appendf("AddActiveObjectRand count=%v", aoCount)
+	fm.Appendf("ActiveObjectsRand count=%v", aoCount)
 
 	fm = tw.Add("ObjMax1", floorW, floorH, 1.0).Appends(
 		floortemplate.MixedResourceMaze(floorW, floorH)...,
 	)
-	fm.Appendf("AddActiveObjectRand count=%v", aoCount)
+	fm.Appendf("ActiveObjectsRand count=%v", aoCount)
 	fm.Appends(
 		fmt.Sprintf("ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=%v h=%v", floorW, floorH),
 	)
@@ -48,7 +48,7 @@ func New(name string) *towermake.Tower {
 	fm = tw.Add("ObjMax2", floorW, floorH, 1.0).Appends(
 		floortemplate.MixedResourceMaze(floorW, floorH)...,
 	)
-	fm.Appendf("AddActiveObjectRand count=%v", aoCount)
+	fm.Appendf("ActiveObjectsRand count=%v", aoCount)
 	fm.Appends(
 		floortemplate.CityRoomsRand(roomCount, rnd.Intn)...,
 	)
