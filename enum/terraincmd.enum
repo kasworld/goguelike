@@ -5,7 +5,7 @@ NewTerrain  name:string w:int h:int actturnboost:float
 # initial ao count 
 AddActiveObjectRand count:int
 
-# co count on floor
+# minimum co count on floor
 AddCarryObjectRand count:int
 
 # add resource  
@@ -55,7 +55,7 @@ AddTrap                 x:int y:int display:FieldObjDisplayType acttype:FieldObj
 AddTrapsRand            display:FieldObjDisplayType acttype:FieldObjActType count:int message:string
 AddTrapsInRoom          display:FieldObjDisplayType acttype:FieldObjActType count:int message:string
 
-# add fieldobj LightHouse, GateKeeper
+# add fieldobj rotate line attack
 AddRotateLineAttack           x:int y:int display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType message:string
 AddRotateLineAttackRand       display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType count:int message:string
 AddRotateLineAttackInRoom     display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType count:int message:string
