@@ -18,8 +18,9 @@ import (
 
 func New(name string) *towermake.Tower {
 	tw := towermake.New(name)
-	tw.Add("SightTest", 64, 64, 64, 0, 1.0).Appends(
-		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=64 h=64",
+	tw.Add("SightTest", 64, 64, 1.0).Appends(
+		"AddActiveObjectRand count=64",
+		"ResourceFillRect resource=Soil amount=1 x=0 y=0 w=64 h=64",
 	)
 
 	for _, fm := range tw.GetList() {

@@ -35,8 +35,8 @@ func New(name string) *Tower {
 	return tw
 }
 
-func (tw *Tower) Add(name string, w, h int, ao, po int, turnBoost float64) *Floor {
-	fm := NewFloor(name, w, h, ao, po, turnBoost)
+func (tw *Tower) Add(name string, w, h int, turnBoost float64) *Floor {
+	fm := NewFloor(name, w, h, turnBoost)
 	return tw.AddFloor(name, fm)
 }
 

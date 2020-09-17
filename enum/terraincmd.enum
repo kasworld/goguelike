@@ -1,6 +1,12 @@
 # cmd argformat
 
-NewTerrain  name:string w:int h:int ao:int po:int actturnboost:float
+NewTerrain  name:string w:int h:int actturnboost:float
+
+# initial ao count 
+AddActiveObjectRand count:int
+
+# co count on floor
+AddCarryObjectRand count:int
 
 # add resource  
 ResourceMazeWall        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool

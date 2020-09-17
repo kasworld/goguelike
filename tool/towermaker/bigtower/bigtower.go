@@ -39,35 +39,42 @@ func New(name string, floorCount int) *towermake.Tower {
 			if roomCount < 2 {
 				roomCount = 2
 			}
-			fm := tw.Add(floorName, w, h, roomCount/2, 0, 1.0)
+			fm := tw.Add(floorName, w, h, 1.0)
+			fm.Appendf("AddActiveObjectRand count=%v", roomCount/2)
 			fm.Appends(
 				floortemplate.RoguelikeRand(roomCount, rnd.Intn)...,
 			)
 		case 1:
-			tw.Add(floorName, 256, 256, 256, 0, 1.0).Appends(
+			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingCity256x256()...,
 			)
+			fm.Appendf("AddActiveObjectRand count=%v", 256)
 
 		case 3:
-			tw.Add(floorName, 256, 256, 256, 0, 1.0).Appends(
+			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingField256x256()...,
 			)
+			fm.Appendf("AddActiveObjectRand count=%v", 256)
 		case 5:
-			tw.Add(floorName, 256, 256, 256, 0, 1.0).Appends(
+			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingMaze256x256()...,
 			)
+			fm.Appendf("AddActiveObjectRand count=%v", 256)
 		case 7:
-			tw.Add(floorName, 64, 64, 16, 0, 1.0).Appends(
+			fm := tw.Add(floorName, 64, 64, 1.0).Appends(
 				floortemplate.FreeForAll64x64()...,
 			)
+			fm.Appendf("AddActiveObjectRand count=%v", 16)
+
 		case 9:
-			tw.Add(floorName, 256, 256, 256, 0, 1.0).Appends(
+			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				"ResourceFromPNG name=imagefloor.png",
 				"ResourceRand resource=Plant mean=100000000 stddev=65535 repeat=256",
 				"ResourceAgeing initrun=0 msper=64000 resetaftern=1440",
 				"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=32 mean=6 stddev=4",
 				"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
 			)
+			fm.Appendf("AddActiveObjectRand count=%v", 256)
 		}
 	}
 

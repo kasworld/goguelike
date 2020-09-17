@@ -12,7 +12,13 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 
 	# cmd argformat
 
-	NewTerrain  name:string w:int h:int ao:int po:int actturnboost:float
+	NewTerrain  name:string w:int h:int actturnboost:float
+
+	# initial ao count 
+	AddActiveObjectRand count:int
+
+	# co count on floor
+	AddCarryObjectRand count:int
 
 	# add resource  
 	ResourceMazeWall        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
@@ -31,7 +37,7 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 	# add room
 	AddRoom                 bgtile:TileType walltile:TileType terrace:bool x:int y:int w:int h:int
 	AddRoomMaze             bgtile:TileType walltile:TileType terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
-	AddRoomsRand            bgtile:TileType walltile:TileType terrace:bool align:int count:int mean:int stddev:int min:int
+	AddRoomsRand            bgtile:TileType walltile:TileType terrace:bool align:int count:int mean:int stddev:int
 	ConnectRooms            tile:TileType connect:int allconnect:bool diagonal:bool
 
 	# add tile

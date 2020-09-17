@@ -26,99 +26,99 @@ func New(name string) *towermake.Tower {
 	var rnd = g2rand.New()
 
 	tw := towermake.New(name)
-	tw.Add("Practice", 64, 32, 0, 0, 0.7).Appends(
+	tw.Add("Practice", 64, 32, 0.7).Appends(
 		floortemplate.Practice64x32()...,
 	)
-	tw.Add("SoilPlant", 64, 64, 16, 0, 1.0).Appends(
+	tw.Add("SoilPlant", 64, 64, 1.0).Appends(
 		floortemplate.SoilPlant64x64()...,
-	)
-	tw.Add("ManyPortals", 128, 128, 64, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 16)
+	tw.Add("ManyPortals", 128, 128, 1.0).Appends(
 		floortemplate.BGTile9Rooms128x128()...,
-	)
-	tw.Add("SoilWater", 128, 128, 64, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 64)
+	tw.Add("SoilWater", 128, 128, 1.0).Appends(
 		floortemplate.SoilWater128x128()...,
-	)
-	tw.Add("SoilMagma", 128, 128, 64, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 64)
+	tw.Add("SoilMagma", 128, 128, 1.0).Appends(
 		floortemplate.SoilMagma128x128()...,
-	)
-	tw.Add("SoilIce", 128, 128, 64, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 64)
+	tw.Add("SoilIce", 128, 128, 1.0).Appends(
 		floortemplate.SoilIce128x128()...,
-	)
-	tw.Add("MadeByImage", 256, 256, 256, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 64)
+	tw.Add("MadeByImage", 256, 256, 1.0).Appends(
 		"ResourceFromPNG name=imagefloor.png",
 		"ResourceRand resource=Plant mean=100000000 stddev=65535 repeat=256",
 		"ResourceAgeing initrun=0 msper=64000 resetaftern=1440",
 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=32 mean=6 stddev=4",
 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
-	)
-	tw.Add("AgeingCity", 256, 256, 256, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 256)
+	tw.Add("AgeingCity", 256, 256, 1.0).Appends(
 		floortemplate.AgeingCity256x256()...,
-	)
-	tw.Add("AgeingField", 256, 256, 256, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 256)
+	tw.Add("AgeingField", 256, 256, 1.0).Appends(
 		floortemplate.AgeingField256x256()...,
-	)
-	tw.Add("AgeingMaze", 256, 256, 256, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 256)
+	tw.Add("AgeingMaze", 256, 256, 1.0).Appends(
 		floortemplate.AgeingMaze256x256()...,
-	)
+	).Appendf("AddActiveObjectRand count=%v", 256)
 
-	fm := tw.Add("BedTown", 256, 256, 128, 0, 1.0).Appends(
+	fm := tw.Add("BedTown", 256, 256, 1.0).Appends(
 		floortemplate.CityRooms(256, 256, 11, 11, 5, rnd.Intn)...,
-	)
+	).Appendf("AddActiveObjectRand count=%v", 128)
 
-	fm = tw.Add("ResourceMazeFill", 256, 256, 128, 0, 1.0).Appends(
+	fm = tw.Add("ResourceMazeFill", 256, 256, 1.0).Appends(
 		floortemplate.MixedResourceMaze(256, 256)...,
-	)
+	).Appendf("AddActiveObjectRand count=%v", 128)
 	fm.Appends(
-		fmt.Sprintf("ResourceFillRect resource=Soil  amount=1  x=0 y=0  w=%v h=%v", 256, 256),
+		fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
 	)
 	fm.Appends(
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
 	)
 
-	fm = tw.Add("ResourceMaze", 256, 256, 128, 0, 1.0).Appends(
+	fm = tw.Add("ResourceMaze", 256, 256, 1.0).Appends(
 		floortemplate.MixedResourceMaze(256, 256)...,
-	)
+	).Appendf("AddActiveObjectRand count=%v", 128)
 	fm.Appends(
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
 	)
 
 	lhSize := gameconst.ViewPortW * 10
-	fm = tw.Add("MovingDanger", lhSize, lhSize, 0, 0, 1.0).Appendf(
-		"ResourceFillRect resource=Soil amount=1  x=0 y=0  w=%v h=%v",
+	fm = tw.Add("MovingDanger", lhSize, lhSize, 1.0).Appendf(
+		"ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v",
 		lhSize, lhSize,
 	)
 	fm.Appends(
 		floortemplate.MixedResourceMaze(lhSize, lhSize)...,
 	)
 
-	tw.Add("RogueLike", 80, 43, 16, 0, 1.0).Appends(
+	tw.Add("RogueLike", 80, 43, 1.0).Appends(
 		floortemplate.RogueLike80x43()...,
-	)
-	tw.Add("GogueLike", 80, 43, 32, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 16)
+	tw.Add("GogueLike", 80, 43, 1.0).Appends(
 		floortemplate.GogueLike()...,
-	)
-	tw.Add("Ghost", 80, 43, 16, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 32)
+	tw.Add("Ghost", 80, 43, 1.0).Appends(
 		floortemplate.Ghost80x43()...,
-	)
-	tw.Add("FreeForAll", 64, 64, 16, 0, 1.0).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 16)
+	tw.Add("FreeForAll", 64, 64, 1.0).Appends(
 		floortemplate.FreeForAll64x64()...,
-	)
-	tw.Add("TileRooms", 64, 32, 0, 0, 1.5).Appends(
+	).Appendf("AddActiveObjectRand count=%v", 16)
+	tw.Add("TileRooms", 64, 32, 1.5).Appends(
 		floortemplate.TileRooms64x32()...,
 	)
-	tw.Add("PortalMaze", 64, 32, 0, 0, 1.5).Appends(
+	tw.Add("PortalMaze", 64, 32, 1.5).Appends(
 		floortemplate.PortalMaze64x32Finalized()...,
 	)
-	tw.Add("MazeRooms1", 64, 32, 0, 0, 1.5).Appends(
+	tw.Add("MazeRooms1", 64, 32, 1.5).Appends(
 		floortemplate.MazeBigSmall64x32()...,
 	)
-	tw.Add("MazeRooms2", 64, 32, 0, 0, 1.5).Appends(
+	tw.Add("MazeRooms2", 64, 32, 1.5).Appends(
 		floortemplate.MazeRooms64x32()...,
 	)
-	tw.Add("MazeRooms3", 64, 32, 0, 0, 1.5).Appends(
+	tw.Add("MazeRooms3", 64, 32, 1.5).Appends(
 		floortemplate.MazeRoomsOverlapWall64x32()...,
 	)
-	tw.Add("MazeWalk", 64, 64, 0, 0, 2.0).Appends(
+	tw.Add("MazeWalk", 64, 64, 2.0).Appends(
 		"ResourceMazeWalk resource=Soil amount=64 x=0 y=0 w=64 h=64 xn=16 yn=16 connerfill=true",
 	)
 

@@ -12,17 +12,42 @@
 package terrain
 
 import (
+	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/game/terrain/corridor"
+	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
+	"github.com/kasworld/goguelike/game/terrain/roommanager"
+	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/scriptparse"
+	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/wrapper"
 )
 
 func cmdNewTerrain(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var name string
-	var w, h, aocount, pocount int
+	var w, h int
 	var actTurnBoost float64
-	if err := ca.GetArgs(&name, &w, &h, &aocount, &pocount, &actTurnBoost); err != nil {
+	if err := ca.GetArgs(&name, &w, &h, &actTurnBoost); err != nil {
 		return err
 	}
-	return tr.execNewTerrain(name, w, h, aocount, pocount, actTurnBoost)
+	return tr.execNewTerrain(name, w, h, actTurnBoost)
+}
+
+func cmdAddActiveObjectRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var aocount int
+	if err := ca.GetArgs(&aocount); err != nil {
+		return err
+	}
+	tr.ActiveObjCount = aocount
+	return nil
+}
+
+func cmdAddCarryObjectRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
+	var cocount int
+	if err := ca.GetArgs(&cocount); err != nil {
+		return err
+	}
+	tr.CarryObjCount = cocount
+	return nil
 }
 
 func cmdFinalizeTerrain(tr *Terrain, ca *scriptparse.CmdArgs) error {
@@ -31,5 +56,28 @@ func cmdFinalizeTerrain(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	tr.tileLayer.DrawRooms(tr.roomManager.GetRoomList())
 	tr.tileLayer.DrawCorridors(tr.corridorList)
 	tr.renderServiceTileArea()
+	return nil
+}
+
+func (tr *Terrain) execNewTerrain(
+	name string, w, h int, actturnboost float64) error {
+	tr.Xlen, tr.Ylen = w, h
+
+	tr.XWrapper = wrapper.New(tr.Xlen)
+	tr.YWrapper = wrapper.New(tr.Ylen)
+	tr.XWrap = tr.XWrapper.GetWrapFn()
+	tr.YWrap = tr.YWrapper.GetWrapFn()
+
+	tr.Name = name
+	tr.ActTurnBoost = actturnboost
+	tr.serviceTileArea = tilearea.New(w, h)
+	tr.tileLayer = tilearea.New(w, h)
+	tr.resourceTileArea = resourcetilearea.New(w, h)
+	tr.roomManager = roommanager.New(w, h)
+	tr.corridorList = make([]*corridor.Corridor, 0)
+	tr.foPosMan = uuidposman.New(tr.Xlen, tr.Ylen)
+
+	tr.initCrpCache()
+	tr.findList = findnear.NewXYLenList(w, h)
 	return nil
 }

@@ -41,7 +41,8 @@ func New(name string, floorCount int) *towermake.Tower {
 		if roomCount < 2 {
 			roomCount = 2
 		}
-		fm := tw.Add(fmt.Sprintf("Floor%v", i), w, h, roomCount/2, 0, 1.0)
+		fm := tw.Add(fmt.Sprintf("Floor%v", i), w, h, 1.0)
+		fm.Appendf("AddActiveObjectRand count=%v", roomCount/2)
 		fm.Appends(
 			floortemplate.RoguelikeRand(roomCount, rnd.Intn)...,
 		)

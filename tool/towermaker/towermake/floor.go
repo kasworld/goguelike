@@ -33,12 +33,9 @@ type Floor struct {
 	Script        []string
 }
 
-func NewFloor(name string, w, h int, ao, po int, turnBoost float64) *Floor {
+func NewFloor(name string, w, h int, turnBoost float64) *Floor {
 	if w <= 0 || h <= 0 {
 		fmt.Printf("%v w,h %v %v\n", name, w, h)
-	}
-	if ao < 0 || po < 0 {
-		fmt.Printf("%v ao,po %v %v\n", name, ao, po)
 	}
 	fm := &Floor{
 		rnd:    g2rand.New(),
@@ -48,8 +45,8 @@ func NewFloor(name string, w, h int, ao, po int, turnBoost float64) *Floor {
 		Script: make([]string, 0),
 	}
 	fm.Appendf(
-		"NewTerrain w=%v h=%v name=%v ao=%v po=%v actturnboost=%v",
-		w, h, name, ao, po, turnBoost)
+		"NewTerrain w=%v h=%v name=%v actturnboost=%v",
+		w, h, name, turnBoost)
 	return fm
 }
 

@@ -14,20 +14,16 @@ package terrain
 import (
 	"fmt"
 
-	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/enum/terraincmd"
-	"github.com/kasworld/goguelike/game/terrain/corridor"
 	"github.com/kasworld/goguelike/game/terrain/paramconv"
-	"github.com/kasworld/goguelike/game/terrain/resourcetilearea"
-	"github.com/kasworld/goguelike/game/terrain/roommanager"
-	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/scriptparse"
-	"github.com/kasworld/goguelike/lib/uuidposman"
-	"github.com/kasworld/wrapper"
 )
 
 var TerrainScriptFn = map[terraincmd.TerrainCmd]func(tr *Terrain, ca *scriptparse.CmdArgs) error{
 	terraincmd.NewTerrain: cmdNewTerrain,
+
+	terraincmd.AddActiveObjectRand: cmdAddActiveObjectRand,
+	terraincmd.AddCarryObjectRand:  cmdAddCarryObjectRand,
 
 	terraincmd.ResourceMazeWall:     cmdResourceMazeWall,
 	terraincmd.ResourceMazeWalk:     cmdResourceMazeWalk,
@@ -128,34 +124,6 @@ func (tr *Terrain) Execute1Cmdline(cmdline string) error {
 		Name2Type:   name2type,
 	}
 	return fn(tr, ca)
-}
-
-func (tr *Terrain) execNewTerrain(
-	name string, w, h int, aocount, pocount int, actturnboost float64) error {
-	// if !isPowerOfTwo(w) || !isPowerOfTwo(h) {
-	// 	return fmt.Errorf("w,h must power of 2, %v %v", w, h)
-	// }
-	tr.Xlen, tr.Ylen = w, h
-	tr.ActiveObjCount = aocount
-	tr.CarryObjCount = pocount
-
-	tr.XWrapper = wrapper.New(tr.Xlen)
-	tr.YWrapper = wrapper.New(tr.Ylen)
-	tr.XWrap = tr.XWrapper.GetWrapFn()
-	tr.YWrap = tr.YWrapper.GetWrapFn()
-
-	tr.Name = name
-	tr.ActTurnBoost = actturnboost
-	tr.serviceTileArea = tilearea.New(w, h)
-	tr.tileLayer = tilearea.New(w, h)
-	tr.resourceTileArea = resourcetilearea.New(w, h)
-	tr.roomManager = roommanager.New(w, h)
-	tr.corridorList = make([]*corridor.Corridor, 0)
-	tr.foPosMan = uuidposman.New(tr.Xlen, tr.Ylen)
-
-	tr.initCrpCache()
-	tr.findList = findnear.NewXYLenList(w, h)
-	return nil
 }
 
 func isPowerOfTwo(i int) bool {
