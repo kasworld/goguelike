@@ -37,7 +37,7 @@ func cmdAddTrapRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var acttype fieldobjacttype.FieldObjActType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &acttype, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &acttype, &message); err != nil {
 		return err
 	}
 	try := count
@@ -60,7 +60,7 @@ func cmdAddTrapRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var acttype fieldobjacttype.FieldObjActType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &acttype, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &acttype, &message); err != nil {
 		return err
 	}
 	try := count

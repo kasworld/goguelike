@@ -11,14 +11,16 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 스크립트 명령어 /enum/terraincmd.enum 의 내용.
 
 	# cmd argformat
+	# args must same order with GetArgs function args
+	# no need to same order with map script
 
 	NewTerrain  name:string w:int h:int actturnboost:float
 
 	# initial ao count 
-	AddActiveObjectRand count:int
+	ActiveObjectsRand count:int
 
-	# co count on floor
-	AddCarryObjectRand count:int
+	# minimum co count on floor
+	CarryObjectsRand count:int
 
 	# add resource  
 	ResourceMazeWall        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
@@ -55,24 +57,27 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 
 	# add fieldobj
 	AddPortal               x:int y:int display:FieldObjDisplayType acttype:FieldObjActType PortalID:string DstPortalID:string message:string
-	AddPortalRand           display:FieldObjDisplayType acttype:FieldObjActType PortalID:string DstPortalID:string message:string
-	AddPortalInRoom         display:FieldObjDisplayType acttype:FieldObjActType PortalID:string DstPortalID:string message:string
-	AddRecycler             x:int y:int display:FieldObjDisplayType message:string
-	AddRecyclerRand         display:FieldObjDisplayType count:int message:string
-	AddRecyclerInRoom       display:FieldObjDisplayType count:int message:string
-	AddTrapTeleport         x:int y:int DstFloor:string message:string 
-	AddTrapTeleportsRand    DstFloor:string count:int message:string
-	AddTrapTeleportsInRoom  DstFloor:string count:int message:string
-	AddTrap                 x:int y:int display:FieldObjDisplayType acttype:FieldObjActType message:string
-	AddTrapsRand            display:FieldObjDisplayType acttype:FieldObjActType count:int message:string
-	AddTrapsInRoom          display:FieldObjDisplayType acttype:FieldObjActType count:int message:string
+	AddPortalRand                       display:FieldObjDisplayType acttype:FieldObjActType PortalID:string DstPortalID:string message:string
+	AddPortalInRoom                     display:FieldObjDisplayType acttype:FieldObjActType PortalID:string DstPortalID:string message:string
 
-	# add fieldobj LightHouse, GateKeeper
+	AddRecycler             x:int y:int display:FieldObjDisplayType message:string
+	AddRecyclerRand         count:int   display:FieldObjDisplayType message:string
+	AddRecyclerInRoom       count:int   display:FieldObjDisplayType message:string
+
+	AddTrapTeleport         x:int y:int DstFloor:string message:string 
+	AddTrapTeleportsRand    count:int   DstFloor:string message:string
+	AddTrapTeleportsInRoom  count:int   DstFloor:string message:string
+
+	AddTrap                 x:int y:int display:FieldObjDisplayType acttype:FieldObjActType message:string
+	AddTrapsRand            count:int   display:FieldObjDisplayType acttype:FieldObjActType message:string
+	AddTrapsInRoom          count:int   display:FieldObjDisplayType acttype:FieldObjActType message:string
+
+	# add fieldobj rotate line attack
 	AddRotateLineAttack           x:int y:int display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType message:string
-	AddRotateLineAttackRand       display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType count:int message:string
-	AddRotateLineAttackInRoom     display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType count:int message:string
+	AddRotateLineAttackRand       count:int   display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType message:string
+	AddRotateLineAttackInRoom     count:int   display:FieldObjDisplayType winglen:int wingcount:int degree:int perturn:int decay:DecayType message:string
 
 	# add Mine
 	AddMine           x:int y:int display:FieldObjDisplayType decay:DecayType message:string
-	AddMineRand       display:FieldObjDisplayType decay:DecayType count:int message:string
-	AddMineInRoom     display:FieldObjDisplayType decay:DecayType count:int message:string
+	AddMineRand       count:int   display:FieldObjDisplayType decay:DecayType message:string
+	AddMineInRoom     count:int   display:FieldObjDisplayType decay:DecayType message:string

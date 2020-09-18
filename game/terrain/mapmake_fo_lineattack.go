@@ -41,7 +41,7 @@ func cmdAddRotateLineAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var winglen, wingcount int
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &winglen, &wingcount, &degree, &perturn, &decay, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &winglen, &wingcount, &degree, &perturn, &decay, &message); err != nil {
 		return err
 	}
 	try := count
@@ -66,7 +66,7 @@ func cmdAddRotateLineAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) erro
 	var winglen, wingcount int
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &winglen, &wingcount, &degree, &perturn, &decay, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &winglen, &wingcount, &degree, &perturn, &decay, &message); err != nil {
 		return err
 	}
 	try := count

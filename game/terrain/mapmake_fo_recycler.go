@@ -34,7 +34,7 @@ func cmdAddRecyclerRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &message); err != nil {
 		return err
 	}
 	try := count
@@ -56,7 +56,7 @@ func cmdAddRecyclerRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var dispType fieldobjdisplaytype.FieldObjDisplayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &message); err != nil {
 		return err
 	}
 	try := count

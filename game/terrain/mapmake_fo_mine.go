@@ -37,7 +37,7 @@ func cmdAddMineRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var decay decaytype.DecayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &decay, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &decay, &message); err != nil {
 		return err
 	}
 	try := count
@@ -60,7 +60,7 @@ func cmdAddMineRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var decay decaytype.DecayType
 	var count int
 	var message string
-	if err := ca.GetArgs(&dispType, &decay, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &dispType, &decay, &message); err != nil {
 		return err
 	}
 	try := count

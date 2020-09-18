@@ -33,7 +33,7 @@ func cmdAddTrapTeleportRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var DstFloorName string
 	var count int
 	var message string
-	if err := ca.GetArgs(&DstFloorName, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &DstFloorName, &message); err != nil {
 		return err
 	}
 
@@ -56,7 +56,7 @@ func cmdAddTrapTeleportRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	var DstFloorName string
 	var count int
 	var message string
-	if err := ca.GetArgs(&DstFloorName, &count, &message); err != nil {
+	if err := ca.GetArgs(&count, &DstFloorName, &message); err != nil {
 		return err
 	}
 
