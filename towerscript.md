@@ -14,18 +14,16 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 	# args must same order with GetArgs function args
 	# no need to same order with map script
 
-	NewTerrain  name:string w:int h:int actturnboost:float
+	# create new terrain, must be 1st line except comment
+	NewTerrain          name:string w:int h:int actturnboost:float
 
 	# initial ao count 
-	ActiveObjectsRand count:int
+	ActiveObjectsRand   count:int
 
 	# minimum co count on floor
-	CarryObjectsRand count:int
+	CarryObjectsRand    count:int
 
 	# add resource  
-	ResourceMazeWall        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
-	ResourceMazeWalk        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
-	ResourceRand            resource:ResourceType mean:int stddev:int repeat:int
 	ResourceAt              resource:ResourceType amount:int x:int y:int
 	ResourceHLine           resource:ResourceType amount:int x:int w:int y:int
 	ResourceVLine           resource:ResourceType amount:int x:int y:int h:int
@@ -33,7 +31,13 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 	ResourceRect            resource:ResourceType amount:int x:int w:int y:int h:int
 	ResourceFillRect        resource:ResourceType amount:int x:int w:int y:int h:int
 	ResourceFillEllipses    resource:ResourceType amount:int x:int w:int y:int h:int
+	ResourceMazeWall        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	ResourceMazeWalk        resource:ResourceType amount:int x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	ResourceRand            resource:ResourceType mean:int stddev:int repeat:int
 	ResourceFromPNG         name:string
+
+	# define terrain ageing
+	# before start, Millisecond per ageing (0==no ageing), reset terrain to init state after n ageing
 	ResourceAgeing          initrun:int msper:int resetaftern:int
 
 	# add room
@@ -43,8 +47,6 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 	ConnectRooms            tile:TileType connect:int allconnect:bool diagonal:bool
 
 	# add tile
-	TileMazeWall        tile:TileType x:int y:int w:int h:int xn:int yn:int connerfill:bool
-	TileMazeWalk        tile:TileType x:int y:int w:int h:int xn:int yn:int connerfill:bool
 	TileAt              tile:TileType x:int y:int
 	TileHLine           tile:TileType x:int w:int y:int
 	TileVLine           tile:TileType x:int y:int h:int
@@ -52,7 +54,10 @@ script를 parse하는 것은 /lib/scriptparse 를 볼것.
 	TileRect            tile:TileType x:int w:int y:int h:int
 	TileFillRect        tile:TileType x:int w:int y:int h:int
 	TileFillEllipses    tile:TileType x:int w:int y:int h:int
+	TileMazeWall        tile:TileType x:int y:int w:int h:int xn:int yn:int connerfill:bool
+	TileMazeWalk        tile:TileType x:int y:int w:int h:int xn:int yn:int connerfill:bool
 
+	# end define terrain tiles (above commands)
 	FinalizeTerrain         
 
 	# add fieldobj
