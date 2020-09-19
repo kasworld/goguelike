@@ -20,6 +20,7 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/way9type"
+	"github.com/kasworld/goguelike/game/attackcheck"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/lib/uuidposman"
@@ -419,9 +420,18 @@ func actPlanAttack(sai *ServerAI) bool {
 		return false
 	}
 
-	attackdir, canAttack := sai.canAttackTo(sai.aox, sai.aoy, dstx, dsty)
+	ter := sai.currentFloor.GetTerrain()
+	attackdir, canAttack := attackcheck.CanBasicAttackTo(
+		ter.GetTiles(), sai.aox, sai.aoy, dstx, dsty)
 	if canAttack {
 		sai.sendActNotiPacket2Floor(c2t_idcmd.Attack, attackdir, "")
+		return true
+	}
+
+	attackdir, canAttack = attackcheck.CanLongAttackTo(
+		ter.GetTiles(), sai.aox, sai.aoy, dstx, dsty)
+	if canAttack {
+		sai.sendActNotiPacket2Floor(c2t_idcmd.AttackLong, attackdir, "")
 		return true
 	}
 

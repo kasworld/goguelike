@@ -15,16 +15,24 @@ import (
 	"github.com/kasworld/go-abs"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/way9type"
+	"github.com/kasworld/goguelike/game/tilearea"
 )
 
-func IsInLongAttack(x1, y1, x2, y2, w, h int) (bool, way9type.Way9Type) {
+func CanLongAttackTo(ta tilearea.TileArea, x1, y1, x2, y2 int) (way9type.Way9Type, bool) {
+	w, h := ta.GetXYLen()
 	absx := abs.Absi(x1 - x2)
 	absy := abs.Absi(y1 - y2)
 	if absx >= gameconst.AttackLongLen || absy >= gameconst.AttackLongLen {
-		return false, way9type.Center
+		return way9type.Center, false
 	}
 	isWay9 := absx == 0 || absy == 0 || absx == absy
 	dx, dy := way9type.CalcDxDyWrapped(x2-x1, y2-y1, w, h)
 	way := way9type.RemoteDxDy2Way9(dx, dy)
-	return isWay9, way
+	return way, isWay9 && !ta[x1][y1].NoBattle() && !ta[x2][y2].NoBattle()
+}
+
+func CanBasicAttackTo(ta tilearea.TileArea, x1, y1, x2, y2 int) (way9type.Way9Type, bool) {
+	w, h := ta.GetXYLen()
+	contact, dir := way9type.CalcContactDirWrappedXY(x1, y1, x2, y2, w, h)
+	return dir, contact && !ta[x1][y1].NoBattle() && !ta[x2][y2].NoBattle()
 }

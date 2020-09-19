@@ -132,7 +132,6 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	if !cf.Tiles[playerX][playerY].CanBattle() {
 		return false
 	}
-	w, h := cf.Tiles.GetXYLen()
 
 	// attack basic
 	for _, ao := range app.olNotiData.ActiveObjList {
@@ -142,14 +141,11 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		if ao.UUID == gInitData.AccountInfo.ActiveObjUUID {
 			continue
 		}
-		if !cf.Tiles[ao.X][ao.Y].CanBattle() {
-			continue
-		}
-		isContact, dir := way9type.CalcContactDirWrappedXY(
-			playerX, playerY, ao.X, ao.Y, w, h)
-		if isContact && dir != way9type.Center {
+		attackdir, canAttack := attackcheck.CanBasicAttackTo(
+			cf.Tiles, playerX, playerY, ao.X, ao.Y)
+		if canAttack {
 			go app.sendPacket(c2t_idcmd.Attack,
-				&c2t_obj.ReqAttack_data{Dir: dir},
+				&c2t_obj.ReqAttack_data{Dir: attackdir},
 			)
 			return true
 		}
@@ -163,14 +159,11 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		if ao.UUID == gInitData.AccountInfo.ActiveObjUUID {
 			continue
 		}
-		if !cf.Tiles[ao.X][ao.Y].CanBattle() {
-			continue
-		}
-		isWay9, dir := attackcheck.IsInLongAttack(
-			playerX, playerY, ao.X, ao.Y, w, h)
-		if isWay9 && dir != way9type.Center {
+		attackdir, canAttack := attackcheck.CanLongAttackTo(
+			cf.Tiles, playerX, playerY, ao.X, ao.Y)
+		if canAttack {
 			go app.sendPacket(c2t_idcmd.AttackLong,
-				&c2t_obj.ReqAttackLong_data{Dir: dir},
+				&c2t_obj.ReqAttackLong_data{Dir: attackdir},
 			)
 			return true
 		}
