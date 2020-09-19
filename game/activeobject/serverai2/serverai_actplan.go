@@ -383,7 +383,7 @@ func actPlanRechargeCan(sai *ServerAI) bool {
 	}
 }
 
-func initPlanBattle(sai *ServerAI) int {
+func initPlanAttack(sai *ServerAI) int {
 	// find near ao
 	ter := sai.currentFloor.GetTerrain()
 	findObj, dstx, dsty := sai.currentFloor.GetActiveObjPosMan().Search1stByXYLenList(
@@ -409,7 +409,7 @@ func initPlanBattle(sai *ServerAI) int {
 	}
 	return len(sai.movePath2Dest) + 10
 }
-func actPlanBattle(sai *ServerAI) bool {
+func actPlanAttack(sai *ServerAI) bool {
 	if sai.planActiveObj == nil || !sai.planActiveObj.IsAlive() {
 		return false
 	}
@@ -454,7 +454,7 @@ func initPlanRevenge(sai *ServerAI) int {
 	return len(sai.movePath2Dest) + 10
 }
 func actPlanRevenge(sai *ServerAI) bool {
-	return actPlanBattle(sai)
+	return actPlanAttack(sai)
 }
 
 func initPlanPickupCarryObj(sai *ServerAI) int {

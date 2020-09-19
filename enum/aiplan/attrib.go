@@ -32,7 +32,7 @@ var attrib = [AIPlan_Count]struct {
 	PickupCarryObj: {htmlcolors.Yellow},
 	Equip:          {htmlcolors.Yellow},
 	UsePotion:      {htmlcolors.Yellow},
-	Battle:         {htmlcolors.Yellow},
+	Attack:         {htmlcolors.Yellow},
 	MoveStraight3:  {htmlcolors.Yellow},
 	MoveStraight5:  {htmlcolors.Yellow},
 }

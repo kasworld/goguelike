@@ -12,8 +12,6 @@
 package wasmclientgl
 
 import (
-	"github.com/kasworld/go-abs"
-	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/equipslottype"
@@ -21,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/way9type"
+	"github.com/kasworld/goguelike/game/attackcheck"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/lib/htmlbutton"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
@@ -167,7 +166,7 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 		if !cf.Tiles[ao.X][ao.Y].CanBattle() {
 			continue
 		}
-		isWay9, dir := isInLongAttack(
+		isWay9, dir := attackcheck.IsInLongAttack(
 			playerX, playerY, ao.X, ao.Y, w, h)
 		if isWay9 && dir != way9type.Center {
 			go app.sendPacket(c2t_idcmd.AttackLong,
@@ -178,18 +177,6 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	}
 
 	return false
-}
-
-func isInLongAttack(x1, y1, x2, y2, w, h int) (bool, way9type.Way9Type) {
-	absx := abs.Absi(x1 - x2)
-	absy := abs.Absi(y1 - y2)
-	if absx >= gameconst.AttackLongLen || absy >= gameconst.AttackLongLen {
-		return false, way9type.Center
-	}
-	isWay9 := absx == 0 || absy == 0 || absx == absy
-	dx, dy := way9type.CalcDxDyWrapped(x2-x1, y2-y1, w, h)
-	way := way9type.RemoteDxDy2Way9(dx, dy)
-	return isWay9, way
 }
 
 func tryAutoPickup(app *WasmClient, v *htmlbutton.HTMLButton) bool {

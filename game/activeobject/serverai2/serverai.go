@@ -131,7 +131,7 @@ func (sai *ServerAI) actTurn(turnTime time.Time) {
 	sai.aox, sai.aoy = aox, aoy
 
 	// attacked?
-	if sai.runningPlanList.getCurrentPlan() != aiplan.Battle &&
+	if sai.runningPlanList.getCurrentPlan() != aiplan.Attack &&
 		sai.runningPlanList.getCurrentPlan() != aiplan.Revenge &&
 		sai.aoAttackLast() != nil {
 
