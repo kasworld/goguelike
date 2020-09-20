@@ -75,6 +75,7 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjI
 
 		Exp:     int(ao.AOTurnData.TotalExp),
 		Ranking: rank,
+		TotalAO: len(aoList),
 		Death:   int(ao.achieveStat.Get(achievetype.Death)),
 		Kill:    int(ao.achieveStat.Get(achievetype.Kill)),
 		Sight:   ao.AOTurnData.Sight,

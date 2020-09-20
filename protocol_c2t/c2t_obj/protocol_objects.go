@@ -151,7 +151,8 @@ type PlayerActiveObjInfo struct {
 	Bias       bias.Bias
 	Conditions condition_flag.ConditionFlag
 	Exp        int
-	Ranking    int
+	TotalAO    int // total activeobject count
+	Ranking    int // ranking / totalao
 	Death      int
 	Kill       int
 	Sight      float64

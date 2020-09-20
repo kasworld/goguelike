@@ -131,7 +131,7 @@ func (app *WasmClient) makeBaseInfoHTML() string {
 
 	fmt.Fprintf(&buf, "Level %4.2f<br/>", lv)
 	fmt.Fprintf(&buf, "Exp %v<br/>", pao.Exp)
-	fmt.Fprintf(&buf, "Rank %v<br/>", pao.Ranking+1)
+	fmt.Fprintf(&buf, "Rank %v/%v<br/>", pao.Ranking+1, pao.TotalAO)
 
 	fmt.Fprintf(&buf, "%s %v/%v", wrapspan.ColorText("Red", "HP"), pao.HP, pao.HPMax)
 	if tlHp != 0 {
