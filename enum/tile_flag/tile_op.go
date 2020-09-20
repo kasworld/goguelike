@@ -42,6 +42,8 @@ func (t *TileFlag) Op(rv TileTypeValue) error {
 			t.SetByTileFlag(v)
 		case tileoptype.ClearBits:
 			t.ClearByTileFlag(v)
+		case tileoptype.Set:
+			*t = v
 		default:
 			return fmt.Errorf("Invalid op %v", rv)
 		}

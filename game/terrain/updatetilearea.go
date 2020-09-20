@@ -47,9 +47,12 @@ func (tr *Terrain) openBlockedDoor() {
 func (tr *Terrain) tileLayer2SeviceTileArea() {
 	for x, xv := range tr.tileLayer {
 		for y, yv := range xv {
+			if yv.Empty() {
+				continue
+			}
 			tr.serviceTileArea[x][y].Op(
 				tile_flag.TileTypeValue{
-					Op:  tileoptype.SetBits,
+					Op:  tileoptype.Set,
 					Arg: yv},
 			)
 		}
