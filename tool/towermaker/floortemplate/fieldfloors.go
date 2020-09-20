@@ -15,7 +15,7 @@ import "fmt"
 
 func BGTile9Rooms128x128() []string {
 	return []string{
-		"ResourceFillRect resource=Soil   amount=255    x=0  y=0  w=128 h=128",
+		"ResourceFillRect resource=Soil amount=1    x=0  y=0  w=128 h=128",
 		"ResourceRect resource=Plant  amount=1000001 x=0  y=0  w=128 h=128",
 		"ResourceLine resource=Stone amount=1000001 x1=30 y1=30 x2=96 y2=96",
 		"ResourceLine resource=Stone amount=1000001 x1=31 y1=97 x2=97 y2=31",

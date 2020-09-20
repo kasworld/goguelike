@@ -66,10 +66,10 @@ func New(name string) *towermake.Tower {
 	).Appendf("ActiveObjectsRand count=%v", 128)
 
 	fm = tw.Add("ResourceMazeFill", 256, 256, 1.0).Appends(
-		floortemplate.MixedResourceMaze(256, 256)...,
+		fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
 	).Appendf("ActiveObjectsRand count=%v", 128)
 	fm.Appends(
-		fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
+		floortemplate.MixedResourceMaze(256, 256)...,
 	)
 	fm.Appends(
 		floortemplate.CityRoomsRand(512, rnd.Intn)...,
