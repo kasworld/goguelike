@@ -588,7 +588,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		if !ao.IsAlive() {
 			continue
 		}
-		if ao.GetTurnData().Condition.TestByCondition(condition.Greasy) {
+		if ao.GetTurnData().Condition.TestByCondition(condition.Greasy) && condition.Greasy.Probability() < f.rnd.Float64() {
 			eqi := f.rnd.Intn(equipslottype.EquipSlotType_Count)
 			co2drop := ao.GetInven().GetEquipSlot()[eqi]
 			if co2drop == nil {
@@ -599,7 +599,6 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			ao.AppendTurnResult(turnresult.New(turnresulttype.DropCarryObj, co2drop, 0))
 		}
-
 	}
 
 	// set ao act result

@@ -29,20 +29,26 @@ func (cn Condition) Rune() string {
 	return attrib[cn].runeStr
 }
 
+// Probability effect probability
+func (cn Condition) Probability() float64 {
+	return attrib[cn].probability
+}
+
 var attrib = [Condition_Count]struct {
-	runeStr   string
-	hideSelf  bool // hide to client self ao
-	hideOther bool // hide to client other ao
-	color24   htmlcolors.Color24
+	runeStr     string
+	probability float64
+	hideSelf    bool // hide to client self ao
+	hideOther   bool // hide to client other ao
+	color24     htmlcolors.Color24
 }{
-	Blind:     {"bl", false, false, htmlcolors.DarkRed},
-	Invisible: {"iv", false, false, htmlcolors.LemonChiffon},
-	Burden:    {"bu", false, false, htmlcolors.DeepPink},
-	Float:     {"fl", false, false, htmlcolors.Wheat},
-	Greasy:    {"gr", false, false, htmlcolors.PapayaWhip},
-	Drunken:   {"dr", false, false, htmlcolors.Plum},
-	Sleep:     {"sl", false, false, htmlcolors.LightCoral},
-	Contagion: {"cn", false, false, htmlcolors.DarkGreen},
-	Slow:      {"sl", false, false, htmlcolors.DarkBlue},
-	Haste:     {"ha", false, false, htmlcolors.LightBlue},
+	Blind:     {"bl", 1.00, false, false, htmlcolors.DarkRed},
+	Invisible: {"iv", 1.00, false, false, htmlcolors.LemonChiffon},
+	Burden:    {"bu", 1.00, false, false, htmlcolors.DeepPink},
+	Float:     {"fl", 1.00, false, false, htmlcolors.Wheat},
+	Greasy:    {"gr", 0.25, false, false, htmlcolors.PapayaWhip},
+	Drunken:   {"dr", 1.00, false, false, htmlcolors.Plum},
+	Sleep:     {"sl", 1.00, false, false, htmlcolors.LightCoral},
+	Contagion: {"cn", 1.00, false, false, htmlcolors.DarkGreen},
+	Slow:      {"sl", 1.00, false, false, htmlcolors.DarkBlue},
+	Haste:     {"ha", 1.00, false, false, htmlcolors.LightBlue},
 }

@@ -153,6 +153,10 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 		dropRate *= 2
 		reduceRate = 1.5
 	}
+	// greasy increase drop rate
+	if ao.GetTurnData().Condition.TestByCondition(condition.Greasy) {
+		dropRate *= 2
+	}
 
 	for _, v := range ao.GetInven().GetEquipSlot() {
 		isdrop := f.rnd.Float64() < dropRate

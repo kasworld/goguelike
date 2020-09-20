@@ -155,7 +155,7 @@ var foAct2BuffList = [FieldObjActType_Count][]statusoptype.OpArg{
 	Float: statusoptype.RepeatShift(200, 1,
 		statusoptype.OpArg{statusoptype.SetCondition, condition.Float},
 	),
-	Greasy: statusoptype.RepeatShift(400, 4,
+	Greasy: statusoptype.RepeatShift(400, 1,
 		statusoptype.OpArg{statusoptype.SetCondition, condition.Greasy},
 	),
 	Drunken: statusoptype.RepeatShift(200, 2,
