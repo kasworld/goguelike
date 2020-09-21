@@ -15,11 +15,14 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/kasworld/goguelike/lib/scriptparse"
+
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike/enum/resourcetype"
 	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
 func SetFloat(valStr string, dstValue interface{}) error {
@@ -109,6 +112,24 @@ func SetTileType(valStr string, dstValue interface{}) error {
 	return nil
 }
 
+func SetTileFlag(valStr string, dstValue interface{}) error {
+	iv, ok := dstValue.(*tile_flag.TileFlag)
+	if !ok {
+		return fmt.Errorf("fail to cast TileType %v", valStr)
+	}
+	tls := scriptparse.SplitTrim(valStr, ",")
+	var tlf tile_flag.TileFlag
+	for _, v := range tls {
+		tl, exist := tile.String2Tile(v)
+		if !exist {
+			return fmt.Errorf("unknown TileType %v", valStr)
+		}
+		tlf.SetByTile(tl)
+	}
+	*iv = tlf
+	return nil
+}
+
 func SetResourceType(valStr string, dstValue interface{}) error {
 	iv, ok := dstValue.(*resourcetype.ResourceType)
 	if !ok {
@@ -143,6 +164,7 @@ var Type2ConvFn = map[string]func(valStr string, dstValue interface{}) error{
 	"FieldObjActType":     SetFieldObjActType,
 	"FieldObjDisplayType": SetFieldObjDisplayType,
 	"TileType":            SetTileType,
+	"TileFlag":            SetTileFlag,
 	"ResourceType":        SetResourceType,
 	"DecayType":           SetDecayType,
 }

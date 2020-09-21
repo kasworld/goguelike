@@ -32,12 +32,13 @@ func SplitCmdArgstr(cmdline string, sep string) (string, string) {
 
 // Split2ListMap make list , map
 func Split2ListMap(srcText string, sep1, sep2 string) ([]string, map[string]string, error) {
-	list := splitTrim(srcText, sep1)
+	list := SplitTrim(srcText, sep1)
 	nameList, name2value, err := strList2OrderedMap(list, sep2)
 	return nameList, name2value, err
 }
 
-func splitTrim(str string, sep string) []string {
+// SplitTrim split string with trimspace
+func SplitTrim(str string, sep string) []string {
 	str = strings.TrimSpace(str)
 	strs := strings.Split(str, sep)
 	var rtn []string
