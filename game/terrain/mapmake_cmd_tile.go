@@ -14,11 +14,8 @@ package terrain
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/enum/tileoptype"
-
-	"github.com/kasworld/goguelike/enum/tile"
 	"github.com/kasworld/goguelike/enum/tile_flag"
-
+	"github.com/kasworld/goguelike/enum/tileoptype"
 	"github.com/kasworld/goguelike/lib/maze2"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
@@ -26,17 +23,17 @@ import (
 // all function is operation to tileLayer
 
 func cmdTileAt(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x, y int
 	if err := ca.GetArgs(&tl, &x, &y); err != nil {
 		return err
 	}
-	tr.tileLayer.OpXY(x, y, tile_flag.TileTypeValue{Op: tileoptype.OverrideBits, Arg: tl})
+	tr.tileLayer.OpXY(x, y, tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl})
 	return nil
 }
 
 func cmdTileHLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x, w, y int
 	if err := ca.GetArgs(&tl, &x, &w, &y); err != nil {
 		return err
@@ -47,7 +44,7 @@ func cmdTileHLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileVLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x, y, h int
 	if err := ca.GetArgs(&tl, &x, &y, &h); err != nil {
 		return err
@@ -58,7 +55,7 @@ func cmdTileVLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x1, y1, x2, y2 int
 	if err := ca.GetArgs(&tl, &x1, &y1, &x2, &y2); err != nil {
 		return err
@@ -69,7 +66,7 @@ func cmdTileLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x, w, y, h int
 	if err := ca.GetArgs(&tl, &x, &w, &y, &h); err != nil {
 		return err
@@ -80,7 +77,7 @@ func cmdTileRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileFillRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x, w, y, h int
 	if err := ca.GetArgs(&tl, &x, &w, &y, &h); err != nil {
 		return err
@@ -90,7 +87,7 @@ func cmdTileFillRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileFillEllipses(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var x, w, y, h int
 	if err := ca.GetArgs(&tl, &x, &w, &y, &h); err != nil {
 		return err
@@ -100,7 +97,7 @@ func cmdTileFillEllipses(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var xn, yn int
 	var conerFill bool
 	var maX, maY, maW, maH int
@@ -119,7 +116,7 @@ func cmdTileMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 }
 
 func cmdTileMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var xn, yn int
 	var conerFill bool
 	var maX, maY, maW, maH int

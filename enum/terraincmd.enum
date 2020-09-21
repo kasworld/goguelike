@@ -29,21 +29,21 @@ ResourceFromPNG         name:string
 ResourceAgeing          initrun:int msper:int resetaftern:int
 
 # add room
-AddRoom                 bgtile:TileType walltile:TileType terrace:bool x:int y:int w:int h:int
-AddRoomMaze             bgtile:TileType walltile:TileType terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
-AddRoomsRand            bgtile:TileType walltile:TileType terrace:bool align:int count:int mean:int stddev:int
-ConnectRooms            tile:TileType connect:int allconnect:bool diagonal:bool
+AddRoom                 bgtile:TileFlag walltile:TileFlag terrace:bool x:int y:int w:int h:int
+AddRoomMaze             bgtile:TileFlag walltile:TileFlag terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
+AddRoomsRand            bgtile:TileFlag walltile:TileFlag terrace:bool align:int count:int mean:int stddev:int
+ConnectRooms            tile:TileFlag connect:int allconnect:bool diagonal:bool
 
 # add tile
-TileAt              tile:TileType x:int y:int
-TileHLine           tile:TileType x:int w:int y:int
-TileVLine           tile:TileType x:int y:int h:int
-TileLine            tile:TileType x1:int y1:int x2:int y2:int
-TileRect            tile:TileType x:int w:int y:int h:int
-TileFillRect        tile:TileType x:int w:int y:int h:int
-TileFillEllipses    tile:TileType x:int w:int y:int h:int
-TileMazeWall        tile:TileType x:int y:int w:int h:int xn:int yn:int connerfill:bool
-TileMazeWalk        tile:TileType x:int y:int w:int h:int xn:int yn:int connerfill:bool
+TileAt              tile:TileFlag x:int y:int
+TileHLine           tile:TileFlag x:int w:int y:int
+TileVLine           tile:TileFlag x:int y:int h:int
+TileLine            tile:TileFlag x1:int y1:int x2:int y2:int
+TileRect            tile:TileFlag x:int w:int y:int h:int
+TileFillRect        tile:TileFlag x:int w:int y:int h:int
+TileFillEllipses    tile:TileFlag x:int w:int y:int h:int
+TileMazeWall        tile:TileFlag x:int y:int w:int h:int xn:int yn:int connerfill:bool
+TileMazeWalk        tile:TileFlag x:int y:int w:int h:int xn:int yn:int connerfill:bool
 
 # end define terrain tiles (above commands)
 FinalizeTerrain         

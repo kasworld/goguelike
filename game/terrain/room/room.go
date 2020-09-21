@@ -15,7 +15,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/lib/maze2"
 	"github.com/kasworld/prettystring"
 	"github.com/kasworld/rect"
@@ -28,19 +28,19 @@ func (r Room) String() string {
 
 type Room struct {
 	UUID       string
-	BgTile     tile.Tile
+	BgTile     tile_flag.TileFlag
 	Area       rect.Rect
-	Tiles      [][]tile.Tile
+	Tiles      [][]tile_flag.TileFlag
 	ConnectPos [][2]int // door outer pos , out of room area
 	// for sort
-	RecyclerCount   int
-	PortalCount     int
-	TrapCount       int
+	RecyclerCount         int
+	PortalCount           int
+	TrapCount             int
 	RotateLineAttackCount int
-	MineCount       int
+	MineCount             int
 }
 
-func New(rt rect.Rect, bgTile tile.Tile) *Room {
+func New(rt rect.Rect, bgTile tile_flag.TileFlag) *Room {
 	if rt.W < 4 || rt.H < 4 {
 		panic(fmt.Sprintf("room to small %v", rt))
 	}
@@ -48,11 +48,11 @@ func New(rt rect.Rect, bgTile tile.Tile) *Room {
 		UUID:       uuidstr.New(),
 		BgTile:     bgTile,
 		Area:       rt,
-		Tiles:      make([][]tile.Tile, rt.W),
+		Tiles:      make([][]tile_flag.TileFlag, rt.W),
 		ConnectPos: make([][2]int, 0, 4),
 	}
 	for x, _ := range r.Tiles {
-		r.Tiles[x] = make([]tile.Tile, rt.H)
+		r.Tiles[x] = make([]tile_flag.TileFlag, rt.H)
 		for y := range r.Tiles[x] {
 			r.Tiles[x][y] = bgTile
 		}
@@ -60,7 +60,7 @@ func New(rt rect.Rect, bgTile tile.Tile) *Room {
 	return r
 }
 
-func (r *Room) DrawMaze(rnd *g2rand.G2Rand, xn, yn int, walltile tile.Tile, connerFill bool) error {
+func (r *Room) DrawMaze(rnd *g2rand.G2Rand, xn, yn int, walltile tile_flag.TileFlag, connerFill bool) error {
 	m := maze2.New(rnd, xn, yn)
 	ma, err := m.ToBoolMatrix(r.Area.W-1, r.Area.H-1, connerFill)
 	if err != nil {
@@ -76,7 +76,7 @@ func (r *Room) DrawMaze(rnd *g2rand.G2Rand, xn, yn int, walltile tile.Tile, conn
 	return nil
 }
 
-func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile.Tile, terrace bool) error {
+func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile_flag.TileFlag, terrace bool) error {
 	wallrect := r.Area
 	shiftConnetPos := 1
 	if terrace {
@@ -87,82 +87,82 @@ func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile.Tile, terrace bool
 	r.DrawWall_S(wallrect, walltile)
 	r.DrawWall_W(wallrect, walltile)
 	r.DrawWall_E(wallrect, walltile)
-	r.AddWindowRand_N(rnd, wallrect, tile.Window)
-	r.AddWindowRand_S(rnd, wallrect, tile.Window)
-	r.AddWindowRand_W(rnd, wallrect, tile.Window)
-	r.AddWindowRand_E(rnd, wallrect, tile.Window)
-	r.AddDoorRand_N(rnd, wallrect, tile.Door, shiftConnetPos)
-	r.AddDoorRand_S(rnd, wallrect, tile.Door, shiftConnetPos)
-	r.AddDoorRand_W(rnd, wallrect, tile.Door, shiftConnetPos)
-	r.AddDoorRand_E(rnd, wallrect, tile.Door, shiftConnetPos)
+	r.AddWindowRand_N(rnd, wallrect, tile_flag.WindowFlag)
+	r.AddWindowRand_S(rnd, wallrect, tile_flag.WindowFlag)
+	r.AddWindowRand_W(rnd, wallrect, tile_flag.WindowFlag)
+	r.AddWindowRand_E(rnd, wallrect, tile_flag.WindowFlag)
+	r.AddDoorRand_N(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+	r.AddDoorRand_S(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+	r.AddDoorRand_W(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+	r.AddDoorRand_E(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
 	return nil
 }
 
-func (r *Room) DrawWall_N(wallrect rect.Rect, walltile tile.Tile) {
+func (r *Room) DrawWall_N(wallrect rect.Rect, walltile tile_flag.TileFlag) {
 	y := 0
 	for x := 0; x < wallrect.W; x++ {
 		r.Tiles[x][y] = walltile
 	}
 }
-func (r *Room) DrawWall_S(wallrect rect.Rect, walltile tile.Tile) {
+func (r *Room) DrawWall_S(wallrect rect.Rect, walltile tile_flag.TileFlag) {
 	y := wallrect.H - 1
 	for x := 0; x < wallrect.W; x++ {
 		r.Tiles[x][y] = walltile
 	}
 }
-func (r *Room) DrawWall_W(wallrect rect.Rect, walltile tile.Tile) {
+func (r *Room) DrawWall_W(wallrect rect.Rect, walltile tile_flag.TileFlag) {
 	x := 0
 	for y := 0; y < wallrect.H; y++ {
 		r.Tiles[x][y] = walltile
 	}
 }
-func (r *Room) DrawWall_E(wallrect rect.Rect, walltile tile.Tile) {
+func (r *Room) DrawWall_E(wallrect rect.Rect, walltile tile_flag.TileFlag) {
 	x := wallrect.W - 1
 	for y := 0; y < wallrect.H; y++ {
 		r.Tiles[x][y] = walltile
 	}
 }
 
-func (r *Room) AddWindowRand_N(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
+func (r *Room) AddWindowRand_N(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile_flag.TileFlag) {
 	x := rnd.IntRange(1, wallrect.W-1)
 	y := 0
 	r.Tiles[x][y] = wintile
 }
-func (r *Room) AddWindowRand_S(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
+func (r *Room) AddWindowRand_S(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile_flag.TileFlag) {
 	x := rnd.IntRange(1, wallrect.W-1)
 	y := wallrect.H - 1
 	r.Tiles[x][y] = wintile
 }
-func (r *Room) AddWindowRand_W(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
+func (r *Room) AddWindowRand_W(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile_flag.TileFlag) {
 	x := 0
 	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = wintile
 }
-func (r *Room) AddWindowRand_E(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile.Tile) {
+func (r *Room) AddWindowRand_E(rnd *g2rand.G2Rand, wallrect rect.Rect, wintile tile_flag.TileFlag) {
 	x := wallrect.W - 1
 	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = wintile
 }
 
-func (r *Room) AddDoorRand_N(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+func (r *Room) AddDoorRand_N(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile_flag.TileFlag, shiftConnectPos int) {
 	x := rnd.IntRange(1, wallrect.W-1)
 	y := 0
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x, wallrect.Y + y - shiftConnectPos})
 }
-func (r *Room) AddDoorRand_S(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+func (r *Room) AddDoorRand_S(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile_flag.TileFlag, shiftConnectPos int) {
 	x := rnd.IntRange(1, wallrect.W-1)
 	y := wallrect.H - 1
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x, wallrect.Y + y + shiftConnectPos})
 }
-func (r *Room) AddDoorRand_W(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+func (r *Room) AddDoorRand_W(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile_flag.TileFlag, shiftConnectPos int) {
 	x := 0
 	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = doortile
 	r.ConnectPos = append(r.ConnectPos, [2]int{wallrect.X + x - shiftConnectPos, wallrect.Y + y})
 }
-func (r *Room) AddDoorRand_E(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile.Tile, shiftConnectPos int) {
+func (r *Room) AddDoorRand_E(rnd *g2rand.G2Rand, wallrect rect.Rect, doortile tile_flag.TileFlag, shiftConnectPos int) {
 	x := wallrect.W - 1
 	y := rnd.IntRange(1, wallrect.H-1)
 	r.Tiles[x][y] = doortile

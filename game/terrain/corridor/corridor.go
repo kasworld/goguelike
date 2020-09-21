@@ -14,11 +14,11 @@ package corridor
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
 )
 
 type Corridor struct {
-	Tile tile.Tile
+	Tile tile_flag.TileFlag
 	P    [][2]int
 }
 

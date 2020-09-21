@@ -14,14 +14,14 @@ package terrain
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike/enum/tile"
+	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/game/terrain/corridor"
 	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 )
 
 func cmdConnectRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
-	var tl tile.Tile
+	var tl tile_flag.TileFlag
 	var connectCount int
 	var allconnect bool
 	var diagonal bool
@@ -32,7 +32,7 @@ func cmdConnectRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	return nil
 }
 
-func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile.Tile, way8 bool) {
+func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_flag.TileFlag, way8 bool) {
 	roomGraph := make(map[string]map[string]bool)
 	roomMap := make(map[string]*room.Room)
 
@@ -145,7 +145,7 @@ func traverseRoom(startroom string, roomGraph map[string]map[string]bool, visite
 	}
 }
 
-func (tr *Terrain) makeCorridor(r1, r2 *room.Room, ttile tile.Tile, way8 bool) error {
+func (tr *Terrain) makeCorridor(r1, r2 *room.Room, ttile tile_flag.TileFlag, way8 bool) error {
 	p1 := r1.RndDoorOuter(tr.rnd)
 	p2 := r2.RndDoorOuter(tr.rnd)
 
