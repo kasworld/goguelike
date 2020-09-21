@@ -13,8 +13,6 @@ package floortemplate
 
 import (
 	"fmt"
-
-	"github.com/kasworld/goguelike/enum/tile"
 )
 
 func TileRooms64x32() []string {
@@ -40,7 +38,7 @@ func GogueLike() []string {
 		"AddRoomsRand bgtile=Magma walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
 		"AddRoomsRand bgtile=Ice walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4",
 		"AddRoomsRand bgtile=Grass walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Tree walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
+		"AddRoomsRand bgtile=Tree,Soil walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
 		"AddRoomsRand bgtile=Room walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
 		"AddRoomsRand bgtile=Road walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
 		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
@@ -70,17 +68,18 @@ func Ghost80x43() []string {
 	}
 }
 
+var allRoomTile = []string{
+	"Room,Sand", "Soil", "Sand", "Stone", "Grass",
+	"Ice", "Magma", "Swamp", "Sea", "Smoke,Sand",
+}
+var allRoadTile = []string{
+	"Road,Stone", "Soil", "Sand", "Stone", "Tree,Grass", "Grass", "Fog,Stone",
+}
+var allWallTile = []string{
+	"Wall", "Wall", "Window,Tree",
+}
+
 func RoguelikeRand(roomCount int, intnfn func(int) int) []string {
-	var allRoomTile = []tile.Tile{
-		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
-		tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
-	}
-	var allRoadTile = []tile.Tile{
-		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
-	}
-	var allWallTile = []tile.Tile{
-		tile.Wall, tile.Window,
-	}
 	rtn := make([]string, 0)
 	for i := 0; i < roomCount; i++ {
 		roomTile := allRoomTile[intnfn(len(allRoomTile))]
@@ -99,16 +98,6 @@ func RoguelikeRand(roomCount int, intnfn func(int) int) []string {
 }
 
 func CityRoomsRand(roomCount int, intnfn func(int) int) []string {
-	var allRoomTile = []tile.Tile{
-		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
-		tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
-	}
-	var allRoadTile = []tile.Tile{
-		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
-	}
-	var allWallTile = []tile.Tile{
-		tile.Wall, tile.Wall, tile.Window,
-	}
 	rtn := make([]string, 0)
 	for i := 0; i < roomCount; i++ {
 		roomTile := allRoomTile[intnfn(len(allRoomTile))]
@@ -127,20 +116,7 @@ func CityRoomsRand(roomCount int, intnfn func(int) int) []string {
 }
 
 func CityRooms(floorW, floorH, roomW, roomH, roadW int, intnfn func(int) int) []string {
-	// w, h := 800, 640
-	// roomW, roomH := 12, 10
-	// roadW := 5
 	rtn := make([]string, 0)
-	var allRoomTile = []tile.Tile{
-		tile.Room, tile.Soil, tile.Sand, tile.Stone, tile.Grass,
-		tile.Tree, tile.Ice, tile.Magma, tile.Swamp, tile.Sea, tile.Smoke,
-	}
-	var allWallTile = []tile.Tile{
-		tile.Wall, tile.Wall, tile.Window,
-	}
-	var allRoadTile = []tile.Tile{
-		tile.Road, tile.Soil, tile.Sand, tile.Stone, tile.Grass, tile.Tree, tile.Fog,
-	}
 
 	for x := 0; x < floorW-roomW; x += roomW + roadW {
 		for y := 0; y < floorH-roomH; y += roomH + roadW {

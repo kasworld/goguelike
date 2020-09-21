@@ -24,11 +24,11 @@ func BGTile9Rooms128x128() []string {
 		"AddRoom bgtile=Sand walltile=Wall terrace=false   x=8  y=96 w=24 h=24",
 		"AddRoom bgtile=Magma walltile=Wall terrace=false  x=96 y=8  w=24 h=24",
 		"AddRoom bgtile=Swamp walltile=Wall terrace=false  x=96 y=96 w=24 h=24",
-		"AddRoom bgtile=Smoke walltile=Wall terrace=false  x=53 y=8  w=24 h=24",
+		"AddRoom bgtile=Smoke,Soil walltile=Wall terrace=false  x=53 y=8  w=24 h=24",
 		"AddRoom bgtile=Sea walltile=Wall terrace=false    x=53 y=96 w=24 h=24",
-		"AddRoom bgtile=Road walltile=Wall terrace=false   x=8  y=53 w=24 h=24",
+		"AddRoom bgtile=Road,Grass walltile=Wall terrace=false   x=8  y=53 w=24 h=24",
 		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=96 y=53 w=24 h=24",
-		"AddRoom bgtile=Room walltile=Wall terrace=false   x=53 y=53 w=24 h=24",
+		"AddRoom bgtile=Room,Sand walltile=Wall terrace=false   x=53 y=53 w=24 h=24",
 	}
 }
 
