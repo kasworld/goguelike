@@ -28,6 +28,8 @@ ResourceFromPNG         name:string
 # before start, Millisecond per ageing (0==no ageing), reset terrain to init state after n ageing
 ResourceAgeing          initrun:int msper:int resetaftern:int
 
+# TileFlag is comma seperrated tile list
+
 # add room
 AddRoom                 bgtile:TileFlag walltile:TileFlag terrace:bool x:int y:int w:int h:int
 AddRoomMaze             bgtile:TileFlag walltile:TileFlag terrace:bool x:int y:int w:int h:int xn:int yn:int connerfill:bool
