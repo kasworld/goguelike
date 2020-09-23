@@ -28,7 +28,7 @@ func cmdResourceAt(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&rsctl, &amount, &x, &y); err != nil {
 		return err
 	}
-	tr.resourceTileArea.OpXY(x, y, resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)})
+	tr.resourceTileArea[x][y][rsctl] = resourcetile.ResourceValue(amount)
 	return nil
 }
 
@@ -39,9 +39,8 @@ func cmdResourceHLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	fn := func(ax, ay int) bool {
-		tr.resourceTileArea.OpXY(ax, ay, rv)
+		tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 		return false
 	}
 	walk2d.HLine(x, x+w, y, fn)
@@ -55,9 +54,8 @@ func cmdResourceVLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	fn := func(ax, ay int) bool {
-		tr.resourceTileArea.OpXY(ax, ay, rv)
+		tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 		return false
 	}
 	walk2d.VLine(y, y+h, x, fn)
@@ -71,9 +69,8 @@ func cmdResourceLine(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	fn := func(ax, ay int) bool {
-		tr.resourceTileArea.OpXY(ax, ay, rv)
+		tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 		return false
 	}
 	walk2d.Line(x1, y1, x2, y2, fn)
@@ -87,9 +84,8 @@ func cmdResourceRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	fn := func(ax, ay int) bool {
-		tr.resourceTileArea.OpXY(ax, ay, rv)
+		tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 		return false
 	}
 	walk2d.Rect(x, y, x+w, y+h, fn)
@@ -102,9 +98,8 @@ func cmdResourceFillRect(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&rsctl, &amount, &x, &w, &y, &h); err != nil {
 		return err
 	}
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	fn := func(ax, ay int) bool {
-		tr.resourceTileArea.OpXY(ax, ay, rv)
+		tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 		return false
 	}
 	walk2d.FillHV(x, y, x+w, y+h, fn)
@@ -117,9 +112,8 @@ func cmdResourceFillEllipses(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err := ca.GetArgs(&rsctl, &amount, &x, &w, &y, &h); err != nil {
 		return err
 	}
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	fn := func(ax, ay int) bool {
-		tr.resourceTileArea.OpXY(ax, ay, rv)
+		tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 		return false
 	}
 	walk2d.Ellipses(x, y, x+w, y+h, fn)
@@ -136,7 +130,7 @@ func cmdResourceRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		xpos := tr.rnd.Intn(tr.Xlen)
 		ypos := tr.rnd.Intn(tr.Ylen)
 		amount := tr.rnd.NormIntRange(mean, stddev)
-		tr.resourceTileArea.OpXY(xpos, ypos, resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)})
+		tr.resourceTileArea[xpos][ypos][rsctl] = resourcetile.ResourceValue(amount)
 	}
 	return nil
 }
@@ -155,14 +149,11 @@ func cmdResourceMazeWall(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if yv {
-				tr.resourceTileArea.OpAddXY(
-					tr.XWrapper.WrapSafe(maX+x),
-					tr.YWrapper.WrapSafe(maY+y),
-					rv)
+				ax, ay := tr.XWrapper.WrapSafe(maX+x), tr.YWrapper.WrapSafe(maY+y)
+				tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 			}
 		}
 	}
@@ -183,14 +174,11 @@ func cmdResourceMazeWalk(tr *Terrain, ca *scriptparse.CmdArgs) error {
 	if err != nil {
 		return fmt.Errorf("tr %v %v", tr, err)
 	}
-	rv := resourcetile.ResourceTypeValue{T: rsctl, V: resourcetile.ResourceValue(amount)}
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if !yv {
-				tr.resourceTileArea.OpAddXY(
-					tr.XWrapper.WrapSafe(maX+x),
-					tr.YWrapper.WrapSafe(maY+y),
-					rv)
+				ax, ay := tr.XWrapper.WrapSafe(maX+x), tr.YWrapper.WrapSafe(maY+y)
+				tr.resourceTileArea[ax][ay][rsctl] = resourcetile.ResourceValue(amount)
 			}
 		}
 	}

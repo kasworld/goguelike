@@ -30,11 +30,6 @@ func (rt ResourceTile) String() string {
 	return buf.String()
 }
 
-type ResourceTypeValue struct {
-	T resourcetype.ResourceType
-	V ResourceValue
-}
-
 type ResourceTile [resourcetype.ResourceType_Count]ResourceValue
 
 // progress in cell generation

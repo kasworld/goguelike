@@ -48,17 +48,6 @@ func (rta ResourceTileArea) GetXYLen() (int, int) {
 	return len(rta), len(rta[0])
 }
 
-// for draw2d
-func (rta ResourceTileArea) OpXY(x, y int, v interface{}) {
-	rv := v.(resourcetile.ResourceTypeValue)
-	rta[x][y][rv.T] = rv.V
-}
-
-func (rta ResourceTileArea) OpAddXY(x, y int, v interface{}) {
-	rv := v.(resourcetile.ResourceTypeValue)
-	rta[x][y][rv.T] += rv.V
-}
-
 func (rta ResourceTileArea) GetXY(x, y int) *resourcetile.ResourceTile {
 	return &rta[x][y]
 }
