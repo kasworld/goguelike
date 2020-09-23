@@ -49,7 +49,6 @@ genenum -typename=ScrollType -packagename=scrolltype -basedir=enum -vectortype=i
 genenum -typename=StatusOpType -packagename=statusoptype -basedir=enum
 genenum -typename=TerrainCmd -packagename=terraincmd -basedir=enum -vectortype=int
 genenum -typename=Tile -packagename=tile -basedir=enum -flagtype=uint16 -vectortype=int
-genenum -typename=TileOpType -packagename=tileoptype -basedir=enum 
 genenum -typename=TowerAchieve -packagename=towerachieve -basedir=enum -vectortype=float64
 genenum -typename=TurnResultType -packagename=turnresulttype -basedir=enum
 genenum -typename=Way9Type -packagename=way9type -basedir=enum 

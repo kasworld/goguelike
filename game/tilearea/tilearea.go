@@ -63,11 +63,6 @@ func (ta TileArea) GetXYLen() (int, int) {
 	return len(ta), len(ta[0])
 }
 
-// for draw2d
-func (ta TileArea) OpXY(x, y int, v tile_flag.TileTypeValue) {
-	ta[x][y].Op(v)
-}
-
 func (ta TileArea) TotalPos() int {
 	return len(ta) * len(ta[0])
 }

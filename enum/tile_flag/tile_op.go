@@ -12,10 +12,7 @@
 package tile_flag
 
 import (
-	"fmt"
-
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/enum/tileoptype"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
 
@@ -26,43 +23,6 @@ func (t TileFlag) Meditateable() bool {
 
 func (t TileFlag) Empty() bool {
 	return t == 0
-}
-
-type TileTypeValue struct {
-	Op  tileoptype.TileOpType
-	Arg interface{}
-}
-
-func (t *TileFlag) Op(rv TileTypeValue) error {
-	switch rv.Arg.(type) {
-	case TileFlag:
-		v := rv.Arg.(TileFlag)
-		switch rv.Op {
-		case tileoptype.SetBits:
-			t.SetByTileFlag(v)
-		case tileoptype.ClearBits:
-			t.ClearByTileFlag(v)
-		case tileoptype.Set:
-			*t = v
-		default:
-			return fmt.Errorf("Invalid op %v", rv)
-		}
-	case tile.Tile:
-		v := rv.Arg.(tile.Tile)
-		switch rv.Op {
-		case tileoptype.SetBit:
-			t.SetByTile(v)
-		case tileoptype.ClearBit:
-			t.ClearByTile(v)
-		case tileoptype.OverrideBits:
-			t.OverrideBits(v)
-		default:
-			return fmt.Errorf("Invalid op %v", rv)
-		}
-	default:
-		return fmt.Errorf("unknown type %v", rv)
-	}
-	return nil
 }
 
 func (t *TileFlag) OverrideBits(v tile.Tile) {

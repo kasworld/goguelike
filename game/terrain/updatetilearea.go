@@ -13,8 +13,6 @@ package terrain
 
 import (
 	"github.com/kasworld/goguelike/enum/tile"
-	"github.com/kasworld/goguelike/enum/tile_flag"
-	"github.com/kasworld/goguelike/enum/tileoptype"
 )
 
 func (tr *Terrain) resource2View() {
@@ -32,11 +30,7 @@ func (tr *Terrain) openBlockedDoor() {
 			t := tr.serviceTileArea[x][y]
 			if t.CannotPlaceObj() {
 				if tr.roomManager.GetRoomByPos(x, y) != nil {
-					tr.serviceTileArea[x][y].Op(
-						tile_flag.TileTypeValue{
-							Op:  tileoptype.OverrideBits,
-							Arg: tile.Door},
-					)
+					tr.serviceTileArea[x][y].OverrideBits(tile.Door)
 					tr.log.Warn("wall blocked door found %v [%v %v], change to door", tr, x, y)
 				}
 			}
@@ -50,11 +44,7 @@ func (tr *Terrain) tileLayer2SeviceTileArea() {
 			if yv.Empty() {
 				continue
 			}
-			tr.serviceTileArea[x][y].Op(
-				tile_flag.TileTypeValue{
-					Op:  tileoptype.Set,
-					Arg: yv},
-			)
+			tr.serviceTileArea[x][y] = yv
 		}
 	}
 }
