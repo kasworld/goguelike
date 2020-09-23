@@ -13,7 +13,6 @@ package tilearea
 
 import (
 	"github.com/kasworld/goguelike/enum/tile_flag"
-	"github.com/kasworld/goguelike/enum/tileoptype"
 	"github.com/kasworld/goguelike/game/terrain/corridor"
 	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/goguelike/lib/boolmatrix"
@@ -27,8 +26,7 @@ func (ta TileArea) DrawRooms(rs []*room.Room) {
 		for x, xv := range r.Tiles {
 			for y, yv := range xv {
 				tax, tay := xWrap(roomRect.X+x), yWrap(roomRect.Y+y)
-				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: r.BgTile})
-				ta[tax][tay].Op(tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: yv})
+				ta[tax][tay] |= r.BgTile | yv
 			}
 		}
 	}
@@ -43,54 +41,48 @@ func (ta TileArea) DrawCorridors(corridorList []*corridor.Corridor) {
 }
 
 func (ta TileArea) HLine(x, w, y int, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	fn := func(ax, ay int) bool {
-		ta.OpXY(ax, ay, rv)
+		ta[ax][ay] |= tl
 		return false
 	}
 	walk2d.HLine(x, x+w, y, fn)
 }
 
 func (ta TileArea) VLine(x, y, h int, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	fn := func(ax, ay int) bool {
-		ta.OpXY(ax, ay, rv)
+		ta[ax][ay] |= tl
 		return false
 	}
 	walk2d.VLine(y, y+h, x, fn)
 }
 
 func (ta TileArea) Line(x1, y1, x2, y2 int, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	fn := func(ax, ay int) bool {
-		ta.OpXY(ax, ay, rv)
+		ta[ax][ay] |= tl
 		return false
 	}
 	walk2d.Line(x1, y1, x2, y2, fn)
 }
 
 func (ta TileArea) Rect(x, w, y, h int, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	fn := func(ax, ay int) bool {
-		ta.OpXY(ax, ay, rv)
+		ta[ax][ay] |= tl
 		return false
 	}
 	walk2d.Rect(x, y, x+w, y+h, fn)
 }
 
 func (ta TileArea) FillRect(x, w, y, h int, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	fn := func(ax, ay int) bool {
-		ta.OpXY(ax, ay, rv)
+		ta[ax][ay] |= tl
 		return false
 	}
 	walk2d.FillHV(x, y, x+w, y+h, fn)
 }
 
 func (ta TileArea) Ellipses(x, w, y, h int, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	fn := func(ax, ay int) bool {
-		ta.OpXY(ax, ay, rv)
+		ta[ax][ay] |= tl
 		return false
 	}
 	walk2d.Ellipses(x, y, x+w, y+h, fn)
@@ -98,11 +90,10 @@ func (ta TileArea) Ellipses(x, w, y, h int, tl tile_flag.TileFlag) {
 
 func (ta TileArea) DrawBoolMapTrue(xWrap, yWrap func(i int) int,
 	maX, maY int, ma boolmatrix.BoolMatrix, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if yv {
-				ta.OpXY(xWrap(maX+x), yWrap(maY+y), rv)
+				ta[xWrap(maX+x)][yWrap(maY+y)] |= tl
 			}
 		}
 	}
@@ -110,11 +101,10 @@ func (ta TileArea) DrawBoolMapTrue(xWrap, yWrap func(i int) int,
 
 func (ta TileArea) DrawBoolMapFalse(xWrap, yWrap func(i int) int,
 	maX, maY int, ma boolmatrix.BoolMatrix, tl tile_flag.TileFlag) {
-	rv := tile_flag.TileTypeValue{Op: tileoptype.SetBits, Arg: tl}
 	for x, xv := range ma {
 		for y, yv := range xv {
 			if !yv {
-				ta.OpXY(xWrap(maX+x), yWrap(maY+y), rv)
+				ta[xWrap(maX+x)][yWrap(maY+y)] |= tl
 			}
 		}
 	}
