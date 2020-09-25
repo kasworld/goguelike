@@ -87,14 +87,43 @@ func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile_flag.TileFlag, ter
 	r.DrawWall_S(wallrect, walltile)
 	r.DrawWall_W(wallrect, walltile)
 	r.DrawWall_E(wallrect, walltile)
-	r.AddWindowRand_N(rnd, wallrect, tile_flag.WindowFlag)
-	r.AddWindowRand_S(rnd, wallrect, tile_flag.WindowFlag)
-	r.AddWindowRand_W(rnd, wallrect, tile_flag.WindowFlag)
-	r.AddWindowRand_E(rnd, wallrect, tile_flag.WindowFlag)
-	r.AddDoorRand_N(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
-	r.AddDoorRand_S(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
-	r.AddDoorRand_W(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
-	r.AddDoorRand_E(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+
+	wallLen := (wallrect.W+wallrect.H)*2 - 2
+
+	windowCount := wallLen / 8
+	if windowCount < 1 {
+		windowCount = 1
+	}
+	for i := 0; i < windowCount; i++ {
+		switch rnd.Intn(4) {
+		case 0:
+			r.AddWindowRand_N(rnd, wallrect, tile_flag.WindowFlag)
+		case 1:
+			r.AddWindowRand_S(rnd, wallrect, tile_flag.WindowFlag)
+		case 2:
+			r.AddWindowRand_W(rnd, wallrect, tile_flag.WindowFlag)
+		case 3:
+			r.AddWindowRand_E(rnd, wallrect, tile_flag.WindowFlag)
+		}
+	}
+
+	doorCount := wallLen / 8
+	if doorCount < 1 {
+		doorCount = 1
+	}
+	for i := 0; i < doorCount; i++ {
+		switch rnd.Intn(4) {
+		case 0:
+			r.AddDoorRand_N(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+		case 1:
+			r.AddDoorRand_S(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+		case 2:
+			r.AddDoorRand_W(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+		case 3:
+			r.AddDoorRand_E(rnd, wallrect, tile_flag.DoorFlag, shiftConnetPos)
+		}
+	}
+
 	return nil
 }
 
