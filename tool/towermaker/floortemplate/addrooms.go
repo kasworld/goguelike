@@ -15,59 +15,6 @@ import (
 	"fmt"
 )
 
-func TileRooms64x32() []string {
-	return []string{
-		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16",
-		"AddRoom bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=16 h=16",
-		"AddRoom bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=16 h=16",
-		"AddRoom bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=16 h=16",
-		"AddRoom bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=16 h=16",
-		"AddRoom bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=16 h=16",
-		"AddRoom bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=16 h=16",
-		"AddRoom bgtile=Soil walltile=Wall  terrace=false  x=48 y=16 w=16 h=16",
-	}
-}
-
-func GogueLike() []string {
-	return []string{
-		"AddRoomsRand bgtile=Swamp walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Soil walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Stone walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Sand walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Sea walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Magma walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Ice walltile=Wall   terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Grass walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Tree,Soil walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Room walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Road walltile=Wall  terrace=false align=1 count=1 mean=8 stddev=4",
-		"AddRoomsRand bgtile=Smoke walltile=Wall terrace=false align=1 count=1 mean=8 stddev=4",
-		"ConnectRooms tile=Fog connect=1 allconnect=true diagonal=false",
-		"ConnectRooms tile=Sand connect=1 allconnect=true diagonal=false",
-	}
-}
-
-func Practice64x32() []string {
-	return []string{
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4",
-		"ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
-	}
-}
-
-func RogueLike80x43() []string {
-	return []string{
-		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4",
-		"ConnectRooms tile=Soil connect=2 allconnect=true diagonal=false",
-	}
-}
-
-func Ghost80x43() []string {
-	return []string{
-		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4",
-		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
-	}
-}
-
 var allRoomTile = []string{
 	"Room,Sand", "Soil", "Sand", "Stone", "Grass",
 	"Ice", "Magma", "Swamp", "Sea", "Smoke,Sand",
@@ -79,7 +26,7 @@ var allWallTile = []string{
 	"Wall", "Wall", "Window,Tree",
 }
 
-func RoguelikeRand(roomCount int, intnfn func(int) int) []string {
+func GoguelikeRand(roomCount int, intnfn func(int) int) []string {
 	rtn := make([]string, 0)
 	for i := 0; i < roomCount; i++ {
 		roomTile := allRoomTile[intnfn(len(allRoomTile))]

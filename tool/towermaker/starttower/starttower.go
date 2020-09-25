@@ -27,7 +27,8 @@ func New(name string) *towermake.Tower {
 
 	tw := towermake.New(name)
 	tw.Add("Practice", 64, 32, 0.7).Appends(
-		floortemplate.Practice64x32()...,
+		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=6 stddev=4",
+		"ConnectRooms tile=Road connect=2 allconnect=true diagonal=false",
 	)
 	tw.Add("SoilPlant", 64, 64, 1.0).Appends(
 		floortemplate.SoilPlant64x64()...,
@@ -92,31 +93,119 @@ func New(name string) *towermake.Tower {
 	)
 
 	tw.Add("RogueLike", 80, 43, 1.0).Appends(
-		floortemplate.RogueLike80x43()...,
+		"AddRoomsRand bgtile=Soil walltile=Wall terrace=false align=1 count=12 mean=8 stddev=4",
+		"ConnectRooms tile=Soil connect=2 allconnect=true diagonal=false",
 	).Appendf("ActiveObjectsRand count=%v", 16)
+
 	tw.Add("GogueLike", 80, 43, 1.0).Appends(
-		floortemplate.GogueLike()...,
+		floortemplate.GoguelikeRand(12, rnd.Intn)...,
 	).Appendf("ActiveObjectsRand count=%v", 32)
+
 	tw.Add("Ghost", 80, 43, 1.0).Appends(
-		floortemplate.Ghost80x43()...,
+		"AddRoomsRand bgtile=Smoke walltile=Window terrace=false align=1 count=12 mean=8 stddev=4",
+		"ConnectRooms tile=Fog connect=2 allconnect=true diagonal=false",
 	).Appendf("ActiveObjectsRand count=%v", 16)
+
 	tw.Add("FreeForAll", 64, 64, 1.0).Appends(
 		floortemplate.FreeForAll64x64()...,
 	).Appendf("ActiveObjectsRand count=%v", 16)
+
 	tw.Add("TileRooms", 64, 32, 1.5).Appends(
-		floortemplate.TileRooms64x32()...,
+		"AddRoom bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16",
+		"AddRoom bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=16 h=16",
+		"AddRoom bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=16 h=16",
+		"AddRoom bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=16 h=16",
+		"AddRoom bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=16 h=16",
+		"AddRoom bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=16 h=16",
+		"AddRoom bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=16 h=16",
+		"AddRoom bgtile=Soil walltile=Wall  terrace=false  x=48 y=16 w=16 h=16",
 	)
+
 	tw.Add("PortalMaze", 64, 32, 1.5).Appends(
-		floortemplate.PortalMaze64x32Finalized()...,
+		"ResourceFillRect  resource=Soil  amount=1024 x=00 y=00 w=16 h=16",
+		"ResourceFillRect  resource=Plant amount=1024 x=00 y=16 w=16 h=16",
+		"ResourceFillRect  resource=Stone amount=1024 x=16 y=00 w=16 h=16",
+		"ResourceFillRect  resource=Ice   amount=1024 x=16 y=16 w=16 h=16",
+		"",
+		"ResourceFillRect  resource=Soil  amount=1024 x=32 y=00 w=16 h=16",
+		"ResourceFillRect  resource=Water amount=1024 x=32 y=16 w=16 h=16",
+		"ResourceFillRect  resource=Stone amount=1024 x=48 y=00 w=16 h=16",
+		"ResourceFillRect  resource=Fire  amount=2000 x=48 y=16 w=16 h=16",
+		"",
+		"ResourceHLine resource=Stone amount=1000001 x=0  y=15 w=64",
+		"ResourceHLine resource=Stone amount=1000001 x=0  y=31 w=64",
+		"ResourceVLine resource=Stone amount=1000001 x=15 y=0  h=32",
+		"ResourceVLine resource=Stone amount=1000001 x=31 y=0  h=32",
+		"ResourceVLine resource=Stone amount=1000001 x=47 y=0  h=32",
+		"ResourceVLine resource=Stone amount=1000001 x=63 y=0  h=32",
+		"FinalizeTerrain",
+		"",
+		"AddPortal x=04 y=04 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-00-0 DstPortalID=PortalMaze-00-1 message=From",
+		"AddPortal x=04 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-00-1 DstPortalID=PortalMaze-01-0 message=To",
+		"AddPortal x=10 y=04 display=None      acttype=PortalAutoIn PortalID=PortalMaze-00-2 DstPortalID=PortalMaze-10-0 message=To",
+		"AddPortal x=10 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-00-3 DstPortalID=PortalMaze-11-0 message=To",
+
+		"AddPortal x=20 y=04 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-10-0 DstPortalID=PortalMaze-10-1 message=From",
+		"AddPortal x=20 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-10-1 DstPortalID=PortalMaze-11-0 message=To",
+		"AddPortal x=26 y=04 display=None      acttype=PortalAutoIn PortalID=PortalMaze-10-2 DstPortalID=PortalMaze-20-0 message=To",
+		"AddPortal x=26 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-10-3 DstPortalID=PortalMaze-21-0 message=To",
+
+		"AddPortal x=36 y=04 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-20-0 DstPortalID=PortalMaze-20-1 message=From",
+		"AddPortal x=36 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-20-1 DstPortalID=PortalMaze-21-0 message=To",
+		"AddPortal x=42 y=04 display=None      acttype=PortalAutoIn PortalID=PortalMaze-20-2 DstPortalID=PortalMaze-30-0 message=To",
+		"AddPortal x=42 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-20-3 DstPortalID=PortalMaze-31-0 message=To",
+
+		"AddPortal x=52 y=04 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-30-0 DstPortalID=PortalMaze-30-1 message=From",
+		"AddPortal x=52 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-30-1 DstPortalID=PortalMaze-31-0 message=To",
+		"AddPortal x=58 y=04 display=None      acttype=PortalAutoIn PortalID=PortalMaze-30-2 DstPortalID=PortalMaze-00-0 message=To",
+		"AddPortal x=58 y=10 display=None      acttype=PortalAutoIn PortalID=PortalMaze-30-3 DstPortalID=PortalMaze-01-0 message=To",
+
+		"AddPortal x=04 y=20 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-01-0 DstPortalID=PortalMaze-01-1 message=From",
+		"AddPortal x=04 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-01-1 DstPortalID=PortalMaze-00-0 message=To",
+		"AddPortal x=10 y=20 display=None      acttype=PortalAutoIn PortalID=PortalMaze-01-2 DstPortalID=PortalMaze-11-0 message=To",
+		"AddPortal x=10 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-01-3 DstPortalID=PortalMaze-10-0 message=To",
+
+		"AddPortal x=20 y=20 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-11-0 DstPortalID=PortalMaze-11-1 message=From",
+		"AddPortal x=20 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-11-1 DstPortalID=PortalMaze-10-0 message=To",
+		"AddPortal x=26 y=20 display=None      acttype=PortalAutoIn PortalID=PortalMaze-11-2 DstPortalID=PortalMaze-21-0 message=To",
+		"AddPortal x=26 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-11-3 DstPortalID=PortalMaze-20-0 message=To",
+
+		"AddPortal x=36 y=20 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-21-0 DstPortalID=PortalMaze-21-1 message=From",
+		"AddPortal x=36 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-21-1 DstPortalID=PortalMaze-20-0 message=To",
+		"AddPortal x=42 y=20 display=None      acttype=PortalAutoIn PortalID=PortalMaze-21-2 DstPortalID=PortalMaze-31-0 message=To",
+		"AddPortal x=42 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-21-3 DstPortalID=PortalMaze-30-0 message=To",
+
+		"AddPortal x=52 y=20 display=PortalOut acttype=PortalOut    PortalID=PortalMaze-31-0 DstPortalID=PortalMaze-31-1 message=From",
+		"AddPortal x=52 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-31-1 DstPortalID=PortalMaze-30-0 message=To",
+		"AddPortal x=58 y=20 display=None      acttype=PortalAutoIn PortalID=PortalMaze-31-2 DstPortalID=PortalMaze-01-0 message=To",
+		"AddPortal x=58 y=26 display=None      acttype=PortalAutoIn PortalID=PortalMaze-31-3 DstPortalID=PortalMaze-00-0 message=To",
 	)
 	tw.Add("MazeRooms1", 64, 32, 1.5).Appends(
-		floortemplate.MazeBigSmall64x32()...,
+		"ResourceFillRect resource=Soil amount=64  x=0  y=0  w=64 h=32",
+		"AddRoomMaze bgtile=Room walltile=Wall terrace=false  x=0   y=0   w=33 h=31 xn=16 yn=15 connerfill=true",
+		"AddRoomMaze bgtile=Road walltile=Wall terrace=false  x=40  y=8  w=17 h=17 xn=8 yn=8 connerfill=true",
 	)
 	tw.Add("MazeRooms2", 64, 32, 1.5).Appends(
-		floortemplate.MazeRooms64x32()...,
+		"ResourceFillRect resource=Soil amount=64  x=0  y=0  w=64 h=32",
+		"AddRoomMaze bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Tree walltile=Wall  terrace=false  x=48 y=16 w=15 h=15 xn=7 yn=7 connerfill=true",
 	)
 	tw.Add("MazeRooms3", 64, 32, 1.5).Appends(
-		floortemplate.MazeRoomsOverlapWall64x32()...,
+		"ResourceFillRect resource=Soil amount=64  x=0  y=0  w=64 h=32",
+		"AddRoomMaze bgtile=Stone walltile=Wall terrace=false  x=0  y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Sea walltile=Wall   terrace=false  x=16 y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Sand walltile=Wall  terrace=false  x=32 y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Magma walltile=Wall terrace=false  x=48 y=0  w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Ice walltile=Wall   terrace=false  x=0  y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Grass walltile=Wall terrace=false  x=16 y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Swamp walltile=Wall terrace=false  x=32 y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
+		"AddRoomMaze bgtile=Tree walltile=Wall  terrace=false  x=48 y=16 w=16 h=16 xn=7 yn=7 connerfill=true",
 	)
 	tw.Add("MazeWalk", 64, 64, 2.0).Appends(
 		"ResourceMazeWalk resource=Soil amount=64 x=0 y=0 w=64 h=64 xn=16 yn=16 connerfill=true",

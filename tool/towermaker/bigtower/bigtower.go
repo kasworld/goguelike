@@ -44,7 +44,7 @@ func New(name string, floorCount int) *towermake.Tower {
 			fm := tw.Add(floorName, w, h, 1.0)
 			fm.Appendf("ActiveObjectsRand count=%v", roomCount/2)
 			fm.Appends(
-				floortemplate.RoguelikeRand(roomCount, rnd.Intn)...,
+				floortemplate.GoguelikeRand(roomCount, rnd.Intn)...,
 			)
 		case 1:
 			floorName := fmt.Sprintf("AgeingCity%v", i)
