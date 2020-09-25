@@ -28,11 +28,10 @@ func wrapInt(v, l int) int {
 func New(name string, floorCount int) *towermake.Tower {
 	var rnd = g2rand.New()
 	var whList = []int{
-		32, 64, 128,
+		64, 96, 128,
 	}
 	tw := towermake.New(name)
 	for i := 0; i < floorCount; i++ {
-		floorName := fmt.Sprintf("Floor%v", i)
 		switch i % 10 {
 		default: // roguelike floor
 			w := whList[rnd.Intn(len(whList))]
@@ -41,34 +40,40 @@ func New(name string, floorCount int) *towermake.Tower {
 			if roomCount < 2 {
 				roomCount = 2
 			}
+			floorName := fmt.Sprintf("Goguelike%v", i)
 			fm := tw.Add(floorName, w, h, 1.0)
 			fm.Appendf("ActiveObjectsRand count=%v", roomCount/2)
 			fm.Appends(
 				floortemplate.RoguelikeRand(roomCount, rnd.Intn)...,
 			)
 		case 1:
+			floorName := fmt.Sprintf("AgeingCity%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingCity256x256()...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 
 		case 3:
+			floorName := fmt.Sprintf("AgeingField%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingField256x256()...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		case 5:
+			floorName := fmt.Sprintf("AgeingMaze%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.AgeingMaze256x256()...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		case 7:
+			floorName := fmt.Sprintf("BedTown%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				floortemplate.CityRooms(256, 256, 11, 11, 5, rnd.Intn)...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 
 		case 9:
+			floorName := fmt.Sprintf("ResourceMaze%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
 				fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
 			)
@@ -98,20 +103,20 @@ func New(name string, floorCount int) *towermake.Tower {
 		}
 
 		suffix1 := "InRoom"
-		if roomCount == 0 {
+		if roomCount < 10 {
 			suffix1 = "Rand"
 		}
 
 		fm2 := tw.GetList()[wrapInt(i+1, floorCount)]
 		suffix2 := "InRoom"
-		if fm2.CalcRoomCount() == 0 {
+		if fm2.CalcRoomCount() < 10 {
 			suffix2 = "Rand"
 		}
 		fm.ConnectStairUp(suffix1, suffix2, fm2)
 
 		fm2 = tw.GetList()[rnd.Intn(tw.GetCount())]
 		suffix2 = "InRoom"
-		if fm2.CalcRoomCount() == 0 {
+		if fm2.CalcRoomCount() < 10 {
 			suffix2 = "Rand"
 		}
 		fm.ConnectPortalTo(suffix1, suffix2, fm2)
@@ -120,7 +125,7 @@ func New(name string, floorCount int) *towermake.Tower {
 		for j := 0; j < recycleCount/8; j++ {
 			fm2 = tw.GetList()[rnd.Intn(tw.GetCount())]
 			suffix2 = "InRoom"
-			if fm2.CalcRoomCount() == 0 {
+			if fm2.CalcRoomCount() < 10 {
 				suffix2 = "Rand"
 			}
 			fm.ConnectPortalTo(suffix1, suffix2, fm2)
