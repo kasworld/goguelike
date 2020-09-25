@@ -75,11 +75,13 @@ func New(name string, floorCount int) *towermake.Tower {
 		case 9:
 			floorName := fmt.Sprintf("ResourceMaze%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
-				fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
-			)
-			fm.Appends(
 				floortemplate.MixedResourceMaze(256, 256)...,
 			)
+			if rnd.Intn(2) == 0 {
+				fm.Appends(
+					fmt.Sprintf("ResourceFillRect resource=Soil amount=1 x=0 y=0 w=%v h=%v", 256, 256),
+				)
+			}
 			fm.Appends(
 				floortemplate.CityRoomsRand(512, rnd.Intn)...,
 			)
