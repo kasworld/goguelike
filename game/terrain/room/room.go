@@ -88,7 +88,7 @@ func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile_flag.TileFlag, ter
 	r.DrawWall_W(wallrect, walltile)
 	r.DrawWall_E(wallrect, walltile)
 
-	wallLen := (wallrect.W+wallrect.H)*2 - 2
+	wallLen := (wallrect.W+wallrect.H)*2 - 4
 
 	windowCount := wallLen / 8
 	if windowCount < 1 {
