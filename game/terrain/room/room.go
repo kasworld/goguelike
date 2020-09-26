@@ -90,7 +90,7 @@ func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile_flag.TileFlag, ter
 
 	wallLen := (wallrect.W+wallrect.H)*2 - 4
 
-	windowCount := wallLen / 8
+	windowCount := wallLen/8 + rnd.NormIntRange(0, 1)
 	if windowCount < 1 {
 		windowCount = 1
 	}
@@ -107,7 +107,7 @@ func (r *Room) DrawRectWall(rnd *g2rand.G2Rand, walltile tile_flag.TileFlag, ter
 		}
 	}
 
-	doorCount := wallLen / 8
+	doorCount := wallLen/8 + rnd.NormIntRange(0, 1)
 	if doorCount < 1 {
 		doorCount = 1
 	}
