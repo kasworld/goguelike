@@ -57,6 +57,36 @@ func (vp *GameScene) animateDangerObj(frameProgress float64) {
 	}
 }
 
+func (vp *GameScene) animateDoor() {
+	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
+
+	darkMeshs := vp.jsTile3DDarkMesh[tile.Door]
+	for i := 0; i < vp.jsTile3DDarkCount[tile.Door]; i++ {
+		oldmatrix := ThreeJsNew("Matrix4")
+		darkMeshs.Call("getMatrixAt", i, oldmatrix)
+		v3pos := ThreeJsNew("Vector3")
+		v3pos.Call("setFromMatrixPosition", oldmatrix)
+		newmatrix := ThreeJsNew("Matrix4")
+		newmatrix.Call("makeRotationZ", rad)
+		newmatrix.Call("setPosition", v3pos)
+		darkMeshs.Call("setMatrixAt", i, newmatrix)
+	}
+	darkMeshs.Get("instanceMatrix").Set("needsUpdate", true)
+
+	meshs := vp.jsTile3DMesh[tile.Door]
+	for i := 0; i < vp.jsTile3DCount[tile.Door]; i++ {
+		oldmatrix := ThreeJsNew("Matrix4")
+		darkMeshs.Call("getMatrixAt", i, oldmatrix)
+		v3pos := ThreeJsNew("Vector3")
+		v3pos.Call("setFromMatrixPosition", oldmatrix)
+		newmatrix := ThreeJsNew("Matrix4")
+		newmatrix.Call("makeRotationZ", rad)
+		newmatrix.Call("setPosition", v3pos)
+		darkMeshs.Call("setMatrixAt", i, newmatrix)
+	}
+	meshs.Get("instanceMatrix").Set("needsUpdate", true)
+}
+
 // tile scroll list of animate
 // common to playview, floorview
 func (vp *GameScene) animateTile(envBias bias.Bias) {
@@ -73,8 +103,8 @@ func (vp *GameScene) animateTile(envBias bias.Bias) {
 		// tile.Road,
 		// tile.Room,
 		// tile.Wall,
-		tile.Window,
-		tile.Door,
+		// tile.Window,
+		// tile.Door,
 		tile.Fog,
 		tile.Smoke,
 	} {

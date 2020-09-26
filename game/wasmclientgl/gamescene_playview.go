@@ -14,7 +14,6 @@ package wasmclientgl
 import (
 	"fmt"
 	"math"
-	"time"
 
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/condition"
@@ -243,6 +242,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	vp.animateFieldObj()
 	vp.animateDangerObj(frameProgress)
 	vp.animateTile(envBias)
+	vp.animateDoor()
 	vp.moveCameraLight(
 		cf, taNoti.VPX, taNoti.VPY,
 		frameProgress, scrollDir,
@@ -267,7 +267,7 @@ func (vp *GameScene) makeClientTile4PlayView(
 		vp.jsTile3DDarkCount[ti] = 0 // clear use count
 	}
 	// matrix := ThreeJsNew("Matrix4")
-	rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
+	// rad := time.Now().Sub(gInitData.TowerInfo.StartTime).Seconds()
 	for vpi, v := range gXYLenListView {
 		fx := v.X + vpx
 		fy := v.Y + vpy
@@ -282,9 +282,9 @@ func (vp *GameScene) makeClientTile4PlayView(
 			}
 			matrix := ThreeJsNew("Matrix4")
 			if dark {
-				if tile.Tile(ti) == tile.Door {
-					matrix.Call("makeRotationZ", rad)
-				}
+				// if tile.Tile(ti) == tile.Door {
+				// 	matrix.Call("makeRotationZ", rad)
+				// }
 				matrix.Call("setPosition",
 					gTile3DDark[ti].MakePosVector3(fx, fy),
 				)
@@ -292,9 +292,9 @@ func (vp *GameScene) makeClientTile4PlayView(
 					vp.jsTile3DDarkCount[ti], matrix)
 				vp.jsTile3DDarkCount[ti]++
 			} else {
-				if tile.Tile(ti) == tile.Door {
-					matrix.Call("makeRotationZ", rad)
-				}
+				// if tile.Tile(ti) == tile.Door {
+				// 	matrix.Call("makeRotationZ", rad)
+				// }
 				matrix.Call("setPosition",
 					gTile3D[ti].MakePosVector3(fx, fy),
 				)
