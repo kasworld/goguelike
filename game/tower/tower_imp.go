@@ -38,7 +38,7 @@ func (tw *Tower) GetReqCh() chan<- interface{} {
 	return tw.recvRequestCh
 }
 
-func (tw *Tower) ReqState() string {
+func (tw *Tower) ReqChState() string {
 	return fmt.Sprintf("%v/%v", len(tw.recvRequestCh), cap(tw.recvRequestCh))
 }
 

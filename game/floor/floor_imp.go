@@ -38,7 +38,7 @@ func (f *Floor) GetReqCh() chan<- interface{} {
 	return f.recvRequestCh
 }
 
-func (f *Floor) ReqState() string {
+func (f *Floor) ReqChState() string {
 	return fmt.Sprintf("%v/%v",
 		len(f.recvRequestCh), cap(f.recvRequestCh),
 	)
