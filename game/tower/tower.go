@@ -57,11 +57,10 @@ import (
 var _ gamei.TowerI = &Tower{}
 
 func (tw *Tower) String() string {
-	return fmt.Sprintf("Tower_%v[%v %v %v/%v]",
+	return fmt.Sprintf("Tower[%v Seed:%v %v]",
 		tw.sconfig.TowerName,
+		tw.sconfig.Seed,
 		tw.uuid,
-		tw.biasFactor,
-		len(tw.recvRequestCh), cap(tw.recvRequestCh),
 	)
 }
 
@@ -141,10 +140,10 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 	}
 
 	if config.Seed <= 0 {
-		tw.rnd = g2rand.New()
-	} else {
-		tw.rnd = g2rand.NewWithSeed(int64(config.Seed))
+		tw.sconfig.Seed = int(time.Now().UnixNano())
 	}
+	tw.rnd = g2rand.NewWithSeed(int64(config.Seed))
+
 	tw.connManager = c2t_connbytemanager.New()
 
 	tw.sessionManager = sessionmanager.New("",
