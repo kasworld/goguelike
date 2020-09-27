@@ -12,6 +12,8 @@
 package floor
 
 import (
+	"fmt"
+
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
@@ -34,6 +36,12 @@ func (f *Floor) GetName() string {
 
 func (f *Floor) GetReqCh() chan<- interface{} {
 	return f.recvRequestCh
+}
+
+func (f *Floor) ReqState() string {
+	return fmt.Sprintf("%v/%v",
+		len(f.recvRequestCh), cap(f.recvRequestCh),
+	)
 }
 
 func (f *Floor) GetInterDur() *intervalduration.IntervalDuration {

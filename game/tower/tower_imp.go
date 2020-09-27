@@ -12,6 +12,7 @@
 package tower
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/kasworld/goguelike/config/gameconst"
@@ -35,6 +36,10 @@ func (tw *Tower) GetExpRanking() []gamei.ActiveObjectI {
 
 func (tw *Tower) GetReqCh() chan<- interface{} {
 	return tw.recvRequestCh
+}
+
+func (tw *Tower) ReqState() string {
+	return fmt.Sprintf("%v/%v", len(tw.recvRequestCh), cap(tw.recvRequestCh))
 }
 
 func (tw *Tower) GetUUID() string {

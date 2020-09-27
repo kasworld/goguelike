@@ -33,21 +33,16 @@ import (
 var _ gamei.FloorI = &Floor{}
 
 func (f *Floor) String() string {
-	return fmt.Sprintf("Floor[%v %v/%v]",
+	return fmt.Sprintf("Floor[%v Seed:%v]",
 		f.GetName(),
-		len(f.recvRequestCh), cap(f.recvRequestCh),
-	)
-}
-
-func (f *Floor) ReqState() string {
-	return fmt.Sprintf("%v/%v",
-		len(f.recvRequestCh), cap(f.recvRequestCh),
+		f.seed,
 	)
 }
 
 type Floor struct {
-	rnd *g2rand.G2Rand `prettystring:"hide"`
-	log *g2log.LogBase `prettystring:"hide"`
+	rnd  *g2rand.G2Rand `prettystring:"hide"`
+	seed int64
+	log  *g2log.LogBase `prettystring:"hide"`
 
 	tower       gamei.TowerI
 	w           int
@@ -79,6 +74,7 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 	f := &Floor{
 		log:               tw.Log(),
 		tower:             tw,
+		seed:              seed,
 		rnd:               g2rand.NewWithSeed(seed),
 		interDur:          intervalduration.New(""),
 		statPacketObjOver: actpersec.New(),

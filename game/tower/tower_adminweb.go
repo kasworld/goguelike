@@ -203,7 +203,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	<a href= "/towerStat" target="_blank">{{.GetTowerAchieveStat}}</a>
     <br/>
-	TowerCmd act : {{.GetTowerCmdActStat}}
+	TowerCmd act : {{.ReqState}} {{.GetTowerCmdActStat}}
     <br/>
     <a href="/StatServeAPI" target="_blank">{{.GetProtocolStat}}</a>
     <br/>

@@ -171,7 +171,7 @@ func (tw *Tower) GetServiceLockFilename() string {
 }
 
 func (tw *Tower) ServiceInit() error {
-	rd := recordduration.New("TowerInit")
+	rd := recordduration.New(tw.String())
 
 	tw.log.TraceService("Start ServiceInit %v %v", tw, rd)
 	defer func() {
