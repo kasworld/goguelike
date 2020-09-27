@@ -23,17 +23,18 @@ type TowerConfig struct {
 	// common to all tower
 	LogLevel         g2log.LL_Type `default:"7" argname:""`
 	SplitLogLevel    g2log.LL_Type `default:"0" argname:""`
-	BaseLogDir       string        `default:"/tmp/"  argname:""`
+	BaseLogDir       string        `default:"/tmp/" argname:""`
 	DataFolder       string        `default:"./serverdata" argname:""`
 	ClientDataFolder string        `default:"./clientdata" argname:""`
-	GroundRPC        string        `default:"localhost:14002"  argname:""`
+	GroundRPC        string        `default:"localhost:14002" argname:""`
 	WebAdminID       string        `default:"root" argname:""`
 	WebAdminPass     string        `default:"password" argname:"" prettystring:"hidevalue"`
 	AdminAuthKey     string        `default:"6e9456cf-ab29-99b2-f223-1459e00cfcd5" argname:"" prettystring:"hidevalue"`
 
 	// config for each tower
-	ServicePort           int     `default:"14101"  argname:""`
-	AdminPort             int     `default:"14201"  argname:""`
+	Seed                  int     `default:"0" argname:""` // <=0 time seed
+	ServicePort           int     `default:"14101" argname:""`
+	AdminPort             int     `default:"14201" argname:""`
 	ScriptFilename        string  `default:"start" argname:""`
 	TowerName             string  `default:"Default" argname:""`
 	ConcurrentConnections int     `default:"10000" argname:""`

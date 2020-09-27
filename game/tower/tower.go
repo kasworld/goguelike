@@ -127,7 +127,6 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 		recvRequestCh: make(chan interface{},
 			int(float64(config.ConcurrentConnections*2)*config.TurnPerSec)),
 
-		rnd:     g2rand.New(),
 		sconfig: config,
 		log:     log,
 
@@ -139,6 +138,12 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 		errorStat:           c2t_statapierror.New(),
 		towerCmdActStat:     actpersec.New(),
 		towerAchieveStat:    new(towerachieve_vector.TowerAchieveVector),
+	}
+
+	if config.Seed <= 0 {
+		tw.rnd = g2rand.New()
+	} else {
+		tw.rnd = g2rand.NewWithSeed(int64(config.Seed))
 	}
 	tw.connManager = c2t_connbytemanager.New()
 
