@@ -59,7 +59,7 @@ var _ gamei.TowerI = &Tower{}
 func (tw *Tower) String() string {
 	return fmt.Sprintf("Tower[%v Seed:%v %v]",
 		tw.sconfig.TowerName,
-		tw.sconfig.Seed,
+		tw.seed,
 		tw.uuid,
 	)
 }
@@ -73,6 +73,7 @@ type Tower struct {
 	recvRequestCh chan interface{}
 
 	sconfig    *towerconfig.TowerConfig
+	seed       int64
 	uuid       string
 	biasFactor [3]int64  `prettystring:"simple"`
 	startTime  time.Time `prettystring:"simple"`
@@ -139,10 +140,11 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 		towerAchieveStat:    new(towerachieve_vector.TowerAchieveVector),
 	}
 
-	if config.Seed <= 0 {
-		tw.sconfig.Seed = int(time.Now().UnixNano())
+	tw.seed = int64(config.Seed)
+	if tw.seed <= 0 {
+		tw.seed = time.Now().UnixNano()
 	}
-	tw.rnd = g2rand.NewWithSeed(int64(config.Seed))
+	tw.rnd = g2rand.NewWithSeed(int64(tw.seed))
 
 	tw.connManager = c2t_connbytemanager.New()
 

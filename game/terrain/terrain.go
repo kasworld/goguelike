@@ -33,7 +33,7 @@ import (
 func (tr *Terrain) String() string {
 	return fmt.Sprintf("Terrain[%v Seed:%v (%v %v) ]",
 		tr.Name,
-		tr.Seed,
+		tr.seed,
 		tr.Xlen, tr.Ylen,
 	)
 }
@@ -80,7 +80,7 @@ type Terrain struct {
 	YWrap    func(i int) int
 
 	Name              string
-	Seed              int64
+	seed              int64
 	ActTurnBoost      float64
 	ActiveObjCount    int
 	CarryObjCount     int
@@ -96,7 +96,7 @@ func New(seed int64, script []string, dataDir string, l *g2log.LogBase) *Terrain
 		log:           l,
 	}
 	tr.viewportCache = viewportcache.New(tr)
-	tr.Seed = seed
+	tr.seed = seed
 	tr.rnd = g2rand.NewWithSeed(seed)
 	return tr
 }

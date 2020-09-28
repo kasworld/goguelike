@@ -40,9 +40,8 @@ func (f *Floor) String() string {
 }
 
 type Floor struct {
-	rnd  *g2rand.G2Rand `prettystring:"hide"`
-	seed int64
-	log  *g2log.LogBase `prettystring:"hide"`
+	rnd *g2rand.G2Rand `prettystring:"hide"`
+	log *g2log.LogBase `prettystring:"hide"`
 
 	tower       gamei.TowerI
 	w           int
@@ -50,6 +49,7 @@ type Floor struct {
 	bias        bias.Bias        `prettystring:"simple"`
 	terrain     *terrain.Terrain `prettystring:"simple"`
 	initialized bool
+	seed        int64
 
 	// async ageing one at a time
 	inAgeing int32
