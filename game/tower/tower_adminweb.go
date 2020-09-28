@@ -165,6 +165,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	</head>
 	<body>
 
+
 	BuildDate : {{.BuildDate.Format "2006-01-02T15:04:05Z07:00"}}
 	<br/>
 	Version: {{.GetServiceInfo.Version}}
@@ -172,10 +173,14 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	ProtocolVersion : {{.GetServiceInfo.ProtocolVersion}}
 	<br/>
 	DataVersion : {{.GetServiceInfo.DataVersion}}
+	<hr/>
+	{{.}}
 	<br/>
-	Name : {{.GetTowerInfo.Name}}
+	Start : {{.GetStartTime}} / {{.GetRunDur}}
 	<br/>
 	Factor : {{.GetTowerInfo.Factor}}
+	<br/>
+	Current Bias : {{.GetBias}}
 	<br/>
 	TotalFloor : {{.GetFloorManager.GetFloorCount}}
 	<br/>
@@ -185,15 +190,9 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	Max Level From Discover :  {{.GetFloorManager.CalcFullDiscoverLevel}} 
 	<br/>
-	Start : {{.GetStartTime}} / {{.GetRunDur}}
-	<br/>
-	{{.}}
-	<br/>
 	goroutine : {{.NumGoroutine}}	
 	<br/>
 	global wrapper : {{.WrapInfo}}	
-	<br/>
-	Current Bias : {{.GetBias}}
 	<br/>
 	TileCache : {{.TileCacheCount}}
 	<br/>
@@ -201,7 +200,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	RecvStat : {{.GetRecvStat}}
 	<br/>
-	<a href= "/towerStat" target="_blank">{{.GetTowerAchieveStat}}</a>
+	<a href= "/towerStat" target="_blank">Tower Achieve</a>
     <br/>
 	TowerCmd act : {{.ReqChState}} {{.GetTowerCmdActStat}}
     <br/>
