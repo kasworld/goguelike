@@ -16,6 +16,8 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/kasworld/goguelike/enum/respawntype"
+
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/aotype"
 	"github.com/kasworld/goguelike/enum/condition_vector"
@@ -42,6 +44,14 @@ func (ao *ActiveObject) GetHomeFloor() gamei.FloorI {
 
 func (ao *ActiveObject) GetCurrentFloor() gamei.FloorI {
 	return ao.currrentFloor
+}
+
+func (ao *ActiveObject) GetActiveObjType() aotype.ActiveObjType {
+	return ao.aoType
+}
+
+func (ao *ActiveObject) GetRespawnType() respawntype.RespawnType {
+	return ao.respawnType
 }
 
 func (ao *ActiveObject) GetChat() string {
@@ -72,10 +82,6 @@ func (ao *ActiveObject) GetAndClearNeedTANoti() bool {
 // clients conn interface
 func (ao *ActiveObject) GetClientConn() *c2t_serveconnbyte.ServeConnByte {
 	return ao.clientConn
-}
-
-func (ao *ActiveObject) GetActiveObjType() aotype.ActiveObjType {
-	return ao.aoType
 }
 
 // func (ao *ActiveObject) SetActiveObjType(aot aotype.ActiveObjType) {

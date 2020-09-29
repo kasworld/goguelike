@@ -17,6 +17,8 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/kasworld/goguelike/enum/respawntype"
+
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/gamedata"
@@ -68,6 +70,7 @@ type ActiveObject struct {
 	nickName    string
 	homefloor   gamei.FloorI
 	aoType      aotype.ActiveObjType
+	respawnType respawntype.RespawnType
 	bornFaction factiontype.FactionType          `prettystring:"simple"`
 	clientConn  *c2t_serveconnbyte.ServeConnByte // for clientConn conn
 	ai          *serverai2.ServerAI              // for server side ai
@@ -144,6 +147,7 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	ao.nickName = nickname
 	ao.isAIInUse = false
 	ao.aoType = aotype.User
+	ao.respawnType = respawntype.ToCurrentFloor
 	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
 	ao.clientConn = conn
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount*2)
@@ -161,6 +165,7 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]
 	ao.isAIInUse = true
 	ao.aoType = aotype.System
+	ao.respawnType = respawntype.ToHomeFloor
 	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount)
 	ao.addRandPotion(gameconst.InitPotionCount)

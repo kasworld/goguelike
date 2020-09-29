@@ -40,6 +40,7 @@ genenum -typename=FieldObjActType -packagename=fieldobjacttype -basedir=enum -ve
 genenum -typename=FieldObjDisplayType -packagename=fieldobjdisplaytype -basedir=enum
 genenum -typename=PotionType -packagename=potiontype -basedir=enum -vectortype=int
 genenum -typename=ResourceType -packagename=resourcetype -basedir=enum -vectortype=int
+genenum -typename=RespawnType -packagename=respawntype -basedir=enum 
 genenum -typename=ScrollType -packagename=scrolltype -basedir=enum -vectortype=int
 genenum -typename=StatusOpType -packagename=statusoptype -basedir=enum
 genenum -typename=TerrainCmd -packagename=terraincmd -basedir=enum -vectortype=int

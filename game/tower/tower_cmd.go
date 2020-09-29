@@ -13,6 +13,7 @@ package tower
 
 import (
 	"github.com/kasworld/goguelike/enum/achievetype"
+	"github.com/kasworld/goguelike/enum/respawntype"
 	"github.com/kasworld/goguelike/game/cmd2tower"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
@@ -298,11 +299,16 @@ func (tw *Tower) Call_ActiveObjRebirth(ao gamei.ActiveObjectI) {
 			ao, ao.GetHP(), ao.GetTurnData().HPMax)
 	}
 	var dstFloor gamei.FloorI
-	// system ao respawn to home floor == not user ao
-	if aoconn := ao.GetClientConn(); aoconn == nil {
-		dstFloor = ao.GetHomeFloor()
-	} else {
+
+	switch ao.GetRespawnType() {
+	default:
+		tw.log.Fatal("invalid respawntype %v %v", ao, ao.GetRespawnType())
+	case respawntype.ToCurrentFloor:
 		dstFloor = ao.GetCurrentFloor()
+	case respawntype.ToHomeFloor:
+		dstFloor = ao.GetHomeFloor()
+	case respawntype.ToRandomFloor:
+		dstFloor = tw.floorMan.GetFloorList()[tw.rnd.Intn(tw.floorMan.GetFloorCount())]
 	}
 	if err := tw.ao2Floor.ActiveObjRebirthToFloor(dstFloor, ao); err != nil {
 		tw.log.Fatal("%v", err)

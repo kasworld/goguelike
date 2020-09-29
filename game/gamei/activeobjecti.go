@@ -20,6 +20,7 @@ import (
 	"github.com/kasworld/goguelike/enum/condition_vector"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike/enum/potiontype_vector"
+	"github.com/kasworld/goguelike/enum/respawntype"
 	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
@@ -86,6 +87,7 @@ type ActiveObjectI interface {
 
 	GetClientConn() *c2t_serveconnbyte.ServeConnByte
 	GetActiveObjType() aotype.ActiveObjType
+	GetRespawnType() respawntype.RespawnType
 
 	IsAIUse() bool
 	SetUseAI(b bool)
