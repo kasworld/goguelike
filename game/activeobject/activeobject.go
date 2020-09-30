@@ -179,7 +179,7 @@ func (ao *ActiveObject) Cleanup() {
 	ao.ai.Cleanup()
 }
 
-func (ao *ActiveObject) Noti_Rebirth() {
+func (ao *ActiveObject) Rebirth() {
 	ao.hp = ao.AOTurnData.HPMax * gameconst.RebirthHPRate
 	ao.sp = ao.AOTurnData.SPMax * gameconst.RebirthSPRate
 	ao.SetNeedTANoti()

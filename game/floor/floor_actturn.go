@@ -648,7 +648,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		if err := f.ActiveObjDropCarryObjByDie(ao, aox, aoy); err != nil {
 			f.log.Error("%v %v %v", f, ao, err)
 		}
-		ao.Noti_Death(f) // set rebirth count
+		ao.Death(f) // set rebirth count
 		if aoconn := ao.GetClientConn(); aoconn != nil {
 			if err := aoconn.SendNotiPacket(
 				c2t_idnoti.Death,

@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-func (ao *ActiveObject) Noti_EnterFloor(f gamei.FloorI) {
+func (ao *ActiveObject) EnterFloor(f gamei.FloorI) {
 	ao.currrentFloor = f
 	ao.SetNeedTANoti()
 	if _, exist := ao.uuid2VisitArea.GetByID(f.GetName()); !exist {

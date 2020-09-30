@@ -54,9 +54,9 @@ type ActiveObjectI interface {
 
 	IsAlive() bool
 
-	Noti_Rebirth()
-	Noti_EnterFloor(f FloorI)
-	Noti_Death(f FloorI)
+	Rebirth()
+	EnterFloor(f FloorI)
+	Death(f FloorI)
 
 	GetBias() bias.Bias
 	// GetBornFaction() factiontype.FactionType

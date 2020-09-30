@@ -21,7 +21,7 @@ import (
 )
 
 // follow floor env bias
-func (ao *ActiveObject) Noti_Death(f gamei.FloorI) {
+func (ao *ActiveObject) Death(f gamei.FloorI) {
 	envBias := f.GetEnvBias()
 	newActiveObjBiasLen := float64(gameconst.ActiveObjBaseBiasLen)
 	newBias := ao.currentBias.Add(envBias.Idiv(10)).MakeAbsSumTo(newActiveObjBiasLen)
