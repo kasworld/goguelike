@@ -195,8 +195,7 @@ func (f *Floor) processAgeing() {
 			ao.SetNeedTANoti()
 			// send ageing noti
 			if aoconn := ao.GetClientConn(); aoconn != nil {
-				if err := aoconn.SendNotiPacket(
-					c2t_idnoti.Ageing,
+				if err := aoconn.SendNotiPacket(c2t_idnoti.Ageing,
 					NotiAgeing,
 				); err != nil {
 					f.log.Error("%v %v %v", f, ao, err)

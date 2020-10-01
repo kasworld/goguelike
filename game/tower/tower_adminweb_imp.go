@@ -216,8 +216,7 @@ func (tw *Tower) web_Broadcast(w http.ResponseWriter, r *http.Request) {
 	msg := weblib.GetStringByName("Msg", "", w, r)
 	connlist := tw.connManager.GetList()
 	for _, aoconn := range connlist {
-		aoconn.SendNotiPacket(
-			c2t_idnoti.Broadcast,
+		aoconn.SendNotiPacket(c2t_idnoti.Broadcast,
 			c2t_obj.NotiBroadcast_data{
 				Msg: msg,
 			},

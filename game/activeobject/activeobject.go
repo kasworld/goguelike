@@ -165,7 +165,7 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]
 	ao.isAIInUse = true
 	ao.aoType = aotype.System
-	ao.respawnType = respawntype.ToHomeFloor
+	ao.respawnType = respawntype.ToCurrentFloor
 	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount)
 	ao.addRandPotion(gameconst.InitPotionCount)

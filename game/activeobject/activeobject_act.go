@@ -140,8 +140,7 @@ func (ao *ActiveObject) ApplyTurnAct() {
 		ao.remainTurn2Rebirth--
 		if ao.remainTurn2Rebirth == 0 {
 			if aoconn := ao.clientConn; aoconn != nil {
-				err := aoconn.SendNotiPacket(
-					c2t_idnoti.ReadyToRebirth,
+				err := aoconn.SendNotiPacket(c2t_idnoti.ReadyToRebirth,
 					&c2t_obj.NotiReadyToRebirth_data{},
 				)
 				if err != nil {

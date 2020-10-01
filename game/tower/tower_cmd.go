@@ -72,8 +72,7 @@ func (tw *Tower) Call_ActiveObjEnterTower(ao gamei.ActiveObjectI) error {
 		tw.log.Fatal("ao connection nil %v", ao)
 		return nil
 	}
-	if err := aocon.SendNotiPacket(
-		c2t_idnoti.EnterTower,
+	if err := aocon.SendNotiPacket(c2t_idnoti.EnterTower,
 		&c2t_obj.NotiEnterTower_data{
 			TowerInfo: tw.towerInfo,
 		},
@@ -106,8 +105,7 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 		tw.log.Fatal("ao connection nil %v", ao)
 		return nil
 	}
-	if err := aocon.SendNotiPacket(
-		c2t_idnoti.EnterTower,
+	if err := aocon.SendNotiPacket(c2t_idnoti.EnterTower,
 		&c2t_obj.NotiEnterTower_data{
 			TowerInfo: tw.towerInfo,
 		},
@@ -120,8 +118,7 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 			continue
 		}
 		fi := f.ToPacket_FloorInfo()
-		if err := aocon.SendNotiPacket(
-			c2t_idnoti.FloorTiles,
+		if err := aocon.SendNotiPacket(c2t_idnoti.FloorTiles,
 			&c2t_obj.NotiFloorTiles_data{
 				FI:    fi,
 				Tiles: f.GetTerrain().GetTiles().DupWithFilter(va.GetXYNolock),

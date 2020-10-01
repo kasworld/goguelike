@@ -58,8 +58,7 @@ func (ao *ActiveObject) ForgetFloorByName(floorName string) error {
 		return err
 	}
 	if aoconn := ao.clientConn; aoconn != nil {
-		return ao.clientConn.SendNotiPacket(
-			c2t_idnoti.ForgetFloor,
+		return ao.clientConn.SendNotiPacket(c2t_idnoti.ForgetFloor,
 			&c2t_obj.NotiForgetFloor_data{
 				FloorName: floorName,
 			},
@@ -74,8 +73,7 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 
 	fi := f.ToPacket_FloorInfo()
 	if aoconn := ao.clientConn; aoconn != nil {
-		return ao.clientConn.SendNotiPacket(
-			c2t_idnoti.FloorTiles,
+		return ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
 			&c2t_obj.NotiFloorTiles_data{
 				FI:    fi,
 				Tiles: f.GetTerrain().GetTiles(),

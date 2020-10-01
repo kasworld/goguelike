@@ -30,8 +30,7 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 			f.log.Fatal("%v %v", f, err)
 		}
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(
-				c2t_idnoti.LeaveFloor,
+			if err := conn.SendNotiPacket(c2t_idnoti.LeaveFloor,
 				&c2t_obj.NotiLeaveFloor_data{
 					FI: f.ToPacket_FloorInfo(),
 				},
@@ -47,8 +46,7 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 		}
 		pk.ActiveObj.EnterFloor(f)
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(
-				c2t_idnoti.EnterFloor,
+			if err := conn.SendNotiPacket(c2t_idnoti.EnterFloor,
 				&c2t_obj.NotiEnterFloor_data{
 					FI: f.ToPacket_FloorInfo(),
 				},
@@ -65,16 +63,14 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 		pk.ActiveObj.EnterFloor(f)
 		pk.ActiveObj.Rebirth()
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(
-				c2t_idnoti.EnterFloor,
+			if err := conn.SendNotiPacket(c2t_idnoti.EnterFloor,
 				&c2t_obj.NotiEnterFloor_data{
 					FI: f.ToPacket_FloorInfo(),
 				},
 			); err != nil {
 				f.log.Error("%v %v", f, err)
 			}
-			if err := conn.SendNotiPacket(
-				c2t_idnoti.Rebirthed,
+			if err := conn.SendNotiPacket(c2t_idnoti.Rebirthed,
 				&c2t_obj.NotiRebirthed_data{},
 			); err != nil {
 				f.log.Error("%v %v %v", f, pk.ActiveObj, err)

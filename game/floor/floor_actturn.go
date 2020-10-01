@@ -650,8 +650,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		ao.Death(f) // set rebirth count
 		if aoconn := ao.GetClientConn(); aoconn != nil {
-			if err := aoconn.SendNotiPacket(
-				c2t_idnoti.Death,
+			if err := aoconn.SendNotiPacket(c2t_idnoti.Death,
 				&c2t_obj.NotiDeath_data{},
 			); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
@@ -731,8 +730,7 @@ func (f *Floor) sendViewportNoti(
 				float32(sight))
 			if aoconn := ao.GetClientConn(); aoconn != nil {
 				notiTA := f.ToPacket_NotiTileArea(aox, aoy, sight)
-				if err := aoconn.SendNotiPacket(
-					c2t_idnoti.VPTiles,
+				if err := aoconn.SendNotiPacket(c2t_idnoti.VPTiles,
 					notiTA,
 				); err != nil {
 					f.log.Error("%v %v %v", f, ao, err)
@@ -752,8 +750,7 @@ func (f *Floor) sendViewportNoti(
 					ao.ToPacket_ActiveObjClient(aox, aoy))
 			}
 			notiOL.ActiveObj = ao.ToPacket_PlayerActiveObjInfo()
-			if err := aoconn.SendNotiPacket(
-				c2t_idnoti.ObjectList,
+			if err := aoconn.SendNotiPacket(c2t_idnoti.ObjectList,
 				notiOL,
 			); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
