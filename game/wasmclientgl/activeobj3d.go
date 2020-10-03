@@ -29,8 +29,9 @@ var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
 
 func preMakeActiveObj3DGeo() {
 	for i := 0; i < factiontype.FactionType_Count; i++ {
-		ftstr := factiontype.FactionType(i).Rune()
-		geo := MakeAO3DGeoByRune(ftstr)
+		// ftstr := factiontype.FactionType(i).Rune()
+		// geo := MakeAO3DGeoByRune(ftstr)
+		geo := MakeAO3DGeo()
 		gActiveObj3DGeo[i].Geo = geo
 		gActiveObj3DGeo[i].GeoInfo = GetGeoInfo(geo)
 	}
@@ -55,42 +56,41 @@ func MakeAO3DGeoByRune(ftstr string) js.Value {
 
 func MakeAO3DGeo() js.Value {
 	matrix := ThreeJsNew("Matrix4")
-	geoHead := ThreeJsNew("SphereGeometry", DstCellSize/8, DstCellSize, DstCellSize)
+	geoHead := ThreeJsNew("SphereGeometry", DstCellSize/6, DstCellSize, DstCellSize)
 
-	geoArm := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
+	geoArm := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize)
 	geoArm.Call("rotateZ", math.Pi/2)
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, DstCellSize/4, 0,
+		0, -DstCellSize/4, 0,
 	))
 	geoHead.Call("merge", geoArm, matrix)
 	geoArm.Call("dispose")
 
 	geoBody := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, DstCellSize/4, 0,
+		0, -DstCellSize/2.5, 0,
 	))
 	geoHead.Call("merge", geoBody, matrix)
 	geoBody.Call("dispose")
 
 	geoLegL := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
-	geoLegL.Call("rotateZ", math.Pi/4)
+	geoLegL.Call("rotateZ", -math.Pi/4)
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, DstCellSize/2, 0,
+		-DstCellSize/4, -DstCellSize/2-DstCellSize/4, 0,
 	))
 	geoHead.Call("merge", geoLegL, matrix)
 	geoLegL.Call("dispose")
 
 	geoLegR := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
-	geoLegR.Call("rotateZ", -math.Pi/4)
+	geoLegR.Call("rotateZ", math.Pi/4)
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, DstCellSize/2, 0,
+		DstCellSize/4, -DstCellSize/2-DstCellSize/4, 0,
 	))
 	geoHead.Call("merge", geoLegR, matrix)
 	geoLegR.Call("dispose")
 
 	geoHead.Call("center")
 	return geoHead
-
 }
 
 type ActiveObj3D struct {
