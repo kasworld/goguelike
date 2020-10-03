@@ -199,7 +199,10 @@ func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 		-shY+-float64(fy)*DstCellSize-DstCellSize/2,
 		shZ+geoinfo.Len[2]/2+1,
 	)
-	ao3d.Name.SetFieldPosition(fx, fy, shX, shY+DstCellSize, shZ+DstCellSize+2)
+
+	nameDy := float64(
+		gameOptions.GetByIDBase("Angle").State) * DstCellSize / 2
+	ao3d.Name.SetFieldPosition(fx, fy, shX, shY+DstCellSize+nameDy, shZ+DstCellSize+2)
 	for i, v := range ao3d.Condition {
 		v.SetFieldPosition(fx, fy,
 			shX+float64(i)*DstCellSize/8,
