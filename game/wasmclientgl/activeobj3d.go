@@ -12,16 +12,14 @@
 package wasmclientgl
 
 import (
+	"math"
 	"syscall/js"
 
-	"github.com/kasworld/gowasmlib/jslog"
-
-	"github.com/kasworld/goguelike/enum/equipslottype"
-
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-
 	"github.com/kasworld/goguelike/enum/condition"
+	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/factiontype"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
+	"github.com/kasworld/gowasmlib/jslog"
 )
 
 var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
@@ -32,22 +30,67 @@ var gActiveObj3DGeo [factiontype.FactionType_Count]struct {
 func preMakeActiveObj3DGeo() {
 	for i := 0; i < factiontype.FactionType_Count; i++ {
 		ftstr := factiontype.FactionType(i).Rune()
-		geo := ThreeJsNew("TextGeometry", ftstr,
-			map[string]interface{}{
-				"font":           gFont_droid_sans_mono_regular,
-				"size":           DstCellSize * 0.7,
-				"height":         DstCellSize * 0.3,
-				"curveSegments":  DstCellSize / 3,
-				"bevelEnabled":   true,
-				"bevelThickness": DstCellSize / 8,
-				"bevelSize":      DstCellSize / 16,
-				"bevelOffset":    0,
-				"bevelSegments":  DstCellSize / 8,
-			})
-		geo.Call("center")
+		geo := MakeAO3DGeoByRune(ftstr)
 		gActiveObj3DGeo[i].Geo = geo
 		gActiveObj3DGeo[i].GeoInfo = GetGeoInfo(geo)
 	}
+}
+
+func MakeAO3DGeoByRune(ftstr string) js.Value {
+	geo := ThreeJsNew("TextGeometry", ftstr,
+		map[string]interface{}{
+			"font":           gFont_droid_sans_mono_regular,
+			"size":           DstCellSize * 0.7,
+			"height":         DstCellSize * 0.3,
+			"curveSegments":  DstCellSize / 3,
+			"bevelEnabled":   true,
+			"bevelThickness": DstCellSize / 8,
+			"bevelSize":      DstCellSize / 16,
+			"bevelOffset":    0,
+			"bevelSegments":  DstCellSize / 8,
+		})
+	geo.Call("center")
+	return geo
+}
+
+func MakeAO3DGeo() js.Value {
+	matrix := ThreeJsNew("Matrix4")
+	geoHead := ThreeJsNew("SphereGeometry", DstCellSize/8, DstCellSize, DstCellSize)
+
+	geoArm := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
+	geoArm.Call("rotateZ", math.Pi/2)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, DstCellSize/4, 0,
+	))
+	geoHead.Call("merge", geoArm, matrix)
+	geoArm.Call("dispose")
+
+	geoBody := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, DstCellSize/4, 0,
+	))
+	geoHead.Call("merge", geoBody, matrix)
+	geoBody.Call("dispose")
+
+	geoLegL := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
+	geoLegL.Call("rotateZ", math.Pi/4)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, DstCellSize/2, 0,
+	))
+	geoHead.Call("merge", geoLegL, matrix)
+	geoLegL.Call("dispose")
+
+	geoLegR := ThreeJsNew("CylinderGeometry", DstCellSize/16, DstCellSize/16, DstCellSize/2)
+	geoLegR.Call("rotateZ", -math.Pi/4)
+	matrix.Call("setPosition", ThreeJsNew("Vector3",
+		0, DstCellSize/2, 0,
+	))
+	geoHead.Call("merge", geoLegR, matrix)
+	geoLegR.Call("dispose")
+
+	geoHead.Call("center")
+	return geoHead
+
 }
 
 type ActiveObj3D struct {
