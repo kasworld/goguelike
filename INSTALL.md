@@ -7,7 +7,7 @@
     
     linux(debian,ubuntu,mint) 
     또는 window (아마도 10) 제한적 지원(groundserver 미지원) + powershell(5.1, 7.x)
-        windows에서는 sig_usr1을 사용할수 없어서 logrotate가 불가능해 졌습니다.
+        windows에서는 sig_usr1을 사용할수 없어서 log-rotate가 불가능해 졌습니다.
     chrome web brower ( 또는 websocket, webassembly, webgl 을 지원하는 브라우저)
     golang
     webgl을 지원할 그래픽 카드 
@@ -120,10 +120,8 @@ groundserver : towerserver 관리 서버
         start,stop,restart,forcestart,logreopen (default "start")
 
 
-
 towerserver : goguelike game server 또는 windows용 towerserverwin 
 
-    Usage of ./towerserver:
     -AdminAuthKey string
         AdminAuthKey (default "6e9456cf-ab29-99b2-f223-1459e00cfcd5")
     -AdminPort int
@@ -142,6 +140,8 @@ towerserver : goguelike game server 또는 windows용 towerserverwin
         LogLevel (default 7)
     -ScriptFilename string
         ScriptFilename (default "start")
+    -Seed int
+        Seed
     -ServiceHostBase string
         ServiceHostBase (default "http://localhost")
     -ServicePort int
@@ -165,7 +165,7 @@ towerserver : goguelike game server 또는 windows용 towerserverwin
     -memprofilename string
         memory profile filename
     -service string
-        start,stop,restart,forcestart,logreopen (default "start")
+        start,stop,restart,forcestart (default "start")
 
 multiclinet : load test용 다중 client 
 
@@ -229,7 +229,7 @@ textclient : debug/test 용 ui없는 client
     -floorcount int
         roguelike,big tower floor count (default 100)
     -towername string
-        all,start,roguelike,big,sight,objmax tower to make
+        all,start,roguelike,big,sight,objmax,noroom tower to make
 
 wasmclientgl : webbrowser 용 webgl client 
 

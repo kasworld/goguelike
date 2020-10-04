@@ -35,7 +35,7 @@ websocket을 사용 연결 유지형 클라이언트
 
 클라이언트 설치 불필요 
 
-webassembly/html5 canvas를 지원하는 web browser 라면 플랫폼 불문하고 플레이 가능 
+webassembly/websocket/webgl 지원하는 web browser 라면 플랫폼 불문하고 플레이 가능 
 
 
 ## roguelike - roglight?
