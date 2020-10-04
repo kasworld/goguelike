@@ -128,12 +128,12 @@ func NewCarryObj3D(str, color string) *CarryObj3D {
 	}
 }
 
-func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shInfo ShiftInfo) {
+func (aog *CarryObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 	SetPosition(
 		aog.Mesh,
-		float64(fx)*DstCellSize+shInfo.X,
-		-float64(fy)*DstCellSize-shInfo.Y,
-		aog.GeoInfo.Len[2]/2+shInfo.Z,
+		float64(fx)*DstCellSize+shX,
+		-float64(fy)*DstCellSize-shY,
+		aog.GeoInfo.Len[2]/2+shZ,
 	)
 }
 
@@ -192,21 +192,21 @@ func CarryObjClientOnFloor2DrawInfo(
 
 // on floor in tile
 var eqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
-	equipslottype.Helmet: {DstCellSize * 0.0, DstCellSize * 0.0, DstCellSize * 0.33},
-	equipslottype.Amulet: {DstCellSize * 0.75, DstCellSize * 0.0, DstCellSize * 0.33},
+	equipslottype.Helmet: {DstCellSize * 0.0, DstCellSize * 0.0, DstCellSize * 0.0},
+	equipslottype.Amulet: {DstCellSize * 0.75, DstCellSize * 0.0, DstCellSize * 0.0},
 
-	equipslottype.Weapon: {DstCellSize * 0.0, DstCellSize * 0.25, DstCellSize * 0.33},
-	equipslottype.Shield: {DstCellSize * 0.75, DstCellSize * 0.25, DstCellSize * 0.33},
+	equipslottype.Weapon: {DstCellSize * 0.0, DstCellSize * 0.25, DstCellSize * 0.0},
+	equipslottype.Shield: {DstCellSize * 0.75, DstCellSize * 0.25, DstCellSize * 0.0},
 
-	equipslottype.Ring:     {DstCellSize * 0.0, DstCellSize * 0.50, DstCellSize * 0.33},
-	equipslottype.Gauntlet: {DstCellSize * 0.75, DstCellSize * 0.50, DstCellSize * 0.33},
+	equipslottype.Ring:     {DstCellSize * 0.0, DstCellSize * 0.50, DstCellSize * 0.0},
+	equipslottype.Gauntlet: {DstCellSize * 0.75, DstCellSize * 0.50, DstCellSize * 0.0},
 
-	equipslottype.Armor:    {DstCellSize * 0.0, DstCellSize * 0.75, DstCellSize * 0.33},
-	equipslottype.Footwear: {DstCellSize * 0.75, DstCellSize * 0.75, DstCellSize * 0.33},
+	equipslottype.Armor:    {DstCellSize * 0.0, DstCellSize * 0.75, DstCellSize * 0.0},
+	equipslottype.Footwear: {DstCellSize * 0.75, DstCellSize * 0.75, DstCellSize * 0.0},
 }
 
 var otherCarryObjShift = [carryingobjecttype.CarryingObjectType_Count]ShiftInfo{
-	carryingobjecttype.Money:  {DstCellSize * 0.33, DstCellSize * 0.0, DstCellSize * 0.33},
-	carryingobjecttype.Potion: {DstCellSize * 0.33, DstCellSize * 0.33, DstCellSize * 0.33},
-	carryingobjecttype.Scroll: {DstCellSize * 0.33, DstCellSize * 0.66, DstCellSize * 0.33},
+	carryingobjecttype.Money:  {DstCellSize * 0.33, DstCellSize * 0.0, DstCellSize * 0.0},
+	carryingobjecttype.Potion: {DstCellSize * 0.33, DstCellSize * 0.33, DstCellSize * 0.0},
+	carryingobjecttype.Scroll: {DstCellSize * 0.33, DstCellSize * 0.66, DstCellSize * 0.0},
 }

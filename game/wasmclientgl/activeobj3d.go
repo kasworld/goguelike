@@ -218,7 +218,7 @@ func (ao3d *ActiveObj3D) SetFieldPosition(fx, fy int, shX, shY, shZ float64) {
 			continue
 		}
 		shInfo := aoEqPosShift[v.EquipType]
-		ao3d.Co3d[v.EquipType].SetFieldPosition(fx, fy, shInfo)
+		ao3d.Co3d[v.EquipType].SetFieldPosition(fx, fy, shInfo.X+shX, shInfo.Y+shY, shInfo.Z+shZ)
 	}
 	if ao3d.Chat != nil {
 		ao3d.Chat.SetFieldPosition(fx, fy,

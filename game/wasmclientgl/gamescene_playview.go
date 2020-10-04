@@ -134,8 +134,11 @@ func (vp *GameScene) processNotiObjectList(
 		}
 
 		fx, fy := CalcAroundPos(floorW, floorH, vpx, vpy, cro.X, cro.Y)
+		tl := cf.Tiles[cf.XWrapSafe(fx)][cf.YWrapSafe(fy)]
+		shZ := CalcTile3DStepOn(tl)
+
 		shInfo := CarryObjClientOnFloor2DrawInfo(cro)
-		cr3d.SetFieldPosition(fx, fy, shInfo)
+		cr3d.SetFieldPosition(fx, fy, shInfo.X, shInfo.Y, shInfo.Z+shZ)
 		addCOuuid[cro.UUID] = true
 	}
 
