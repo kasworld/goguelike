@@ -89,6 +89,8 @@ func MakeAO3DGeo() js.Value {
 	geoHead.Call("merge", geoLegR, matrix)
 	geoLegR.Call("dispose")
 
+	geoHead.Call("rotateX", math.Pi/2)
+
 	geoHead.Call("center")
 	return geoHead
 }
