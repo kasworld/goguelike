@@ -23,18 +23,18 @@ import (
 )
 
 func NewCarryObj3DGeo(str string) js.Value {
-	refSize := float64(DstCellSize) / 2
+	refSize := float64(DstCellSize)
 	geo := ThreeJsNew("TextGeometry", str,
 		map[string]interface{}{
 			"font":           gFont_helvetiker_regular,
-			"size":           refSize * 0.7,
-			"height":         refSize * 0.3,
-			"curveSegments":  refSize / 3,
+			"size":           refSize / 3,
+			"height":         refSize / 20,
+			"curveSegments":  refSize / 6,
 			"bevelEnabled":   true,
-			"bevelThickness": refSize / 8,
-			"bevelSize":      refSize / 16,
+			"bevelThickness": refSize / 16,
+			"bevelSize":      refSize / 32,
 			"bevelOffset":    0,
-			"bevelSegments":  refSize / 8,
+			"bevelSegments":  refSize / 16,
 		})
 	geo.Call("center")
 	return geo
