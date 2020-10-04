@@ -16,7 +16,8 @@ goimports : 소스 코드 정리, import 해결
 
     go get golang.org/x/tools/cmd/goimports
 
-Packet serializer (MessagePack) : https://github.com/tinylib/msgp
+
+Packet serializer (MessagePack) : https://github.com/tinylib/msgp - gob 로 변경되어 불필요
 
     go get github.com/tinylib/msgp
 
