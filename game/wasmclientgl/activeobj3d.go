@@ -144,6 +144,7 @@ func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value,
 		for _, v := range newaoc.EquippedPo {
 			str, color := Equiped2StrColor(v)
 			toaddco3d := NewCarryObj3D(str, color)
+			toaddco3d.RotateX(math.Pi / 2)
 			toaddMeshs = append(toaddMeshs, toaddco3d.Mesh)
 			ao3d.Co3d[v.EquipType] = toaddco3d
 		}
@@ -159,6 +160,7 @@ func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value,
 		for _, v := range coadded {
 			str, color := Equiped2StrColor(v)
 			toaddco3d := NewCarryObj3D(str, color)
+			toaddco3d.RotateX(math.Pi / 2)
 			toaddMeshs = append(toaddMeshs, toaddco3d.Mesh)
 			ao3d.Co3d[v.EquipType] = toaddco3d
 		}

@@ -166,18 +166,18 @@ type ShiftInfo struct {
 // equipped shift, around ao
 var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
 	// center
-	equipslottype.Helmet:   {DstCellSize * 0.5, DstCellSize * 0.00, DstCellSize * 1.00},
-	equipslottype.Amulet:   {DstCellSize * 0.5, DstCellSize * 0.33, DstCellSize * 1.00},
-	equipslottype.Armor:    {DstCellSize * 0.5, DstCellSize * 0.66, DstCellSize * 1.00},
-	equipslottype.Footwear: {DstCellSize * 0.5, DstCellSize * 1.00, DstCellSize * 1.00},
+	equipslottype.Helmet:   {DstCellSize * 0.5, DstCellSize * 0.00, DstCellSize * 0.5},
+	equipslottype.Amulet:   {DstCellSize * 0.5, DstCellSize * 0.33, DstCellSize * 0.5},
+	equipslottype.Armor:    {DstCellSize * 0.5, DstCellSize * 0.66, DstCellSize * 0.5},
+	equipslottype.Footwear: {DstCellSize * 0.5, DstCellSize * 1.00, DstCellSize * 0.5},
 
 	// right
-	equipslottype.Weapon:   {DstCellSize * 1.00, DstCellSize * 0.33, DstCellSize * 1.00},
-	equipslottype.Gauntlet: {DstCellSize * 1.00, DstCellSize * 0.66, DstCellSize * 1.00},
+	equipslottype.Weapon:   {DstCellSize * 1.00, DstCellSize * 0.33, DstCellSize * 0.5},
+	equipslottype.Gauntlet: {DstCellSize * 1.00, DstCellSize * 0.66, DstCellSize * 0.5},
 
 	// left
-	equipslottype.Shield: {DstCellSize * 0.00, DstCellSize * 0.33, DstCellSize * 1.00},
-	equipslottype.Ring:   {DstCellSize * 0.00, DstCellSize * 0.66, DstCellSize * 1.00},
+	equipslottype.Shield: {DstCellSize * 0.00, DstCellSize * 0.33, DstCellSize * 0.5},
+	equipslottype.Ring:   {DstCellSize * 0.00, DstCellSize * 0.66, DstCellSize * 0.5},
 }
 
 func CarryObjClientOnFloor2DrawInfo(
