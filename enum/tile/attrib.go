@@ -108,3 +108,25 @@ var TileScrollAttrib = [Tile_Count]struct {
 	Window: {false, 0, 0, 0, 0},
 	Door:   {false, 0, 0, 0, 0},
 }
+
+var TileShadowAttrib = [Tile_Count]struct {
+	Cast    bool
+	Receive bool
+}{
+	Swamp:  {false, true},
+	Soil:   {false, true},
+	Stone:  {false, true},
+	Sand:   {false, true},
+	Sea:    {false, true},
+	Magma:  {false, true},
+	Ice:    {false, true},
+	Grass:  {false, false},
+	Tree:   {true, false},
+	Road:   {false, true},
+	Room:   {false, true},
+	Wall:   {true, false},
+	Window: {false, false},
+	Door:   {false, false},
+	Fog:    {false, false},
+	Smoke:  {false, false},
+}
