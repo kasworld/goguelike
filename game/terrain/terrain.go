@@ -180,7 +180,11 @@ func (tr *Terrain) renderServiceTileArea() {
 			continue
 		}
 		if !tr.serviceTileArea[x][y].CharPlaceable() {
-			tr.log.Fatal("fieldobj placed at NonCharPlaceable tile %v", fo)
+			if fo.ActType.MustCharPlaceable() {
+				tr.log.Fatal("fieldobj placed at NonCharPlaceable tile %v", fo)
+			} else {
+				tr.log.Warn("fieldobj placed at NonCharPlaceable tile %v", fo)
+			}
 		}
 	}
 }

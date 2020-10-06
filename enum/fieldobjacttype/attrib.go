@@ -44,44 +44,49 @@ func (v FieldObjActType) NeedTANoti() bool {
 	return attrib[v].NeedTANoti
 }
 
+func (v FieldObjActType) MustCharPlaceable() bool {
+	return attrib[v].MustCharPlaceable
+}
+
 var attrib = [FieldObjActType_Count]struct {
-	Rune        string
-	TrapNoti    bool // send noti on step
-	AutoTrigger bool
-	TriggerRate float64 // if AutoTrigger true
-	SkipAOAct   bool
-	NeedTANoti  bool // if pos changed
-	Color24     htmlcolors.Color24
+	Rune              string
+	TrapNoti          bool // send noti on step
+	AutoTrigger       bool
+	TriggerRate       float64 // if AutoTrigger true
+	SkipAOAct         bool
+	NeedTANoti        bool // if pos changed
+	MustCharPlaceable bool // fatal if placed at noCharPlaceable
+	Color24           htmlcolors.Color24
 }{
-	None: {"?", false, false, 1.0, false, false, htmlcolors.Black},
+	None: {"?", false, false, 1.0, false, false, false, htmlcolors.Black},
 
-	PortalInOut:     {"?", false, false, 0.0, false, false, htmlcolors.MediumVioletRed},
-	PortalIn:        {"?", false, false, 0.0, false, false, htmlcolors.MediumVioletRed},
-	PortalOut:       {"?", false, false, 0.0, false, false, htmlcolors.MediumVioletRed},
-	PortalAutoIn:    {"?", false, true, 1.0, true, true, htmlcolors.MediumVioletRed},
-	RecycleCarryObj: {"?", false, false, 0.0, false, false, htmlcolors.Green},
-	Teleport:        {"?", true, true, 0.1, true, true, htmlcolors.Red},
+	PortalInOut:     {"?", false, false, 0.0, false, false, true, htmlcolors.MediumVioletRed},
+	PortalIn:        {"?", false, false, 0.0, false, false, true, htmlcolors.MediumVioletRed},
+	PortalOut:       {"?", false, false, 0.0, false, false, false, htmlcolors.MediumVioletRed},
+	PortalAutoIn:    {"?", false, true, 1.0, true, true, true, htmlcolors.MediumVioletRed},
+	RecycleCarryObj: {"?", false, false, 0.0, false, false, false, htmlcolors.Green},
+	Teleport:        {"?", true, true, 0.1, true, true, false, htmlcolors.Red},
 
-	ForgetFloor:    {"?", true, true, 0.2, false, true, htmlcolors.OrangeRed},
-	ForgetOneFloor: {"?", true, true, 0.3, false, true, htmlcolors.OrangeRed},
-	AlterFaction:   {"?", true, true, 0.5, false, false, htmlcolors.Red},
-	AllFaction:     {"?", true, true, 0.5, false, false, htmlcolors.Red},
-	Bleeding:       {"?", true, true, 0.2, false, false, htmlcolors.Crimson},
-	Chilly:         {"?", true, true, 0.2, false, false, htmlcolors.DarkTurquoise},
+	ForgetFloor:    {"?", true, true, 0.2, false, true, false, htmlcolors.OrangeRed},
+	ForgetOneFloor: {"?", true, true, 0.3, false, true, false, htmlcolors.OrangeRed},
+	AlterFaction:   {"?", true, true, 0.5, false, false, false, htmlcolors.Red},
+	AllFaction:     {"?", true, true, 0.5, false, false, false, htmlcolors.Red},
+	Bleeding:       {"?", true, true, 0.2, false, false, false, htmlcolors.Crimson},
+	Chilly:         {"?", true, true, 0.2, false, false, false, htmlcolors.DarkTurquoise},
 
-	Blind:     {"?", true, true, 0.2, false, false, condition.Blind.Color()},
-	Invisible: {"?", true, true, 0.5, false, false, condition.Invisible.Color()},
-	Burden:    {"?", true, true, 0.2, false, false, condition.Burden.Color()},
-	Float:     {"?", true, true, 0.3, false, false, condition.Float.Color()},
-	Greasy:    {"?", true, true, 0.5, false, false, condition.Greasy.Color()},
-	Drunken:   {"?", true, true, 0.5, false, false, condition.Drunken.Color()},
-	Sleepy:    {"?", true, true, 0.1, false, false, condition.Sleep.Color()},
-	Contagion: {"?", true, true, 0.1, false, false, condition.Contagion.Color()},
-	Slow:      {"?", true, true, 0.1, false, false, condition.Slow.Color()},
-	Haste:     {"?", true, true, 0.1, false, false, condition.Haste.Color()},
+	Blind:     {"?", true, true, 0.2, false, false, false, condition.Blind.Color()},
+	Invisible: {"?", true, true, 0.5, false, false, false, condition.Invisible.Color()},
+	Burden:    {"?", true, true, 0.2, false, false, false, condition.Burden.Color()},
+	Float:     {"?", true, true, 0.3, false, false, false, condition.Float.Color()},
+	Greasy:    {"?", true, true, 0.5, false, false, false, condition.Greasy.Color()},
+	Drunken:   {"?", true, true, 0.5, false, false, false, condition.Drunken.Color()},
+	Sleepy:    {"?", true, true, 0.1, false, false, false, condition.Sleep.Color()},
+	Contagion: {"?", true, true, 0.1, false, false, false, condition.Contagion.Color()},
+	Slow:      {"?", true, true, 0.1, false, false, false, condition.Slow.Color()},
+	Haste:     {"?", true, true, 0.1, false, false, false, condition.Haste.Color()},
 
-	RotateLineAttack: {"?", false, false, 0.0, false, false, htmlcolors.Lavender},
-	Mine:             {"?", true, true, 1.0, false, false, htmlcolors.Orange},
+	RotateLineAttack: {"?", false, false, 0.0, false, false, false, htmlcolors.Lavender},
+	Mine:             {"?", true, true, 1.0, false, false, false, htmlcolors.Orange},
 }
 
 // try act on fieldobj
