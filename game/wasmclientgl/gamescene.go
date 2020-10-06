@@ -96,7 +96,7 @@ func NewGameScene() *GameScene {
 
 	vp.lightW = ThreeJsNew("PointLight", 0xffffff, 0.5)
 	vp.lightW.Set("castShadow", true)
-	vp.lightW.Get("shadow").Get("camera").Set("near", HelperSize-DstCellSize)
+	vp.lightW.Get("shadow").Get("camera").Set("near", HelperSize/2)
 	vp.lightW.Get("shadow").Get("camera").Set("far", HelperSize*2)
 	vp.scene.Call("add", vp.lightW)
 	fogco := 0x404040
@@ -111,7 +111,7 @@ func NewGameScene() *GameScene {
 	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
 		vp.lightRGB[i] = ThreeJsNew("PointLight", co, 0.5)
 		vp.lightRGB[i].Set("castShadow", true)
-		vp.lightRGB[i].Get("shadow").Get("camera").Set("near", DstCellSize*8-DstCellSize)
+		vp.lightRGB[i].Get("shadow").Get("camera").Set("near", DstCellSize*8/2)
 		vp.lightRGB[i].Get("shadow").Get("camera").Set("far", DstCellSize*8*2)
 		geo := ThreeJsNew("SphereGeometry", DstCellSize/4, DstCellSize, DstCellSize)
 		mat := ThreeJsNew("MeshStandardMaterial",

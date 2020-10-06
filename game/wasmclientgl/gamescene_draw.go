@@ -161,8 +161,11 @@ func (vp *GameScene) moveCameraLight(
 			x, -y, DstCellSize*8,
 		)
 	}
+
 	SetPosition(vp.lightW,
-		cameraX, cameraY, cameraR,
+		cameraX+DstCellSize*8,
+		cameraY+DstCellSize*8,
+		cameraR*0.8,
 	)
 
 	SetPosition(vp.camera,
