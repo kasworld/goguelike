@@ -120,7 +120,7 @@ var TileShadowAttrib = [Tile_Count]struct {
 	Sea:    {false, true},
 	Magma:  {false, true},
 	Ice:    {false, true},
-	Grass:  {false, false},
+	Grass:  {false, true},
 	Tree:   {true, false},
 	Road:   {false, true},
 	Room:   {false, true},

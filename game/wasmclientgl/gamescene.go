@@ -149,8 +149,8 @@ func NewGameScene() *GameScene {
 		geo = gTile3DDark[tlt].Geo
 		mesh = ThreeJsNew("InstancedMesh", geo, mat,
 			gameconst.ClientViewPortW*gameconst.ClientViewPortH)
-		mesh.Set("castShadow", tile.TileShadowAttrib[i].Cast)
-		mesh.Set("receiveShadow", tile.TileShadowAttrib[i].Receive)
+		// mesh.Set("castShadow", tile.TileShadowAttrib[i].Cast)
+		// mesh.Set("receiveShadow", tile.TileShadowAttrib[i].Receive)
 		mesh.Set("count", 0)
 		vp.scene.Call("add", mesh)
 		vp.jsTile3DDarkMesh[i] = mesh
