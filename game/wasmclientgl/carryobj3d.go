@@ -120,6 +120,9 @@ func NewCarryObj3D(str, color string) *CarryObj3D {
 	mat.Set("opacity", 1)
 	geo := gPoolCarryObj3DGeo.Get(str)
 	mesh := ThreeJsNew("Mesh", geo, mat)
+	mesh.Set("castShadow", true)
+	mesh.Set("receiveShadow", false)
+
 	return &CarryObj3D{
 		Str:     str,
 		Color:   color,
