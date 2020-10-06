@@ -111,6 +111,8 @@ func NewActiveObj3D(aoc *c2t_obj.ActiveObjClient) *ActiveObj3D {
 
 	geo := gActiveObj3DGeo[aoc.Faction].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
+	mesh.Set("castShadow", true)
+	mesh.Set("receiveShadow", false)
 	ao3d := &ActiveObj3D{
 		AOC:  aoc,
 		Name: gPoolLabel3D.Get(aoc.NickName),

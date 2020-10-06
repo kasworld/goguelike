@@ -70,6 +70,9 @@ func NewGameScene() *GameScene {
 	}
 
 	vp.renderer = ThreeJsNew("WebGLRenderer")
+	vp.renderer.Get("shadowMap").Set("enabled", true)
+	// vp.renderer.Get("shadowMap").Set("type", true)
+
 	rendererDom := vp.renderer.Get("domElement")
 	GetElementById("canvasglholder").Call("appendChild", rendererDom)
 
@@ -92,6 +95,9 @@ func NewGameScene() *GameScene {
 	vp.scene.Call("add", vp.AP.Mesh)
 
 	vp.lightW = ThreeJsNew("PointLight", 0xffffff, 0.5)
+	vp.lightW.Set("castShadow", true)
+	vp.lightW.Get("shadow").Get("camera").Set("near", HelperSize-DstCellSize)
+	vp.lightW.Get("shadow").Get("camera").Set("far", HelperSize*2)
 	vp.scene.Call("add", vp.lightW)
 	fogco := 0x404040
 	// vp.scene.Set("fog", ThreeJsNew("FogExp2", fogco, 0.00025*1.5))
@@ -104,6 +110,9 @@ func NewGameScene() *GameScene {
 
 	for i, co := range [3]uint32{0xff0000, 0x00ff00, 0x0000ff} {
 		vp.lightRGB[i] = ThreeJsNew("PointLight", co, 0.5)
+		vp.lightRGB[i].Set("castShadow", true)
+		vp.lightRGB[i].Get("shadow").Get("camera").Set("near", DstCellSize*8-DstCellSize)
+		vp.lightRGB[i].Get("shadow").Get("camera").Set("far", DstCellSize*8*2)
 		geo := ThreeJsNew("SphereGeometry", DstCellSize/4, DstCellSize, DstCellSize)
 		mat := ThreeJsNew("MeshStandardMaterial",
 			map[string]interface{}{
@@ -129,6 +138,9 @@ func NewGameScene() *GameScene {
 		geo := gTile3D[tlt].Geo
 		mesh := ThreeJsNew("InstancedMesh", geo, mat,
 			gameconst.ClientViewPortW*gameconst.ClientViewPortH)
+		mesh.Set("castShadow", false)
+		mesh.Set("receiveShadow", true)
+
 		mesh.Set("count", 0)
 		vp.scene.Call("add", mesh)
 		vp.jsTile3DMesh[i] = mesh
@@ -137,6 +149,8 @@ func NewGameScene() *GameScene {
 		geo = gTile3DDark[tlt].Geo
 		mesh = ThreeJsNew("InstancedMesh", geo, mat,
 			gameconst.ClientViewPortW*gameconst.ClientViewPortH)
+		mesh.Set("castShadow", false)
+		mesh.Set("receiveShadow", true)
 		mesh.Set("count", 0)
 		vp.scene.Call("add", mesh)
 		vp.jsTile3DDarkMesh[i] = mesh

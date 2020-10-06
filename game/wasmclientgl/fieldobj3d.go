@@ -126,6 +126,9 @@ func NewFieldObj3D(
 	mat.Set("opacity", 1)
 	geo := NewFieldObjGeo(str)
 	mesh := ThreeJsNew("Mesh", geo, mat)
+	mesh.Set("castShadow", true)
+	mesh.Set("receiveShadow", false)
+
 	return &FieldObj3D{
 		ActType:     ActType,
 		DisplayType: DisplayType,
