@@ -138,6 +138,8 @@ func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value,
 		mat.Set("opacity", 1)
 		geo := gActiveObj3DGeo[newaoc.Faction].Geo
 		mesh := ThreeJsNew("Mesh", geo, mat)
+		mesh.Set("castShadow", true)
+		mesh.Set("receiveShadow", false)
 		ao3d.Mesh = mesh
 		toaddMeshs = append(toaddMeshs, ao3d.Mesh)
 	}
