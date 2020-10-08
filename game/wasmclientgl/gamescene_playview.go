@@ -189,7 +189,11 @@ func (vp *GameScene) UpdatePlayerAO(
 		_, hpw = vp.HP.SetWH(aop.HP, aop.HPMax)
 		_, spw = vp.SP.SetWH(aop.SP, aop.SPMax)
 		if aop.AP < 0 {
-			vp.AP.ScaleX(-aop.AP)
+			vp.AP.ScaleX(0)
+		} else {
+			lv := leveldata.CalcLevelFromExp(float64(aop.Exp))
+			apmax := leveldata.MaxAP(int(lv))
+			vp.AP.ScaleX(aop.AP / apmax)
 		}
 	} else {
 		_, hpw = vp.HP.SetWH(0, aop.HPMax)
