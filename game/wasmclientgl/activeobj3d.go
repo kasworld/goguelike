@@ -104,24 +104,45 @@ type ActiveObj3D struct {
 	Mesh      js.Value
 }
 
-func NewActiveObj3D(aoc *c2t_obj.ActiveObjClient) *ActiveObj3D {
-	mat := gPoolColorMaterial.Get(aoc.Faction.Color24().ToHTMLColorString())
-	// mat.Set("transparent", true)
+func newAO3DMesh(ft factiontype.FactionType) js.Value {
+	mat := gPoolColorMaterial.Get(ft.Color24().ToHTMLColorString())
 	mat.Set("opacity", 1)
-
-	geo := gActiveObj3DGeo[aoc.Faction].Geo
+	geo := gActiveObj3DGeo[ft].Geo
 	mesh := ThreeJsNew("Mesh", geo, mat)
 	mesh.Set("castShadow", true)
 	mesh.Set("receiveShadow", false)
+	return mesh
+}
+func NewActiveObj3D(aoc *c2t_obj.ActiveObjClient) *ActiveObj3D {
 	ao3d := &ActiveObj3D{
 		AOC:  aoc,
 		Name: gPoolLabel3D.Get(aoc.NickName),
-		Mesh: mesh,
+		Mesh: newAO3DMesh(aoc.Faction),
 	}
 	for i := range ao3d.Condition {
 		ao3d.Condition[i] = gPoolCondition3D.Get(condition.Condition(i))
 	}
 	return ao3d
+}
+
+func (ao3d *ActiveObj3D) Dispose() {
+	for i := range ao3d.Condition {
+		gPoolCondition3D.Put(ao3d.Condition[i])
+		ao3d.Condition[i] = nil
+	}
+	for _, v := range ao3d.Co3d {
+		if v == nil {
+			continue
+		}
+		v.Dispose()
+	}
+	// mesh do not need dispose
+	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
+	ao3d.Mesh = js.Undefined()
+	gPoolLabel3D.Put(ao3d.Name)
+	ao3d.Name = nil
+	ao3d.AOC = nil
+	// no need createElement canvas dom obj
 }
 
 // return toaddmesh, toremove mesh
@@ -134,13 +155,7 @@ func (ao3d *ActiveObj3D) UpdateAOC(newaoc *c2t_obj.ActiveObjClient) ([]js.Value,
 	if newaoc.Faction != oldaoc.Faction {
 		todelMeshs = append(todelMeshs, ao3d.Mesh)
 		gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
-		mat := gPoolColorMaterial.Get(newaoc.Faction.Color24().ToHTMLColorString())
-		mat.Set("opacity", 1)
-		geo := gActiveObj3DGeo[newaoc.Faction].Geo
-		mesh := ThreeJsNew("Mesh", geo, mat)
-		mesh.Set("castShadow", true)
-		mesh.Set("receiveShadow", false)
-		ao3d.Mesh = mesh
+		ao3d.Mesh = newAO3DMesh(newaoc.Faction)
 		toaddMeshs = append(toaddMeshs, ao3d.Mesh)
 	}
 
@@ -263,26 +278,6 @@ func (ao3d *ActiveObj3D) ScaleY(y float64) {
 }
 func (ao3d *ActiveObj3D) ScaleZ(z float64) {
 	ao3d.Mesh.Get("scale").Set("z", z)
-}
-
-func (ao3d *ActiveObj3D) Dispose() {
-	for i := range ao3d.Condition {
-		gPoolCondition3D.Put(ao3d.Condition[i])
-		ao3d.Condition[i] = nil
-	}
-	for _, v := range ao3d.Co3d {
-		if v == nil {
-			continue
-		}
-		v.Dispose()
-	}
-	// mesh do not need dispose
-	gPoolColorMaterial.Put(ao3d.Mesh.Get("material"))
-	ao3d.Mesh = js.Undefined()
-	gPoolLabel3D.Put(ao3d.Name)
-	ao3d.Name = nil
-	ao3d.AOC = nil
-	// no need createElement canvas dom obj
 }
 
 // return added, deleted
