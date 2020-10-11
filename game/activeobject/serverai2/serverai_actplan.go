@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/tile_flag"
+	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/attackcheck"
 	"github.com/kasworld/goguelike/game/fieldobject"
@@ -320,6 +321,15 @@ func actPlanRechargeSafe(sai *ServerAI) bool {
 		return false
 	}
 
+	// change plan if damaged from ao, tile, fo
+	for _, v := range sai.ao.GetTurnResultList() {
+		switch v.GetTurnResultType() {
+		case turnresulttype.AttackedFrom, turnresulttype.DeadByTile,
+			turnresulttype.HPDamageFromTrap, turnresulttype.SPDamageFromTrap:
+			return false
+		}
+	}
+
 	if sai.ao.GetHPRate() > 0.9 && sai.ao.GetSPRate() > 0.9 {
 		// plan change to other
 		return false
@@ -374,6 +384,15 @@ func actPlanRechargeCan(sai *ServerAI) bool {
 	// dest arrived
 	if !tl.Meditateable() {
 		return false
+	}
+
+	// change plan if damaged from ao, tile, fo
+	for _, v := range sai.ao.GetTurnResultList() {
+		switch v.GetTurnResultType() {
+		case turnresulttype.AttackedFrom, turnresulttype.DeadByTile,
+			turnresulttype.HPDamageFromTrap, turnresulttype.SPDamageFromTrap:
+			return false
+		}
 	}
 
 	if sai.ao.GetHPRate() > 0.9 && sai.ao.GetSPRate() > 0.9 {
