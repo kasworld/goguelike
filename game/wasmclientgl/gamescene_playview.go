@@ -218,7 +218,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	playerUUID := gInitData.AccountInfo.ActiveObjUUID
 
 	// activeobj animate
-	for i, ao := range olNoti.ActiveObjList {
+	for _, ao := range olNoti.ActiveObjList {
 		aod, exist := vp.jsSceneAOs[ao.UUID]
 		if !exist {
 			continue // ??
@@ -230,16 +230,16 @@ func (vp *GameScene) UpdatePlayViewFrame(
 		if ao.UUID == playerUUID {
 			// player
 			if lastOLNoti.ActiveObj.AP < 0 {
-				aod.RotateY(CalcRotateFrameProgress(frameProgress))
+				aod.RotateZ(CalcRotateFrameProgress(frameProgress))
 				vp.AP.ScaleX(-frameProgress)
 			}
 		}
 		if ao.DamageTake > 0 {
-			if i%2 == 0 {
-				aod.ScaleX(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
-			} else {
-				aod.ScaleY(CalcScaleFrameProgress(frameProgress, ao.DamageTake))
+			dmg := float64(ao.DamageTake)
+			if dmg > 10 {
+				dmg = 10
 			}
+			aod.RotateX(CalcRotateFrameProgress(frameProgress) / 10 * dmg)
 		}
 		// if ao.Act == c2t_idcmd.Move && ao.Result == c2t_error.None {
 		// 	vp.animateActiveObj(cf, aod, ao.X, ao.Y, ao.Dir, frameProgress)
