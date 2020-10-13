@@ -263,14 +263,18 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			f.addAttackLong(ao, arr)
 		}
 	}
+
 	// handle battle on danger obj
-	f.doPosMan.IterAll(func(o uuidposman.UUIDPosI, dstX, dstY int) bool {
-		do := o.(*dangerobject.DangerObject)
-		for _, vv := range f.aoPosMan.GetObjListAt(dstX, dstY) {
-			dstAO := vv.(gamei.ActiveObjectI)
-			if !dstAO.IsAlive() {
-				continue
-			}
+	for _, dstAO := range aoListToProcessInTurn {
+		if !dstAO.IsAlive() {
+			continue
+		}
+		dstX, dstY, exist := f.aoPosMan.GetXYByUUID(dstAO.GetUUID())
+		if !exist {
+			continue
+		}
+		for _, o := range f.doPosMan.GetObjListAt(dstX, dstY) {
+			do := o.(*dangerobject.DangerObject)
 			switch do.DangerType {
 			default:
 				f.log.Fatal("not supported type %v", do.DangerType)
@@ -285,8 +289,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				f.foMineExplodeAttack(do, dstAO, dstX, dstY)
 			}
 		}
-		return false
-	})
+	}
 
 	for _, ao := range aoListToProcessInTurn {
 		if ao.ApplyDamageFromDangerObj() { // just killed
