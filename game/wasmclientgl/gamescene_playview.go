@@ -235,7 +235,7 @@ func (vp *GameScene) UpdatePlayViewFrame(
 			}
 		}
 		if ao.DamageTake > 0 {
-			dmg := float64(ao.DamageTake)
+			dmg := math.Sqrt(float64(ao.DamageTake))
 			if dmg > 10 {
 				dmg = 10
 			}
