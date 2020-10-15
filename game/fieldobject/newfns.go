@@ -12,18 +12,9 @@
 package fieldobject
 
 import (
-	"fmt"
-
-	"github.com/kasworld/findnear"
-	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/config/lineattackdata"
-	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
-	"github.com/kasworld/goguelike/lib/idu64str"
 )
-
-var FOIDMaker = idu64str.New("FOID")
 
 func NewPortal(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
 	acttype fieldobjacttype.FieldObjActType,
@@ -73,81 +64,5 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 		ActType:     acttype,
 		DisplayType: fieldobjdisplaytype.None,
 		Message:     message,
-	}
-}
-
-// NewRotateLineAttack arg order follow terraincmdenum
-func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
-	winglen, wingcount int, degree, degreeperturn int, decay decaytype.DecayType,
-	message string,
-) *FieldObject {
-	lineattackdata.UpdateCache360Line(winglen)
-	return &FieldObject{
-		ID:            FOIDMaker.New(),
-		FloorName:     floorname,
-		ActType:       fieldobjacttype.RotateLineAttack,
-		DisplayType:   displayType,
-		Message:       message,
-		Degree:        degree,
-		DegreePerTurn: degreeperturn,
-		WingLen:       winglen,
-		WingCount:     wingcount,
-		Decay:         decay,
-	}
-}
-
-// GetLineAttack calc dangerobj wingcount * line
-func (fo *FieldObject) GetLineAttack() []findnear.XYLenList {
-	rtn := make([]findnear.XYLenList, fo.WingCount)
-	cache := lineattackdata.GetWingLines(fo.WingLen)
-	wingdeg := 360.0 / float64(fo.WingCount)
-	for wing := 0; wing < fo.WingCount; wing++ {
-		deg := int(float64(wing)*wingdeg + float64(fo.Degree))
-		rtn[wing] = cache[wrapInt(deg, 360)]
-	}
-	return rtn
-}
-
-func wrapInt(v, l int) int {
-	return (v%l + l) % l
-}
-
-func (fo *FieldObject) CalcLineAttackAffectRate(rate float64, i, max int) float64 {
-	switch fo.Decay {
-	default:
-		panic(fmt.Sprintf("invalid decaytype %v", fo))
-	case decaytype.Decrease:
-		return rate / float64(i+1)
-	case decaytype.Even:
-		return rate / (float64(max) / 2.0)
-	case decaytype.Increase:
-		return rate / float64(max-i)
-	}
-}
-
-func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
-	decay decaytype.DecayType, message string,
-) *FieldObject {
-	return &FieldObject{
-		ID:          FOIDMaker.New(),
-		FloorName:   floorname,
-		ActType:     fieldobjacttype.Mine,
-		DisplayType: displayType,
-		Message:     message,
-		Radius:      -1, // not triggered
-		Decay:       decay,
-	}
-}
-
-func (fo *FieldObject) CalcMineAffectRate() float64 {
-	switch fo.Decay {
-	default:
-		panic(fmt.Sprintf("invalid decaytype %v", fo))
-	case decaytype.Decrease:
-		return 1 / float64(fo.Radius+1)
-	case decaytype.Even:
-		return 1 / (gameconst.ViewPortW / 2.0)
-	case decaytype.Increase:
-		return 1 / float64(gameconst.ViewPortW-fo.Radius)
 	}
 }

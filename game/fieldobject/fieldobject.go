@@ -17,8 +17,11 @@ import (
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
+
+var FOIDMaker = idu64str.New("FOID")
 
 type FieldObject struct {
 	FloorName   string
