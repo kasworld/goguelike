@@ -32,8 +32,7 @@ func (p *DangerObject) GetUUID() string {
 	return p.UUID
 }
 
-func NewAOAttact(
-	attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
+func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
 	return &DangerObject{
 		UUID:       uuidstr.New(),
 		Owner:      attacker,
