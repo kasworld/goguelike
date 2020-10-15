@@ -17,13 +17,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kasworld/goguelike/enum/factiontype"
-	"github.com/kasworld/goguelike/vendor/github.com/kasworld/uuidstr"
-
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
+	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
+	"github.com/kasworld/uuidstr"
 )
 
 func init() {
