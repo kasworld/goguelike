@@ -23,7 +23,7 @@ import (
 func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
 	decay decaytype.DecayType, message string,
 ) *FieldObject {
-	return &FieldObject{
+	fo := &FieldObject{
 		ID:          FOIDMaker.New(),
 		FloorName:   floorname,
 		ActType:     fieldobjacttype.Mine,
@@ -32,6 +32,12 @@ func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayTy
 		Radius:      -1, // not triggered
 		Decay:       decay,
 	}
+
+	return fo
+}
+
+func (fo *FieldObject) makeMineDOs() {
+
 }
 
 func (fo *FieldObject) CalcMineAffectRate() float64 {

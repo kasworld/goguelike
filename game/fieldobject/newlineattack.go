@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/kasworld/goguelike/config/lineattackdata"
 	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
@@ -35,7 +34,6 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 	winglen, wingcount int, degree, degreeperturn int, decay decaytype.DecayType,
 	message string,
 ) *FieldObject {
-	lineattackdata.UpdateCache360Line(winglen)
 	fo := &FieldObject{
 		ID:            FOIDMaker.New(),
 		FloorName:     floorname,

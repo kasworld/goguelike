@@ -14,6 +14,7 @@ package fieldobject
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
@@ -48,6 +49,7 @@ type FieldObject struct {
 	Radius float64
 
 	premakeWingsXYLDOs [360][]XYlenDO
+	premakeMineXYLDOs  [gameconst.ViewPortW][]XYlenDO
 }
 
 func (p FieldObject) String() string {
