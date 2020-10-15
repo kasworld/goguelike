@@ -22,7 +22,6 @@ import (
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/terrain"
 	"github.com/kasworld/goguelike/lib/g2log"
@@ -59,7 +58,6 @@ type Floor struct {
 	poPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 	foPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
 	doPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
-	doPool   *dangerobject.DOPool
 
 	interDur          *intervalduration.IntervalDuration `prettystring:"simple"`
 	statPacketObjOver *actpersec.ActPerSec               `prettystring:"simple"`
@@ -113,7 +111,6 @@ func (f *Floor) Init() error {
 	f.poPosMan = uuidposman.New(f.w, f.h)
 	f.foPosMan = f.terrain.GetFieldObjPosMan()
 	f.doPosMan = uuidposman.New(f.w, f.h)
-	f.doPool = dangerobject.NewDOPool()
 	f.bias = bias.Bias{
 		f.rnd.Float64() - 0.5,
 		f.rnd.Float64() - 0.5,
