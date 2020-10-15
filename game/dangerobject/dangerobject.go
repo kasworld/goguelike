@@ -13,10 +13,12 @@ package dangerobject
 
 import (
 	"github.com/kasworld/goguelike/enum/dangertype"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/uuidstr"
 )
+
+var doidMaker = idu64str.New("DOID")
 
 type DangerObject struct {
 	UUID           string
@@ -34,7 +36,7 @@ func (p *DangerObject) GetUUID() string {
 
 func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
 	return &DangerObject{
-		UUID:       uuidstr.New(),
+		UUID:       doidMaker.New(),
 		Owner:      attacker,
 		OwnerX:     srcx,
 		OwnerY:     srcy,
@@ -46,7 +48,7 @@ func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, s
 
 func NewFOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, affectRate float64) *DangerObject {
 	return &DangerObject{
-		UUID:       uuidstr.New(),
+		UUID:       doidMaker.New(),
 		Owner:      attacker,
 		DangerType: dt,
 		RemainTurn: dt.Turn2Live(),
