@@ -21,9 +21,11 @@ import (
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/uuidstr"
 )
+
+var EquipIDMaker = idu64str.New("EquipID")
 
 func (po EquipObj) String() string {
 	return fmt.Sprintf("EquipObj[%v %v %v %v]",
@@ -43,7 +45,7 @@ type EquipObj struct {
 
 func NewRandFactionEquipObj(aoname string, ft factiontype.FactionType, rnd *g2rand.G2Rand) gamei.EquipObjI {
 	po := EquipObj{
-		uuid: uuidstr.New(),
+		uuid: EquipIDMaker.New(),
 	}
 	po.Faction = ft
 	po.equipType = equipslottype.EquipSlotType(rnd.Intn(equipslottype.EquipSlotType_Count))
@@ -72,7 +74,7 @@ func NewEquipByFactionSlot(aoname string,
 	rnd *g2rand.G2Rand) gamei.EquipObjI {
 
 	po := EquipObj{
-		uuid: uuidstr.New(),
+		uuid: EquipIDMaker.New(),
 	}
 	po.Faction = ft
 	po.equipType = eqslot

@@ -20,8 +20,10 @@ import (
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
-	"github.com/kasworld/uuidstr"
+	"github.com/kasworld/goguelike/lib/idu64str"
 )
+
+var FOIDMaker = idu64str.New("FOID")
 
 func NewPortal(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
 	acttype fieldobjacttype.FieldObjActType,
@@ -41,7 +43,7 @@ func NewPortal(floorname string, displayType fieldobjdisplaytype.FieldObjDisplay
 func NewRecycler(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType, message string,
 ) *FieldObject {
 	return &FieldObject{
-		ID:          uuidstr.New(),
+		ID:          FOIDMaker.New(),
 		FloorName:   floorname,
 		ActType:     fieldobjacttype.RecycleCarryObj,
 		DisplayType: displayType,
@@ -53,7 +55,7 @@ func NewTrapTeleport(floorname string, message string,
 	dstFloorName string,
 ) *FieldObject {
 	return &FieldObject{
-		ID:           uuidstr.New(),
+		ID:           FOIDMaker.New(),
 		FloorName:    floorname,
 		ActType:      fieldobjacttype.Teleport,
 		DisplayType:  fieldobjdisplaytype.None,
@@ -66,7 +68,7 @@ func NewTrapNoArg(floorname string, displayType fieldobjdisplaytype.FieldObjDisp
 	acttype fieldobjacttype.FieldObjActType,
 ) *FieldObject {
 	return &FieldObject{
-		ID:          uuidstr.New(),
+		ID:          FOIDMaker.New(),
 		FloorName:   floorname,
 		ActType:     acttype,
 		DisplayType: fieldobjdisplaytype.None,
@@ -81,7 +83,7 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 ) *FieldObject {
 	lineattackdata.UpdateCache360Line(winglen)
 	return &FieldObject{
-		ID:            uuidstr.New(),
+		ID:            FOIDMaker.New(),
 		FloorName:     floorname,
 		ActType:       fieldobjacttype.RotateLineAttack,
 		DisplayType:   displayType,
@@ -127,7 +129,7 @@ func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayTy
 	decay decaytype.DecayType, message string,
 ) *FieldObject {
 	return &FieldObject{
-		ID:          uuidstr.New(),
+		ID:          FOIDMaker.New(),
 		FloorName:   floorname,
 		ActType:     fieldobjacttype.Mine,
 		DisplayType: displayType,

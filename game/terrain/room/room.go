@@ -16,11 +16,13 @@ import (
 
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/enum/tile_flag"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/lib/maze2"
 	"github.com/kasworld/prettystring"
 	"github.com/kasworld/rect"
-	"github.com/kasworld/uuidstr"
 )
+
+var roomIDMaker = idu64str.New("RoomID")
 
 func (r Room) String() string {
 	return fmt.Sprintf("Room[%v Area:%v]", r.UUID, r.Area)
@@ -45,7 +47,7 @@ func New(rt rect.Rect, bgTile tile_flag.TileFlag) *Room {
 		panic(fmt.Sprintf("room to small %v", rt))
 	}
 	r := &Room{
-		UUID:       uuidstr.New(),
+		UUID:       roomIDMaker.New(),
 		BgTile:     bgTile,
 		Area:       rt,
 		Tiles:      make([][]tile_flag.TileFlag, rt.W),

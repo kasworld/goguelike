@@ -18,9 +18,11 @@ import (
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/uuidstr"
 )
+
+var PotionIDMaker = idu64str.New("PotionID")
 
 type Potion struct {
 	uuid              string
@@ -36,7 +38,7 @@ func (p Potion) String() string {
 
 func NewPotion(pt potiontype.PotionType) gamei.PotionI {
 	rtn := &Potion{
-		uuid:       uuidstr.New(),
+		uuid:       PotionIDMaker.New(),
 		potionType: pt,
 	}
 	return rtn

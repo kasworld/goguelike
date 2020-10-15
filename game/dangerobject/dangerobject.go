@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
-var doidMaker = idu64str.New("DOID")
+var DOIDMaker = idu64str.New("DOID")
 
 type DangerObject struct {
 	UUID           string
@@ -36,7 +36,7 @@ func (p *DangerObject) GetUUID() string {
 
 func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
 	return &DangerObject{
-		UUID:       doidMaker.New(),
+		UUID:       DOIDMaker.New(),
 		Owner:      attacker,
 		OwnerX:     srcx,
 		OwnerY:     srcy,
@@ -48,7 +48,7 @@ func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, s
 
 func NewFOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, affectRate float64) *DangerObject {
 	return &DangerObject{
-		UUID:       doidMaker.New(),
+		UUID:       DOIDMaker.New(),
 		Owner:      attacker,
 		DangerType: dt,
 		RemainTurn: dt.Turn2Live(),

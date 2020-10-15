@@ -18,9 +18,11 @@ import (
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/uuidstr"
 )
+
+var ScrollIDMaker = idu64str.New("ScrollID")
 
 type Scroll struct {
 	uuid              string
@@ -37,7 +39,7 @@ func (p Scroll) String() string {
 
 func NewScroll(st scrolltype.ScrollType) gamei.ScrollI {
 	rtn := &Scroll{
-		uuid:       uuidstr.New(),
+		uuid:       ScrollIDMaker.New(),
 		scrollType: st,
 	}
 	return rtn

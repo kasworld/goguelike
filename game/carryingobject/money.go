@@ -17,9 +17,11 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
-	"github.com/kasworld/uuidstr"
 )
+
+var MoneyIDMaker = idu64str.New("MoneyID")
 
 type Money struct {
 	uuid              string
@@ -37,7 +39,7 @@ func NewMoney(v float64) gamei.MoneyI {
 		v = 0
 	}
 	rtn := Money{
-		uuid:  uuidstr.New(),
+		uuid:  MoneyIDMaker.New(),
 		value: v,
 	}
 	return &rtn
