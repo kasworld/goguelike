@@ -46,6 +46,8 @@ type FieldObject struct {
 	// Mine, -1 on not triggered
 	// on trigger inc every turn, start 0 to Viewport size, end.
 	Radius float64
+
+	premakeWingsXYLDOs [360][]XYlenDO
 }
 
 func (p FieldObject) String() string {

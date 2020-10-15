@@ -13,13 +13,22 @@ package fieldobject
 
 import (
 	"fmt"
+	"math"
 
-	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/lineattackdata"
+	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
+	"github.com/kasworld/goguelike/game/dangerobject"
+	"github.com/kasworld/goguelike/lib/lineofsight"
 )
+
+type XYlenDO struct {
+	X  int
+	Y  int
+	DO *dangerobject.DangerObject
+}
 
 // NewRotateLineAttack arg order follow terraincmdenum
 func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
@@ -27,7 +36,7 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 	message string,
 ) *FieldObject {
 	lineattackdata.UpdateCache360Line(winglen)
-	return &FieldObject{
+	fo := &FieldObject{
 		ID:            FOIDMaker.New(),
 		FloorName:     floorname,
 		ActType:       fieldobjacttype.RotateLineAttack,
@@ -39,25 +48,40 @@ func NewRotateLineAttack(floorname string, displayType fieldobjdisplaytype.Field
 		WingCount:     wingcount,
 		Decay:         decay,
 	}
+	for deg := 0; deg < 360; deg++ {
+		fo.premakeWingsXYLDOs[deg] = fo.makeWingDOs(deg)
+	}
+	return fo
 }
 
-// GetLineAttack calc dangerobj wingcount * line
-func (fo *FieldObject) GetLineAttack() []findnear.XYLenList {
-	rtn := make([]findnear.XYLenList, fo.WingCount)
-	cache := lineattackdata.GetWingLines(fo.WingLen)
-	wingdeg := 360.0 / float64(fo.WingCount)
-	for wing := 0; wing < fo.WingCount; wing++ {
-		deg := int(float64(wing)*wingdeg + float64(fo.Degree))
-		rtn[wing] = cache[wrapInt(deg, 360)]
+func (fo *FieldObject) makeWingDOs(deg int) []XYlenDO {
+	rad := float64(deg) / 180.0 * math.Pi
+	dx := float64(fo.WingLen) * math.Cos(rad)
+	dy := float64(fo.WingLen) * math.Sin(rad)
+	xyll := lineofsight.MakePosLenList(0.5, 0.5, dx+0.5, dy+0.5).ToCellLenList()
+	rtn := make([]XYlenDO, len(xyll))
+	for i, v := range xyll {
+		rr := fo.calcLineAttackAffectRate(v.L, i, len(xyll))
+		rtn[i] = XYlenDO{
+			X:  v.X,
+			Y:  v.Y,
+			DO: dangerobject.NewFOAttact(fo, dangertype.RotateLineAttack, rr),
+		}
 	}
 	return rtn
+}
+
+func (fo *FieldObject) GetWingByNum(wing int) []XYlenDO {
+	wingdeg := 360.0 / float64(fo.WingCount)
+	deg := int(float64(wing)*wingdeg + float64(fo.Degree))
+	return fo.premakeWingsXYLDOs[wrapInt(deg, 360)]
 }
 
 func wrapInt(v, l int) int {
 	return (v%l + l) % l
 }
 
-func (fo *FieldObject) CalcLineAttackAffectRate(rate float64, i, max int) float64 {
+func (fo *FieldObject) calcLineAttackAffectRate(rate float64, i, max int) float64 {
 	switch fo.Decay {
 	default:
 		panic(fmt.Sprintf("invalid decaytype %v", fo))

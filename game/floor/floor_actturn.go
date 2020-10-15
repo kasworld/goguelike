@@ -218,12 +218,12 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		fo := o.(*fieldobject.FieldObject)
 		switch fo.ActType {
 		case fieldobjacttype.RotateLineAttack:
-			wings := fo.GetLineAttack()
-			for _, line := range wings {
-				for i, v := range line {
-					rr := fo.CalcLineAttackAffectRate(v.L, i, len(line))
+			for wing := 0; wing < fo.WingCount; wing++ {
+				dos := fo.GetWingByNum(wing)
+				for _, v := range dos {
+					v.DO.RemainTurn = dangertype.RotateLineAttack.Turn2Live()
 					f.doPosMan.AddToXY(
-						dangerobject.NewFOAttact(fo, dangertype.RotateLineAttack, rr),
+						v.DO,
 						foX+v.X, foY+v.Y,
 					)
 				}
