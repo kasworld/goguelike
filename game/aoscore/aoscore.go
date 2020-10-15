@@ -18,12 +18,12 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/enum/factiontype"
+	"github.com/kasworld/goguelike/vendor/github.com/kasworld/uuidstr"
 
 	"github.com/kasworld/goguelike/config/leveldata"
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
-	"github.com/kasworld/uuidstr"
 )
 
 func init() {
@@ -45,6 +45,7 @@ type ActiveObjScore struct {
 	CurrentBias bias.Bias `prettystring:"simple"`
 }
 
+// make dummy data
 func NewActiveObjScoreByLevel(lv int, bornFaction factiontype.FactionType, CurrentBias bias.Bias) *ActiveObjScore {
 	exp := leveldata.BaseExp(lv)
 	aos := &ActiveObjScore{
