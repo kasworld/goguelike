@@ -14,41 +14,75 @@ package fieldobject
 import (
 	"fmt"
 
+	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/enum/decaytype"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/enum/fieldobjdisplaytype"
+	"github.com/kasworld/goguelike/game/dangerobject"
 )
 
 func NewMine(floorname string, displayType fieldobjdisplaytype.FieldObjDisplayType,
 	decay decaytype.DecayType, message string,
 ) *FieldObject {
 	fo := &FieldObject{
-		ID:          FOIDMaker.New(),
-		FloorName:   floorname,
-		ActType:     fieldobjacttype.Mine,
-		DisplayType: displayType,
-		Message:     message,
-		Radius:      -1, // not triggered
-		Decay:       decay,
+		ID:            FOIDMaker.New(),
+		FloorName:     floorname,
+		ActType:       fieldobjacttype.Mine,
+		DisplayType:   displayType,
+		Message:       message,
+		CurrentRadius: -1, // not triggered
+		Decay:         decay,
 	}
-
+	fo.makeMineDOs()
 	return fo
 }
 
 func (fo *FieldObject) makeMineDOs() {
-
+	for r := 0; r < gameconst.ViewPortW; r++ {
+		fo.premakeMineXYLDOs[r] = make([]XYlenDO, len(MineData[r]))
+		var rr float64
+		switch fo.Decay {
+		default:
+			panic(fmt.Sprintf("invalid decaytype %v", fo))
+		case decaytype.Decrease:
+			rr = 1 / float64(r+1)
+		case decaytype.Even:
+			rr = 1 / (gameconst.ViewPortW / 2.0)
+		case decaytype.Increase:
+			rr = 1 / float64(gameconst.ViewPortW-r)
+		}
+		for i, v := range MineData[r] {
+			xyldo := XYlenDO{
+				X:  v.X,
+				Y:  v.Y,
+				DO: dangerobject.NewFOAttact(fo, dangertype.MineExplode, rr),
+			}
+			fo.premakeMineXYLDOs[r][i] = xyldo
+		}
+	}
 }
 
-func (fo *FieldObject) CalcMineAffectRate() float64 {
-	switch fo.Decay {
-	default:
-		panic(fmt.Sprintf("invalid decaytype %v", fo))
-	case decaytype.Decrease:
-		return 1 / float64(fo.Radius+1)
-	case decaytype.Even:
-		return 1 / (gameconst.ViewPortW / 2.0)
-	case decaytype.Increase:
-		return 1 / float64(gameconst.ViewPortW-fo.Radius)
+func (fo *FieldObject) GetMineDO() []XYlenDO {
+	return fo.premakeMineXYLDOs[fo.CurrentRadius]
+}
+
+var MineData [gameconst.ViewPortW]findnear.XYLenList
+
+func init() {
+	fullData := findnear.NewXYLenList(
+		gameconst.ClientViewPortW, gameconst.ClientViewPortH)[:gameconst.ViewPortWH]
+
+	st := 0
+	curRadius := 1.0
+	for i, v := range fullData {
+		if v.L > curRadius {
+			MineData[int(curRadius)-1] = fullData[st:i]
+			st = i
+			curRadius++
+		}
 	}
+	MineData[int(curRadius)-1] = fullData[st:]
+	// fmt.Printf("%v", MineData)
 }

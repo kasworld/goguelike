@@ -16,7 +16,6 @@ import (
 
 	"github.com/kasworld/goguelike/config/contagionarea"
 	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/config/minedata"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/condition"
 	"github.com/kasworld/goguelike/enum/dangertype"
@@ -163,7 +162,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 		case fieldobjacttype.Mine:
 			// start explode
-			p.Radius = 0
+			p.CurrentRadius = 0
 		}
 		if p.ActType.SkipAOAct() {
 			aoMapSkipTurn[ao.GetUUID()] = true
@@ -219,8 +218,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		switch fo.ActType {
 		case fieldobjacttype.RotateLineAttack:
 			for wing := 0; wing < fo.WingCount; wing++ {
-				dos := fo.GetWingByNum(wing)
-				for _, v := range dos {
+				for _, v := range fo.GetWingByNum(wing) {
 					v.DO.RemainTurn = dangertype.RotateLineAttack.Turn2Live()
 					f.doPosMan.AddToXY(
 						v.DO,
@@ -230,20 +228,20 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			fo.Degree += fo.DegreePerTurn
 		case fieldobjacttype.Mine:
-			if fo.Radius >= gameconst.ViewPortW { // end explode
-				fo.Radius = -1
+			if fo.CurrentRadius >= gameconst.ViewPortW { // end explode
+				fo.CurrentRadius = -1
 			}
-			if fo.Radius >= 0 { //  active
+			if fo.CurrentRadius >= 0 { //  active
 				// add do
-				rr := fo.CalcMineAffectRate()
-				for _, v := range minedata.MineData[int(fo.Radius)] {
+				for _, v := range fo.GetMineDO() {
+					v.DO.RemainTurn = dangertype.MineExplode.Turn2Live()
 					f.doPosMan.AddToXY(
-						dangerobject.NewFOAttact(fo, dangertype.MineExplode, rr),
+						v.DO,
 						foX+v.X, foY+v.Y,
 					)
 				}
 				// inc next
-				fo.Radius++
+				fo.CurrentRadius++
 			}
 		}
 		return false

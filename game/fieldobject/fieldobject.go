@@ -46,7 +46,7 @@ type FieldObject struct {
 
 	// Mine, -1 on not triggered
 	// on trigger inc every turn, start 0 to Viewport size, end.
-	Radius float64
+	CurrentRadius int
 
 	premakeWingsXYLDOs [360][]XYlenDO
 	premakeMineXYLDOs  [gameconst.ViewPortW][]XYlenDO
@@ -64,7 +64,7 @@ func (p FieldObject) String() string {
 		p.Decay,
 		p.Degree, p.DegreePerTurn,
 		p.WingLen, p.WingCount,
-		p.Radius,
+		p.CurrentRadius,
 	)
 }
 
