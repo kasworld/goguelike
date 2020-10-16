@@ -17,8 +17,6 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/kasworld/goguelike/enum/respawntype"
-
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/gamedata"
@@ -30,6 +28,7 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike/enum/potiontype"
 	"github.com/kasworld/goguelike/enum/potiontype_vector"
+	"github.com/kasworld/goguelike/enum/respawntype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/enum/towerachieve_vector"
@@ -44,11 +43,16 @@ import (
 	"github.com/kasworld/goguelike/game/inventory"
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/lib/g2log"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/uuidstr"
 )
+
+var SysAOIDMaker = idu64str.New("SysAOID")
+
+// var UserAOIDMaker = idu64str.New("UserAOID")
 
 var _ gamei.ActiveObjectI = &ActiveObject{}
 
@@ -122,7 +126,6 @@ func newActiveObj(
 		rnd:              g2rand.NewWithSeed(seed),
 		log:              l,
 		towerAchieveStat: towerAchieveStat,
-		uuid:             uuidstr.New(),
 		homefloor:        homefloor,
 
 		// battle
@@ -144,6 +147,8 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	conn *c2t_serveconnbyte.ServeConnByte) *ActiveObject {
 
 	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
+	ao.uuid = uuidstr.New()
+	// ao.uuid = UserAOIDMaker.New()
 	ao.nickName = nickname
 	ao.isAIInUse = false
 	ao.aoType = aotype.User
@@ -162,6 +167,7 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
 	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
+	ao.uuid = SysAOIDMaker.New()
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]
 	ao.isAIInUse = true
 	ao.aoType = aotype.System

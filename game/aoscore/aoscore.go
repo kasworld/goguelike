@@ -21,13 +21,15 @@ import (
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/factiontype"
 	"github.com/kasworld/goguelike/game/bias"
+	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
-	"github.com/kasworld/uuidstr"
 )
 
 func init() {
 	gob.Register(&ActiveObjScore{})
 }
+
+var ScoreIDMaker = idu64str.New("ScoreID")
 
 type ActiveObjScore struct {
 	TowerUUID  string
@@ -44,7 +46,7 @@ type ActiveObjScore struct {
 	CurrentBias bias.Bias `prettystring:"simple"`
 }
 
-// make dummy data
+// NewActiveObjScoreByLevel make dummy data for ground server
 func NewActiveObjScoreByLevel(lv int, bornFaction factiontype.FactionType, CurrentBias bias.Bias) *ActiveObjScore {
 	exp := leveldata.BaseExp(lv)
 	aos := &ActiveObjScore{
@@ -52,7 +54,7 @@ func NewActiveObjScoreByLevel(lv int, bornFaction factiontype.FactionType, Curre
 		TowerName:  "Noname",
 		RecordTime: time.Now(),
 
-		UUID:        uuidstr.New(),
+		UUID:        ScoreIDMaker.New(),
 		NickName:    fmt.Sprintf("Unnamed%v", lv),
 		Exp:         exp,
 		BornFaction: bornFaction,
