@@ -13,11 +13,6 @@ package idu64str
 
 import "testing"
 
-func Test_makeStr1(t *testing.T) {
-	mk := New("hello")
-	println(mk.New1())
-}
-
 func Test_makeStr2(t *testing.T) {
 	mk := New("hello")
 	println(mk.New())
