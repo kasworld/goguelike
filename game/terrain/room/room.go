@@ -22,7 +22,7 @@ import (
 	"github.com/kasworld/rect"
 )
 
-var roomIDMaker = idu64str.New("RoomID")
+var RoomIDMaker = idu64str.New("RoomID")
 
 func (r Room) String() string {
 	return fmt.Sprintf("Room[%v Area:%v]", r.UUID, r.Area)
@@ -47,7 +47,7 @@ func New(rt rect.Rect, bgTile tile_flag.TileFlag) *Room {
 		panic(fmt.Sprintf("room to small %v", rt))
 	}
 	r := &Room{
-		UUID:       roomIDMaker.New(),
+		UUID:       RoomIDMaker.New(),
 		BgTile:     bgTile,
 		Area:       rt,
 		Tiles:      make([][]tile_flag.TileFlag, rt.W),
