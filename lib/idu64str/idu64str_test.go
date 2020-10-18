@@ -11,9 +11,17 @@
 
 package idu64str
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_makeStr2(t *testing.T) {
 	mk := New("hello")
 	println(mk.New())
+}
+
+func TestMaker_String(t *testing.T) {
+	mk := New("hello")
+	mk.New()
+	println(mk.String())
 }

@@ -20,6 +20,10 @@ type Maker struct {
 	currentu64 uint64
 }
 
+func (mk *Maker) String() string {
+	return string(mk.buf16)
+}
+
 func New(prefix string) *Maker {
 	mk := &Maker{}
 	prefixbyte := []byte(prefix)
