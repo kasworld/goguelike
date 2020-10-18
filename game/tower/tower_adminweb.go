@@ -21,7 +21,12 @@ import (
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike/game/activeobject"
 	"github.com/kasworld/goguelike/game/aoid2activeobject"
+	"github.com/kasworld/goguelike/game/carryingobject"
+	"github.com/kasworld/goguelike/game/dangerobject"
+	"github.com/kasworld/goguelike/game/fieldobject"
+	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/goguelike/lib/sessionmanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_connbytemanager"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -161,6 +166,31 @@ func (tw *Tower) GetTowerCmdActStat() *actpersec.ActPerSec {
 	return tw.towerCmdActStat
 }
 
+func (tw *Tower) SysAOID() string {
+	return activeobject.SysAOIDMaker.String()
+}
+func (tw *Tower) EquipID() string {
+	return carryingobject.EquipIDMaker.String()
+}
+func (tw *Tower) MoneyID() string {
+	return carryingobject.MoneyIDMaker.String()
+}
+func (tw *Tower) PotionID() string {
+	return carryingobject.PotionIDMaker.String()
+}
+func (tw *Tower) ScrollID() string {
+	return carryingobject.ScrollIDMaker.String()
+}
+func (tw *Tower) DOID() string {
+	return dangerobject.DOIDMaker.String()
+}
+func (tw *Tower) FOID() string {
+	return fieldobject.FOIDMaker.String()
+}
+func (tw *Tower) RoomID() string {
+	return room.RoomIDMaker.String()
+}
+
 func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New("index").Parse(`
 	<html> <head>
@@ -196,6 +226,22 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	Max Exp From Discover : {{.GetFloorManager.CalcFullDiscoverExp}} 
 	<br/>
 	Max Level From Discover :  {{.GetFloorManager.CalcFullDiscoverLevel}} 
+	<br/>
+	SysAOID : {{.SysAOID}}
+	<br/>
+	EquipID : {{.EquipID}}
+	<br/>
+	MoneyID : {{.MoneyID}}
+	<br/>
+	PotionID : {{.PotionID}}
+	<br/>
+	ScrollID : {{.ScrollID}}
+	<br/>
+	DOID : {{.DOID}}
+	<br/>
+	FOID : {{.FOID}}
+	<br/>
+	RoomID : {{.RoomID}}
 	<br/>
 	goroutine : {{.NumGoroutine}}	
 	<br/>
