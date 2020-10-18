@@ -26,7 +26,7 @@ import (
 	"github.com/kasworld/wrapper"
 )
 
-type BitContainder uint8
+type BitContainer uint8
 
 const FullBit = 0xff
 const BitLen = 8
@@ -52,7 +52,7 @@ type VisitArea struct {
 	discoverExp         int
 	discoveredTileCount int
 	completeTileCount   int
-	bitsList            []BitContainder
+	bitsList            []BitContainer
 }
 
 func NewVisitArea(fi floorI) *VisitArea {
@@ -64,7 +64,7 @@ func NewVisitArea(fi floorI) *VisitArea {
 	}
 	va.xWrap = wrapper.New(va.w).GetWrapFn()
 	va.yWrap = wrapper.New(va.h).GetWrapFn()
-	va.bitsList = make([]BitContainder, va.w*va.h/BitLen+1)
+	va.bitsList = make([]BitContainer, va.w*va.h/BitLen+1)
 	return va
 }
 
@@ -85,7 +85,7 @@ func (va *VisitArea) Dup() *VisitArea {
 		yWrap:               va.yWrap,
 		discoveredTileCount: va.discoveredTileCount,
 		completeTileCount:   va.completeTileCount,
-		bitsList:            make([]BitContainder, len(va.bitsList)),
+		bitsList:            make([]BitContainer, len(va.bitsList)),
 	}
 	copy(rtn.bitsList, va.bitsList)
 	return rtn
@@ -154,7 +154,7 @@ func (va *VisitArea) MakeComplete() int {
 	return inc
 }
 
-func (va *VisitArea) calcIndexAndBitForXY(x, y int) (uint, BitContainder) {
+func (va *VisitArea) calcIndexAndBitForXY(x, y int) (uint, BitContainer) {
 	pos := uint(x + y*va.w)
 	indexPos := pos >> PosShift
 	bitPos := pos & MaskBit
@@ -245,7 +245,7 @@ func (va *VisitArea) Forget() int {
 	defer va.mutex.Unlock()
 	forgetTileCount := va.discoveredTileCount
 	va.discoveredTileCount = 0
-	va.bitsList = make([]BitContainder, va.w*va.h/BitLen+1)
+	va.bitsList = make([]BitContainer, va.w*va.h/BitLen+1)
 	va.updateExp()
 	return forgetTileCount
 }
