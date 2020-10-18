@@ -49,6 +49,9 @@ func (tw *Tower) initAdminWeb() {
 	}
 
 	webMux.HandleFunc("/favicon.ico", tw.web_FaviconIco)
+
+	webMux.HandleFunc("/service", tw.web_Service)
+
 	webMux.HandleFuncAuth("/", tw.web_TowerInfo)
 	webMux.HandleFuncAuth("/floor", tw.web_FloorInfo)
 	webMux.HandleFuncAuth("/floorimagezoom", tw.web_FloorImageZoom)
@@ -165,6 +168,10 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	</head>
 	<body>
 
+	service cmd <a href= "/service?cmd=logreopen" target="_blank">logreopen</a> 
+	<br/>
+	service cmd <a href= "/service?cmd=stop" target="_blank">stop</a> 
+	<hr/>
 
 	BuildDate : {{.BuildDate.Format "2006-01-02T15:04:05Z07:00"}}
 	<br/>
