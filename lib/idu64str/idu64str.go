@@ -16,19 +16,17 @@ import (
 )
 
 type Maker struct {
-	buf16      []byte
+	prefixbyte []byte
 	currentu64 uint64
 }
 
 func (mk *Maker) String() string {
-	return string(mk.buf16)
+	return makeString(mk.prefixbyte, mk.currentu64)
 }
 
 func New(prefix string) *Maker {
 	mk := &Maker{}
-	prefixbyte := []byte(prefix)
-	mk.buf16 = make([]byte, 16+len(prefixbyte))
-	copy(mk.buf16, prefixbyte)
+	mk.prefixbyte = []byte(prefix)
 	return mk
 }
 
@@ -36,12 +34,18 @@ const hextable = "0123456789abcdef"
 
 func (mk *Maker) New() string {
 	newValue := atomic.AddUint64(&mk.currentu64, 1)
-	l := len(mk.buf16) - 1
+	return makeString(mk.prefixbyte, newValue)
+}
+
+func makeString(prefixbyte []byte, newValue uint64) string {
+	buf16 := make([]byte, len(prefixbyte)+16)
+	copy(buf16, prefixbyte)
+	l := len(buf16) - 1
 	for i := 0; i < 16; i++ {
-		mk.buf16[l-i] = hextable[newValue&0xf]
+		buf16[l-i] = hextable[newValue&0xf]
 		newValue >>= 4
 	}
-	return string(mk.buf16)
+	return string(buf16)
 }
 
 var G_Maker = New("gmaker")
