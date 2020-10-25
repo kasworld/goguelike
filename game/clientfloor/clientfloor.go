@@ -82,15 +82,25 @@ func (cf *ClientFloor) Forget() {
 }
 
 func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
-	cf.Tiles = fta.Tiles
-	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	for x, xv := range cf.Tiles {
+	for x, xv := range fta.Tiles {
+		xpos := fta.X + x
 		for y, yv := range xv {
+			ypos := fta.Y + y
+			cf.Tiles[xpos][ypos] = yv
 			if yv != 0 {
-				cf.Visited.CheckAndSetNolock(x, y)
+				cf.Visited.CheckAndSetNolock(xpos, ypos)
 			}
 		}
 	}
+	// cf.Tiles = fta.Tiles
+	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
+	// for x, xv := range cf.Tiles {
+	// 	for y, yv := range xv {
+	// 		if yv != 0 {
+	// 			cf.Visited.CheckAndSetNolock(x, y)
+	// 		}
+	// 	}
+	// }
 	return
 }
 
