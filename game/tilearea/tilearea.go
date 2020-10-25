@@ -96,3 +96,42 @@ func (ta TileArea) ToImage(zoom int) *image.RGBA {
 func (ta TileArea) GetTiles() TileArea {
 	return ta
 }
+
+// GetRectArea dup rect area start x,y, size w,h
+func (ta TileArea) GetRectArea(x, y int, w, h int) TileArea {
+	rtn := New(w, h)
+	for i := 0; i < w; i++ {
+		for j := 0; j < h; j++ {
+			rtn[i][j] = ta[x+w][y+h]
+		}
+	}
+	return rtn
+}
+
+// Split tile area limit size tilecount
+// return list of  start post , tilearea
+func (ta TileArea) Split(size int) ([][2]int, []TileArea) {
+	rtnPos := make([][2]int, 0)
+	rtnArea := make([]TileArea, 0)
+
+	taW, taH := ta.GetXYLen()
+	h := size / taW
+	w := size / h
+
+	for i := 0; i < taW; i += w {
+		cW := w
+		if w-i < cW {
+			cW = w - i
+		}
+		for j := 0; j < taH; j += h {
+			cH := h
+			if h-j < cH {
+				cH = h - j
+			}
+			rtnPos = append(rtnPos, [2]int{i, j})
+			rtnArea = append(rtnArea, ta.GetRectArea(i, j, cW, cH))
+		}
+	}
+
+	return rtnPos, rtnArea
+}
