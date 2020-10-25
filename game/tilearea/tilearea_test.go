@@ -20,3 +20,9 @@ func TestCalcStat(t *testing.T) {
 	ts := ta.CalcStat()
 	t.Logf("%v", ts)
 }
+
+func TestTileArea_Split(t *testing.T) {
+	ta := New(64, 64)
+	p, a := ta.Split(250)
+	t.Logf("%v %v", p, a)
+}

@@ -102,7 +102,7 @@ func (ta TileArea) GetRectArea(x, y int, w, h int) TileArea {
 	rtn := New(w, h)
 	for i := 0; i < w; i++ {
 		for j := 0; j < h; j++ {
-			rtn[i][j] = ta[x+w][y+h]
+			rtn[i][j] = ta[x+i][y+j]
 		}
 	}
 	return rtn
