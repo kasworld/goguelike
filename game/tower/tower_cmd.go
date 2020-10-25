@@ -121,6 +121,8 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 		if err := aocon.SendNotiPacket(c2t_idnoti.FloorTiles,
 			&c2t_obj.NotiFloorTiles_data{
 				FI:    fi,
+				X:     0,
+				Y:     0,
 				Tiles: f.GetTerrain().GetTiles().DupWithFilter(va.GetXYNolock),
 			},
 		); err != nil {

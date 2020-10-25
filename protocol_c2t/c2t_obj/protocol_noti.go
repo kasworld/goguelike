@@ -66,16 +66,19 @@ type NotiObjectList_data struct {
 	DangerObjList []*DangerObjClient
 }
 
+// NotiVPTiles_data contains tile info center from pos
 type NotiVPTiles_data struct {
 	FloorName string
-	VPX       int
-	VPY       int
+	VPX       int // viewport center X
+	VPY       int // viewport center Y
 	VPTiles   *viewportdata.ViewportTileArea2
 }
 
+// NotiFloorTiles_data used for floor map, reconnect client
 type NotiFloorTiles_data struct {
-	FI *FloorInfo
-
+	FI    *FloorInfo
+	X     int // X start position, not center
+	Y     int // Y start position, not center
 	Tiles tilearea.TileArea
 }
 
