@@ -92,15 +92,7 @@ func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
-	// cf.Tiles = fta.Tiles
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	// for x, xv := range cf.Tiles {
-	// 	for y, yv := range xv {
-	// 		if yv != 0 {
-	// 			cf.Visited.CheckAndSetNolock(x, y)
-	// 		}
-	// 	}
-	// }
 	return
 }
 
