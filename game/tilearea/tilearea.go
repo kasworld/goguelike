@@ -111,22 +111,29 @@ func (ta TileArea) GetRectArea(x, y int, w, h int) TileArea {
 // Split tile area limit size tilecount
 // return list of  start post , tilearea
 func (ta TileArea) Split(size int) ([][2]int, []TileArea) {
+	if size < 0 {
+		// panic("size < 0")
+		return nil, nil
+	}
 	rtnPos := make([][2]int, 0)
 	rtnArea := make([]TileArea, 0)
 
 	taW, taH := ta.GetXYLen()
 	h := size / taW
+	if h < 0 {
+		h = 1
+	}
 	w := size / h
 
 	for i := 0; i < taW; i += w {
 		cW := w
-		if w-i < cW {
-			cW = w - i
+		if taW-i < cW {
+			cW = taW - i
 		}
 		for j := 0; j < taH; j += h {
 			cH := h
-			if h-j < cH {
-				cH = h - j
+			if taH-j < cH {
+				cH = taH - j
 			}
 			rtnPos = append(rtnPos, [2]int{i, j})
 			rtnArea = append(rtnArea, ta.GetRectArea(i, j, cW, cH))
