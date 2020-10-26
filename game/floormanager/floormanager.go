@@ -14,17 +14,14 @@ package floormanager
 import (
 	"fmt"
 	"sync"
-	"unsafe"
 
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
-	"github.com/kasworld/goguelike/enum/tile_flag"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/floor"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/towerscript"
 	"github.com/kasworld/goguelike/lib/g2log"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_const"
 )
 
 func (fm *FloorManager) String() string {
@@ -88,14 +85,6 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 			fm.startFloor = f
 		}
 		fm.log.TraceService("Floor generated %v", f)
-
-		// check terrain size enough to send FloorTiles noti
-		w, h := f.GetTerrain().GetXYLen()
-		var tt tile_flag.TileFlag
-		if w*h*int(unsafe.Sizeof(tt)) >= c2t_const.MaxBodyLen {
-			return fmt.Errorf("terrain too big to send FloorTiles noti %v > MaxBodyLen(%v) floor:%v",
-				w*h*int(unsafe.Sizeof(tt)), c2t_const.MaxBodyLen, f.GetName())
-		}
 
 		if oldFloor, exist := fm.floorName2Floor[f.GetName()]; exist {
 			return fmt.Errorf("floor name duplicate %v %v", oldFloor, f)
