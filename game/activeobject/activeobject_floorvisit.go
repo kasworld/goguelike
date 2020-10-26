@@ -88,14 +88,6 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 				return err
 			}
 		}
-		// return ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
-		// 	&c2t_obj.NotiFloorTiles_data{
-		// 		FI:    fi,
-		// 		X:     0,
-		// 		Y:     0,
-		// 		Tiles: f.GetTerrain().GetTiles(),
-		// 	},
-		// )
 	}
 	return nil
 }
