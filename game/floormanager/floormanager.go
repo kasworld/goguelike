@@ -16,6 +16,7 @@ import (
 	"sync"
 
 	"github.com/kasworld/g2rand"
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/floor"
@@ -148,4 +149,12 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 	}
 
 	return nil
+}
+
+func (fm *FloorManager) CalcSendBufferCount() int {
+	rtn := 0
+	for _, f := range fm.floorList {
+		rtn += f.GetWidth()*f.GetHeight()/gameconst.TileAreaSplitSize + 1
+	}
+	return rtn + 10
 }
