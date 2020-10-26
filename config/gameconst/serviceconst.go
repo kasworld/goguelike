@@ -19,4 +19,6 @@ const (
 	// for client
 	ClientReadTimeoutSec  = 6
 	ClientWriteTimeoutSec = 3
+
+	TileAreaSplitSize = 0x10000
 )

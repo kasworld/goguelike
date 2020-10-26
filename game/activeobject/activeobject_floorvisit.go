@@ -14,6 +14,7 @@ package activeobject
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
@@ -73,14 +74,28 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 
 	fi := f.ToPacket_FloorInfo()
 	if aoconn := ao.clientConn; aoconn != nil {
-		return ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
-			&c2t_obj.NotiFloorTiles_data{
-				FI:    fi,
-				X:     0,
-				Y:     0,
-				Tiles: f.GetTerrain().GetTiles(),
-			},
-		)
+		posList, taList := f.GetTerrain().GetTiles().Split(gameconst.TileAreaSplitSize)
+		for i := range posList {
+			err := ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
+				&c2t_obj.NotiFloorTiles_data{
+					FI:    fi,
+					X:     posList[i][0],
+					Y:     posList[i][1],
+					Tiles: taList[i],
+				},
+			)
+			if err != nil {
+				return err
+			}
+		}
+		// return ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
+		// 	&c2t_obj.NotiFloorTiles_data{
+		// 		FI:    fi,
+		// 		X:     0,
+		// 		Y:     0,
+		// 		Tiles: f.GetTerrain().GetTiles(),
+		// 	},
+		// )
 	}
 	return nil
 }

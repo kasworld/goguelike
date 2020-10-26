@@ -12,6 +12,7 @@
 package tower
 
 import (
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/respawntype"
 	"github.com/kasworld/goguelike/game/cmd2tower"
@@ -118,16 +119,31 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 			continue
 		}
 		fi := f.ToPacket_FloorInfo()
-		if err := aocon.SendNotiPacket(c2t_idnoti.FloorTiles,
-			&c2t_obj.NotiFloorTiles_data{
-				FI:    fi,
-				X:     0,
-				Y:     0,
-				Tiles: f.GetTerrain().GetTiles().DupWithFilter(va.GetXYNolock),
-			},
-		); err != nil {
-			tw.log.Error("%v", err)
+		posList, taList := f.GetTerrain().GetTiles().DupWithFilter(va.GetXYNolock).Split(gameconst.TileAreaSplitSize)
+		for i := range posList {
+			err := aocon.SendNotiPacket(c2t_idnoti.FloorTiles,
+				&c2t_obj.NotiFloorTiles_data{
+					FI:    fi,
+					X:     posList[i][0],
+					Y:     posList[i][1],
+					Tiles: taList[i],
+				},
+			)
+			if err != nil {
+				tw.log.Error("%v", err)
+			}
 		}
+
+		// if err := aocon.SendNotiPacket(c2t_idnoti.FloorTiles,
+		// 	&c2t_obj.NotiFloorTiles_data{
+		// 		FI:    fi,
+		// 		X:     0,
+		// 		Y:     0,
+		// 		Tiles: f.GetTerrain().GetTiles().DupWithFilter(va.GetXYNolock),
+		// 	},
+		// ); err != nil {
+		// 	tw.log.Error("%v", err)
+		// }
 	}
 	return nil // continue login
 }
