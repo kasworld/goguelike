@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/towerconfig"
 	"github.com/kasworld/goguelike/game/tower"
-	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_version"
 	"github.com/kasworld/signalhandlewin"
 	"github.com/kasworld/version"
@@ -56,7 +55,7 @@ func main() {
 	if *configurl != "" {
 		// fmt.Printf("load ini %v\n", *configurl)
 		if err := configutil.LoadIni(*configurl, &config); err != nil {
-			g2log.Fatal("%v", err)
+			fmt.Printf("%v\n", err)
 		}
 	}
 	ads.ApplyFlagTo(config)

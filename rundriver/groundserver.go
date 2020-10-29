@@ -20,9 +20,7 @@ import (
 	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/groundconfig"
 	"github.com/kasworld/goguelike/game/ground"
-	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_version"
-	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/prettystring"
 	"github.com/kasworld/signalhandle"
 	"github.com/kasworld/version"
@@ -55,28 +53,14 @@ func main() {
 	ads.SetDefaultToNonZeroField(config)
 	if *configurl != "" {
 		if err := configutil.LoadIni(*configurl, config); err != nil {
-			g2log.Error("%v", err)
+			fmt.Printf("%v\n", err)
 		}
 	}
 	ads.ApplyFlagTo(config)
 	fmt.Println(prettystring.PrettyString(config, 4))
 
-	// g2log.GlobalLogger.SetFlags(g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
-	twlog, err := g2log.NewWithDstDir(
-		"ground",
-		config.MakeLogDir(),
-		logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
-		config.LogLevel,
-		config.SplitLogLevel,
-	)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		return
-	}
-	g2log.GlobalLogger = twlog
-
-	tw := ground.New(config, g2log.GlobalLogger)
+	tw := ground.New(config)
 	if err := signalhandle.StartByArgs(tw); err != nil {
-		g2log.Error("%v", err)
+		fmt.Printf("%v\n", err)
 	}
 }

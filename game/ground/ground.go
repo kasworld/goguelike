@@ -19,12 +19,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/kasworld/actpersec"
 	"github.com/kasworld/configutil"
 	"github.com/kasworld/g2rand"
-
-	"github.com/kasworld/actpersec"
-	"github.com/kasworld/prettystring"
-
 	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/groundconfig"
@@ -41,6 +38,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_t2g/t2g_packet"
 	"github.com/kasworld/launcherlib"
 	"github.com/kasworld/log/logflags"
+	"github.com/kasworld/prettystring"
 	"github.com/kasworld/recordduration"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib/retrylistenandserve"
@@ -79,8 +77,28 @@ type Ground struct {
 		t2g_packet.Header, interface{}, error) `prettystring:"hide"`
 }
 
-func New(config *groundconfig.GroundConfig, log *g2log.LogBase) *Ground {
+func New(config *groundconfig.GroundConfig) *Ground {
 	fmt.Printf("%v", config.StringForm())
+
+	var log *g2log.LogBase
+	if config.BaseLogDir != "" {
+		var err error
+		log, err = g2log.NewWithDstDir(
+			"ground",
+			config.MakeLogDir(),
+			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
+			config.LogLevel,
+			config.SplitLogLevel,
+		)
+		if err == nil {
+			g2log.GlobalLogger = log
+		} else {
+			log = g2log.GlobalLogger
+			fmt.Printf("%v\n", err)
+		}
+	} else {
+		log = g2log.GlobalLogger
+	}
 
 	grd := Ground{
 		rnd:         g2rand.New(),
