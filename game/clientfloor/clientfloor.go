@@ -92,7 +92,7 @@ func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
-	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
+	// cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	return
 }
 
