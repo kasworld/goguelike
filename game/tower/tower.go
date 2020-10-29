@@ -47,6 +47,7 @@ import (
 	"github.com/kasworld/goguelike/protocol_t2g/t2g_idcmd"
 	"github.com/kasworld/goguelike/protocol_t2g/t2g_obj"
 	"github.com/kasworld/goguelike/protocol_t2g/t2g_packet"
+	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/rangestat"
 	"github.com/kasworld/recordduration"
 	"github.com/kasworld/uuidstr"
@@ -117,8 +118,28 @@ type Tower struct {
 	clientWeb *http.Server `prettystring:"simple"`
 }
 
-func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
+func New(config *towerconfig.TowerConfig) *Tower {
 	fmt.Printf("%v\n", config.StringForm())
+
+	var twlog *g2log.LogBase
+	if config.BaseLogDir != "" {
+		var err error
+		twlog, err = g2log.NewWithDstDir(
+			config.TowerName,
+			config.MakeLogDir(),
+			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
+			config.LogLevel,
+			config.SplitLogLevel,
+		)
+		if err == nil {
+			g2log.GlobalLogger = twlog
+		} else {
+			twlog = g2log.GlobalLogger
+			fmt.Printf("%v\n", err)
+		}
+	} else {
+		twlog = g2log.GlobalLogger
+	}
 
 	tw := &Tower{
 		uuid:         uuidstr.New(),
@@ -128,7 +149,7 @@ func New(config *towerconfig.TowerConfig, log *g2log.LogBase) *Tower {
 			int(float64(config.ConcurrentConnections*2)*config.TurnPerSec)),
 
 		sconfig: config,
-		log:     log,
+		log:     twlog,
 
 		clientConnLimitStat: rangestat.New("", 0, config.ConcurrentConnections),
 		sendStat:            actpersec.New(),

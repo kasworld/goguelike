@@ -23,7 +23,7 @@ type TowerConfig struct {
 	// common to all tower
 	LogLevel         g2log.LL_Type `default:"7" argname:""`
 	SplitLogLevel    g2log.LL_Type `default:"0" argname:""`
-	BaseLogDir       string        `default:"/tmp/" argname:""`
+	BaseLogDir       string        `default:"" argname:""`
 	DataFolder       string        `default:"./serverdata" argname:""`
 	ClientDataFolder string        `default:"./clientdata" argname:""`
 	GroundRPC        string        `default:"localhost:14002" argname:""`

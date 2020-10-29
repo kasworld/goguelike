@@ -23,7 +23,6 @@ import (
 	"github.com/kasworld/goguelike/game/tower"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_version"
-	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/signalhandle"
 	"github.com/kasworld/version"
 )
@@ -68,23 +67,9 @@ func main() {
 		defer fn()
 	}
 
-	twlog, err := g2log.NewWithDstDir(
-		config.TowerName,
-		config.MakeLogDir(),
-		logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
-		config.LogLevel,
-		config.SplitLogLevel,
-	)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		return
-	}
-	// tw.log = twlog
-	g2log.GlobalLogger = twlog
-
-	tw := tower.New(config, twlog)
+	tw := tower.New(config)
 	if err := signalhandle.StartByArgs(tw); err != nil {
-		g2log.Error("%v", err)
+		fmt.Printf("%v\n", err)
 	}
 
 	if profile.IsMem() {
