@@ -121,10 +121,8 @@ type Tower struct {
 func New(config *towerconfig.TowerConfig) *Tower {
 	fmt.Printf("%v\n", config.StringForm())
 
-	var twlog *g2log.LogBase
 	if config.BaseLogDir != "" {
-		var err error
-		twlog, err = g2log.NewWithDstDir(
+		log, err := g2log.NewWithDstDir(
 			config.TowerName,
 			config.MakeLogDir(),
 			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
@@ -132,13 +130,19 @@ func New(config *towerconfig.TowerConfig) *Tower {
 			config.SplitLogLevel,
 		)
 		if err == nil {
-			g2log.GlobalLogger = twlog
+			g2log.GlobalLogger = log
 		} else {
-			twlog = g2log.GlobalLogger
 			fmt.Printf("%v\n", err)
+			g2log.GlobalLogger.SetFlags(
+				g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+			g2log.GlobalLogger.SetLevel(
+				config.LogLevel)
 		}
 	} else {
-		twlog = g2log.GlobalLogger
+		g2log.GlobalLogger.SetFlags(
+			g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+		g2log.GlobalLogger.SetLevel(
+			config.LogLevel)
 	}
 
 	tw := &Tower{
@@ -149,7 +153,7 @@ func New(config *towerconfig.TowerConfig) *Tower {
 			int(float64(config.ConcurrentConnections*2)*config.TurnPerSec)),
 
 		sconfig: config,
-		log:     twlog,
+		log:     g2log.GlobalLogger,
 
 		clientConnLimitStat: rangestat.New("", 0, config.ConcurrentConnections),
 		sendStat:            actpersec.New(),

@@ -80,10 +80,8 @@ type Ground struct {
 func New(config *groundconfig.GroundConfig) *Ground {
 	fmt.Printf("%v", config.StringForm())
 
-	var log *g2log.LogBase
 	if config.BaseLogDir != "" {
-		var err error
-		log, err = g2log.NewWithDstDir(
+		log, err := g2log.NewWithDstDir(
 			"ground",
 			config.MakeLogDir(),
 			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
@@ -93,17 +91,23 @@ func New(config *groundconfig.GroundConfig) *Ground {
 		if err == nil {
 			g2log.GlobalLogger = log
 		} else {
-			log = g2log.GlobalLogger
 			fmt.Printf("%v\n", err)
+			g2log.GlobalLogger.SetFlags(
+				g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+			g2log.GlobalLogger.SetLevel(
+				config.LogLevel)
 		}
 	} else {
-		log = g2log.GlobalLogger
+		g2log.GlobalLogger.SetFlags(
+			g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+		g2log.GlobalLogger.SetLevel(
+			config.LogLevel)
 	}
 
 	grd := Ground{
 		rnd:         g2rand.New(),
 		sconfig:     config,
-		log:         log,
+		log:         g2log.GlobalLogger,
 		SendStat:    actpersec.New(),
 		RecvStat:    actpersec.New(),
 		connManager: t2g_connbytemanager.New(),

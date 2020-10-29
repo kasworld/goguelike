@@ -50,20 +50,30 @@ func main() {
 		fn := profile.StartCPUProfile()
 		defer fn()
 	}
-	twlog, err := g2log.NewWithDstDir(
-		config.PlayerNameBase,
-		config.MakeLogDir(),
-		logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
-		config.LogLevel,
-		config.SplitLogLevel,
-	)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		return
+
+	if config.BaseLogDir != "" {
+		log, err := g2log.NewWithDstDir(
+			config.PlayerNameBase,
+			config.MakeLogDir(),
+			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
+			config.LogLevel,
+			config.SplitLogLevel,
+		)
+		if err == nil {
+			g2log.GlobalLogger = log
+		} else {
+			fmt.Printf("%v\n", err)
+			g2log.GlobalLogger.SetFlags(
+				g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+			g2log.GlobalLogger.SetLevel(
+				config.LogLevel)
+		}
+	} else {
+		g2log.GlobalLogger.SetFlags(
+			g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+		g2log.GlobalLogger.SetLevel(
+			config.LogLevel)
 	}
-	g2log.GlobalLogger = twlog
-	// mc := NewMultiClient(*config, g2log.GlobalLogger)
-	// mc.Run()
 
 	chErr := make(chan error)
 	go func() {
