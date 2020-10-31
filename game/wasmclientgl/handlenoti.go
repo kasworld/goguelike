@@ -736,12 +736,27 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 }
 
 // FieldObjList    // for rebuild known floor
-func objRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, body interface{}) error {
+func objRecvNotiFn_FieldObjList(recvobj interface{}, hd c2t_packet.Header, body interface{}) error {
 	robj, ok := body.(*c2t_obj.NotiFieldObjList_data)
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", body)
 	}
-	return fmt.Errorf("Not implemented %v", robj)
+	app, ok := recvobj.(*WasmClient)
+	if !ok {
+		return fmt.Errorf("recvobj type mismatch %v", recvobj)
+	}
+	cf, exist := app.Name2ClientFloor[robj.FI.Name]
+	if !exist {
+		// new floor
+		cf = clientfloor.New(robj.FI)
+		app.Name2ClientFloor[robj.FI.Name] = cf
+		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
+			"Found floor %v", cf.FloorInfo.Name))
+		app.NotiMessage.AppendTf(tcsInfo,
+			"Found floor %v", cf.FloorInfo.Name)
+	}
+	cf.UpdateFieldObjList(robj.FOList)
+	return nil
 }
 
 func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {

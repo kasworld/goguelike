@@ -16,7 +16,9 @@ import (
 
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/viewportdata"
+	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
@@ -74,19 +76,34 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 
 	fi := f.ToPacket_FloorInfo()
 	if aoconn := ao.clientConn; aoconn != nil {
+		// send tile area
 		posList, taList := f.GetTerrain().GetTiles().Split(gameconst.TileAreaSplitSize)
 		for i := range posList {
-			err := ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
+			if err := ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
 				&c2t_obj.NotiFloorTiles_data{
 					FI:    fi,
 					X:     posList[i][0],
 					Y:     posList[i][1],
 					Tiles: taList[i],
 				},
-			)
-			if err != nil {
+			); err != nil {
 				return err
 			}
+		}
+		// send fieldobj list
+		fol := make([]*c2t_obj.FieldObjClient, 0)
+		f.GetFieldObjPosMan().IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+			fo := o.(*fieldobject.FieldObject)
+			fol = append(fol, fo.ToPacket_FieldObjClient(foX, foY))
+			return false
+		})
+		if err := ao.clientConn.SendNotiPacket(c2t_idnoti.FieldObjList,
+			&c2t_obj.NotiFieldObjList_data{
+				FI:     fi,
+				FOList: fol,
+			},
+		); err != nil {
+			return err
 		}
 	}
 	return nil

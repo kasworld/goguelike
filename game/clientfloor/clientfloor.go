@@ -92,7 +92,6 @@ func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
-	// cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	return
 }
 
@@ -125,6 +124,12 @@ func (cf *ClientFloor) UpdateFromViewportTile(
 		}
 	}
 	return nil
+}
+
+func (cf *ClientFloor) UpdateFieldObjList(folsit []*c2t_obj.FieldObjClient) {
+	for _, v := range folsit {
+		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+	}
 }
 
 func (cf *ClientFloor) PosAddDir(x, y int, dir way9type.Way9Type) (int, int) {

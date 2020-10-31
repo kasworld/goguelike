@@ -317,7 +317,18 @@ func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	return fmt.Errorf("Not implemented %v", recved)
+	cai, ok := me.(*ClientAI)
+	if !ok {
+		return fmt.Errorf("recvobj type mismatch %v", me)
+	}
+	cf, exist := cai.Name2ClientFloor[recved.FI.Name]
+	if !exist {
+		// new floor
+		cf = clientfloor.New(recved.FI)
+		cai.Name2ClientFloor[recved.FI.Name] = cf
+	}
+	cf.UpdateFieldObjList(recved.FOList)
+	return nil
 }
 
 func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody []byte) error {
