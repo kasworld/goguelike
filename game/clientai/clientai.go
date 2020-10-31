@@ -51,7 +51,7 @@ type ClientAI struct {
 
 	// turn data
 	movePacketPerTurn     int32
-	OLNotiData            *c2t_obj.NotiObjectList_data
+	OLNotiData            *c2t_obj.NotiVPObjList_data
 	playerActiveObjClient *c2t_obj.ActiveObjClient
 	onFieldObj            *c2t_obj.FieldObjClient
 	IsOverLoad            bool

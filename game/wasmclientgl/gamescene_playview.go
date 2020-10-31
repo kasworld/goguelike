@@ -29,7 +29,7 @@ import (
 func (vp *GameScene) ProcessNotiVPTiles(
 	cf *clientfloor.ClientFloor,
 	taNoti *c2t_obj.NotiVPTiles_data,
-	olNoti *c2t_obj.NotiObjectList_data,
+	olNoti *c2t_obj.NotiVPObjList_data,
 	path2dst [][2]int,
 ) error {
 
@@ -46,8 +46,8 @@ func (vp *GameScene) ProcessNotiVPTiles(
 }
 
 // place obj around vpx, vpy
-func (vp *GameScene) processNotiObjectList(
-	cf *clientfloor.ClientFloor, olNoti *c2t_obj.NotiObjectList_data, vpx, vpy int) {
+func (vp *GameScene) processNotiVPObjList(
+	cf *clientfloor.ClientFloor, olNoti *c2t_obj.NotiVPObjList_data, vpx, vpy int) {
 
 	floorW := cf.XWrapper.GetWidth()
 	floorH := cf.YWrapper.GetWidth()
@@ -211,8 +211,8 @@ func (vp *GameScene) UpdatePlayViewFrame(
 	frameProgress float64,
 	scrollDir way9type.Way9Type,
 	taNoti *c2t_obj.NotiVPTiles_data,
-	olNoti *c2t_obj.NotiObjectList_data,
-	lastOLNoti *c2t_obj.NotiObjectList_data,
+	olNoti *c2t_obj.NotiVPObjList_data,
+	lastOLNoti *c2t_obj.NotiVPObjList_data,
 	envBias bias.Bias,
 ) {
 	playerUUID := gInitData.AccountInfo.ActiveObjUUID

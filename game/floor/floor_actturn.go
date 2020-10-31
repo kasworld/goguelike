@@ -706,7 +706,7 @@ func (f *Floor) processCarryObj2floor() {
 	}
 }
 
-// send VPTiles, ObjectList noti when need
+// send VPTiles, VPObjList noti when need
 // request next turn act
 func (f *Floor) sendViewportNoti(
 	turnTime time.Time,
@@ -739,7 +739,7 @@ func (f *Floor) sendViewportNoti(
 			}
 		}
 		if aoconn := ao.GetClientConn(); aoconn != nil {
-			notiOL := f.ToPacket_NotiObjectList(
+			notiOL := f.ToPacket_NotiVPObjList(
 				turnTime,
 				vpixyolistcache,
 				aox, aoy, ao.GetTurnData().Sight)
@@ -751,7 +751,7 @@ func (f *Floor) sendViewportNoti(
 					ao.ToPacket_ActiveObjClient(aox, aoy))
 			}
 			notiOL.ActiveObj = ao.ToPacket_PlayerActiveObjInfo()
-			if err := aoconn.SendNotiPacket(c2t_idnoti.ObjectList,
+			if err := aoconn.SendNotiPacket(c2t_idnoti.VPObjList,
 				notiOL,
 			); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)

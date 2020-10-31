@@ -36,21 +36,32 @@ import (
 )
 
 var ProcessRecvObjNotiFnMap = [...]func(recvobj interface{}, header c2t_packet.Header, body interface{}) error{
-	c2t_idnoti.EnterTower:     objRecvNotiFn_EnterTower,
-	c2t_idnoti.LeaveTower:     objRecvNotiFn_LeaveTower,
-	c2t_idnoti.EnterFloor:     objRecvNotiFn_EnterFloor,
-	c2t_idnoti.LeaveFloor:     objRecvNotiFn_LeaveFloor,
-	c2t_idnoti.Ageing:         objRecvNotiFn_Ageing,
-	c2t_idnoti.Death:          objRecvNotiFn_Death,
-	c2t_idnoti.ReadyToRebirth: objRecvNotiFn_ReadyToRebirth,
-	c2t_idnoti.Rebirthed:      objRecvNotiFn_Rebirthed,
-	c2t_idnoti.Broadcast:      objRecvNotiFn_Broadcast,
-	c2t_idnoti.VPTiles:        objRecvNotiFn_VPTiles,
-	c2t_idnoti.ObjectList:     objRecvNotiFn_ObjectList,
-	c2t_idnoti.FloorTiles:     objRecvNotiFn_FloorTiles,
-	c2t_idnoti.FoundFieldObj:  objRecvNotiFn_FoundFieldObj,
-	c2t_idnoti.ForgetFloor:    objRecvNotiFn_ForgetFloor,
-	c2t_idnoti.ActivateTrap:   objRecvNotiFn_ActivateTrap,
+	c2t_idnoti.Invalid:        objRecvNotiFn_Invalid,        // Invalid make empty packet error
+	c2t_idnoti.EnterTower:     objRecvNotiFn_EnterTower,     // EnterTower
+	c2t_idnoti.EnterFloor:     objRecvNotiFn_EnterFloor,     // EnterFloor
+	c2t_idnoti.LeaveFloor:     objRecvNotiFn_LeaveFloor,     // LeaveFloor
+	c2t_idnoti.LeaveTower:     objRecvNotiFn_LeaveTower,     // LeaveTower
+	c2t_idnoti.Ageing:         objRecvNotiFn_Ageing,         // Ageing          // floor
+	c2t_idnoti.Death:          objRecvNotiFn_Death,          // Death
+	c2t_idnoti.ReadyToRebirth: objRecvNotiFn_ReadyToRebirth, // ReadyToRebirth
+	c2t_idnoti.Rebirthed:      objRecvNotiFn_Rebirthed,      // Rebirthed
+	c2t_idnoti.Broadcast:      objRecvNotiFn_Broadcast,      // Broadcast       // global chat broadcast from web admin
+	c2t_idnoti.VPObjList:      objRecvNotiFn_VPObjList,      // VPObjList       // in viewport, every turn
+	c2t_idnoti.VPTiles:        objRecvNotiFn_VPTiles,        // VPTiles         // in viewport, when viewport changed only
+	c2t_idnoti.FloorTiles:     objRecvNotiFn_FloorTiles,     // FloorTiles      // for rebuild known floor
+	c2t_idnoti.FieldObjList:   objRecvNotiFn_FieldObjList,   // FieldObjList    // for rebuild known floor
+	c2t_idnoti.FoundFieldObj:  objRecvNotiFn_FoundFieldObj,  // FoundFieldObj   // hidden field obj
+	c2t_idnoti.ForgetFloor:    objRecvNotiFn_ForgetFloor,    // ForgetFloor
+	c2t_idnoti.ActivateTrap:   objRecvNotiFn_ActivateTrap,   // ActivateTrap
+}
+
+// Invalid make empty packet error
+func objRecvNotiFn_Invalid(me interface{}, hd c2t_packet.Header, body interface{}) error {
+	robj, ok := body.(*c2t_obj.NotiInvalid_data)
+	if !ok {
+		return fmt.Errorf("packet mismatch %v", body)
+	}
+	return fmt.Errorf("Not implemented %v", robj)
 }
 
 func objRecvNotiFn_EnterTower(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
@@ -241,8 +252,8 @@ func objRecvNotiFn_Broadcast(recvobj interface{}, header c2t_packet.Header, obj 
 	return nil
 }
 
-func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
-	robj, ok := obj.(*c2t_obj.NotiObjectList_data)
+func objRecvNotiFn_VPObjList(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
+	robj, ok := obj.(*c2t_obj.NotiVPObjList_data)
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", obj)
 	}
@@ -407,7 +418,7 @@ func objRecvNotiFn_ObjectList(recvobj interface{}, header c2t_packet.Header, obj
 
 	playerX, playerY := app.GetPlayerXY()
 	// cf.updateFieldObjInView(playerX, playerY)
-	app.vp.processNotiObjectList(cf, newOLNotiData, playerX, playerY)
+	app.vp.processNotiVPObjList(cf, newOLNotiData, playerX, playerY)
 	if cf.IsValidPos(playerX, playerY) {
 		app.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
 	}
@@ -722,6 +733,15 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 			"Discover floor %v complete", cf.FloorInfo.Name)
 	}
 	return nil
+}
+
+// FieldObjList    // for rebuild known floor
+func objRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, body interface{}) error {
+	robj, ok := body.(*c2t_obj.NotiFieldObjList_data)
+	if !ok {
+		return fmt.Errorf("packet mismatch %v", body)
+	}
+	return fmt.Errorf("Not implemented %v", robj)
 }
 
 func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {

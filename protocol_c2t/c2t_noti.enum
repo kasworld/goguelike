@@ -3,14 +3,15 @@ EnterTower
 EnterFloor
 LeaveFloor
 LeaveTower
-Ageing // floor 
+Ageing          // floor 
 Death
 ReadyToRebirth
 Rebirthed
-Broadcast // global chat broadcast from web admin
-ObjectList // every turn
-VPTiles // when viewport changed only
-FloorTiles // reconnect , all floor tiles 
-FoundFieldObj // hidden field obj
+Broadcast       // global chat broadcast from web admin
+VPObjList       // in viewport, every turn
+VPTiles         // in viewport, when viewport changed only
+FloorTiles      // for rebuild known floor
+FieldObjList    // for rebuild known floor 
+FoundFieldObj   // hidden field obj
 ForgetFloor 
 ActivateTrap

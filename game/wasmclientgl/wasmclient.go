@@ -79,8 +79,8 @@ type WasmClient struct {
 	needRefreshSet bool
 
 	taNotiData     *c2t_obj.NotiVPTiles_data
-	olNotiData     *c2t_obj.NotiObjectList_data
-	lastOLNotiData *c2t_obj.NotiObjectList_data
+	olNotiData     *c2t_obj.NotiVPObjList_data
+	lastOLNotiData *c2t_obj.NotiVPObjList_data
 
 	movePacketPerTurn int32
 	actPacketPerTurn  int32

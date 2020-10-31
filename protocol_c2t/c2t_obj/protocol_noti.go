@@ -56,7 +56,7 @@ type NotiBroadcast_data struct {
 	Msg string
 }
 
-type NotiObjectList_data struct {
+type NotiVPObjList_data struct {
 	Time          time.Time `prettystring:"simple"`
 	FloorName     string
 	ActiveObj     *PlayerActiveObjInfo
@@ -80,6 +80,12 @@ type NotiFloorTiles_data struct {
 	X     int // X start position, not center
 	Y     int // Y start position, not center
 	Tiles tilearea.TileArea
+}
+
+// FieldObjList    // for rebuild known floor
+type NotiFieldObjList_data struct {
+	FI     *FloorInfo
+	FOList []*FieldObjClient
 }
 
 type NotiFoundFieldObj_data struct {

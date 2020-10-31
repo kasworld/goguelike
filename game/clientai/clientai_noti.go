@@ -21,27 +21,29 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_json"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 )
 
 var DemuxNoti2ByteFnMap = [...]func(me interface{}, hd c2t_packet.Header, rbody []byte) error{
-	c2t_idnoti.Invalid:        bytesRecvNotiFn_Invalid,
-	c2t_idnoti.EnterTower:     bytesRecvNotiFn_EnterTower,
-	c2t_idnoti.LeaveTower:     bytesRecvNotiFn_LeaveTower,
-	c2t_idnoti.EnterFloor:     bytesRecvNotiFn_EnterFloor,
-	c2t_idnoti.LeaveFloor:     bytesRecvNotiFn_LeaveFloor,
-	c2t_idnoti.Ageing:         bytesRecvNotiFn_Ageing,
-	c2t_idnoti.Death:          bytesRecvNotiFn_Death,
-	c2t_idnoti.ReadyToRebirth: bytesRecvNotiFn_ReadyToRebirth,
-	c2t_idnoti.Rebirthed:      bytesRecvNotiFn_Rebirthed,
-	c2t_idnoti.Broadcast:      bytesRecvNotiFn_Broadcast,
-	c2t_idnoti.ObjectList:     bytesRecvNotiFn_ObjectList,
-	c2t_idnoti.VPTiles:        bytesRecvNotiFn_VPTiles,
-	c2t_idnoti.FloorTiles:     bytesRecvNotiFn_FloorTiles,
-	c2t_idnoti.FoundFieldObj:  bytesRecvNotiFn_FoundFieldObj,
-	c2t_idnoti.ForgetFloor:    bytesRecvNotiFn_ForgetFloor,
-	c2t_idnoti.ActivateTrap:   bytesRecvNotiFn_ActivateTrap,
+	c2t_idnoti.Invalid:        bytesRecvNotiFn_Invalid,        // Invalid make empty packet error
+	c2t_idnoti.EnterTower:     bytesRecvNotiFn_EnterTower,     // EnterTower
+	c2t_idnoti.EnterFloor:     bytesRecvNotiFn_EnterFloor,     // EnterFloor
+	c2t_idnoti.LeaveFloor:     bytesRecvNotiFn_LeaveFloor,     // LeaveFloor
+	c2t_idnoti.LeaveTower:     bytesRecvNotiFn_LeaveTower,     // LeaveTower
+	c2t_idnoti.Ageing:         bytesRecvNotiFn_Ageing,         // Ageing          // floor
+	c2t_idnoti.Death:          bytesRecvNotiFn_Death,          // Death
+	c2t_idnoti.ReadyToRebirth: bytesRecvNotiFn_ReadyToRebirth, // ReadyToRebirth
+	c2t_idnoti.Rebirthed:      bytesRecvNotiFn_Rebirthed,      // Rebirthed
+	c2t_idnoti.Broadcast:      bytesRecvNotiFn_Broadcast,      // Broadcast       // global chat broadcast from web admin
+	c2t_idnoti.VPObjList:      bytesRecvNotiFn_VPObjList,      // VPObjList       // in viewport, every turn
+	c2t_idnoti.VPTiles:        bytesRecvNotiFn_VPTiles,        // VPTiles         // in viewport, when viewport changed only
+	c2t_idnoti.FloorTiles:     bytesRecvNotiFn_FloorTiles,     // FloorTiles      // for rebuild known floor
+	c2t_idnoti.FieldObjList:   bytesRecvNotiFn_FieldObjList,   // FieldObjList    // for rebuild known floor
+	c2t_idnoti.FoundFieldObj:  bytesRecvNotiFn_FoundFieldObj,  // FoundFieldObj   // hidden field obj
+	c2t_idnoti.ForgetFloor:    bytesRecvNotiFn_ForgetFloor,    // ForgetFloor
+	c2t_idnoti.ActivateTrap:   bytesRecvNotiFn_ActivateTrap,   // ActivateTrap
 }
 
 func bytesRecvNotiFn_Invalid(me interface{}, hd c2t_packet.Header, rbody []byte) error {
@@ -162,12 +164,12 @@ func bytesRecvNotiFn_Broadcast(me interface{}, hd c2t_packet.Header, rbody []byt
 	return nil
 }
 
-func bytesRecvNotiFn_ObjectList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
+func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
-	pkbody, ok := robj.(*c2t_obj.NotiObjectList_data)
+	pkbody, ok := robj.(*c2t_obj.NotiVPObjList_data)
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
@@ -303,6 +305,19 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 		// floor complete
 	}
 	return nil
+}
+
+// FieldObjList    // for rebuild known floor
+func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
+	robj, err := c2t_json.UnmarshalPacket(hd, rbody)
+	if err != nil {
+		return fmt.Errorf("Packet type miss match %v", rbody)
+	}
+	recved, ok := robj.(*c2t_obj.NotiFieldObjList_data)
+	if !ok {
+		return fmt.Errorf("packet mismatch %v", robj)
+	}
+	return fmt.Errorf("Not implemented %v", recved)
 }
 
 func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody []byte) error {
