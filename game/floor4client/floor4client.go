@@ -31,6 +31,7 @@ func New(fi visitarea.FloorI) *Floor4Client {
 
 func (f4c *Floor4Client) Forget() {
 	f4c.Visit.Forget()
+	f4c.FOPosMan.Cleanup()
 }
 
 // for web

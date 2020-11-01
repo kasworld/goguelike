@@ -71,8 +71,17 @@ func (ao *ActiveObject) ForgetFloorByName(floorName string) error {
 }
 
 func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
-	f4c, _ := ao.floor4ClientMan.GetByName(f.GetName())
+	f4c, exist := ao.floor4ClientMan.GetByName(f.GetName())
+	if !exist {
+		f4c = ao.floor4ClientMan.Add(f)
+	}
+
 	f4c.Visit.MakeComplete()
+	f.GetFieldObjPosMan().IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+		fo := o.(*fieldobject.FieldObject)
+		f4c.FOPosMan.AddOrUpdateToXY(fo, foX, foY)
+		return false
+	})
 
 	fi := f.ToPacket_FloorInfo()
 	if aoconn := ao.clientConn; aoconn != nil {
@@ -92,7 +101,7 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 		}
 		// send fieldobj list
 		fol := make([]*c2t_obj.FieldObjClient, 0)
-		f.GetFieldObjPosMan().IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+		f4c.FOPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
 			fo := o.(*fieldobject.FieldObject)
 			fol = append(fol, fo.ToPacket_FieldObjClient(foX, foY))
 			return false
