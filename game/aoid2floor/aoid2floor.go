@@ -111,6 +111,9 @@ func (toam *ActiveObjID2Floor) ActiveObjRebirthToFloor(
 	if err != nil {
 		toam.log.Fatal("%v %v %v", err, dstFloor, ao)
 	}
+	if oldfloor != nil && oldfloor != dstFloor {
+		toam.aoEnterFloorNolock(dstFloor, ao, x, y)
+	}
 	toam.aoRebirthToFloorNolock(dstFloor, ao, x, y)
 	return nil
 }

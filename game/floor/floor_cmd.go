@@ -53,6 +53,9 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 			); err != nil {
 				f.log.Error("%v %v", f, err)
 			}
+			// send tile area
+
+			// send fieldobj list
 		}
 
 	case *cmd2floor.ReqRebirth2Floor:
@@ -60,16 +63,8 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 		if err != nil {
 			f.log.Fatal("%v %v", f, err)
 		}
-		pk.ActiveObj.EnterFloor(f)
 		pk.ActiveObj.Rebirth()
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(c2t_idnoti.EnterFloor,
-				&c2t_obj.NotiEnterFloor_data{
-					FI: f.ToPacket_FloorInfo(),
-				},
-			); err != nil {
-				f.log.Error("%v %v", f, err)
-			}
 			if err := conn.SendNotiPacket(c2t_idnoti.Rebirthed,
 				&c2t_obj.NotiRebirthed_data{},
 			); err != nil {
