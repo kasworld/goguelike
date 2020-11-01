@@ -33,7 +33,7 @@ const BitLen = 8
 const MaskBit = BitLen - 1
 const PosShift = 3
 
-type floorI interface {
+type FloorI interface {
 	GetName() string
 	GetWidth() int
 	GetHeight() int
@@ -55,7 +55,7 @@ type VisitArea struct {
 	bitsList            []BitContainer
 }
 
-func NewVisitArea(fi floorI) *VisitArea {
+func New(fi FloorI) *VisitArea {
 	va := &VisitArea{
 		name:              fi.GetName(),
 		w:                 fi.GetWidth(),

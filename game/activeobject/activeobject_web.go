@@ -16,6 +16,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/kasworld/goguelike/game/floor4client"
+
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/achievetype_vector"
 	"github.com/kasworld/goguelike/enum/condition_vector"
@@ -225,11 +227,11 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (ao *ActiveObject) GetVisitFloorList() []*visitarea.VisitArea {
-	return ao.uuid2VisitArea.GetList()
+func (ao *ActiveObject) GetVisitFloorList() []*floor4client.Floor4Client {
+	return ao.floor4ClientMan.GetList()
 }
 
 func (ao *ActiveObject) GetVisitFloor(floorname string) *visitarea.VisitArea {
-	r, _ := ao.uuid2VisitArea.GetByID(floorname)
-	return r
+	r, _ := ao.floor4ClientMan.GetByName(floorname)
+	return r.Visit
 }

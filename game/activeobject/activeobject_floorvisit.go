@@ -26,8 +26,8 @@ import (
 func (ao *ActiveObject) EnterFloor(f gamei.FloorI) {
 	ao.currrentFloor = f
 	ao.SetNeedTANoti()
-	if _, exist := ao.uuid2VisitArea.GetByID(f.GetName()); !exist {
-		ao.uuid2VisitArea.Add(f)
+	if _, exist := ao.floor4ClientMan.GetByName(f.GetName()); !exist {
+		ao.floor4ClientMan.Add(f)
 	}
 	if aio := ao.ai; aio != nil {
 		aio.ResetPlan()
@@ -37,12 +37,12 @@ func (ao *ActiveObject) EnterFloor(f gamei.FloorI) {
 func (ao *ActiveObject) UpdateVisitAreaBySightMat2(
 	f gamei.FloorI, vpCenterX, vpCenterY int,
 	sightMat *viewportdata.ViewportSight2, sight float32) {
-	va, exist := ao.uuid2VisitArea.GetByID(f.GetName())
+	f4c, exist := ao.floor4ClientMan.GetByName(f.GetName())
 	if !exist {
 		ao.log.Fatal("floor not visited %v %v", ao, f.GetName())
-		va = ao.uuid2VisitArea.Add(f)
+		f4c = ao.floor4ClientMan.Add(f)
 	}
-	va.UpdateBySightMat2(
+	f4c.Visit.UpdateBySightMat2(
 		f.GetTerrain().GetTiles(),
 		vpCenterX, vpCenterY,
 		sightMat,
@@ -50,14 +50,14 @@ func (ao *ActiveObject) UpdateVisitAreaBySightMat2(
 }
 
 func (ao *ActiveObject) forgetAnyFloor() error {
-	for _, floorName := range ao.uuid2VisitArea.GetIDList() {
+	for _, floorName := range ao.floor4ClientMan.GetNameList() {
 		return ao.ForgetFloorByName(floorName)
 	}
 	return fmt.Errorf("no visit floor")
 }
 
 func (ao *ActiveObject) ForgetFloorByName(floorName string) error {
-	if err := ao.uuid2VisitArea.Forget(floorName); err != nil {
+	if err := ao.floor4ClientMan.Forget(floorName); err != nil {
 		return err
 	}
 	if aoconn := ao.clientConn; aoconn != nil {
@@ -71,8 +71,8 @@ func (ao *ActiveObject) ForgetFloorByName(floorName string) error {
 }
 
 func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
-	va, _ := ao.uuid2VisitArea.GetByID(f.GetName())
-	va.MakeComplete()
+	f4c, _ := ao.floor4ClientMan.GetByName(f.GetName())
+	f4c.Visit.MakeComplete()
 
 	fi := f.ToPacket_FloorInfo()
 	if aoconn := ao.clientConn; aoconn != nil {

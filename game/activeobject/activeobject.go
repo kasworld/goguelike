@@ -39,9 +39,9 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/carryingobject"
+	"github.com/kasworld/goguelike/game/floor4clientman"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/inventory"
-	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/lib/g2log"
 	"github.com/kasworld/goguelike/lib/idu64str"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
@@ -88,7 +88,9 @@ type ActiveObject struct {
 	aoActionStat     c2t_idcmd_stats.CommandIDStat                `prettystring:"simple"`
 	conditionStat    condition_vector.ConditionVector             `prettystring:"simple"`
 
-	uuid2VisitArea     *visitarea.ID2VisitArea `prettystring:"simple"`
+	// info known to activeobject
+	floor4ClientMan *floor4clientman.Floor4ClientMan `prettystring:"simple"`
+
 	currrentFloor      gamei.FloorI
 	remainTurn2Rebirth int
 
@@ -129,12 +131,12 @@ func newActiveObj(
 		homefloor:        homefloor,
 
 		// battle
-		hp:             100,
-		sp:             100,
-		inven:          inventory.New(towerAchieveStat),
-		buffManager:    activebuff.New(),
-		uuid2VisitArea: visitarea.NewID2VisitArea(),
-		AOTurnData:     &aoturndata.ActiveObjTurnData{},
+		hp:              100,
+		sp:              100,
+		inven:           inventory.New(towerAchieveStat),
+		buffManager:     activebuff.New(),
+		floor4ClientMan: floor4clientman.New(),
+		AOTurnData:      &aoturndata.ActiveObjTurnData{},
 	}
 	ao.bornFaction = factiontype.FactionType(ao.rnd.Intn(factiontype.FactionType_Count))
 	ao.currentBias = bias.Bias(ao.bornFaction.FactorBase()).MakeAbsSumTo(gameconst.ActiveObjBaseBiasLen)

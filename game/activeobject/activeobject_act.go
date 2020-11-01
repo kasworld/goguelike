@@ -65,8 +65,8 @@ func (ao *ActiveObject) updateActiveObjTurnData() {
 	}
 
 	nonBattleExp := 0
-	for _, v := range ao.uuid2VisitArea.GetList() {
-		nonBattleExp += v.GetDiscoverExp()
+	for _, v := range ao.floor4ClientMan.GetList() {
+		nonBattleExp += v.Visit.GetDiscoverExp()
 	}
 	ao.AOTurnData.NonBattleExp = float64(nonBattleExp)
 	ao.AOTurnData.TotalExp = ao.AOTurnData.NonBattleExp + ao.battleExp

@@ -45,7 +45,7 @@ type ClientFloor struct {
 func New(FloorInfo *c2t_obj.FloorInfo) *ClientFloor {
 	cf := ClientFloor{
 		Tiles:     tilearea.New(FloorInfo.W, FloorInfo.H),
-		Visited:   visitarea.NewVisitArea(FloorInfo),
+		Visited:   visitarea.New(FloorInfo),
 		FloorInfo: FloorInfo,
 		XWrapper:  wrapper.New(FloorInfo.W),
 		YWrapper:  wrapper.New(FloorInfo.H),
@@ -78,7 +78,7 @@ func (cf *ClientFloor) Forget() {
 	FloorInfo := cf.FloorInfo
 	cf.Tiles = tilearea.New(FloorInfo.W, FloorInfo.H)
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	cf.Visited = visitarea.NewVisitArea(FloorInfo)
+	cf.Visited = visitarea.New(FloorInfo)
 }
 
 func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
