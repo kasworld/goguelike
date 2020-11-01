@@ -12,7 +12,6 @@
 package tower
 
 import (
-	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/enum/respawntype"
 	"github.com/kasworld/goguelike/game/cmd2tower"
@@ -113,27 +112,9 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 	); err != nil {
 		tw.log.Fatal("%v", err)
 	}
-	for _, f := range tw.floorMan.GetFloorList() {
-		va := ao.GetVisitFloor(f.GetName())
-		if va == nil {
-			continue
-		}
-		fi := f.ToPacket_FloorInfo()
-		posList, taList := f.GetTerrain().GetTiles().DupWithFilter(va.GetXYNolock).Split(gameconst.TileAreaSplitSize)
-		for i := range posList {
-			err := aocon.SendNotiPacket(c2t_idnoti.FloorTiles,
-				&c2t_obj.NotiFloorTiles_data{
-					FI:    fi,
-					X:     posList[i][0],
-					Y:     posList[i][1],
-					Tiles: taList[i],
-				},
-			)
-			if err != nil {
-				tw.log.Error("%v", err)
-			}
-		}
-	}
+
+	// TODO need visited floor small info send to client, not full info
+
 	return nil // continue login
 }
 

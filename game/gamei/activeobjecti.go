@@ -28,7 +28,7 @@ import (
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/aoscore"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/visitarea"
+	"github.com/kasworld/goguelike/game/floor4client"
 	"github.com/kasworld/goguelike/lib/scriptparse"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
@@ -133,7 +133,8 @@ type ActiveObjectI interface {
 	UpdateVisitAreaBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)
 
-	GetVisitFloor(floorname string) *visitarea.VisitArea
+	// GetVisitFloor(floorname string) *visitarea.VisitArea
+	GetFloor4Client(floorname string) *floor4client.Floor4Client
 	ForgetFloorByName(floorname string) error
 	MakeFloorComplete(f FloorI) error
 

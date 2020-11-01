@@ -522,7 +522,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			f.log.Debug("manual in portal %v %v", f, ao)
 
 		case c2t_idcmd.ActTeleport:
-			if !ao.GetVisitFloor(f.GetName()).IsComplete() {
+			if !ao.GetFloor4Client(f.GetName()).Visit.IsComplete() {
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
 					c2t_error.ActionProhibited)

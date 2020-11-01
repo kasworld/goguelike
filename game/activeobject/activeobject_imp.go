@@ -29,6 +29,7 @@ import (
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
+	"github.com/kasworld/goguelike/game/floor4client"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_serveconnbyte"
@@ -44,6 +45,11 @@ func (ao *ActiveObject) GetHomeFloor() gamei.FloorI {
 
 func (ao *ActiveObject) GetCurrentFloor() gamei.FloorI {
 	return ao.currrentFloor
+}
+
+func (ao *ActiveObject) GetFloor4Client(floorname string) *floor4client.Floor4Client {
+	r, _ := ao.floor4ClientMan.GetByName(floorname)
+	return r
 }
 
 func (ao *ActiveObject) GetActiveObjType() aotype.ActiveObjType {

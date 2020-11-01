@@ -12,9 +12,12 @@
 package floor
 
 import (
+	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/game/cmd2floor"
+	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/lib/uuidposman"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -53,9 +56,41 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 			); err != nil {
 				f.log.Error("%v %v", f, err)
 			}
-			// send tile area
+			// send known tile area
+			f4c := pk.ActiveObj.GetFloor4Client(f.GetName())
+			fi := f.ToPacket_FloorInfo()
+			posList, taList := f.GetTerrain().GetTiles().DupWithFilter(
+				f4c.Visit.GetXYNolock).Split(gameconst.TileAreaSplitSize)
+			for i := range posList {
+				err := conn.SendNotiPacket(c2t_idnoti.FloorTiles,
+					&c2t_obj.NotiFloorTiles_data{
+						FI:    fi,
+						X:     posList[i][0],
+						Y:     posList[i][1],
+						Tiles: taList[i],
+					},
+				)
+				if err != nil {
+					f.log.Error("%v", err)
+				}
+			}
 
 			// send fieldobj list
+			fol := make([]*c2t_obj.FieldObjClient, 0)
+			f4c.FOPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+				fo := o.(*fieldobject.FieldObject)
+				fol = append(fol, fo.ToPacket_FieldObjClient(foX, foY))
+				return false
+			})
+			if err := conn.SendNotiPacket(c2t_idnoti.FieldObjList,
+				&c2t_obj.NotiFieldObjList_data{
+					FI:     fi,
+					FOList: fol,
+				},
+			); err != nil {
+				f.log.Error("%v", err)
+			}
+
 		}
 
 	case *cmd2floor.ReqRebirth2Floor:

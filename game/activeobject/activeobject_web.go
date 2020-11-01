@@ -26,7 +26,6 @@ import (
 	"github.com/kasworld/goguelike/enum/potiontype_vector"
 	"github.com/kasworld/goguelike/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike/game/activeobject/serverai2"
-	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 )
 
@@ -206,7 +205,7 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 		` + condition_vector.HTML_tableheader + `
 		</table>
 	{{end}}
-	{{range $i, $v := .GetVisitFloorList}}
+	{{range $i, $v := .GetFloor4ClientList}}
 		{{if $v}}
 			{{$i}} {{$v}}
 			<br/>
@@ -227,11 +226,6 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (ao *ActiveObject) GetVisitFloorList() []*floor4client.Floor4Client {
+func (ao *ActiveObject) GetFloor4ClientList() []*floor4client.Floor4Client {
 	return ao.floor4ClientMan.GetList()
-}
-
-func (ao *ActiveObject) GetVisitFloor(floorname string) *visitarea.VisitArea {
-	r, _ := ao.floor4ClientMan.GetByName(floorname)
-	return r.Visit
 }

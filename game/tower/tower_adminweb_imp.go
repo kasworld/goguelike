@@ -159,7 +159,7 @@ func (tw *Tower) web_ActiveObjVisitFloorImage(w http.ResponseWriter, r *http.Req
 		http.Error(w, "Invalid aoid", 404)
 		return
 	}
-	ao.GetVisitFloor(visitfloorid).Web_Image(w, r)
+	ao.GetFloor4Client(visitfloorid).Visit.Web_Image(w, r)
 }
 
 func (tw *Tower) web_ActiveObjRankingList(w http.ResponseWriter, r *http.Request) {
