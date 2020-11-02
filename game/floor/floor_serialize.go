@@ -31,18 +31,3 @@ func (f *Floor) ToPacket_NotiAgeing() *c2t_obj.NotiAgeing_data {
 		FloorName: f.GetName(),
 	}
 }
-
-func (f *Floor) ToPacket_NotiTileArea(
-	x, y int, sight float64) *c2t_obj.NotiVPTiles_data {
-
-	x, y = f.terrain.WrapXY(x, y)
-	sightMat := f.terrain.GetViewportCache().GetByCache(x, y)
-	cstiles := f.makeViewportTiles2(x, y, sightMat, float32(sight))
-
-	return &c2t_obj.NotiVPTiles_data{
-		FloorName: f.GetName(),
-		VPX:       x,
-		VPY:       y,
-		VPTiles:   cstiles,
-	}
-}

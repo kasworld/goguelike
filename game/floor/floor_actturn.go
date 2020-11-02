@@ -734,7 +734,15 @@ func (f *Floor) sendViewportNoti(
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat,
 				float32(sight))
 			if aoconn := ao.GetClientConn(); aoconn != nil {
-				notiTA := f.ToPacket_NotiTileArea(aox, aoy, sight)
+				// make and send NotiTileArea
+				cstiles := f.makeViewportTiles2(aox, aoy, sightMat, float32(sight))
+				notiTA := &c2t_obj.NotiVPTiles_data{
+					FloorName: f.GetName(),
+					VPX:       aox,
+					VPY:       aoy,
+					VPTiles:   cstiles,
+				}
+
 				if err := aoconn.SendNotiPacket(c2t_idnoti.VPTiles,
 					notiTA,
 				); err != nil {
