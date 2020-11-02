@@ -12,8 +12,6 @@
 package floor
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -31,30 +29,6 @@ func (f *Floor) ToPacket_FloorInfo() *c2t_obj.FloorInfo {
 func (f *Floor) ToPacket_NotiAgeing() *c2t_obj.NotiAgeing_data {
 	return &c2t_obj.NotiAgeing_data{
 		FloorName: f.GetName(),
-	}
-}
-
-func (f *Floor) ToPacket_NotiVPObjList(
-	turnTime time.Time,
-	cache *CacheVPIXYOList,
-	x, y int, sight float64) *c2t_obj.NotiVPObjList_data {
-
-	x, y = f.terrain.WrapXY(x, y)
-	vpixyolists := cache.GetAtByCache(x, y)
-
-	sightMat := f.terrain.GetViewportCache().GetByCache(x, y)
-	aOs := f.makeViewportActiveObjs2(vpixyolists[0], sightMat, float32(sight))
-	pOs := f.makeViewportCarryObjs2(vpixyolists[1], sightMat, float32(sight))
-	fOs := f.makeViewportFieldObjs2(vpixyolists[2], sightMat, float32(sight))
-	dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, float32(sight))
-
-	return &c2t_obj.NotiVPObjList_data{
-		Time:          turnTime,
-		FloorName:     f.GetName(),
-		ActiveObjList: aOs,
-		CarryObjList:  pOs,
-		FieldObjList:  fOs,
-		DangerObjList: dOs,
 	}
 }
 

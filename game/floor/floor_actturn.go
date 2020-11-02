@@ -724,9 +724,13 @@ func (f *Floor) sendViewportNoti(
 			f.log.Warn("ao not in currentfloor %v %v, skip tile, obj noti", f, ao)
 			continue
 		}
+
+		aox, aoy = f.terrain.WrapXY(aox, aoy)
+		vpixyolists := vpixyolistcache.GetAtByCache(aox, aoy)
+		sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
+		sight := ao.GetTurnData().Sight
+
 		if ao.GetAndClearNeedTANoti() {
-			sight := ao.GetTurnData().Sight
-			sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat,
 				float32(sight))
 			if aoconn := ao.GetClientConn(); aoconn != nil {
@@ -739,10 +743,19 @@ func (f *Floor) sendViewportNoti(
 			}
 		}
 		if aoconn := ao.GetClientConn(); aoconn != nil {
-			notiOL := f.ToPacket_NotiVPObjList(
-				turnTime,
-				vpixyolistcache,
-				aox, aoy, ao.GetTurnData().Sight)
+			// make and send NotiVPObjList
+			aOs := f.makeViewportActiveObjs2(vpixyolists[0], sightMat, float32(sight))
+			pOs := f.makeViewportCarryObjs2(vpixyolists[1], sightMat, float32(sight))
+			fOs := f.makeViewportFieldObjs2(vpixyolists[2], sightMat, float32(sight))
+			dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, float32(sight))
+			notiOL := &c2t_obj.NotiVPObjList_data{
+				Time:          turnTime,
+				FloorName:     f.GetName(),
+				ActiveObjList: aOs,
+				CarryObjList:  pOs,
+				FieldObjList:  fOs,
+				DangerObjList: dOs,
+			}
 
 			// update ai floor4client info
 			f4c := ao.GetFloor4Client(f.GetName())
