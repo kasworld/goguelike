@@ -743,6 +743,13 @@ func (f *Floor) sendViewportNoti(
 				turnTime,
 				vpixyolistcache,
 				aox, aoy, ao.GetTurnData().Sight)
+
+			// update ai floor4client info
+			f4c := ao.GetFloor4Client(f.GetName())
+			for _, fo := range notiOL.FieldObjList {
+				f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)
+			}
+
 			aoContidion := ao.GetTurnData().Condition
 			if aoContidion.TestByCondition(condition.Blind) ||
 				aoContidion.TestByCondition(condition.Invisible) {
