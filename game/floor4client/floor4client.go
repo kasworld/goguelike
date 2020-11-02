@@ -18,7 +18,7 @@ import (
 
 type Floor4Client struct {
 	Visit    *visitarea.VisitArea
-	FOPosMan *uuidposman.UUIDPosMan
+	FOPosMan *uuidposman.UUIDPosMan // must *c2t_obj.FieldObjClient
 }
 
 func New(fi visitarea.FloorI) *Floor4Client {

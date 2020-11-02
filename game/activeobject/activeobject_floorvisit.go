@@ -79,7 +79,7 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 	f4c.Visit.MakeComplete()
 	f.GetFieldObjPosMan().IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
 		fo := o.(*fieldobject.FieldObject)
-		f4c.FOPosMan.AddOrUpdateToXY(fo, foX, foY)
+		f4c.FOPosMan.AddOrUpdateToXY(fo.ToPacket_FieldObjClient(foX, foY), foX, foY)
 		return false
 	})
 
@@ -102,8 +102,8 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 		// send fieldobj list
 		fol := make([]*c2t_obj.FieldObjClient, 0)
 		f4c.FOPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
-			fo := o.(*fieldobject.FieldObject)
-			fol = append(fol, fo.ToPacket_FieldObjClient(foX, foY))
+			fo := o.(*c2t_obj.FieldObjClient)
+			fol = append(fol, fo)
 			return false
 		})
 		if err := ao.clientConn.SendNotiPacket(c2t_idnoti.FieldObjList,
