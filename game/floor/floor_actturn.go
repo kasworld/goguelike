@@ -745,20 +745,16 @@ func (f *Floor) sendViewportNoti(
 		}
 
 		if ao.GetAndClearNeedTANoti() {
-			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat,
-				sight)
+			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat, sight)
 			if aoconn := ao.GetClientConn(); aoconn != nil {
 				// make and send NotiTileArea
-				cstiles := f.makeViewportTiles2(aox, aoy, sightMat, sight)
-				notiTA := &c2t_obj.NotiVPTiles_data{
-					FloorName: f.GetName(),
-					VPX:       aox,
-					VPY:       aoy,
-					VPTiles:   cstiles,
-				}
-
 				if err := aoconn.SendNotiPacket(c2t_idnoti.VPTiles,
-					notiTA,
+					&c2t_obj.NotiVPTiles_data{
+						FloorName: f.GetName(),
+						VPX:       aox,
+						VPY:       aoy,
+						VPTiles:   f.makeViewportTiles2(aox, aoy, sightMat, sight),
+					},
 				); err != nil {
 					f.log.Error("%v %v %v", f, ao, err)
 				}
@@ -766,24 +762,22 @@ func (f *Floor) sendViewportNoti(
 		}
 		if aoconn := ao.GetClientConn(); aoconn != nil {
 			// make and send NotiVPObjList
-			notiOL := &c2t_obj.NotiVPObjList_data{
-				Time:          turnTime,
-				FloorName:     f.GetName(),
-				ActiveObjList: aOs,
-				CarryObjList:  pOs,
-				FieldObjList:  fOs,
-				DangerObjList: dOs,
-			}
 			aoContidion := ao.GetTurnData().Condition
 			if aoContidion.TestByCondition(condition.Blind) ||
 				aoContidion.TestByCondition(condition.Invisible) {
 				// if blind, invisible add self
-				notiOL.ActiveObjList = append(notiOL.ActiveObjList,
-					ao.ToPacket_ActiveObjClient(aox, aoy))
+				aOs = append(aOs, ao.ToPacket_ActiveObjClient(aox, aoy))
 			}
-			notiOL.ActiveObj = ao.ToPacket_PlayerActiveObjInfo()
 			if err := aoconn.SendNotiPacket(c2t_idnoti.VPObjList,
-				notiOL,
+				&c2t_obj.NotiVPObjList_data{
+					Time:          turnTime,
+					ActiveObj:     ao.ToPacket_PlayerActiveObjInfo(),
+					FloorName:     f.GetName(),
+					ActiveObjList: aOs,
+					CarryObjList:  pOs,
+					FieldObjList:  fOs,
+					DangerObjList: dOs,
+				},
 			); err != nil {
 				f.log.Error("%v %v %v", f, ao, err)
 			}
