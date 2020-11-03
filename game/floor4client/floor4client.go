@@ -38,6 +38,20 @@ func (f4c *Floor4Client) Forget() {
 	f4c.FOPosMan.Cleanup()
 }
 
+func (f4c *Floor4Client) UpdateObjLists(
+	ActiveObjList []*c2t_obj.ActiveObjClient,
+	CarryObjList []*c2t_obj.CarryObjClientOnFloor,
+	FieldObjList []*c2t_obj.FieldObjClient,
+	DangerObjList []*c2t_obj.DangerObjClient,
+) {
+	f4c.ActiveObjList = ActiveObjList
+	f4c.CarryObjList = CarryObjList
+	f4c.DangerObjList = DangerObjList
+	for _, fo := range FieldObjList {
+		f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)
+	}
+}
+
 // for web
 func (f4c *Floor4Client) GetName() string {
 	return f4c.Visit.GetName()

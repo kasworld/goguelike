@@ -740,12 +740,7 @@ func (f *Floor) sendViewportNoti(
 		dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, sight)
 		// update ai floor4client info
 		f4c := ao.GetFloor4Client(f.GetName())
-		f4c.ActiveObjList = aOs
-		f4c.CarryObjList = pOs
-		f4c.DangerObjList = dOs
-		for _, fo := range fOs {
-			f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)
-		}
+		f4c.UpdateObjLists(aOs, pOs, fOs, dOs)
 
 		if ao.GetAndClearNeedTANoti() {
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat, sight)
