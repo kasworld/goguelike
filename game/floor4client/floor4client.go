@@ -14,11 +14,15 @@ package floor4client
 import (
 	"github.com/kasworld/goguelike/game/visitarea"
 	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 type Floor4Client struct {
-	Visit    *visitarea.VisitArea
-	FOPosMan *uuidposman.UUIDPosMan // must *c2t_obj.FieldObjClient
+	Visit         *visitarea.VisitArea
+	FOPosMan      *uuidposman.UUIDPosMan // must *c2t_obj.FieldObjClient
+	ActiveObjList []*c2t_obj.ActiveObjClient
+	CarryObjList  []*c2t_obj.CarryObjClientOnFloor
+	DangerObjList []*c2t_obj.DangerObjClient
 }
 
 func New(fi visitarea.FloorI) *Floor4Client {
