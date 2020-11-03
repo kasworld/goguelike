@@ -17,12 +17,13 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
+// Floor4Client has floor info for server ai, client
 type Floor4Client struct {
 	Visit         *visitarea.VisitArea
-	FOPosMan      *uuidposman.UUIDPosMan // must *c2t_obj.FieldObjClient
-	ActiveObjList []*c2t_obj.ActiveObjClient
-	CarryObjList  []*c2t_obj.CarryObjClientOnFloor
-	DangerObjList []*c2t_obj.DangerObjClient
+	FOPosMan      *uuidposman.UUIDPosMan           // must *c2t_obj.FieldObjClient
+	ActiveObjList []*c2t_obj.ActiveObjClient       // changed every turn
+	CarryObjList  []*c2t_obj.CarryObjClientOnFloor // changed every turn
+	DangerObjList []*c2t_obj.DangerObjClient       // changed every turn
 }
 
 func New(fi visitarea.FloorI) *Floor4Client {
