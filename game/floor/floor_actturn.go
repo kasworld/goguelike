@@ -104,6 +104,11 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		if p.ActType.AutoTrigger() && p.ActType.TriggerRate() > f.rnd.Float64() {
 			triggered = true
 		}
+
+		// add found hidden fo to client foman
+		f4c := ao.GetFloor4Client(f.GetName())
+		f4c.FOPosMan.AddOrUpdateToXY(p.ToPacket_FieldObjClient(aox, aoy), aox, aoy)
+
 		if aoconn := ao.GetClientConn(); aoconn != nil {
 			if p.DisplayType == fieldobjdisplaytype.None {
 				if err := aoconn.SendNotiPacket(c2t_idnoti.FoundFieldObj,
@@ -729,6 +734,15 @@ func (f *Floor) sendViewportNoti(
 		vpixyolists := vpixyolistcache.GetAtByCache(aox, aoy)
 		sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
 		sight := ao.GetTurnData().Sight
+		aOs := f.makeViewportActiveObjs2(vpixyolists[0], sightMat, float32(sight))
+		pOs := f.makeViewportCarryObjs2(vpixyolists[1], sightMat, float32(sight))
+		fOs := f.makeViewportFieldObjs2(vpixyolists[2], sightMat, float32(sight))
+		dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, float32(sight))
+		// update ai floor4client info
+		f4c := ao.GetFloor4Client(f.GetName())
+		for _, fo := range fOs {
+			f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)
+		}
 
 		if ao.GetAndClearNeedTANoti() {
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat,
@@ -752,10 +766,6 @@ func (f *Floor) sendViewportNoti(
 		}
 		if aoconn := ao.GetClientConn(); aoconn != nil {
 			// make and send NotiVPObjList
-			aOs := f.makeViewportActiveObjs2(vpixyolists[0], sightMat, float32(sight))
-			pOs := f.makeViewportCarryObjs2(vpixyolists[1], sightMat, float32(sight))
-			fOs := f.makeViewportFieldObjs2(vpixyolists[2], sightMat, float32(sight))
-			dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, float32(sight))
 			notiOL := &c2t_obj.NotiVPObjList_data{
 				Time:          turnTime,
 				FloorName:     f.GetName(),
@@ -764,13 +774,6 @@ func (f *Floor) sendViewportNoti(
 				FieldObjList:  fOs,
 				DangerObjList: dOs,
 			}
-
-			// update ai floor4client info
-			f4c := ao.GetFloor4Client(f.GetName())
-			for _, fo := range notiOL.FieldObjList {
-				f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)
-			}
-
 			aoContidion := ao.GetTurnData().Condition
 			if aoContidion.TestByCondition(condition.Blind) ||
 				aoContidion.TestByCondition(condition.Invisible) {
