@@ -66,6 +66,7 @@ func (tw *Tower) initServiceWeb(ctx context.Context) {
 		c2t_idcmd.Rebirth:           tw.bytesAPIFn_ReqRebirth,           // Rebirth
 		c2t_idcmd.MoveFloor:         tw.bytesAPIFn_ReqMoveFloor,         // MoveFloor tower cmd
 		c2t_idcmd.AIPlay:            tw.bytesAPIFn_ReqAIPlay,            // AIPlay
+		c2t_idcmd.VisitFloorList:    tw.bytesAPIFn_ReqVisitFloorList,    // VisitFloorList floor info of visited
 		c2t_idcmd.Meditate:          tw.bytesAPIFn_ReqMeditate,          // Meditate turn act
 		c2t_idcmd.KillSelf:          tw.bytesAPIFn_ReqKillSelf,          // KillSelf turn act
 		c2t_idcmd.Move:              tw.bytesAPIFn_ReqMove,              // Move turn act

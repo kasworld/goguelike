@@ -122,6 +122,7 @@ type ActiveObjectI interface {
 	ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjClient
 	ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjInfo
 	To_ActiveObjScore() *aoscore.ActiveObjScore
+	MakeVisitFloorList() []*c2t_obj.VisitFloorInfo
 
 	GetAchieveStat() *achievetype_vector.AchieveTypeVector
 	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector

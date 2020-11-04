@@ -85,3 +85,13 @@ type ReqAIPlay_data struct {
 type RspAIPlay_data struct {
 	Dummy uint8
 }
+
+// VisitFloorList floor info of visited
+type ReqVisitFloorList_data struct {
+	Dummy uint8 // change as you need
+}
+
+// VisitFloorList floor info of visited
+type RspVisitFloorList_data struct {
+	FloorList []*VisitFloorInfo
+}

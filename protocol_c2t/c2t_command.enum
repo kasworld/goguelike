@@ -7,6 +7,7 @@ AchieveInfo
 Rebirth
 MoveFloor tower cmd 
 AIPlay
+VisitFloorList floor info of visited 
 
 # ao action, need turn AP
 Meditate rest and recover HP,SP

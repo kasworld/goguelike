@@ -29,9 +29,10 @@ var attrib = [CommandID_Count]struct {
 	Chat:        {false, 0},
 	AchieveInfo: {false, 0},
 
-	Rebirth:   {false, 0},
-	MoveFloor: {false, 1}, // need check need turn
-	AIPlay:    {false, 0},
+	Rebirth:        {false, 0},
+	MoveFloor:      {false, 1}, // need check need turn
+	AIPlay:         {false, 0},
+	VisitFloorList: {false, 0},
 
 	Meditate:    {false, 1},
 	KillSelf:    {false, 1},

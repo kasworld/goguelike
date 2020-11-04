@@ -86,6 +86,11 @@ func (fi FloorInfo) VisitableCount() int {
 	return fi.Tiles
 }
 
+type VisitFloorInfo struct {
+	Name       string
+	VisitCount int
+}
+
 type CarryObjClientOnFloor struct {
 	UUID               string
 	X                  int

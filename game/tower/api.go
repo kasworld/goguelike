@@ -293,3 +293,28 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 	}
 	return rhd, &c2t_obj.RspAIPlay_data{}, nil
 }
+
+func (tw *Tower) bytesAPIFn_ReqVisitFloorList(
+	me interface{}, hd c2t_packet.Header, rbody []byte) (
+	c2t_packet.Header, interface{}, error) {
+
+	// r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+	// if err != nil {
+	// 	return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+	// }
+	// robj, ok := r.(*c2t_obj.ReqVisitFloorList_data)
+	// if !ok {
+	// 	return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+	// }
+	ao, err := tw.api_me2ao(me)
+	if err != nil {
+		return hd, nil, err
+	}
+	rhd := c2t_packet.Header{
+		ErrorCode: c2t_error.None,
+	}
+
+	return rhd, &c2t_obj.RspVisitFloorList_data{
+		FloorList: ao.MakeVisitFloorList(),
+	}, nil
+}
