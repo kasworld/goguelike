@@ -122,7 +122,6 @@ type ActiveObjectI interface {
 	ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjClient
 	ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjInfo
 	To_ActiveObjScore() *aoscore.ActiveObjScore
-	MakeVisitFloorList() []*c2t_obj.VisitFloorInfo
 
 	GetAchieveStat() *achievetype_vector.AchieveTypeVector
 	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector
@@ -134,7 +133,7 @@ type ActiveObjectI interface {
 	UpdateVisitAreaBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)
 
-	// GetVisitFloor(floorname string) *visitarea.VisitArea
+	GetFloor4ClientList() []*floor4client.Floor4Client
 	GetFloor4Client(floorname string) *floor4client.Floor4Client
 	ForgetFloorByName(floorname string) error
 	MakeFloorComplete(f FloorI) error

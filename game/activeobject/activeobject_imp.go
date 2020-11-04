@@ -52,6 +52,10 @@ func (ao *ActiveObject) GetFloor4Client(floorname string) *floor4client.Floor4Cl
 	return r
 }
 
+func (ao *ActiveObject) GetFloor4ClientList() []*floor4client.Floor4Client {
+	return ao.floor4ClientMan.GetList()
+}
+
 func (ao *ActiveObject) GetActiveObjType() aotype.ActiveObjType {
 	return ao.aoType
 }

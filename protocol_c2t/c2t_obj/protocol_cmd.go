@@ -93,5 +93,5 @@ type ReqVisitFloorList_data struct {
 
 // VisitFloorList floor info of visited
 type RspVisitFloorList_data struct {
-	FloorList []*VisitFloorInfo
+	FloorList []*FloorInfo
 }

@@ -57,10 +57,3 @@ func (f4c *Floor4Client) UpdateObjLists(
 func (f4c *Floor4Client) GetName() string {
 	return f4c.Visit.GetName()
 }
-
-func (f4c *Floor4Client) ToPacket_VisitFloor() *c2t_obj.VisitFloorInfo {
-	return &c2t_obj.VisitFloorInfo{
-		Name:       f4c.Visit.GetName(),
-		VisitCount: f4c.Visit.GetDiscoveredTileCount(),
-	}
-}

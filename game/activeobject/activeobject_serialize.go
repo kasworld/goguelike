@@ -116,11 +116,3 @@ func (ao *ActiveObject) To_ActiveObjScore() *aoscore.ActiveObjScore {
 	}
 	return aos
 }
-
-func (ao *ActiveObject) MakeVisitFloorList() []*c2t_obj.VisitFloorInfo {
-	rtn := make([]*c2t_obj.VisitFloorInfo, 0)
-	for _, f4c := range ao.floor4ClientMan.GetList() {
-		rtn = append(rtn, f4c.ToPacket_VisitFloor())
-	}
-	return rtn
-}

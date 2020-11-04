@@ -313,8 +313,14 @@ func (tw *Tower) bytesAPIFn_ReqVisitFloorList(
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
-
+	floorList := make([]*c2t_obj.FloorInfo, 0)
+	for _, f4c := range ao.GetFloor4ClientList() {
+		f := tw.floorMan.GetFloorByName(f4c.GetName())
+		fi := f.ToPacket_FloorInfo()
+		fi.VisitCount = f4c.Visit.GetDiscoveredTileCount()
+		floorList = append(floorList, fi)
+	}
 	return rhd, &c2t_obj.RspVisitFloorList_data{
-		FloorList: ao.MakeVisitFloorList(),
+		FloorList: floorList,
 	}, nil
 }

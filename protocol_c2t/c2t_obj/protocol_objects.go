@@ -71,6 +71,7 @@ type FloorInfo struct {
 	Tiles      int
 	Bias       bias.Bias
 	TurnPerSec float64
+	VisitCount int
 }
 
 func (fi FloorInfo) GetName() string {
@@ -84,11 +85,6 @@ func (fi FloorInfo) GetHeight() int {
 }
 func (fi FloorInfo) VisitableCount() int {
 	return fi.Tiles
-}
-
-type VisitFloorInfo struct {
-	Name       string
-	VisitCount int
 }
 
 type CarryObjClientOnFloor struct {
