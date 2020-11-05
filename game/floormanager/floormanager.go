@@ -79,7 +79,11 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 
 	for i, f := range tmpFloorList {
 		if !f.Initialized() {
-			fm.log.Warn("skip not initialized floor %v", fm.terrainScript[i])
+			if len(fm.terrainScript[i]) > 0 {
+				fm.log.Warn("skip not initialized floor %v", fm.terrainScript[i][0])
+			} else {
+				fm.log.Warn("skip not initialized floor No.%v", i)
+			}
 			continue
 		}
 		if fm.startFloor == nil {
