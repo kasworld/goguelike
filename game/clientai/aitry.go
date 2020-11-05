@@ -46,7 +46,7 @@ func (cai *ClientAI) actByControlMode() {
 }
 
 func tryAutoBattle(cai *ClientAI) bool {
-	cf := cai.currentFloor()
+	cf := cai.CurrentFloor
 	if cai.OLNotiData == nil {
 		return false
 	}
@@ -86,7 +86,7 @@ func tryAutoBattle(cai *ClientAI) bool {
 }
 
 func tryAutoPickup(cai *ClientAI) bool {
-	cf := cai.currentFloor()
+	cf := cai.CurrentFloor
 	if cai.OLNotiData == nil {
 		return false
 	}
@@ -218,7 +218,7 @@ func tryAutoRecyclePotionScroll(cai *ClientAI) bool {
 /////////
 
 func (cai *ClientAI) isBetterCarryObj(EquipType equipslottype.EquipSlotType, PoBias bias.Bias) bool {
-	aoEnvBias := cai.TowerBias().Add(cai.currentFloor().GetBias()).Add(cai.OLNotiData.ActiveObj.Bias)
+	aoEnvBias := cai.TowerBias().Add(cai.CurrentFloor.GetBias()).Add(cai.OLNotiData.ActiveObj.Bias)
 	newBiasAbs := aoEnvBias.Add(PoBias).AbsSum()
 	for _, v := range cai.OLNotiData.ActiveObj.EquippedPo {
 		if v.EquipType == EquipType {
@@ -229,7 +229,7 @@ func (cai *ClientAI) isBetterCarryObj(EquipType equipslottype.EquipSlotType, PoB
 }
 
 func (cai *ClientAI) needUnEquipCarryObj(PoBias bias.Bias) bool {
-	aoEnvBias := cai.TowerBias().Add(cai.currentFloor().GetBias()).Add(cai.OLNotiData.ActiveObj.Bias)
+	aoEnvBias := cai.TowerBias().Add(cai.CurrentFloor.GetBias()).Add(cai.OLNotiData.ActiveObj.Bias)
 
 	currentBias := aoEnvBias.Add(PoBias)
 	newBias := aoEnvBias
@@ -237,7 +237,7 @@ func (cai *ClientAI) needUnEquipCarryObj(PoBias bias.Bias) bool {
 }
 
 func (cai *ClientAI) needUseScroll(po *c2t_obj.ScrollClient) bool {
-	cf := cai.currentFloor()
+	cf := cai.CurrentFloor
 	switch po.ScrollType {
 	case scrolltype.FloorMap:
 		if cf.Visited.CalcCompleteRate() < 1.0 {

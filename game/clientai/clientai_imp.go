@@ -14,7 +14,6 @@ package clientai
 import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
 
@@ -28,14 +27,6 @@ func (cai *ClientAI) String() string {
 
 func (cai *ClientAI) GetArg() interface{} {
 	return cai.config
-}
-
-func (cai *ClientAI) currentFloor() *clientfloor.ClientFloor {
-	if fi := cai.FloorInfo; fi == nil {
-		return nil
-	} else {
-		return cai.Name2ClientFloor[fi.Name]
-	}
 }
 
 func (cai *ClientAI) TowerBias() bias.Bias {

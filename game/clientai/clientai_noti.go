@@ -98,14 +98,11 @@ func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cai.FloorInfo = pkbody.FI
-	cf, exist := cai.Name2ClientFloor[pkbody.FI.Name]
-	if !exist {
-		// new floor
-		cf = clientfloor.New(pkbody.FI)
-		cai.Name2ClientFloor[pkbody.FI.Name] = cf
+	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
+		cai.CurrentFloor = clientfloor.New(pkbody.FI)
 	}
-	cf.EnterFloor()
+
+	cai.CurrentFloor.EnterFloor()
 
 	return nil
 }
@@ -209,29 +206,24 @@ func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byt
 
 	cai.IsOverLoad = newOLNotiData.ActiveObj.CalcWeight() >= leveldata.WeightLimit(newLevel)
 
-	if cai.FloorInfo == nil {
-		cai.log.Error("cai.FloorInfo not set")
+	if cai.CurrentFloor.FloorInfo == nil {
+		cai.log.Error("cai.CurrentFloor.FloorInfo not set")
 		return nil
 	}
-	if cai.FloorInfo.Name != newOLNotiData.FloorName {
+	if cai.CurrentFloor.FloorInfo.Name != newOLNotiData.FloorName {
 		cai.log.Error("not current floor objlist data %v %v",
-			cai.currentFloor().FloorInfo.Name, newOLNotiData.FloorName,
+			cai.CurrentFloor.FloorInfo.Name, newOLNotiData.FloorName,
 		)
 		return nil
 	}
 
-	cf, exist := cai.Name2ClientFloor[newOLNotiData.FloorName]
-	if !exist {
-		cai.log.Warn("floor not added %v", newOLNotiData.FloorName)
-		return nil
-	}
 	for _, v := range newOLNotiData.FieldObjList {
-		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+		cai.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
 	}
 
 	playerX, playerY := cai.GetPlayerXY()
-	if cai.playerActiveObjClient != nil && cf.IsValidPos(playerX, playerY) {
-		cai.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
+	if cai.playerActiveObjClient != nil && cai.CurrentFloor.IsValidPos(playerX, playerY) {
+		cai.onFieldObj = cai.CurrentFloor.GetFieldObjAt(playerX, playerY)
 		cai.actByControlMode()
 	}
 	return nil
@@ -251,28 +243,23 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 
-	if cai.FloorInfo == nil {
-		cai.log.Warn("OrangeRed cai.FloorInfo not set")
+	if cai.CurrentFloor.FloorInfo == nil {
+		cai.log.Warn("OrangeRed cai.CurrentFloor.FloorInfo not set")
 		return nil
 	}
-	if cai.FloorInfo.Name != pkbody.FloorName {
+	if cai.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
 		cai.log.Warn("not current floor vptile data %v %v",
-			cai.currentFloor().FloorInfo.Name, pkbody.FloorName,
+			cai.CurrentFloor.FloorInfo.Name, pkbody.FloorName,
 		)
 		return nil
 	}
-	cf, exist := cai.Name2ClientFloor[pkbody.FloorName]
-	if !exist {
-		cai.log.Warn("floor not added %v", pkbody.FloorName)
-		return nil
-	}
 
-	oldComplete := cf.Visited.IsComplete()
-	if err := cf.UpdateFromViewportTile(pkbody, cai.ViewportXYLenList); err != nil {
+	oldComplete := cai.CurrentFloor.Visited.IsComplete()
+	if err := cai.CurrentFloor.UpdateFromViewportTile(pkbody, cai.ViewportXYLenList); err != nil {
 		cai.log.Warn("%v", err)
 		return nil
 	}
-	if !oldComplete && cf.Visited.IsComplete() {
+	if !oldComplete && cai.CurrentFloor.Visited.IsComplete() {
 		// just completed
 	}
 
@@ -292,16 +279,14 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cf, exist := cai.Name2ClientFloor[pkbody.FI.Name]
-	if !exist {
+	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
 		// new floor
-		cf = clientfloor.New(pkbody.FI)
-		cai.Name2ClientFloor[pkbody.FI.Name] = cf
+		cai.CurrentFloor = clientfloor.New(pkbody.FI)
 	}
 
-	oldComplete := cf.Visited.IsComplete()
-	cf.ReplaceFloorTiles(pkbody)
-	if !oldComplete && cf.Visited.IsComplete() {
+	oldComplete := cai.CurrentFloor.Visited.IsComplete()
+	cai.CurrentFloor.ReplaceFloorTiles(pkbody)
+	if !oldComplete && cai.CurrentFloor.Visited.IsComplete() {
 		// floor complete
 	}
 	return nil
@@ -313,7 +298,7 @@ func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
-	recved, ok := robj.(*c2t_obj.NotiFieldObjList_data)
+	pkbody, ok := robj.(*c2t_obj.NotiFieldObjList_data)
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
@@ -321,13 +306,11 @@ func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cf, exist := cai.Name2ClientFloor[recved.FI.Name]
-	if !exist {
+	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
 		// new floor
-		cf = clientfloor.New(recved.FI)
-		cai.Name2ClientFloor[recved.FI.Name] = cf
+		cai.CurrentFloor = clientfloor.New(pkbody.FI)
 	}
-	cf.UpdateFieldObjList(recved.FOList)
+	cai.CurrentFloor.UpdateFieldObjList(pkbody.FOList)
 	return nil
 }
 
@@ -344,13 +327,12 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	fromFloor, exist := cai.Name2ClientFloor[pkbody.FloorName]
-	if !exist {
+	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
 		cai.log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
 		return fmt.Errorf("FoundFieldObj unknonw floor %v", pkbody)
 	}
-	if fromFloor.FieldObjPosMan.Get1stObjAt(pkbody.FieldObj.X, pkbody.FieldObj.Y) == nil {
-		fromFloor.FieldObjPosMan.AddOrUpdateToXY(pkbody.FieldObj, pkbody.FieldObj.X, pkbody.FieldObj.Y)
+	if cai.CurrentFloor.FieldObjPosMan.Get1stObjAt(pkbody.FieldObj.X, pkbody.FieldObj.Y) == nil {
+		cai.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(pkbody.FieldObj, pkbody.FieldObj.X, pkbody.FieldObj.Y)
 	}
 	return nil
 }
@@ -369,9 +351,9 @@ func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []b
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 
-	forgetFloor, exist := cai.Name2ClientFloor[pkbody.FloorName]
-	if exist {
-		forgetFloor.Forget()
+	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
+	} else {
+		cai.CurrentFloor.Forget()
 	}
 	return nil
 }
