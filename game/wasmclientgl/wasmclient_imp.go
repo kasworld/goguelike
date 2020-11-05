@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -35,7 +34,7 @@ func (app *WasmClient) GetEnvBias() bias.Bias {
 	}
 	var envBias bias.Bias
 	if fd := app.olNotiData; fd != nil {
-		envBias = app.TowerBias().Add(app.FloorInfo.Bias)
+		envBias = app.TowerBias().Add(app.CurrentFloor.FloorInfo.Bias)
 	}
 	return envBias
 }
@@ -51,14 +50,6 @@ func (app *WasmClient) TowerBias() bias.Bias {
 	dur := app.ServerTime().Sub(gInitData.TowerInfo.StartTime)
 	// dur := app.olNotiData.Time.Sub(gInitData.TowerInfo.StartTime)
 	return bias.MakeBiasByProgress(ft, dur.Seconds(), gameconst.TowerBaseBiasLen)
-}
-
-func (app *WasmClient) currentFloor() *clientfloor.ClientFloor {
-	if fi := app.FloorInfo; fi == nil {
-		return nil
-	} else {
-		return app.Name2ClientFloor[fi.Name]
-	}
 }
 
 func (app *WasmClient) ActionResult2String(ar *aoactreqrsp.ActReqRsp) string {

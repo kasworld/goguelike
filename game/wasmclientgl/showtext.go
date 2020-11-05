@@ -27,7 +27,6 @@ import (
 	"github.com/kasworld/goguelike/enum/scrolltype"
 	"github.com/kasworld/goguelike/enum/way9type"
 	"github.com/kasworld/goguelike/game/bias"
-	"github.com/kasworld/goguelike/game/clientfloor"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -40,7 +39,7 @@ func (app *WasmClient) makeBaseInfoHTML() string {
 		return "Wait to enter tower"
 	}
 	var buf bytes.Buffer
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 
 	towerBias := app.TowerBias()
 	fmt.Fprintf(&buf,
@@ -51,13 +50,13 @@ func (app *WasmClient) makeBaseInfoHTML() string {
 		gInitData.TowerInfo.Name, towerBias.NearFaction(),
 		towerBias.IntString(),
 	)
-	floorBias := app.FloorInfo.Bias
+	floorBias := app.CurrentFloor.FloorInfo.Bias
 	fmt.Fprintf(&buf,
 		`Floor <span class="tooltip" style="color:%s">%s %v
 			<span class="tooltiptext-bottom">%v</span>
 		</span><br/>`,
 		floorBias.ToHTMLColorString(),
-		app.FloorInfo.Name, floorBias.NearFaction(),
+		app.CurrentFloor.FloorInfo.Name, floorBias.NearFaction(),
 		floorBias.IntString(),
 	)
 
@@ -355,7 +354,7 @@ func (app *WasmClient) makeInvenInfoHTML() string {
 
 func (app *WasmClient) makeFieldObjListHTML() string {
 	var buf bytes.Buffer
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	objList := cf.FieldObjPosMan.GetAllList()
 	foList := make([]*c2t_obj.FieldObjClient, len(objList))
 	for i, v := range objList {
@@ -374,34 +373,34 @@ func (app *WasmClient) makeFieldObjListHTML() string {
 
 func (app *WasmClient) makeFloorListHTML() string {
 	var buf bytes.Buffer
-	if len(app.Name2ClientFloor) == gInitData.TowerInfo.TotalFloorNum {
+	if len(app.FloorInfoList) == gInitData.TowerInfo.TotalFloorNum {
 		fmt.Fprintf(&buf, "Found All Floor %v<br/>",
-			len(app.Name2ClientFloor))
+			len(app.FloorInfoList))
 	} else {
 		fmt.Fprintf(&buf, "Floor Found %v<br/>",
-			len(app.Name2ClientFloor))
+			len(app.FloorInfoList))
 	}
-	cfList := make(clientfloor.ClientFloorList, 0)
-	for _, v := range app.Name2ClientFloor {
-		cfList = append(cfList, v)
-	}
-	cfList.Sort()
+	// cfList := make([]*c2t_obj.FloorInfo, 0)
+	// for _, v := range app.FloorInfoList {
+	// 	cfList = append(cfList, v)
+	// }
+	// cfList.Sort()
 
 	win := js.Global().Get("window")
 	winH := win.Get("innerHeight").Float()
 	ftSize := winH / 100
-	for i, cf := range cfList {
-		floorStr := wrapspan.THCSTextf(cf.FloorInfo.Bias, "%v", cf.FloorInfo.Bias.NearFaction().String())
-		fmt.Fprintf(&buf, "%v %v ", floorStr, cf.Visited)
-		if cf.Visited.CalcCompleteRate() >= 1.0 {
+	for i, cf := range app.FloorInfoList {
+		floorStr := wrapspan.THCSTextf(cf.Bias, "%v", cf.Bias.NearFaction().String())
+		fmt.Fprintf(&buf, "%v %v ", floorStr, cf.VisitCount)
+		if cf.VisitCount >= cf.Tiles {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')">Teleport</button>`,
-				ftSize, cf.FloorInfo.Name,
+				ftSize, cf.Name,
 			)
 		} else {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')" disabled>Teleport</button>`,
-				ftSize, cf.FloorInfo.Name,
+				ftSize, cf.Name,
 			)
 		}
 		buf.WriteString("<br/>")
@@ -427,7 +426,7 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 	fmt.Fprintf(&buf, "%v<br/>", app.ServerJitter)
 	fmt.Fprintf(&buf, "%v<br/>", app.DispInterDur.GetInterval())
 	fmt.Fprintf(&buf, "floor %.1f actturn/sec display %.1fFPS<br/>",
-		app.FloorInfo.TurnPerSec,
+		app.CurrentFloor.FloorInfo.TurnPerSec,
 		1.0/app.DispInterDur.GetInterval().GetLastDuration().Seconds())
 	fmt.Fprintf(&buf, "%v<br/>", app.DispInterDur.GetDuration())
 	fmt.Fprintf(&buf, "Display %d<br/>", app.DispInterDur.GetCount())
@@ -457,7 +456,7 @@ func (app *WasmClient) DisplayTextInfo() {
 	} else {
 		commandButtons.GetByIDBase("EnterPortal").Disable()
 	}
-	if cf := app.currentFloor(); cf.Visited.CalcCompleteRate() >= 1.0 {
+	if cf := app.CurrentFloor; cf.Visited.CalcCompleteRate() >= 1.0 {
 		commandButtons.GetByIDBase("Teleport").Enable()
 	} else {
 		commandButtons.GetByIDBase("Teleport").Disable()

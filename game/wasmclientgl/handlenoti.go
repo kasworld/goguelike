@@ -111,21 +111,18 @@ func objRecvNotiFn_EnterFloor(recvobj interface{}, header c2t_packet.Header, obj
 	}
 
 	soundmap.Play("enterfloorsound")
-	app.FloorInfo = robj.FI
-	cf, exist := app.Name2ClientFloor[robj.FI.Name]
-	if !exist {
-		// new floor
-		cf = clientfloor.New(robj.FI)
-		app.Name2ClientFloor[robj.FI.Name] = cf
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != robj.FI.Name {
+		app.CurrentFloor = clientfloor.New(robj.FI)
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
-			"Found floor %v", cf.FloorInfo.Name))
+			"Found floor %v", app.CurrentFloor.FloorInfo.Name))
 		app.NotiMessage.AppendTf(tcsInfo,
-			"Found floor %v", cf.FloorInfo.Name)
+			"Found floor %v", app.CurrentFloor.FloorInfo.Name)
 	}
-	app.systemMessage.Appendf("Enter floor %v", cf.FloorInfo.Name)
+
+	app.systemMessage.Appendf("Enter floor %v", app.CurrentFloor.FloorInfo.Name)
 	app.NotiMessage.AppendTf(tcsInfo,
-		"Enter floor %v", cf.FloorInfo.Name)
-	cf.EnterFloor()
+		"Enter floor %v", app.CurrentFloor.FloorInfo.Name)
+	app.CurrentFloor.EnterFloor()
 	return nil
 }
 func objRecvNotiFn_LeaveFloor(recvobj interface{}, header c2t_packet.Header, obj interface{}) error {
@@ -396,39 +393,33 @@ func objRecvNotiFn_VPObjList(recvobj interface{}, header c2t_packet.Header, obj 
 		app.remainTurn2Rebirth--
 	}
 
-	if app.FloorInfo == nil {
-		jslog.Error("app.FloorInfo not set")
+	if app.CurrentFloor == nil {
+		jslog.Error("app.CurrentFloor not set")
 		return nil
 	}
-	if app.FloorInfo.Name != newOLNotiData.FloorName {
+	if app.CurrentFloor.FloorInfo.Name != newOLNotiData.FloorName {
 		jslog.Errorf("not current floor objlist data %v %v",
-			app.currentFloor().FloorInfo.Name, newOLNotiData.FloorName,
+			app.CurrentFloor.FloorInfo.Name, newOLNotiData.FloorName,
 		)
 		return nil
 	}
 
-	cf, exist := app.Name2ClientFloor[newOLNotiData.FloorName]
-	if !exist {
-		jslog.Warnf("floor not added %v", newOLNotiData.FloorName)
-		return nil
-	}
 	for _, v := range newOLNotiData.FieldObjList {
-		cf.FieldObjPosMan.AddToXY(v, v.X, v.Y)
+		app.CurrentFloor.FieldObjPosMan.AddToXY(v, v.X, v.Y)
 	}
 
 	playerX, playerY := app.GetPlayerXY()
-	// cf.updateFieldObjInView(playerX, playerY)
-	app.vp.processNotiVPObjList(cf, newOLNotiData, playerX, playerY)
-	if cf.IsValidPos(playerX, playerY) {
-		app.onFieldObj = cf.GetFieldObjAt(playerX, playerY)
+	app.vp.processNotiVPObjList(app.CurrentFloor, newOLNotiData, playerX, playerY)
+	if app.CurrentFloor.IsValidPos(playerX, playerY) {
+		app.onFieldObj = app.CurrentFloor.GetFieldObjAt(playerX, playerY)
 	}
 
 	app.DisplayTextInfo()
 	atomic.StoreInt32(&app.movePacketPerTurn, 0)
 	atomic.StoreInt32(&app.actPacketPerTurn, 0)
 
-	if !cf.IsValidPos(playerX, playerY) {
-		jslog.Warnf("ao pos out of floor %v [%v %v]", cf, playerX, playerY)
+	if !app.CurrentFloor.IsValidPos(playerX, playerY) {
+		jslog.Warnf("ao pos out of floor %v [%v %v]", app.CurrentFloor, playerX, playerY)
 		return nil
 	}
 	if newOLNotiData.ActiveObj.AP > 0 {
@@ -484,7 +475,7 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 		app.systemMessage.Appendf("Kill %v", aostr)
 		app.NotiMessage.AppendTf(tcsInfo, "You kill %v", nickname)
 	case turnresulttype.AttackedFrom:
-		if o := app.currentFloor().FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
+		if o := app.CurrentFloor.FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
 			fo := o.(*c2t_obj.FieldObjClient)
 			app.systemMessage.Appendf("Damage %4.1f from %v", v.Arg, fo.Message)
 			app.NotiMessage.AppendTf(tcsInfo, "Damage %4.1f from %v", v.Arg, fo.Message)
@@ -499,7 +490,7 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 			wrapspan.ColorTextf("Red", "Damage %4.1f from", v.Arg),
 			aostr)
 	case turnresulttype.KilledBy:
-		if o := app.currentFloor().FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
+		if o := app.CurrentFloor.FieldObjPosMan.GetByUUID(v.DstUUID); o != nil {
 			fo := o.(*c2t_obj.FieldObjClient)
 			app.systemMessage.Appendf("Killed by %v", fo.Message)
 			app.NotiMessage.AppendTf(tcsInfo, "Killed by %v", fo.Message)
@@ -597,7 +588,7 @@ func (app *WasmClient) actByControlMode() {
 }
 
 func (app *WasmClient) moveByUserInput() bool {
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	playerX, playerY := app.GetPlayerXY()
 	if !cf.IsValidPos(playerX, playerY) {
 		jslog.Errorf("ao out of floor %v %v", app.olNotiData.ActiveObj, cf)
@@ -670,36 +661,31 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	app.taNotiHeader = header
 	app.taNotiData = robj
 
-	if app.FloorInfo == nil {
-		jslog.Warn("OrangeRed", "app.FloorInfo not set")
+	if app.CurrentFloor == nil {
+		jslog.Warn("OrangeRed", "app.CurrentFloor not set")
 		return nil
 	}
-	if app.FloorInfo.Name != app.taNotiData.FloorName {
+	if app.CurrentFloor.FloorInfo.Name != app.taNotiData.FloorName {
 		jslog.Warnf("not current floor vptile data %v %v",
-			app.currentFloor().FloorInfo.Name, app.taNotiData.FloorName,
+			app.CurrentFloor.FloorInfo.Name, app.taNotiData.FloorName,
 		)
 		return nil
 	}
-	cf, exist := app.Name2ClientFloor[app.taNotiData.FloorName]
-	if !exist {
-		jslog.Warnf("floor not added %v", app.taNotiData.FloorName)
-		return nil
-	}
 
-	oldComplete := cf.Visited.IsComplete()
-	if err := cf.UpdateFromViewportTile(
+	oldComplete := app.CurrentFloor.Visited.IsComplete()
+	if err := app.CurrentFloor.UpdateFromViewportTile(
 		app.taNotiData, gInitData.ViewportXYLenList); err != nil {
 		jslog.Warn("%v", err)
 		return nil
 	}
 	app.vp.ProcessNotiVPTiles(
-		cf, app.taNotiData, app.olNotiData, app.Path2dst)
+		app.CurrentFloor, app.taNotiData, app.olNotiData, app.Path2dst)
 
-	if !oldComplete && cf.Visited.IsComplete() { // just completed
+	if !oldComplete && app.CurrentFloor.Visited.IsComplete() { // just completed
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
-			"Discover floor complete %v", cf.FloorInfo.Name))
+			"Discover floor complete %v", app.CurrentFloor.FloorInfo.Name))
 		app.NotiMessage.AppendTf(tcsInfo,
-			"Discover floor complete %v", cf.FloorInfo.Name)
+			"Discover floor complete %v", app.CurrentFloor.FloorInfo.Name)
 	}
 	return nil
 }
@@ -713,24 +699,22 @@ func objRecvNotiFn_FloorTiles(recvobj interface{}, header c2t_packet.Header, obj
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
 	}
-	cf, exist := app.Name2ClientFloor[robj.FI.Name]
-	if !exist {
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != robj.FI.Name {
 		// new floor
-		cf = clientfloor.New(robj.FI)
-		app.Name2ClientFloor[robj.FI.Name] = cf
+		app.CurrentFloor = clientfloor.New(robj.FI)
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
-			"Found floor %v", cf.FloorInfo.Name))
+			"Found floor %v", app.CurrentFloor.FloorInfo.Name))
 		app.NotiMessage.AppendTf(tcsInfo,
-			"Found floor %v", cf.FloorInfo.Name)
+			"Found floor %v", app.CurrentFloor.FloorInfo.Name)
 	}
 
-	oldComplete := cf.Visited.IsComplete()
-	cf.ReplaceFloorTiles(robj)
-	if !oldComplete && cf.Visited.IsComplete() {
+	oldComplete := app.CurrentFloor.Visited.IsComplete()
+	app.CurrentFloor.ReplaceFloorTiles(robj)
+	if !oldComplete && app.CurrentFloor.Visited.IsComplete() {
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
-			"Discover floor %v complete", cf.FloorInfo.Name))
+			"Discover floor %v complete", app.CurrentFloor.FloorInfo.Name))
 		app.NotiMessage.AppendTf(tcsInfo,
-			"Discover floor %v complete", cf.FloorInfo.Name)
+			"Discover floor %v complete", app.CurrentFloor.FloorInfo.Name)
 	}
 	return nil
 }
@@ -745,17 +729,15 @@ func objRecvNotiFn_FieldObjList(recvobj interface{}, hd c2t_packet.Header, body 
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
 	}
-	cf, exist := app.Name2ClientFloor[robj.FI.Name]
-	if !exist {
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != robj.FI.Name {
 		// new floor
-		cf = clientfloor.New(robj.FI)
-		app.Name2ClientFloor[robj.FI.Name] = cf
+		app.CurrentFloor = clientfloor.New(robj.FI)
 		app.systemMessage.Append(wrapspan.ColorTextf("yellow",
-			"Found floor %v", cf.FloorInfo.Name))
+			"Found floor %v", app.CurrentFloor.FloorInfo.Name))
 		app.NotiMessage.AppendTf(tcsInfo,
-			"Found floor %v", cf.FloorInfo.Name)
+			"Found floor %v", app.CurrentFloor.FloorInfo.Name)
 	}
-	cf.UpdateFieldObjList(robj.FOList)
+	app.CurrentFloor.UpdateFieldObjList(robj.FOList)
 	return nil
 }
 
@@ -771,13 +753,12 @@ func objRecvNotiFn_FoundFieldObj(recvobj interface{}, header c2t_packet.Header, 
 	_ = app
 	_ = robj
 
-	fromFloor, exist := app.Name2ClientFloor[robj.FloorName]
-	if !exist {
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != robj.FloorName {
 		jslog.Warnf("FoundFieldObj unknonw floor %v", robj)
+		return nil
 	}
-	if fromFloor.FieldObjPosMan.Get1stObjAt(robj.FieldObj.X, robj.FieldObj.Y) == nil {
-		fromFloor.FieldObjPosMan.AddToXY(robj.FieldObj, robj.FieldObj.X, robj.FieldObj.Y)
-		// fromFloor.addFieldObj(robj.FieldObj)
+	if app.CurrentFloor.FieldObjPosMan.Get1stObjAt(robj.FieldObj.X, robj.FieldObj.Y) == nil {
+		app.CurrentFloor.FieldObjPosMan.AddToXY(robj.FieldObj, robj.FieldObj.X, robj.FieldObj.Y)
 		notiString := "Found Hidden FieldObj"
 		app.systemMessage.Append(wrapspan.ColorText("yellow",
 			notiString))
@@ -799,11 +780,10 @@ func objRecvNotiFn_ForgetFloor(recvobj interface{}, header c2t_packet.Header, ob
 	_ = app
 	_ = robj
 
-	forgetFloor, exist := app.Name2ClientFloor[robj.FloorName]
-	if !exist {
-		jslog.Warnf("ForgetFloor unknonw floor %v", robj)
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != robj.FloorName {
+		// do nothing
 	} else {
-		forgetFloor.Forget()
+		app.CurrentFloor.Forget()
 	}
 	return nil
 }

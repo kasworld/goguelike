@@ -58,8 +58,8 @@ type WasmClient struct {
 
 	AOUUID2AOClient       map[string]*c2t_obj.ActiveObjClient
 	CaObjUUID2CaObjClient map[string]interface{}
-	Name2ClientFloor      map[string]*clientfloor.ClientFloor
-	FloorInfo             *c2t_obj.FloorInfo
+	FloorInfoList         []*c2t_obj.FloorInfo
+	CurrentFloor          *clientfloor.ClientFloor
 	remainTurn2Rebirth    int
 
 	// for net
@@ -117,10 +117,8 @@ func InitPage() {
 	)
 
 	app := &WasmClient{
-		rnd:              g2rand.New(),
-		ServerJitter:     actjitter.New("Server"),
-		Name2ClientFloor: make(map[string]*clientfloor.ClientFloor),
-
+		rnd:                g2rand.New(),
+		ServerJitter:       actjitter.New("Server"),
 		systemMessage:      make(textncount.TextNCountList, 0),
 		KeyboardPressedMap: jskeypressmap.New(),
 		DispInterDur:       intervalduration.New("Display"),
@@ -257,8 +255,6 @@ func (app *WasmClient) enterTower(towerindex int) {
 			c2t_version.ProtocolVersion, gInitData.ServiceInfo.ProtocolVersion)
 	}
 
-	// app.vp.ViewportPos2Index = gInitData.ViewportXYLenList.MakePos2Index()
-
 	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionUUID), gInitData.AccountInfo.NickName)
 
 	if gInitData.CanUseCmd(c2t_idcmd.AIPlay) {
@@ -311,16 +307,12 @@ func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{}
 		app.vp.renderer.Call("render", app.titlescene.scene, app.titlescene.camera)
 		return nil
 	}
-	// if app.olNotiData == nil {
-	// 	app.vp.renderer.Call("render", app.titlescene.scene, app.titlescene.camera)
-	// 	return nil
-	// }
 
 	frameProgress := app.ClientJitter.GetInFrameProgress2()
 	scrollDir := app.getScrollDir()
 
 	envBias := app.GetEnvBias()
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	if cf != nil {
 		switch gameOptions.GetByIDBase("ViewMode").State {
 		case 0: // play view

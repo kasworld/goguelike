@@ -151,10 +151,14 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 	return nil
 }
 
+// CalcSendBufferCount find max split floor value
 func (fm *FloorManager) CalcSendBufferCount() int {
 	rtn := 0
 	for _, f := range fm.floorList {
-		rtn += f.GetWidth()*f.GetHeight()/gameconst.TileAreaSplitSize + 1
+		cv := f.GetWidth()*f.GetHeight()/gameconst.TileAreaSplitSize + 1
+		if cv > rtn {
+			rtn = cv
+		}
 	}
 	return rtn + 10
 }

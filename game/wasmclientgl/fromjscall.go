@@ -182,7 +182,7 @@ func (app *WasmClient) jsHandleMouseClick(this js.Value, args []js.Value) interf
 func (app *WasmClient) makePathToMouseClick() {
 	switch gameOptions.GetByIDBase("ViewMode").State {
 	case 0: // play viewpot mode
-		cf := app.currentFloor()
+		cf := app.CurrentFloor
 		if cf == nil {
 			jslog.Error("no current floor")
 			return

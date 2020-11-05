@@ -121,7 +121,7 @@ func tryAutoBattle(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	if app.olNotiData == nil {
 		return false
 	}
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	if app.olNotiData.FloorName != cf.FloorInfo.Name {
 		return false
 	}
@@ -179,7 +179,7 @@ func tryAutoPickup(app *WasmClient, v *htmlbutton.HTMLButton) bool {
 	if app.olNotiData.ActiveObj.Conditions.TestByCondition(condition.Float) {
 		return false
 	}
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	if app.olNotiData == nil {
 		return false
 	}
@@ -325,7 +325,7 @@ func tryAutoRecyclePotionScroll(app *WasmClient, v *htmlbutton.HTMLButton) bool 
 /////////
 
 func (app *WasmClient) isBetterCarryObj(EquipType equipslottype.EquipSlotType, PoBias bias.Bias) bool {
-	aoEnvBias := app.TowerBias().Add(app.currentFloor().GetBias()).Add(app.olNotiData.ActiveObj.Bias)
+	aoEnvBias := app.TowerBias().Add(app.CurrentFloor.GetBias()).Add(app.olNotiData.ActiveObj.Bias)
 	newBiasAbs := aoEnvBias.Add(PoBias).AbsSum()
 	for _, v := range app.olNotiData.ActiveObj.EquippedPo {
 		if v.EquipType == EquipType {
@@ -336,7 +336,7 @@ func (app *WasmClient) isBetterCarryObj(EquipType equipslottype.EquipSlotType, P
 }
 
 func (app *WasmClient) needUnEquipCarryObj(PoBias bias.Bias) bool {
-	aoEnvBias := app.TowerBias().Add(app.currentFloor().GetBias()).Add(app.olNotiData.ActiveObj.Bias)
+	aoEnvBias := app.TowerBias().Add(app.CurrentFloor.GetBias()).Add(app.olNotiData.ActiveObj.Bias)
 
 	currentBias := aoEnvBias.Add(PoBias)
 	newBias := aoEnvBias
@@ -344,7 +344,7 @@ func (app *WasmClient) needUnEquipCarryObj(PoBias bias.Bias) bool {
 }
 
 func (app *WasmClient) needUseScroll(po *c2t_obj.ScrollClient) bool {
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	switch po.ScrollType {
 	case scrolltype.FloorMap:
 		if cf.Visited.CalcCompleteRate() < 1.0 {

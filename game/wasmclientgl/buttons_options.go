@@ -147,7 +147,7 @@ func cmdToggleVPFloorPlay(obj interface{}, v *htmlbutton.HTMLButton) {
 	switch v.State {
 	case 0: // play viewpot mode
 		// need rebuild tile, fieldobj
-		cf := app.currentFloor()
+		cf := app.CurrentFloor
 		vpx := app.taNotiData.VPX
 		vpy := app.taNotiData.VPY
 		app.vp.makeClientTile4FloorView(cf, vpx, vpy)
@@ -178,7 +178,7 @@ func cmdToggleAngle(obj interface{}, v *htmlbutton.HTMLButton) {
 		return
 	}
 
-	// if cf := app.currentFloor(); cf != nil {
+	// if cf := app.CurrentFloor; cf != nil {
 	// 	cf.Angle(v.State)
 	// }
 

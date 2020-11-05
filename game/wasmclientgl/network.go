@@ -183,7 +183,7 @@ func (app *WasmClient) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
 }
 
 func (app *WasmClient) sendMovePacketByInput(tryDir way9type.Way9Type) bool {
-	cf := app.currentFloor()
+	cf := app.CurrentFloor
 	playerX, playerY := app.GetPlayerXY()
 	moveDir := cf.FindMovableDir(playerX, playerY, tryDir)
 	if moveDir != way9type.Center {
