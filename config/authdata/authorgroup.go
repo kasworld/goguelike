@@ -43,6 +43,7 @@ var allAuthorizationSet = map[string]*c2t_authorize.AuthorizedCmds{
 		c2t_idcmd.Chat,
 		c2t_idcmd.AchieveInfo,
 		c2t_idcmd.Rebirth,
+		c2t_idcmd.VisitFloorList,
 		c2t_idcmd.Meditate,
 		c2t_idcmd.KillSelf,
 		c2t_idcmd.Move,
