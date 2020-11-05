@@ -170,6 +170,21 @@ func (app *WasmClient) reqHeartbeat() error {
 	)
 }
 
+func (app *WasmClient) updateFloorInfoList() {
+	app.ReqWithRspFnWithAuth(
+		c2t_idcmd.VisitFloorList,
+		&c2t_obj.ReqVisitFloorList_data{},
+		func(hd c2t_packet.Header, rsp interface{}) error {
+			rpk := rsp.(*c2t_obj.RspVisitFloorList_data)
+			fl := rpk.FloorList
+			c2t_obj.FloorInfoByName(fl).Sort()
+			app.FloorInfoList = fl
+			return nil
+		},
+	)
+
+}
+
 func (app *WasmClient) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
 	if cmd.NeedTurn() != 0 { // is act?
 		atomic.AddInt32(&app.actPacketPerTurn, 1)

@@ -268,6 +268,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 	}
 
 	go soundmap.Play("startsound")
+	go app.updateFloorInfoList()
 
 	app.ResizeCanvas()
 

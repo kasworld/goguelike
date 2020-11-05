@@ -380,18 +380,13 @@ func (app *WasmClient) makeFloorListHTML() string {
 		fmt.Fprintf(&buf, "Floor Found %v<br/>",
 			len(app.FloorInfoList))
 	}
-	// cfList := make([]*c2t_obj.FloorInfo, 0)
-	// for _, v := range app.FloorInfoList {
-	// 	cfList = append(cfList, v)
-	// }
-	// cfList.Sort()
 
 	win := js.Global().Get("window")
 	winH := win.Get("innerHeight").Float()
 	ftSize := winH / 100
 	for i, cf := range app.FloorInfoList {
 		floorStr := wrapspan.THCSTextf(cf.Bias, "%v", cf.Bias.NearFaction().String())
-		fmt.Fprintf(&buf, "%v %v ", floorStr, cf.VisitCount)
+		fmt.Fprintf(&buf, "%v %v %v/%v ", cf.Name, floorStr, cf.VisitCount, cf.Tiles)
 		if cf.VisitCount >= cf.Tiles {
 			fmt.Fprintf(&buf,
 				`<button style="font-size: %vpx" onclick="moveFloor('%s')">Teleport</button>`,

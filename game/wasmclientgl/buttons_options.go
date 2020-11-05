@@ -134,6 +134,7 @@ func (app *WasmClient) updateRightInfo() {
 	case 4: // FieldObjList
 		infoobj.Set("innerHTML", app.makeFieldObjListHTML())
 	case 5: // FloorList
+		go app.updateFloorInfoList()
 		infoobj.Set("innerHTML", app.makeFloorListHTML())
 	}
 }

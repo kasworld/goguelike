@@ -233,3 +233,18 @@ func (objList FieldObjByType) Less(i, j int) bool {
 func (objList FieldObjByType) Sort() {
 	sort.Stable(objList)
 }
+
+type FloorInfoByName []*FloorInfo
+
+func (objList FloorInfoByName) Len() int { return len(objList) }
+func (objList FloorInfoByName) Swap(i, j int) {
+	objList[i], objList[j] = objList[j], objList[i]
+}
+func (objList FloorInfoByName) Less(i, j int) bool {
+	po1 := objList[i]
+	po2 := objList[j]
+	return po1.Name > po2.Name
+}
+func (objList FloorInfoByName) Sort() {
+	sort.Stable(objList)
+}
