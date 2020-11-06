@@ -38,7 +38,7 @@ func GoguelikeRand(roomCount int, intnfn func(int) int) []string {
 	}
 	roadTile := allRoadTile[intnfn(len(allRoadTile))]
 	rtn = append(rtn, fmt.Sprintf(
-		"ConnectRooms tile=%v connect=1 allconnect=true diagonal=false",
+		"ConnectRooms tile=%v connect=2 allconnect=true diagonal=false",
 		roadTile))
 
 	return rtn

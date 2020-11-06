@@ -16,6 +16,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike/tool/towermaker/bigtower"
+	"github.com/kasworld/goguelike/tool/towermaker/gigatower"
 	"github.com/kasworld/goguelike/tool/towermaker/noroomtower"
 	"github.com/kasworld/goguelike/tool/towermaker/objmaxtower"
 	"github.com/kasworld/goguelike/tool/towermaker/roguetower"
@@ -25,7 +26,7 @@ import (
 
 func main() {
 	towername := flag.String("towername", "",
-		"all,start,roguelike,big,sight,objmax,noroom tower to make")
+		"all,start,roguelike,big,sight,objmax,noroom,giga tower to make")
 	floorcount := flag.Int("floorcount", 100, "roguelike,big tower floor count")
 	flag.Parse()
 
@@ -66,6 +67,11 @@ func main() {
 		twname := fmt.Sprintf("%v%v", *towername, *floorcount)
 		fmt.Printf("try make tower with towername:%v floorcount:%v\n", twname, *floorcount)
 		bigtower.New(twname, *floorcount).Save()
+
+	case "giga":
+		twname := fmt.Sprintf("%v%v", *towername, *floorcount)
+		fmt.Printf("try make tower with towername:%v floorcount:%v\n", twname, *floorcount)
+		gigatower.New(twname, *floorcount).Save()
 
 	}
 
