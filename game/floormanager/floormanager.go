@@ -43,6 +43,8 @@ type FloorManager struct {
 
 	floorName2Floor map[string]gamei.FloorI
 	portalID2Portal map[string]*fieldobject.FieldObject
+
+	sendBufferSize int
 }
 
 func New(terrainScript towerscript.TowerScript, tw gamei.TowerI) *FloorManager {
@@ -151,12 +153,12 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 			return fmt.Errorf("portal not match %v %v", srcPortal, dstPortal)
 		}
 	}
-
+	fm.sendBufferSize = fm.calcSendBufferSize()
 	return nil
 }
 
-// CalcSendBufferCount find max split floor value
-func (fm *FloorManager) CalcSendBufferCount() int {
+// calcSendBufferSize find max split floor value
+func (fm *FloorManager) calcSendBufferSize() int {
 	rtn := 0
 	for _, f := range fm.floorList {
 		cv := f.GetWidth()*f.GetHeight()/gameconst.TileAreaSplitSize + 1

@@ -140,7 +140,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	}
 	c2sc := c2t_serveconnbyte.NewWithStats(
 		connData,
-		tw.floorMan.CalcSendBufferCount(),
+		tw.floorMan.GetSendBufferSize(),
 		authdata.NewPreLoginAuthorCmdIDList(),
 		tw.sendStat, tw.recvStat,
 		tw.protocolStat,

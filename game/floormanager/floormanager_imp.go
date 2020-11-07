@@ -44,6 +44,10 @@ func (fm *FloorManager) GetFloorList() []gamei.FloorI {
 	return fm.floorList
 }
 
+func (fm *FloorManager) GetSendBufferSize() int {
+	return fm.sendBufferSize
+}
+
 func (fm *FloorManager) GetFloorIndexByName(id string) (int, error) {
 	for i, v := range fm.floorList {
 		if v == nil {
