@@ -62,13 +62,13 @@ func New(name string) *towermake.Tower {
 		floortemplate.AgeingCitySize(256)...,
 	).Appendf("ActiveObjectsRand count=%v", 256)
 
-	tw.Add("AgeingField", 256, 256, 1.0).Appends(
-		floortemplate.AgeingFieldSize(256)...,
-	).Appendf("ActiveObjectsRand count=%v", 256)
+	tw.Add("AgeingField", 512, 512, 1.0).Appends(
+		floortemplate.AgeingFieldSize(512)...,
+	).Appendf("ActiveObjectsRand count=%v", 512)
 
-	tw.Add("AgeingMaze", 256, 256, 1.0).Appends(
-		floortemplate.AgeingMazeSize(256)...,
-	).Appendf("ActiveObjectsRand count=%v", 256)
+	tw.Add("AgeingMaze", 1024, 1024, 1.0).Appends(
+		floortemplate.AgeingMazeSize(1024)...,
+	).Appendf("ActiveObjectsRand count=%v", 1024)
 
 	fm := tw.Add("BedTown", 256, 256, 1.0).Appends(
 		floortemplate.CityRooms(256, 256, 11, 11, 5, rnd.Intn)...,
