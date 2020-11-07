@@ -10,7 +10,7 @@
 // limitations under the License.
 
 // positioned object managment in 2d space
-package uuidposman
+package uuidposman_old
 
 import (
 	"fmt"
@@ -35,12 +35,12 @@ func (fo *UUIDPosMan) String() string {
 }
 
 type UUIDPosMan struct {
-	mutex    sync.RWMutex            `prettystring:"hide"`
-	uuid2obj map[string]UUIDPosI     `prettystring:"simple"`
-	uuid2pos map[string][2]int       `prettystring:"simple"`
-	pos2objs map[[2]int]UUIDPosIList `prettystring:"simple"`
-	XWrapper *wrapper.Wrapper        `prettystring:"simple"`
-	YWrapper *wrapper.Wrapper        `prettystring:"simple"`
+	mutex    sync.RWMutex        `prettystring:"hide"`
+	uuid2obj map[string]UUIDPosI `prettystring:"simple"`
+	uuid2pos map[string][2]int   `prettystring:"simple"`
+	pos2objs [][]UUIDPosIList    `prettystring:"simple"`
+	XWrapper *wrapper.Wrapper    `prettystring:"simple"`
+	YWrapper *wrapper.Wrapper    `prettystring:"simple"`
 	XWrap    func(i int) int
 	YWrap    func(i int) int
 }
@@ -49,12 +49,15 @@ func New(x, y int) *UUIDPosMan {
 	rtn := UUIDPosMan{
 		uuid2obj: make(map[string]UUIDPosI),
 		uuid2pos: make(map[string][2]int),
-		pos2objs: make(map[[2]int]UUIDPosIList, x),
+		pos2objs: make([][]UUIDPosIList, x),
 		XWrapper: wrapper.New(x),
 		YWrapper: wrapper.New(y),
 	}
 	rtn.XWrap = rtn.XWrapper.GetWrapFn()
 	rtn.YWrap = rtn.YWrapper.GetWrapFn()
+	for i, _ := range rtn.pos2objs {
+		rtn.pos2objs[i] = make([]UUIDPosIList, y)
+	}
 	return &rtn
 }
 
@@ -140,7 +143,10 @@ func (fo *UUIDPosMan) Get1stObjAt(x, y int) UUIDPosI {
 	defer fo.mutex.RUnlock()
 
 	x, y = fo.Wrap(x, y)
-	for _, v := range fo.pos2objs[[2]int{x, y}] {
+	for _, v := range fo.pos2objs[x][y] {
+		if v == nil {
+			continue
+		}
 		return v
 	}
 	return nil
@@ -149,9 +155,12 @@ func (fo *UUIDPosMan) Get1stObjAt(x, y int) UUIDPosI {
 func (fo *UUIDPosMan) GetObjListAt(x, y int) UUIDPosIList {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
-	rtn := make(UUIDPosIList, 0, len(fo.pos2objs[[2]int{x, y}]))
+	rtn := make(UUIDPosIList, 0, len(fo.pos2objs[x][y]))
 	x, y = fo.Wrap(x, y)
-	for _, v := range fo.pos2objs[[2]int{x, y}] {
+	for _, v := range fo.pos2objs[x][y] {
+		if v == nil {
+			continue
+		}
 		rtn = append(rtn, v)
 	}
 	return rtn
@@ -166,7 +175,10 @@ func (fo *UUIDPosMan) Search1stByXYLenList(
 
 	for _, v := range xylenlist {
 		x, y := fo.Wrap(sx+v.X, sy+v.Y)
-		for _, o := range fo.pos2objs[[2]int{x, y}] {
+		for _, o := range fo.pos2objs[x][y] {
+			if o == nil {
+				continue
+			}
 			if filterfn(o, x, y, v) {
 				return o, x, y
 			}
@@ -191,7 +203,10 @@ func (fo *UUIDPosMan) GetVPIXYObjByXYLenList(
 	rtn := make([]VPIXYObj, 0)
 	for i, v := range xylenlist {
 		x, y := fo.Wrap(sx+v.X, sy+v.Y)
-		for _, o := range fo.pos2objs[[2]int{x, y}] {
+		for _, o := range fo.pos2objs[x][y] {
+			if o == nil {
+				continue
+			}
 			rtn = append(rtn, VPIXYObj{
 				I: i,
 				X: x,
@@ -216,7 +231,10 @@ func (fo *UUIDPosMan) IterByXYLenList(
 loop:
 	for i, v := range xylenlist {
 		x, y := fo.Wrap(sx+v.X, sy+v.Y)
-		for _, o := range fo.pos2objs[[2]int{x, y}] {
+		for _, o := range fo.pos2objs[x][y] {
+			if o == nil {
+				continue
+			}
 			if stopFn(o, x, y, i, v) {
 				break loop
 			}
@@ -247,6 +265,7 @@ func (fo *UUIDPosMan) addNolock(o UUIDPosI, x, y int) error {
 		return fmt.Errorf("Fail to addNolock obj exist %v", o)
 	}
 
+	// x, y := o.GetXY()
 	x, y = fo.Wrap(x, y)
 	fo.uuid2obj[id] = o
 	fo.uuid2pos[id] = [2]int{x, y}
@@ -313,17 +332,22 @@ func (fo *UUIDPosMan) UpdateToXY(o UUIDPosI, newx, newy int) error {
 ///////////////////////////////////////////////////////////
 
 func (fo *UUIDPosMan) addObj2Pos(o UUIDPosI, x, y int) {
-	fo.pos2objs[[2]int{x, y}] = append(fo.pos2objs[[2]int{x, y}], o)
+	for i, v := range fo.pos2objs[x][y] {
+		if v == nil {
+			fo.pos2objs[x][y][i] = o
+			return
+		}
+	}
+	fo.pos2objs[x][y] = append(fo.pos2objs[x][y], o)
 }
 
 func (fo *UUIDPosMan) delObjAt(o UUIDPosI, x, y int) error {
-	for i, v := range fo.pos2objs[[2]int{x, y}] {
+	for i, v := range fo.pos2objs[x][y] {
+		if v == nil {
+			continue
+		}
 		if v.GetUUID() == o.GetUUID() {
-			if len(fo.pos2objs[[2]int{x, y}]) == 1 {
-				delete(fo.pos2objs, [2]int{x, y})
-			} else {
-				fo.pos2objs[[2]int{x, y}] = append(fo.pos2objs[[2]int{x, y}][:i], fo.pos2objs[[2]int{x, y}][i+1:]...)
-			}
+			fo.pos2objs[x][y][i] = nil
 			return nil
 		}
 	}
