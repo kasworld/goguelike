@@ -22,7 +22,8 @@ import (
 	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike/game/visitarea"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposman_map"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/wrapper"
 )
@@ -39,7 +40,7 @@ type ClientFloor struct {
 	Tiles4PathFind *tilearea4pathfind.TileArea4PathFind `prettystring:"simple"`
 	visitTime      time.Time                            `prettystring:"simple"`
 
-	FieldObjPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
+	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 }
 
 func New(FloorInfo *c2t_obj.FloorInfo) *ClientFloor {
@@ -53,7 +54,7 @@ func New(FloorInfo *c2t_obj.FloorInfo) *ClientFloor {
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
-	cf.FieldObjPosMan = uuidposman.New(FloorInfo.W, FloorInfo.H)
+	cf.FieldObjPosMan = uuidposman_map.New(FloorInfo.W, FloorInfo.H)
 
 	return &cf
 }

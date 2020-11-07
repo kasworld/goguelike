@@ -10,23 +10,16 @@
 // limitations under the License.
 
 // positioned object managment in 2d space
-package uuidposman
+package uuidposman_map
 
 import (
 	"fmt"
 	"sync"
 
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
 )
-
-type UUIDPosI interface {
-	GetUUID() string
-}
-
-type UUIDPosIList []UUIDPosI
-
-type DoFn func(fo UUIDPosI) bool
 
 func (fo *UUIDPosMan) String() string {
 	return fmt.Sprintf("UUIDPosMan[(%v %v) %v]",
@@ -35,21 +28,21 @@ func (fo *UUIDPosMan) String() string {
 }
 
 type UUIDPosMan struct {
-	mutex    sync.RWMutex            `prettystring:"hide"`
-	uuid2obj map[string]UUIDPosI     `prettystring:"simple"`
-	uuid2pos map[string][2]int       `prettystring:"simple"`
-	pos2objs map[[2]int]UUIDPosIList `prettystring:"simple"`
-	XWrapper *wrapper.Wrapper        `prettystring:"simple"`
-	YWrapper *wrapper.Wrapper        `prettystring:"simple"`
+	mutex    sync.RWMutex                        `prettystring:"hide"`
+	uuid2obj map[string]uuidposmani.UUIDPosI     `prettystring:"simple"`
+	uuid2pos map[string][2]int                   `prettystring:"simple"`
+	pos2objs map[[2]int]uuidposmani.UUIDPosIList `prettystring:"simple"`
+	XWrapper *wrapper.Wrapper                    `prettystring:"simple"`
+	YWrapper *wrapper.Wrapper                    `prettystring:"simple"`
 	XWrap    func(i int) int
 	YWrap    func(i int) int
 }
 
 func New(x, y int) *UUIDPosMan {
 	rtn := UUIDPosMan{
-		uuid2obj: make(map[string]UUIDPosI),
+		uuid2obj: make(map[string]uuidposmani.UUIDPosI),
 		uuid2pos: make(map[string][2]int),
-		pos2objs: make(map[[2]int]UUIDPosIList, x),
+		pos2objs: make(map[[2]int]uuidposmani.UUIDPosIList, x),
 		XWrapper: wrapper.New(x),
 		YWrapper: wrapper.New(y),
 	}
@@ -79,8 +72,8 @@ func (fo *UUIDPosMan) Wrap(x, y int) (int, int) {
 	return fo.XWrap(x), fo.YWrap(y)
 }
 
-func (fo *UUIDPosMan) GetAllList() UUIDPosIList {
-	rtn := make(UUIDPosIList, 0, len(fo.uuid2obj))
+func (fo *UUIDPosMan) GetAllList() uuidposmani.UUIDPosIList {
+	rtn := make(uuidposmani.UUIDPosIList, 0, len(fo.uuid2obj))
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 	for _, v := range fo.uuid2obj {
@@ -90,7 +83,7 @@ func (fo *UUIDPosMan) GetAllList() UUIDPosIList {
 }
 
 // IterAll stop obj if filter return true
-func (fo *UUIDPosMan) IterAll(iterfn func(o UUIDPosI, x, y int) bool) {
+func (fo *UUIDPosMan) IterAll(iterfn func(o uuidposmani.UUIDPosI, x, y int) bool) {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 	for id, o := range fo.uuid2obj {
@@ -102,13 +95,13 @@ func (fo *UUIDPosMan) IterAll(iterfn func(o UUIDPosI, x, y int) bool) {
 	return
 }
 
-func (fo *UUIDPosMan) GetByUUID(id string) UUIDPosI {
+func (fo *UUIDPosMan) GetByUUID(id string) uuidposmani.UUIDPosI {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 	return fo.uuid2obj[id]
 }
 
-func (fo *UUIDPosMan) GetByXYAndUUID(id string, x, y int) (UUIDPosI, error) {
+func (fo *UUIDPosMan) GetByXYAndUUID(id string, x, y int) (uuidposmani.UUIDPosI, error) {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 
@@ -135,7 +128,7 @@ func (fo *UUIDPosMan) GetXYByUUID(id string) (int, int, bool) {
 	return pos[0], pos[1], exist
 }
 
-func (fo *UUIDPosMan) Get1stObjAt(x, y int) UUIDPosI {
+func (fo *UUIDPosMan) Get1stObjAt(x, y int) uuidposmani.UUIDPosI {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 
@@ -146,10 +139,10 @@ func (fo *UUIDPosMan) Get1stObjAt(x, y int) UUIDPosI {
 	return nil
 }
 
-func (fo *UUIDPosMan) GetObjListAt(x, y int) UUIDPosIList {
+func (fo *UUIDPosMan) GetObjListAt(x, y int) uuidposmani.UUIDPosIList {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
-	rtn := make(UUIDPosIList, 0, len(fo.pos2objs[[2]int{x, y}]))
+	rtn := make(uuidposmani.UUIDPosIList, 0, len(fo.pos2objs[[2]int{x, y}]))
 	x, y = fo.Wrap(x, y)
 	for _, v := range fo.pos2objs[[2]int{x, y}] {
 		rtn = append(rtn, v)
@@ -160,7 +153,7 @@ func (fo *UUIDPosMan) GetObjListAt(x, y int) UUIDPosIList {
 func (fo *UUIDPosMan) Search1stByXYLenList(
 	xylenlist findnear.XYLenList,
 	sx, sy int,
-	filterfn func(o UUIDPosI, x, y int, xylen findnear.XYLen) bool) (UUIDPosI, int, int) {
+	filterfn func(o uuidposmani.UUIDPosI, x, y int, xylen findnear.XYLen) bool) (uuidposmani.UUIDPosI, int, int) {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 
@@ -175,24 +168,17 @@ func (fo *UUIDPosMan) Search1stByXYLenList(
 	return nil, 0, 0
 }
 
-// VPIXYObj use for viewport by xylenlist,
-type VPIXYObj struct {
-	I    int // xylen pos
-	X, Y int // pos in uuidposman
-	O    UUIDPosI
-}
-
 func (fo *UUIDPosMan) GetVPIXYObjByXYLenList(
 	xylenlist findnear.XYLenList,
-	sx, sy int, l int) []VPIXYObj {
+	sx, sy int, l int) []uuidposmani.VPIXYObj {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 
-	rtn := make([]VPIXYObj, 0)
+	rtn := make([]uuidposmani.VPIXYObj, 0)
 	for i, v := range xylenlist {
 		x, y := fo.Wrap(sx+v.X, sy+v.Y)
 		for _, o := range fo.pos2objs[[2]int{x, y}] {
-			rtn = append(rtn, VPIXYObj{
+			rtn = append(rtn, uuidposmani.VPIXYObj{
 				I: i,
 				X: x,
 				Y: y,
@@ -209,7 +195,7 @@ func (fo *UUIDPosMan) GetVPIXYObjByXYLenList(
 func (fo *UUIDPosMan) IterByXYLenList(
 	xylenlist findnear.XYLenList,
 	sx, sy int, l int,
-	stopFn func(o UUIDPosI, x, y int, i int, xylen findnear.XYLen) bool) {
+	stopFn func(o uuidposmani.UUIDPosI, x, y int, i int, xylen findnear.XYLen) bool) {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 
@@ -224,7 +210,7 @@ loop:
 	}
 }
 
-func (fo *UUIDPosMan) AddOrUpdateToXY(o UUIDPosI, x, y int) error {
+func (fo *UUIDPosMan) AddOrUpdateToXY(o uuidposmani.UUIDPosI, x, y int) error {
 	fo.mutex.Lock()
 	defer fo.mutex.Unlock()
 
@@ -236,12 +222,12 @@ func (fo *UUIDPosMan) AddOrUpdateToXY(o UUIDPosI, x, y int) error {
 	return fo.addNolock(o, x, y)
 }
 
-func (fo *UUIDPosMan) AddToXY(o UUIDPosI, x, y int) error {
+func (fo *UUIDPosMan) AddToXY(o uuidposmani.UUIDPosI, x, y int) error {
 	fo.mutex.Lock()
 	defer fo.mutex.Unlock()
 	return fo.addNolock(o, x, y)
 }
-func (fo *UUIDPosMan) addNolock(o UUIDPosI, x, y int) error {
+func (fo *UUIDPosMan) addNolock(o uuidposmani.UUIDPosI, x, y int) error {
 	id := o.GetUUID()
 	if fo.uuid2obj[id] != nil {
 		return fmt.Errorf("Fail to addNolock obj exist %v", o)
@@ -255,7 +241,7 @@ func (fo *UUIDPosMan) addNolock(o UUIDPosI, x, y int) error {
 }
 
 // DelByFilter del obj if filter return true
-func (fo *UUIDPosMan) DelByFilter(filter func(o UUIDPosI, x, y int) bool) error {
+func (fo *UUIDPosMan) DelByFilter(filter func(o uuidposmani.UUIDPosI, x, y int) bool) error {
 	fo.mutex.Lock()
 	defer fo.mutex.Unlock()
 	for id, o := range fo.uuid2obj {
@@ -269,12 +255,12 @@ func (fo *UUIDPosMan) DelByFilter(filter func(o UUIDPosI, x, y int) bool) error 
 	return nil
 }
 
-func (fo *UUIDPosMan) Del(o UUIDPosI) error {
+func (fo *UUIDPosMan) Del(o uuidposmani.UUIDPosI) error {
 	fo.mutex.Lock()
 	defer fo.mutex.Unlock()
 	return fo.delNolock(o)
 }
-func (fo *UUIDPosMan) delNolock(o UUIDPosI) error {
+func (fo *UUIDPosMan) delNolock(o uuidposmani.UUIDPosI) error {
 	id := o.GetUUID()
 	if fo.uuid2obj[id] == nil {
 		return fmt.Errorf("Fail to delNolock obj not exist %v", o)
@@ -293,7 +279,7 @@ func (fo *UUIDPosMan) delNolock(o UUIDPosI) error {
 	}
 }
 
-func (fo *UUIDPosMan) UpdateToXY(o UUIDPosI, newx, newy int) error {
+func (fo *UUIDPosMan) UpdateToXY(o uuidposmani.UUIDPosI, newx, newy int) error {
 	fo.mutex.Lock()
 	defer fo.mutex.Unlock()
 	newx, newy = fo.Wrap(newx, newy)
@@ -312,11 +298,11 @@ func (fo *UUIDPosMan) UpdateToXY(o UUIDPosI, newx, newy int) error {
 
 ///////////////////////////////////////////////////////////
 
-func (fo *UUIDPosMan) addObj2Pos(o UUIDPosI, x, y int) {
+func (fo *UUIDPosMan) addObj2Pos(o uuidposmani.UUIDPosI, x, y int) {
 	fo.pos2objs[[2]int{x, y}] = append(fo.pos2objs[[2]int{x, y}], o)
 }
 
-func (fo *UUIDPosMan) delObjAt(o UUIDPosI, x, y int) error {
+func (fo *UUIDPosMan) delObjAt(o uuidposmani.UUIDPosI, x, y int) error {
 	for i, v := range fo.pos2objs[[2]int{x, y}] {
 		if v.GetUUID() == o.GetUUID() {
 			if len(fo.pos2objs[[2]int{x, y}]) == 1 {

@@ -14,7 +14,7 @@ package dangerobject
 import (
 	"github.com/kasworld/goguelike/enum/dangertype"
 	"github.com/kasworld/goguelike/lib/idu64str"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -22,8 +22,8 @@ var DOIDMaker = idu64str.New("DOID")
 
 type DangerObject struct {
 	UUID           string
-	Owner          uuidposman.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
-	OwnerX, OwnerY int                 // pos at make attack time
+	Owner          uuidposmani.UUIDPosI // id of owner ( ao, floor? , fieldobj?)
+	OwnerX, OwnerY int                  // pos at make attack time
 	DangerType     dangertype.DangerType
 	RemainTurn     int // remain turn to affect
 	AffectRate     float64
@@ -34,7 +34,7 @@ func (p *DangerObject) GetUUID() string {
 	return p.UUID
 }
 
-func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
+func NewAOAttact(attacker uuidposmani.UUIDPosI, dt dangertype.DangerType, srcx, srcy int) *DangerObject {
 	return &DangerObject{
 		UUID:       DOIDMaker.New(),
 		Owner:      attacker,
@@ -46,7 +46,7 @@ func NewAOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, srcx, s
 	}
 }
 
-func NewFOAttact(attacker uuidposman.UUIDPosI, dt dangertype.DangerType, affectRate float64) *DangerObject {
+func NewFOAttact(attacker uuidposmani.UUIDPosI, dt dangertype.DangerType, affectRate float64) *DangerObject {
 	return &DangerObject{
 		UUID:       DOIDMaker.New(),
 		Owner:      attacker,

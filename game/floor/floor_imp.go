@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/terraini"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/intervalduration"
 )
 
@@ -93,13 +93,13 @@ func (f *Floor) TotalCarryObjCount() int {
 	return f.poPosMan.Count()
 }
 
-func (f *Floor) GetActiveObjPosMan() *uuidposman.UUIDPosMan {
+func (f *Floor) GetActiveObjPosMan() uuidposmani.UUIDPosManI {
 	return f.aoPosMan
 }
-func (f *Floor) GetFieldObjPosMan() *uuidposman.UUIDPosMan {
+func (f *Floor) GetFieldObjPosMan() uuidposmani.UUIDPosManI {
 	return f.foPosMan
 }
-func (f *Floor) GetCarryObjPosMan() *uuidposman.UUIDPosMan {
+func (f *Floor) GetCarryObjPosMan() uuidposmani.UUIDPosManI {
 	return f.poPosMan
 }
 

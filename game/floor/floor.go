@@ -25,7 +25,8 @@ import (
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/game/terrain"
 	"github.com/kasworld/goguelike/lib/g2log"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposman_slice"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/intervalduration"
 )
@@ -54,10 +55,10 @@ type Floor struct {
 	// async ageing one at a time
 	inAgeing int32
 
-	aoPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
-	poPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
-	foPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
-	doPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
+	aoPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
+	poPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
+	foPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
+	doPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
 	interDur          *intervalduration.IntervalDuration `prettystring:"simple"`
 	statPacketObjOver *actpersec.ActPerSec               `prettystring:"simple"`
@@ -107,10 +108,10 @@ func (f *Floor) Init() error {
 		return nil // skip no name floor terrain
 	}
 	f.w, f.h = f.GetTerrain().GetXYLen()
-	f.aoPosMan = uuidposman.New(f.w, f.h)
-	f.poPosMan = uuidposman.New(f.w, f.h)
+	f.aoPosMan = uuidposman_slice.New(f.w, f.h)
+	f.poPosMan = uuidposman_slice.New(f.w, f.h)
 	f.foPosMan = f.terrain.GetFieldObjPosMan()
-	f.doPosMan = uuidposman.New(f.w, f.h)
+	f.doPosMan = uuidposman_slice.New(f.w, f.h)
 	f.bias = bias.Bias{
 		f.rnd.Float64() - 0.5,
 		f.rnd.Float64() - 0.5,

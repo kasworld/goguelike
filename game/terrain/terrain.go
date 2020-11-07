@@ -26,7 +26,7 @@ import (
 	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike/lib/g2log"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
 )
 
@@ -70,7 +70,7 @@ type Terrain struct {
 	crpCache [][]*CorridorPather `prettystring:"simple"`
 	findList findnear.XYLenList  `prettystring:"simple"`
 
-	foPosMan *uuidposman.UUIDPosMan `prettystring:"simple"`
+	foPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
 	Xlen     int
 	Ylen     int

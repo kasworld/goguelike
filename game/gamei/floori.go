@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/terraini"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -42,9 +42,9 @@ type FloorI interface {
 	GetStatPacketObjOver() *actpersec.ActPerSec
 	GetCmdFloorActStat() *actpersec.ActPerSec
 
-	GetActiveObjPosMan() *uuidposman.UUIDPosMan
-	GetCarryObjPosMan() *uuidposman.UUIDPosMan
-	GetFieldObjPosMan() *uuidposman.UUIDPosMan
+	GetActiveObjPosMan() uuidposmani.UUIDPosManI
+	GetCarryObjPosMan() uuidposmani.UUIDPosManI
+	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 
 	GetReqCh() chan<- interface{}
 	Run(ctx context.Context)

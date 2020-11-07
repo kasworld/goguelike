@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/goguelike/game/terrain/viewportcache"
 	"github.com/kasworld/goguelike/game/tilearea"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
 )
 
@@ -29,7 +29,7 @@ type TerrainI interface {
 	GetOriRcsTiles() resourcetilearea.ResourceTileArea
 	GetTiles() tilearea.TileArea
 	GetName() string
-	GetFieldObjPosMan() *uuidposman.UUIDPosMan
+	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 	GetRoomList() []*room.Room
 	GetViewportCache() *viewportcache.ViewportCache
 	FindPath(dstx, dsty, srcx, srcy int, trylimit int) [][2]int

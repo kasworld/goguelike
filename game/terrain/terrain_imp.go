@@ -17,7 +17,7 @@ import (
 	"github.com/kasworld/goguelike/game/terrain/room"
 	"github.com/kasworld/goguelike/game/terrain/viewportcache"
 	"github.com/kasworld/goguelike/game/tilearea"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
 )
 
@@ -34,7 +34,7 @@ func (tr *Terrain) GetName() string {
 	return tr.Name
 }
 
-func (tr *Terrain) GetFieldObjPosMan() *uuidposman.UUIDPosMan {
+func (tr *Terrain) GetFieldObjPosMan() uuidposmani.UUIDPosManI {
 	return tr.foPosMan
 }
 

@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
@@ -44,7 +44,7 @@ func (f *Floor) makeViewportTiles2(centerX, centerY int, sightMat *viewportdata.
 }
 
 func (f *Floor) makeViewportActiveObjs2(
-	vpixyolist []uuidposman.VPIXYObj,
+	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.ActiveObjClient {
 
 	maxobj := gameconst.ActiveObjCountInViewportLimit
@@ -69,7 +69,7 @@ func (f *Floor) makeViewportActiveObjs2(
 }
 
 func (f *Floor) makeViewportCarryObjs2(
-	vpixyolist []uuidposman.VPIXYObj,
+	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.CarryObjClientOnFloor {
 
 	maxobj := gameconst.CarryObjCountInViewportLimit
@@ -90,7 +90,7 @@ func (f *Floor) makeViewportCarryObjs2(
 }
 
 func (f *Floor) makeViewportFieldObjs2(
-	vpixyolist []uuidposman.VPIXYObj,
+	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.FieldObjClient {
 
 	maxobj := gameconst.FieldObjCountInViewportLimit
@@ -114,7 +114,7 @@ func (f *Floor) makeViewportFieldObjs2(
 }
 
 func (f *Floor) makeViewportDangerObjs2(
-	vpixyolist []uuidposman.VPIXYObj,
+	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.DangerObjClient {
 
 	maxobj := gameconst.DangerObjCountInViewportLimit

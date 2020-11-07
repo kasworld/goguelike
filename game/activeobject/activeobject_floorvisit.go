@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike/config/viewportdata"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
@@ -77,7 +77,7 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 	}
 
 	f4c.Visit.MakeComplete()
-	f.GetFieldObjPosMan().IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+	f.GetFieldObjPosMan().IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
 		fo := o.(*fieldobject.FieldObject)
 		f4c.FOPosMan.AddOrUpdateToXY(fo.ToPacket_FieldObjClient(foX, foY), foX, foY)
 		return false
@@ -101,7 +101,7 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 		}
 		// send fieldobj list
 		fol := make([]*c2t_obj.FieldObjClient, 0)
-		f4c.FOPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+		f4c.FOPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
 			fo := o.(*c2t_obj.FieldObjClient)
 			fol = append(fol, fo)
 			return false

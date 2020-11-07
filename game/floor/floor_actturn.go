@@ -31,7 +31,7 @@ import (
 	"github.com/kasworld/goguelike/game/dangerobject"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
@@ -210,7 +210,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 
 	// clear dangerobj no remainturn
-	if err := f.doPosMan.DelByFilter(func(o uuidposman.UUIDPosI, x, y int) bool {
+	if err := f.doPosMan.DelByFilter(func(o uuidposmani.UUIDPosI, x, y int) bool {
 		do := o.(*dangerobject.DangerObject)
 		return !do.Live1Turn() // del if no remainturn
 	}); err != nil {
@@ -218,7 +218,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 
 	// add areaattack fieldobj dangerobj
-	f.foPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+	f.foPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
 		fo := o.(*fieldobject.FieldObject)
 		switch fo.ActType {
 		case fieldobjacttype.RotateLineAttack:

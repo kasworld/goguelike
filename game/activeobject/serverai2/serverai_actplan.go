@@ -24,7 +24,7 @@ import (
 	"github.com/kasworld/goguelike/game/attackcheck"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
 
@@ -178,7 +178,7 @@ func initPlanUsePortal(sai *ServerAI) int {
 	findObj, dstx, dsty := sai.currentFloor.GetFieldObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
-		func(o uuidposman.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
+		func(o uuidposmani.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
 			p1, _, err := sai.currentFloor.FindUsablePortalPairAt(x, y)
 			if err != nil {
 				return false
@@ -227,7 +227,7 @@ func initPlanMoveToRecycler(sai *ServerAI) int {
 	findObj, dstx, dsty := sai.currentFloor.GetFieldObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
-		func(o uuidposman.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
+		func(o uuidposmani.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
 			if fo, ok := o.(*fieldobject.FieldObject); ok {
 				if fo.ActType != fieldobjacttype.RecycleCarryObj {
 					return false
@@ -409,7 +409,7 @@ func initPlanAttack(sai *ServerAI) int {
 	findObj, dstx, dsty := sai.currentFloor.GetActiveObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
-		func(o uuidposman.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
+		func(o uuidposmani.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
 			if o.GetUUID() != sai.ao.GetUUID() &&
 				o.(gamei.ActiveObjectI).IsAlive() &&
 				ter.GetTiles()[x][y].CanBattle() {
@@ -491,7 +491,7 @@ func initPlanPickupCarryObj(sai *ServerAI) int {
 	findObj, dstx, dsty := sai.currentFloor.GetCarryObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
-		func(o uuidposman.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
+		func(o uuidposmani.UUIDPosI, x, y int, xylen findnear.XYLen) bool {
 			if _, ok := o.(gamei.CarryingObjectI); ok {
 				// str := sai.objCache.Get(o.GetUUID())
 				// if str != "drop" {

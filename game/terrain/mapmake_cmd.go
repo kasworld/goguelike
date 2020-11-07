@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike/game/terrain/roommanager"
 	"github.com/kasworld/goguelike/game/tilearea"
 	"github.com/kasworld/goguelike/lib/scriptparse"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposman_slice"
 	"github.com/kasworld/wrapper"
 )
 
@@ -75,7 +75,7 @@ func (tr *Terrain) execNewTerrain(
 	tr.resourceTileArea = resourcetilearea.New(w, h)
 	tr.roomManager = roommanager.New(w, h)
 	tr.corridorList = make([]*corridor.Corridor, 0)
-	tr.foPosMan = uuidposman.New(tr.Xlen, tr.Ylen)
+	tr.foPosMan = uuidposman_slice.New(tr.Xlen, tr.Ylen)
 
 	tr.initCrpCache()
 	tr.findList = findnear.NewXYLenList(w, h)

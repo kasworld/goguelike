@@ -16,7 +16,7 @@ import (
 	"github.com/kasworld/goguelike/enum/achievetype"
 	"github.com/kasworld/goguelike/game/cmd2floor"
 	"github.com/kasworld/goguelike/game/gamei"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
@@ -76,7 +76,7 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 
 			// send fieldobj list
 			fol := make([]*c2t_obj.FieldObjClient, 0)
-			f4c.FOPosMan.IterAll(func(o uuidposman.UUIDPosI, foX, foY int) bool {
+			f4c.FOPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
 				fo := o.(*c2t_obj.FieldObjClient)
 				fol = append(fol, fo)
 				return false

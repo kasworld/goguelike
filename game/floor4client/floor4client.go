@@ -13,14 +13,15 @@ package floor4client
 
 import (
 	"github.com/kasworld/goguelike/game/visitarea"
-	"github.com/kasworld/goguelike/lib/uuidposman"
+	"github.com/kasworld/goguelike/lib/uuidposman_map"
+	"github.com/kasworld/goguelike/lib/uuidposmani"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 )
 
 // Floor4Client has floor info for server ai, client
 type Floor4Client struct {
 	Visit         *visitarea.VisitArea
-	FOPosMan      *uuidposman.UUIDPosMan           // must *c2t_obj.FieldObjClient
+	FOPosMan      uuidposmani.UUIDPosManI          // must *c2t_obj.FieldObjClient
 	ActiveObjList []*c2t_obj.ActiveObjClient       // changed every turn
 	CarryObjList  []*c2t_obj.CarryObjClientOnFloor // changed every turn
 	DangerObjList []*c2t_obj.DangerObjClient       // changed every turn
@@ -29,7 +30,7 @@ type Floor4Client struct {
 func New(fi visitarea.FloorI) *Floor4Client {
 	f4c := &Floor4Client{
 		Visit:    visitarea.New(fi),
-		FOPosMan: uuidposman.New(fi.GetWidth(), fi.GetHeight()),
+		FOPosMan: uuidposman_map.New(fi.GetWidth(), fi.GetHeight()),
 	}
 	return f4c
 }
