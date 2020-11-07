@@ -32,47 +32,47 @@ func BGTile9Rooms128x128() []string {
 	}
 }
 
-func AgeingCity256x256() []string {
-	return []string{
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
-		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceAgeing initrun=10 msper=65000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=64 mean=8 stddev=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
-	}
-}
+// func AgeingCity256x256() []string {
+// 	return []string{
+// 		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
+// 		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
+// 		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
+// 		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceAgeing initrun=10 msper=65000 resetaftern=1440",
+// 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=64 mean=8 stddev=4",
+// 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+// 	}
+// }
 
-func AgeingField256x256() []string {
-	return []string{
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
-		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceAgeing initrun=10 msper=66000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=8 stddev=4",
-		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
-	}
-}
+// func AgeingField256x256() []string {
+// 	return []string{
+// 		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
+// 		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
+// 		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
+// 		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceAgeing initrun=10 msper=66000 resetaftern=1440",
+// 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=8 stddev=4",
+// 		"ConnectRooms tile=Road connect=1 allconnect=false diagonal=true",
+// 	}
+// }
 
-func AgeingMaze256x256() []string {
-	return []string{
-		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
-		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
-		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
-		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
-		"ResourceMazeWall resource=Stone amount=2000001 x=0 y=0 w=256 h=256 xn=32 yn=32 connerfill=false",
-		"ResourceAgeing initrun=10 msper=67000 resetaftern=1440",
-		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=10 stddev=4",
-	}
-}
+// func AgeingMaze256x256() []string {
+// 	return []string{
+// 		"ResourceFillRect resource=Soil amount=1 x=0  y=0  w=256 h=256",
+// 		"ResourceRand resource=Ice   mean=1600000000 stddev=10000000 repeat=8",
+// 		"ResourceRand resource=Water mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceRand resource=Fire  mean=1600000000 stddev=10000000 repeat=8",
+// 		"ResourceRand resource=Soil  mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceRand resource=Plant mean=100000000  stddev=10000000 repeat=256",
+// 		"ResourceMazeWall resource=Stone amount=2000001 x=0 y=0 w=256 h=256 xn=32 yn=32 connerfill=false",
+// 		"ResourceAgeing initrun=10 msper=67000 resetaftern=1440",
+// 		"AddRoomsRand bgtile=Room walltile=Wall terrace=false align=1 count=8 mean=10 stddev=4",
+// 	}
+// }
 
 func FreeForAll64x64() []string {
 	return []string{

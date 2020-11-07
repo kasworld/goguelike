@@ -49,20 +49,20 @@ func New(name string, floorCount int) *towermake.Tower {
 		case 1:
 			floorName := fmt.Sprintf("AgeingCity%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
-				floortemplate.AgeingCity256x256()...,
+				floortemplate.AgeingCitySize(256)...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 
 		case 3:
 			floorName := fmt.Sprintf("AgeingField%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
-				floortemplate.AgeingField256x256()...,
+				floortemplate.AgeingFieldSize(256)...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		case 5:
 			floorName := fmt.Sprintf("AgeingMaze%v", i)
 			fm := tw.Add(floorName, 256, 256, 1.0).Appends(
-				floortemplate.AgeingMaze256x256()...,
+				floortemplate.AgeingMazeSize(256)...,
 			)
 			fm.Appendf("ActiveObjectsRand count=%v", 256)
 		case 7:
