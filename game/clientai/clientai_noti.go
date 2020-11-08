@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idnoti"
-	"github.com/kasworld/goguelike/protocol_c2t/c2t_json"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_packet"
 )
@@ -294,7 +293,7 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 
 // FieldObjList    // for rebuild known floor
 func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	robj, err := c2t_json.UnmarshalPacket(hd, rbody)
+	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
 		return fmt.Errorf("Packet type miss match %v", rbody)
 	}
