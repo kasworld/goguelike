@@ -72,12 +72,6 @@ func New(seed int64, ao gamei.ActiveObjectI, l *g2log.LogBase) *ServerAI {
 		log:    l,
 		aouuid: ao.GetUUID(),
 	}
-	var err error
-	// sai.objCache, err = NewObjCache(objCacheSize)
-	if err != nil {
-		sai.log.Fatal("ai cache init fail %v %v", ao, err)
-		panic("ai cache init fail")
-	}
 	sai.fieldObjUseTime = make(map[string]time.Time)
 	sai.interDur = intervalduration.New("")
 	sai.runningPlanList = aoType2aiPlan[sai.ao.GetActiveObjType()].dup()
