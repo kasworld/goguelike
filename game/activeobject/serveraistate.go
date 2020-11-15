@@ -12,9 +12,12 @@
 package activeobject
 
 import (
+	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/kasworld/goguelike/config/gameconst"
+	"github.com/kasworld/goguelike/enum/aiplan"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -22,8 +25,72 @@ import (
 	"github.com/kasworld/goguelike/game/bias"
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
+	"github.com/kasworld/goguelike/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
+	"github.com/kasworld/intervalduration"
 )
+
+type ServerAIState struct {
+	aox int
+	aoy int
+
+	// export info
+	InterDur        *intervalduration.IntervalDuration
+	RunningPlanList aiplan.PlanList
+
+	turnTime        time.Time
+	isAIRunning     int32 // atomic check
+	movePath2Dest   [][2]int
+	planCarryObj    gamei.CarryingObjectI
+	planActiveObj   gamei.ActiveObjectI
+	planRemainCount int
+	moveDir         way9type.Way9Type
+
+	fieldObjUseTime map[string]time.Time
+}
+
+func (sai *ServerAIState) String() string {
+	return fmt.Sprintf("ServerAIState[%v]", sai.RunningPlanList.GetCurrentPlan())
+}
+
+func (ao *ActiveObject) NewServerAI() *ServerAIState {
+	sai := &ServerAIState{
+		fieldObjUseTime: make(map[string]time.Time),
+		InterDur:        intervalduration.New(""),
+		RunningPlanList: aoType2aiPlan[ao.GetActiveObjType()].Dup(),
+	}
+	ao.rnd.Shuffle(len(sai.RunningPlanList), func(i, j int) {
+		sai.RunningPlanList[i], sai.RunningPlanList[j] = sai.RunningPlanList[j], sai.RunningPlanList[i]
+	})
+	return sai
+}
+
+func (ao *ActiveObject) NeedChangePlan(sai *ServerAIState, actresult *aoactreqrsp.ActReqRsp) bool {
+	if actresult == nil {
+		return false
+	}
+	if !actresult.Acted() {
+		return false
+	}
+	return actresult.Error != c2t_error.None
+}
+
+func (ao *ActiveObject) selectPlan(sai *ServerAIState) {
+	if sai.RunningPlanList.GetCurrentPlan() != aiplan.MoveToRecycler && ao.overloadRate(sai) >= 1.0 {
+		sai.RunningPlanList.Move2Front(aiplan.MoveToRecycler)
+	}
+	if sai.RunningPlanList.GetCurrentPlan() != aiplan.UsePortal && ao.floorDiscoverRate(sai) >= 1.0 {
+		sai.RunningPlanList.Move2Front(aiplan.UsePortal)
+	}
+
+	for tryCount := len(sai.RunningPlanList); tryCount > 0; tryCount-- {
+		sai.RunningPlanList.Front2Last()
+		sai.planRemainCount = allPlanList[sai.RunningPlanList.GetCurrentPlan()].InitFn(ao, sai)
+		if sai.planRemainCount > 0 {
+			break // init success
+		}
+	}
+}
 
 func (ao *ActiveObject) ResetPlan(sai *ServerAIState) {
 	sai.planRemainCount = 0
