@@ -30,7 +30,7 @@ type ServerAIState struct {
 
 	// export info
 	InterDur        *intervalduration.IntervalDuration
-	RunningPlanList planList
+	RunningPlanList aiplan.PlanList
 
 	turnTime        time.Time
 	isAIRunning     int32 // atomic check
@@ -53,7 +53,7 @@ func (ao *ActiveObject) NewServerAI() *ServerAIState {
 	sai := &ServerAIState{}
 	sai.fieldObjUseTime = make(map[string]time.Time)
 	sai.InterDur = intervalduration.New("")
-	sai.RunningPlanList = aoType2aiPlan[ao.GetActiveObjType()].dup()
+	sai.RunningPlanList = aoType2aiPlan[ao.GetActiveObjType()].Dup()
 	ao.rnd.Shuffle(len(sai.RunningPlanList), func(i, j int) {
 		sai.RunningPlanList[i], sai.RunningPlanList[j] = sai.RunningPlanList[j], sai.RunningPlanList[i]
 	})
@@ -119,7 +119,7 @@ func (ao *ActiveObject) actTurn(sai *ServerAIState, turnTime time.Time) {
 		sai.RunningPlanList.GetCurrentPlan() != aiplan.Revenge &&
 		ao.aoAttackLast(sai) != nil {
 
-		sai.RunningPlanList.move2Front(aiplan.Revenge)
+		sai.RunningPlanList.Move2Front(aiplan.Revenge)
 		ao.selectPlan(sai)
 	} else {
 		// need select new plan?
@@ -149,14 +149,14 @@ func NeedChangePlan(actresult *aoactreqrsp.ActReqRsp) bool {
 
 func (ao *ActiveObject) selectPlan(sai *ServerAIState) {
 	if sai.RunningPlanList.GetCurrentPlan() != aiplan.MoveToRecycler && ao.overloadRate(sai) >= 1.0 {
-		sai.RunningPlanList.move2Front(aiplan.MoveToRecycler)
+		sai.RunningPlanList.Move2Front(aiplan.MoveToRecycler)
 	}
 	if sai.RunningPlanList.GetCurrentPlan() != aiplan.UsePortal && ao.floorDiscoverRate(sai) >= 1.0 {
-		sai.RunningPlanList.move2Front(aiplan.UsePortal)
+		sai.RunningPlanList.Move2Front(aiplan.UsePortal)
 	}
 
 	for tryCount := len(sai.RunningPlanList); tryCount > 0; tryCount-- {
-		sai.RunningPlanList.front2Last()
+		sai.RunningPlanList.Front2Last()
 		sai.planRemainCount = sai.allPlanList[sai.RunningPlanList.GetCurrentPlan()].InitFn(sai)
 		if sai.planRemainCount > 0 {
 			break // init success

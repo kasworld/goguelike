@@ -29,19 +29,6 @@ func (ao *ActiveObject) ResetPlan(sai *ServerAIState) {
 	sai.planRemainCount = 0
 }
 
-// func (ao *ActiveObject) GetAIDur(sai *ServerAIState) *intervalduration.IntervalDuration {
-// 	return sai.interDur
-// }
-
-// func (ao *ActiveObject) GetPlan(sai *ServerAIState) aiplan.AIPlan {
-// 	return sai.RunningPlanList.getCurrentPlan()
-// }
-
-// for web
-// func (ao *ActiveObject) GetPlanNameList(sai *ServerAIState) string {
-// 	return sai.RunningPlanList.String()
-// }
-
 // ai util fns
 
 // start pos == ao pos , end pos == dest pos
