@@ -85,7 +85,7 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjI
 		SP:    int(ao.sp),
 		SPMax: int(ao.AOTurnData.SPMax),
 
-		AIPlan: ao.ai.GetPlan(),
+		AIPlan: ao.ai.RunningPlanList.GetCurrentPlan(),
 
 		Act: ao.turnActReqRsp,
 		AP:  ao.ap,

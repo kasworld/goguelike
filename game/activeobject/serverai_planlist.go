@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverai2
+package activeobject
 
 import (
 	"bytes"
@@ -20,27 +20,8 @@ import (
 )
 
 type planObj struct {
-	Name   string
-	InitFn func(sai *ServerAI) int
-	ActFn  func(sai *ServerAI) bool
-}
-
-var allPlanList = []planObj{
-	aiplan.None:           {"None", initPlanNone, actPlanNone},
-	aiplan.Chat:           {"Chat", initPlanChat, actPlanChat},
-	aiplan.StrollAround:   {"StrollAround", initPlanStrollAround, actPlanStrollAround},
-	aiplan.Move2Dest:      {"Move2Dest", initPlanMove2Dest, actPlanMove2Dest},
-	aiplan.Revenge:        {"Revenge", initPlanRevenge, actPlanRevenge},
-	aiplan.UsePortal:      {"UsePortal", initPlanUsePortal, actPlanUsePortal},
-	aiplan.MoveToRecycler: {"MoveToRecycler", initPlanMoveToRecycler, actPlanMoveToRecycler},
-	aiplan.RechargeSafe:   {"RechargeSafe", initPlanRechargeSafe, actPlanRechargeSafe},
-	aiplan.RechargeCan:    {"RechargeCan", initPlanRechargeCan, actPlanRechargeCan},
-	aiplan.PickupCarryObj: {"PickupCarryObj", initPlanPickupCarryObj, actPlanPickupCarryObj},
-	aiplan.Equip:          {"Equip", initPlanEquip, actPlanEquip},
-	aiplan.UsePotion:      {"UsePotion", initPlanUsePotion, actPlanUsePotion},
-	aiplan.Attack:         {"Attack", initPlanAttack, actPlanAttack},
-	aiplan.MoveStraight3:  {"MoveStraight3", initPlanMoveStraight3, actPlanMoveStraight3},
-	aiplan.MoveStraight5:  {"MoveStraight5", initPlanMoveStraight5, actPlanMoveStraight5},
+	InitFn func(sai *ServerAIState) int
+	ActFn  func(sai *ServerAIState) bool
 }
 
 var aoType2aiPlan = [...]planList{
@@ -80,13 +61,13 @@ type planList []aiplan.AIPlan
 func (pl planList) String() string {
 	var buf bytes.Buffer
 	for _, v := range pl {
-		fmt.Fprintf(&buf, "%s ", allPlanList[v].Name)
+		fmt.Fprintf(&buf, "%s ", v)
 	}
 	return buf.String()
 }
 
 // get front plan
-func (pl planList) getCurrentPlan() aiplan.AIPlan {
+func (pl planList) GetCurrentPlan() aiplan.AIPlan {
 	return pl.getLast()
 }
 

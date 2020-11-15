@@ -44,7 +44,7 @@ func (ao *ActiveObject) GetHomeFloor() gamei.FloorI {
 }
 
 func (ao *ActiveObject) GetCurrentFloor() gamei.FloorI {
-	return ao.currrentFloor
+	return ao.currentFloor
 }
 
 func (ao *ActiveObject) GetFloor4Client(floorname string) *floor4client.Floor4Client {

@@ -23,7 +23,6 @@ import (
 	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike/enum/potiontype_vector"
 	"github.com/kasworld/goguelike/enum/scrolltype_vector"
-	"github.com/kasworld/goguelike/game/activeobject/serverai2"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd_stats"
 )
 
@@ -45,7 +44,7 @@ func (ao *ActiveObject) GetKill() int {
 	return int(ao.achieveStat.Get(achievetype.Kill))
 }
 
-func (ao *ActiveObject) GetAIObj() *serverai2.ServerAI {
+func (ao *ActiveObject) GetAIObj() *ServerAIState {
 	return ao.ai
 }
 
@@ -95,9 +94,9 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	{{if .GetAIObj }} 
 		AI : {{.GetAIObj}} 
 		<br/>
-		AI Dur : {{.GetAIObj.GetAIDur}} 
+		AI Dur : {{.GetAIObj.InterDur}} 
 		<br/>
-		AI Plans : {{.GetAIObj.GetPlanNameList}} 
+		AI Plans : {{.GetAIObj.RunningPlanList}} 
 	{{end}}
 	<br/>
 	LoadRate {{.GetTurnData.LoadRate}}

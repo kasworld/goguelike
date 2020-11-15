@@ -20,12 +20,12 @@ func (ao *ActiveObject) IsAIUse() bool {
 func (ao *ActiveObject) SetUseAI(b bool) {
 	ao.isAIInUse = b
 	if aio := ao.ai; aio != nil {
-		go aio.ResetPlan()
+		go ao.ResetPlan(aio)
 	}
 }
 
 func (ao *ActiveObject) RunAI(turnTime time.Time) {
 	if aio := ao.ai; aio != nil && ao.IsAIUse() {
-		aio.ActTurn(turnTime)
+		ao.ActTurn(aio, turnTime)
 	}
 }

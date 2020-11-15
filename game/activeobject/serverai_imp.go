@@ -9,13 +9,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package serverai2
+package activeobject
 
 import (
 	"math/rand"
 
 	"github.com/kasworld/goguelike/config/gameconst"
-	"github.com/kasworld/goguelike/enum/aiplan"
 	"github.com/kasworld/goguelike/enum/equipslottype"
 	"github.com/kasworld/goguelike/enum/turnresulttype"
 	"github.com/kasworld/goguelike/enum/way9type"
@@ -24,37 +23,36 @@ import (
 	"github.com/kasworld/goguelike/game/fieldobject"
 	"github.com/kasworld/goguelike/game/gamei"
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/intervalduration"
 )
 
-func (sai *ServerAI) ResetPlan() {
+func (ao *ActiveObject) ResetPlan(sai *ServerAIState) {
 	sai.planRemainCount = 0
 }
 
-func (sai *ServerAI) GetAIDur() *intervalduration.IntervalDuration {
-	return sai.interDur
-}
+// func (ao *ActiveObject) GetAIDur(sai *ServerAIState) *intervalduration.IntervalDuration {
+// 	return sai.interDur
+// }
 
-func (sai *ServerAI) GetPlan() aiplan.AIPlan {
-	return sai.runningPlanList.getCurrentPlan()
-}
+// func (ao *ActiveObject) GetPlan(sai *ServerAIState) aiplan.AIPlan {
+// 	return sai.RunningPlanList.getCurrentPlan()
+// }
 
 // for web
-func (sai *ServerAI) GetPlanNameList() string {
-	return sai.runningPlanList.String()
-}
+// func (ao *ActiveObject) GetPlanNameList(sai *ServerAIState) string {
+// 	return sai.RunningPlanList.String()
+// }
 
 // ai util fns
 
 // start pos == ao pos , end pos == dest pos
-func (sai *ServerAI) makePath2Dest(dstx, dsty int) [][2]int {
+func (ao *ActiveObject) makePath2Dest(sai *ServerAIState, dstx, dsty int) [][2]int {
 	srcx, srcy := sai.aox, sai.aoy
 	trylimit := gameconst.ViewPortWH
-	rtn := sai.currentFloor.FindPath(dstx, dsty, srcx, srcy, trylimit)
+	rtn := ao.currentFloor.FindPath(dstx, dsty, srcx, srcy, trylimit)
 	return rtn
 }
 
-func (sai *ServerAI) followPath2Dest() (way9type.Way9Type, bool) {
+func (ao *ActiveObject) followPath2Dest(sai *ServerAIState) (way9type.Way9Type, bool) {
 	if sai.movePath2Dest == nil {
 		return way9type.Center, false
 	}
@@ -68,7 +66,7 @@ func (sai *ServerAI) followPath2Dest() (way9type.Way9Type, bool) {
 		return way9type.Center, true
 	}
 
-	w, h := sai.currentFloor.GetTerrain().GetXYLen()
+	w, h := ao.currentFloor.GetTerrain().GetXYLen()
 	if aopos == sai.movePath2Dest[0] {
 		nextpos := sai.movePath2Dest[1]
 		isContact, toMoveDir := way9type.CalcContactDirWrapped(
@@ -93,18 +91,18 @@ func (sai *ServerAI) followPath2Dest() (way9type.Way9Type, bool) {
 	}
 }
 
-func (sai *ServerAI) needUnEquipCarryObj(PoBias bias.Bias) bool {
-	aoEnvBias := sai.ao.GetBias().Add(sai.currentFloor.GetEnvBias())
+func (ao *ActiveObject) needUnEquipCarryObj(sai *ServerAIState, PoBias bias.Bias) bool {
+	aoEnvBias := ao.GetBias().Add(ao.currentFloor.GetEnvBias())
 
 	currentBias := aoEnvBias.Add(PoBias)
 	newBias := aoEnvBias
 	return newBias.AbsSum() > currentBias.AbsSum()
 }
-func (sai *ServerAI) isBetterCarryObj2(PoEquipType equipslottype.EquipSlotType, PoBias bias.Bias) bool {
-	aoEnvBias := sai.ao.GetBias().Add(sai.currentFloor.GetEnvBias())
+func (ao *ActiveObject) isBetterCarryObj2(sai *ServerAIState, PoEquipType equipslottype.EquipSlotType, PoBias bias.Bias) bool {
+	aoEnvBias := ao.GetBias().Add(ao.currentFloor.GetEnvBias())
 
 	newBiasAbs := aoEnvBias.Add(PoBias).AbsSum()
-	v := sai.ao.GetInven().GetEquipSlot()[PoEquipType]
+	v := ao.GetInven().GetEquipSlot()[PoEquipType]
 	if v == nil {
 		return newBiasAbs > aoEnvBias.AbsSum()
 	} else {
@@ -112,16 +110,8 @@ func (sai *ServerAI) isBetterCarryObj2(PoEquipType equipslottype.EquipSlotType, 
 	}
 }
 
-// func (sai *ServerAI) canAttackTo(x1, y1, x2, y2 int) (way9type.Way9Type, bool) {
-// 	ter := sai.currentFloor.GetTerrain()
-// 	w, h := ter.GetXYLen()
-// 	contact, dir := way9type.CalcContactDirWrappedXY(x1, y1, x2, y2, w, h)
-// 	return dir, contact &&
-// 		!ter.GetTiles()[x1][y1].NoBattle() && !ter.GetTiles()[x2][y2].NoBattle()
-// }
-
-func (sai *ServerAI) findMovableDir5(x, y int, dir way9type.Way9Type) way9type.Way9Type {
-	tiles := sai.currentFloor.GetTerrain().GetTiles()
+func (ao *ActiveObject) findMovableDir5(sai *ServerAIState, x, y int, dir way9type.Way9Type) way9type.Way9Type {
+	tiles := ao.currentFloor.GetTerrain().GetTiles()
 	dirList := []way9type.Way9Type{
 		dir,
 		dir.TurnDir(1),
@@ -139,7 +129,7 @@ func (sai *ServerAI) findMovableDir5(x, y int, dir way9type.Way9Type) way9type.W
 		}
 	}
 	for _, dir := range dirList {
-		nextX, nextY := sai.posAddDir(x, y, dir)
+		nextX, nextY := ao.posAddDir(sai, x, y, dir)
 		if tiles[nextX][nextY].CharPlaceable() {
 			return dir
 		}
@@ -147,8 +137,8 @@ func (sai *ServerAI) findMovableDir5(x, y int, dir way9type.Way9Type) way9type.W
 	return way9type.Center
 }
 
-func (sai *ServerAI) findMovableDir3(x, y int, dir way9type.Way9Type) way9type.Way9Type {
-	tiles := sai.currentFloor.GetTerrain().GetTiles()
+func (ao *ActiveObject) findMovableDir3(sai *ServerAIState, x, y int, dir way9type.Way9Type) way9type.Way9Type {
+	tiles := ao.currentFloor.GetTerrain().GetTiles()
 	dirList := []way9type.Way9Type{
 		dir,
 		dir.TurnDir(1),
@@ -162,7 +152,7 @@ func (sai *ServerAI) findMovableDir3(x, y int, dir way9type.Way9Type) way9type.W
 		}
 	}
 	for _, dir := range dirList {
-		nextX, nextY := sai.posAddDir(x, y, dir)
+		nextX, nextY := ao.posAddDir(sai, x, y, dir)
 		if tiles[nextX][nextY].CharPlaceable() {
 			return dir
 		}
@@ -170,15 +160,15 @@ func (sai *ServerAI) findMovableDir3(x, y int, dir way9type.Way9Type) way9type.W
 	return way9type.Center
 }
 
-func (sai *ServerAI) posAddDir(x, y int, dir way9type.Way9Type) (int, int) {
-	ter := sai.currentFloor.GetTerrain()
+func (ao *ActiveObject) posAddDir(sai *ServerAIState, x, y int, dir way9type.Way9Type) (int, int) {
+	ter := ao.currentFloor.GetTerrain()
 	nextX := x + dir.Dx()
 	nextY := y + dir.Dy()
 	nextX, nextY = ter.WrapXY(nextX, nextY)
 	return nextX, nextY
 }
 
-func (sai *ServerAI) sendActNotiPacket2Floor(
+func (ao *ActiveObject) sendActNotiPacket2Floor(sai *ServerAIState,
 	Act c2t_idcmd.CommandID,
 	Dir way9type.Way9Type,
 	UUID string,
@@ -188,20 +178,20 @@ func (sai *ServerAI) sendActNotiPacket2Floor(
 		Dir:  Dir,
 		UUID: UUID,
 	}
-	sai.ao.SetReq2Handle(pk)
+	ao.SetReq2Handle(pk)
 }
 
-func (sai *ServerAI) needRecharge() bool {
-	return sai.ao.GetSPRate() < 0.3 || sai.ao.GetHPRate() < 0.3
+func (ao *ActiveObject) needRecharge(sai *ServerAIState) bool {
+	return ao.GetSPRate() < 0.3 || ao.GetHPRate() < 0.3
 }
 
-func (sai *ServerAI) aoAttackLast() gamei.ActiveObjectI {
-	for _, v := range sai.ao.GetTurnResultList() {
+func (ao *ActiveObject) aoAttackLast(sai *ServerAIState) gamei.ActiveObjectI {
+	for _, v := range ao.GetTurnResultList() {
 		if v.GetTurnResultType() == turnresulttype.AttackedFrom {
 			dstObj := v.GetDstObj()
 			switch o := dstObj.(type) {
 			default:
-				sai.log.Fatal("unknown dstao %v", v)
+				ao.log.Fatal("unknown dstao %v", v)
 			case gamei.ActiveObjectI:
 				if o.IsAlive() {
 					return o
@@ -214,11 +204,11 @@ func (sai *ServerAI) aoAttackLast() gamei.ActiveObjectI {
 	return nil
 }
 
-func (sai *ServerAI) overloadRate() float64 {
-	return sai.ao.GetTurnData().LoadRate
+func (ao *ActiveObject) overloadRate(sai *ServerAIState) float64 {
+	return ao.GetTurnData().LoadRate
 }
 
-func (sai *ServerAI) floorDiscoverRate() float64 {
-	vf := sai.ao.GetFloor4Client(sai.currentFloor.GetName())
+func (ao *ActiveObject) floorDiscoverRate(sai *ServerAIState) float64 {
+	vf := ao.GetFloor4Client(ao.currentFloor.GetName())
 	return vf.Visit.CalcCompleteRate()
 }

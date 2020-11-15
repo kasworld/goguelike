@@ -24,13 +24,13 @@ import (
 )
 
 func (ao *ActiveObject) EnterFloor(f gamei.FloorI) {
-	ao.currrentFloor = f
+	ao.currentFloor = f
 	ao.SetNeedTANoti()
 	if _, exist := ao.floor4ClientMan.GetByName(f.GetName()); !exist {
 		ao.floor4ClientMan.Add(f)
 	}
 	if aio := ao.ai; aio != nil {
-		aio.ResetPlan()
+		ao.ResetPlan(aio)
 	}
 }
 

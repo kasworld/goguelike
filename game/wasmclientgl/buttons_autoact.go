@@ -31,7 +31,7 @@ var autoActs = htmlbutton.NewButtonGroup("AutoActs",
 	[]*htmlbutton.HTMLButton{
 		// not client ai
 		htmlbutton.New("z", "AutoPlay", []string{"AutoPlay", "NoAutoPlay"},
-			"ServerAI on/off", cmdToggleServerAI, 0),
+			"ServerAIState on/off", cmdToggleServerAI, 0),
 		htmlbutton.New("x", "AutoRebirth", []string{"AutoRebirth", "NoAutoRebirth"},
 			"auto rebirth on/off", cmdToggleAutoRebirth, 0),
 		// client ai

@@ -31,7 +31,7 @@ func (ao *ActiveObject) Death(f gamei.FloorI) {
 	ao.ap = 0
 	ao.achieveStat.Inc(achievetype.Death)
 	if ao.ai != nil {
-		ao.ai.ResetPlan()
+		ao.ResetPlan(ao.ai)
 	}
 }
 

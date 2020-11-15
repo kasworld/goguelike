@@ -153,7 +153,7 @@ func (ao *ActiveObject) ApplyTurnAct() {
 				}
 			}
 			// send noti
-			ao.ai.ResetPlan()
+			ao.ResetPlan(ao.ai)
 		}
 	}
 }
@@ -249,7 +249,7 @@ func (ao *ActiveObject) DoUseCarryObj(poid string) error {
 			ao.log.Fatal("unknown scrolltype %v", po)
 		case scrolltype.Empty:
 		case scrolltype.FloorMap:
-			return ao.MakeFloorComplete(ao.currrentFloor)
+			return ao.MakeFloorComplete(ao.currentFloor)
 		case scrolltype.Teleport:
 			ao.log.Fatal("Scroll_Teleport must processed in floor %v", ao)
 		}

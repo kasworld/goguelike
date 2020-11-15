@@ -34,7 +34,6 @@ import (
 	"github.com/kasworld/goguelike/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
-	"github.com/kasworld/goguelike/game/activeobject/serverai2"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike/game/aoactreqrsp"
 	"github.com/kasworld/goguelike/game/bias"
@@ -77,7 +76,7 @@ type ActiveObject struct {
 	respawnType respawntype.RespawnType
 	bornFaction factiontype.FactionType          `prettystring:"simple"`
 	clientConn  *c2t_serveconnbyte.ServeConnByte // for clientConn conn
-	ai          *serverai2.ServerAI              // for server side ai
+	ai          *ServerAIState                        // for server side ai
 	isAIInUse   bool
 
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
@@ -91,7 +90,7 @@ type ActiveObject struct {
 	// info known to activeobject
 	floor4ClientMan *floor4clientman.Floor4ClientMan `prettystring:"simple"`
 
-	currrentFloor      gamei.FloorI
+	currentFloor       gamei.FloorI
 	remainTurn2Rebirth int
 
 	chat     string
@@ -155,7 +154,7 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	ao.isAIInUse = false
 	ao.aoType = aotype.User
 	ao.respawnType = respawntype.ToCurrentFloor
-	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
+	ao.ai = ao.NewServerAI()
 	ao.clientConn = conn
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount*2)
 	ao.addRandPotion(gameconst.InitPotionCount * 2)
@@ -174,7 +173,7 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	ao.isAIInUse = true
 	ao.aoType = aotype.System
 	ao.respawnType = respawntype.ToHomeFloor
-	ao.ai = serverai2.New(ao.rnd.Int63(), ao, ao.log)
+	ao.ai = ao.NewServerAI()
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount)
 	ao.addRandPotion(gameconst.InitPotionCount)
 	ao.addRandScroll(gameconst.InitScrollCount)
@@ -184,7 +183,6 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 
 func (ao *ActiveObject) Cleanup() {
 	ao.isAIInUse = false
-	ao.ai.Cleanup()
 }
 
 func (ao *ActiveObject) Rebirth() {
@@ -204,7 +202,7 @@ func (ao *ActiveObject) Rebirth() {
 		}
 		ao.addInitGold()
 	}
-	ao.ai.ResetPlan()
+	ao.ResetPlan(ao.ai)
 }
 
 func (ao *ActiveObject) addInitGold() {
