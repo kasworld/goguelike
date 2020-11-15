@@ -28,21 +28,21 @@ import (
 	"github.com/kasworld/goguelike/protocol_c2t/c2t_idcmd"
 )
 
-func (ao *ActiveObject) initPlanNone(sai *ServerAIState) int {
+func ai_initPlanNone(ao *ActiveObject, sai *ServerAIState) int {
 	return 0
 }
-func (ao *ActiveObject) actPlanNone(sai *ServerAIState) bool {
+func ai_actPlanNone(ao *ActiveObject, sai *ServerAIState) bool {
 	ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Meditate, way9type.Center, "")
 	return false
 }
 
-func (ao *ActiveObject) initPlanChat(sai *ServerAIState) int {
+func ai_initPlanChat(ao *ActiveObject, sai *ServerAIState) int {
 	if ao.rnd.Intn(10) == 0 {
 		return 1
 	}
 	return 0
 }
-func (ao *ActiveObject) actPlanChat(sai *ServerAIState) bool {
+func ai_actPlanChat(ao *ActiveObject, sai *ServerAIState) bool {
 	chat := gamedata.ChatData[ao.rnd.Intn(len(gamedata.ChatData))]
 	if len(chat) > 32 {
 		chat = chat[:32]
@@ -51,7 +51,7 @@ func (ao *ActiveObject) actPlanChat(sai *ServerAIState) bool {
 	return true
 }
 
-func (ao *ActiveObject) initPlanMove2Dest(sai *ServerAIState) int {
+func ai_initPlanMove2Dest(ao *ActiveObject, sai *ServerAIState) int {
 	dstx := ao.rnd.Intn(ao.currentFloor.GetWidth())
 	dsty := ao.rnd.Intn(ao.currentFloor.GetHeight())
 	sai.movePath2Dest = ao.makePath2Dest(sai, dstx, dsty)
@@ -60,7 +60,7 @@ func (ao *ActiveObject) initPlanMove2Dest(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 10
 }
-func (ao *ActiveObject) actPlanMove2Dest(sai *ServerAIState) bool {
+func ai_actPlanMove2Dest(ao *ActiveObject, sai *ServerAIState) bool {
 	moveDir, isContact := ao.followPath2Dest(sai)
 	if !isContact {
 		// plan fail, change to other
@@ -76,7 +76,7 @@ func (ao *ActiveObject) actPlanMove2Dest(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanStrollAround(sai *ServerAIState) int {
+func ai_initPlanStrollAround(ao *ActiveObject, sai *ServerAIState) int {
 	n := ao.rnd.IntRange(len(viewportdata.ViewportXYLenList)/2, len(viewportdata.ViewportXYLenList))
 	xylen := viewportdata.ViewportXYLenList[n]
 	dstx, dsty := sai.aox+xylen.X, sai.aoy+xylen.Y
@@ -86,7 +86,7 @@ func (ao *ActiveObject) initPlanStrollAround(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 10
 }
-func (ao *ActiveObject) actPlanStrollAround(sai *ServerAIState) bool {
+func ai_actPlanStrollAround(ao *ActiveObject, sai *ServerAIState) bool {
 	moveDir, isContact := ao.followPath2Dest(sai)
 	if !isContact {
 		// plan fail, change to other
@@ -102,7 +102,7 @@ func (ao *ActiveObject) actPlanStrollAround(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanMoveStraight3(sai *ServerAIState) int {
+func ai_initPlanMoveStraight3(ao *ActiveObject, sai *ServerAIState) int {
 	if sai.moveDir == way9type.Center {
 		sai.moveDir = way9type.Way9Type(ao.rnd.IntRange(1, way9type.Way9Type_Count))
 	} else {
@@ -122,7 +122,7 @@ func (ao *ActiveObject) initPlanMoveStraight3(sai *ServerAIState) int {
 	w, h := ao.currentFloor.GetWidth(), ao.currentFloor.GetHeight()
 	return ao.rnd.NormIntRange((w+h)/3, (w+h)/6)
 }
-func (ao *ActiveObject) actPlanMoveStraight3(sai *ServerAIState) bool {
+func ai_actPlanMoveStraight3(ao *ActiveObject, sai *ServerAIState) bool {
 	// break loop move
 	if len(sai.movePath2Dest) > 1 {
 		if sai.movePath2Dest[0] == [2]int{sai.aox, sai.aoy} {
@@ -138,7 +138,7 @@ func (ao *ActiveObject) actPlanMoveStraight3(sai *ServerAIState) bool {
 	return true
 }
 
-func (ao *ActiveObject) initPlanMoveStraight5(sai *ServerAIState) int {
+func ai_initPlanMoveStraight5(ao *ActiveObject, sai *ServerAIState) int {
 	if sai.moveDir == way9type.Center {
 		sai.moveDir = way9type.Way9Type(ao.rnd.IntRange(1, way9type.Way9Type_Count))
 	} else {
@@ -158,7 +158,7 @@ func (ao *ActiveObject) initPlanMoveStraight5(sai *ServerAIState) int {
 	w, h := ao.currentFloor.GetWidth(), ao.currentFloor.GetHeight()
 	return ao.rnd.NormIntRange((w+h)/5, (w+h)/10)
 }
-func (ao *ActiveObject) actPlanMoveStraight5(sai *ServerAIState) bool {
+func ai_actPlanMoveStraight5(ao *ActiveObject, sai *ServerAIState) bool {
 	// break loop move
 	if len(sai.movePath2Dest) > 1 {
 		if sai.movePath2Dest[0] == [2]int{sai.aox, sai.aoy} {
@@ -174,7 +174,7 @@ func (ao *ActiveObject) actPlanMoveStraight5(sai *ServerAIState) bool {
 	return true
 }
 
-func (ao *ActiveObject) initPlanUsePortal(sai *ServerAIState) int {
+func ai_initPlanUsePortal(ao *ActiveObject, sai *ServerAIState) int {
 	findObj, dstx, dsty := ao.currentFloor.GetFieldObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
@@ -199,7 +199,7 @@ func (ao *ActiveObject) initPlanUsePortal(sai *ServerAIState) int {
 	}
 	return 0
 }
-func (ao *ActiveObject) actPlanUsePortal(sai *ServerAIState) bool {
+func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 	moveDir, isContact := ao.followPath2Dest(sai)
 	if !isContact {
 		// plan fail, change to other
@@ -223,7 +223,7 @@ func (ao *ActiveObject) actPlanUsePortal(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanMoveToRecycler(sai *ServerAIState) int {
+func ai_initPlanMoveToRecycler(ao *ActiveObject, sai *ServerAIState) int {
 	findObj, dstx, dsty := ao.currentFloor.GetFieldObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
 		sai.aox, sai.aoy,
@@ -250,7 +250,7 @@ func (ao *ActiveObject) initPlanMoveToRecycler(sai *ServerAIState) int {
 	}
 	return 0
 }
-func (ao *ActiveObject) actPlanMoveToRecycler(sai *ServerAIState) bool {
+func ai_actPlanMoveToRecycler(ao *ActiveObject, sai *ServerAIState) bool {
 	moveDir, isContact := ao.followPath2Dest(sai)
 	if !isContact {
 		// plan fail, change to other
@@ -272,7 +272,7 @@ func (ao *ActiveObject) actPlanMoveToRecycler(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanRechargeSafe(sai *ServerAIState) int {
+func ai_initPlanRechargeSafe(ao *ActiveObject, sai *ServerAIState) int {
 	if !ao.needRecharge(sai) || ao.overloadRate(sai) > 1 {
 		return 0
 	}
@@ -293,7 +293,7 @@ func (ao *ActiveObject) initPlanRechargeSafe(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 100
 }
-func (ao *ActiveObject) actPlanRechargeSafe(sai *ServerAIState) bool {
+func ai_actPlanRechargeSafe(ao *ActiveObject, sai *ServerAIState) bool {
 	if ao.overloadRate(sai) > 1.0 {
 		return false
 	}
@@ -338,7 +338,7 @@ func (ao *ActiveObject) actPlanRechargeSafe(sai *ServerAIState) bool {
 	}
 }
 
-func (ao *ActiveObject) initPlanRechargeCan(sai *ServerAIState) int {
+func ai_initPlanRechargeCan(ao *ActiveObject, sai *ServerAIState) int {
 	if !ao.needRecharge(sai) || ao.overloadRate(sai) > 1 {
 		return 0
 	}
@@ -359,7 +359,7 @@ func (ao *ActiveObject) initPlanRechargeCan(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 50
 }
-func (ao *ActiveObject) actPlanRechargeCan(sai *ServerAIState) bool {
+func ai_actPlanRechargeCan(ao *ActiveObject, sai *ServerAIState) bool {
 	if ao.overloadRate(sai) > 1.0 {
 		return false
 	}
@@ -403,7 +403,7 @@ func (ao *ActiveObject) actPlanRechargeCan(sai *ServerAIState) bool {
 	}
 }
 
-func (ao *ActiveObject) initPlanAttack(sai *ServerAIState) int {
+func ai_initPlanAttack(ao *ActiveObject, sai *ServerAIState) int {
 	// find near ao
 	ter := ao.currentFloor.GetTerrain()
 	findObj, dstx, dsty := ao.currentFloor.GetActiveObjPosMan().Search1stByXYLenList(
@@ -429,7 +429,7 @@ func (ao *ActiveObject) initPlanAttack(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 10
 }
-func (ao *ActiveObject) actPlanAttack(sai *ServerAIState) bool {
+func ai_actPlanAttack(ao *ActiveObject, sai *ServerAIState) bool {
 	if sai.planActiveObj == nil || !sai.planActiveObj.IsAlive() {
 		return false
 	}
@@ -466,7 +466,7 @@ func (ao *ActiveObject) actPlanAttack(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanRevenge(sai *ServerAIState) int {
+func ai_initPlanRevenge(ao *ActiveObject, sai *ServerAIState) int {
 	dstActiveObj := ao.aoAttackLast(sai)
 	if dstActiveObj == nil {
 		return 0
@@ -482,11 +482,11 @@ func (ao *ActiveObject) initPlanRevenge(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 10
 }
-func (ao *ActiveObject) actPlanRevenge(sai *ServerAIState) bool {
-	return ao.actPlanAttack(sai)
+func ai_actPlanRevenge(ao *ActiveObject, sai *ServerAIState) bool {
+	return ai_actPlanAttack(ao, sai)
 }
 
-func (ao *ActiveObject) initPlanPickupCarryObj(sai *ServerAIState) int {
+func ai_initPlanPickupCarryObj(ao *ActiveObject, sai *ServerAIState) int {
 	// find near po
 	findObj, dstx, dsty := ao.currentFloor.GetCarryObjPosMan().Search1stByXYLenList(
 		viewportdata.ViewportXYLenList,
@@ -512,7 +512,7 @@ func (ao *ActiveObject) initPlanPickupCarryObj(sai *ServerAIState) int {
 	}
 	return len(sai.movePath2Dest) + 10
 }
-func (ao *ActiveObject) actPlanPickupCarryObj(sai *ServerAIState) bool {
+func ai_actPlanPickupCarryObj(ao *ActiveObject, sai *ServerAIState) bool {
 	moveDir, isContact := ao.followPath2Dest(sai)
 	if !isContact {
 		// plan fail, change to other
@@ -529,13 +529,13 @@ func (ao *ActiveObject) actPlanPickupCarryObj(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanEquip(sai *ServerAIState) int {
+func ai_initPlanEquip(ao *ActiveObject, sai *ServerAIState) int {
 	if len(ao.GetInven().GetEquipList()) == 0 {
 		return 0
 	}
 	return 1
 }
-func (ao *ActiveObject) actPlanEquip(sai *ServerAIState) bool {
+func ai_actPlanEquip(ao *ActiveObject, sai *ServerAIState) bool {
 	for _, po := range ao.GetInven().GetEquipSlot() {
 		if po != nil && ao.needUnEquipCarryObj(sai, po.GetBias()) {
 			ao.sendActNotiPacket2Floor(sai, c2t_idcmd.UnEquip, way9type.Center,
@@ -553,13 +553,13 @@ func (ao *ActiveObject) actPlanEquip(sai *ServerAIState) bool {
 	return false
 }
 
-func (ao *ActiveObject) initPlanUsePotion(sai *ServerAIState) int {
+func ai_initPlanUsePotion(ao *ActiveObject, sai *ServerAIState) int {
 	if len(ao.GetInven().GetPotionList()) == 0 {
 		return 0
 	}
 	return 1
 }
-func (ao *ActiveObject) actPlanUsePotion(sai *ServerAIState) bool {
+func ai_actPlanUsePotion(ao *ActiveObject, sai *ServerAIState) bool {
 	for _, po := range ao.GetInven().GetPotionList() {
 		if po == nil {
 			continue

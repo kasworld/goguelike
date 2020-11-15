@@ -17,8 +17,8 @@ import (
 )
 
 type planObj struct {
-	InitFn func(sai *ServerAIState) int
-	ActFn  func(sai *ServerAIState) bool
+	InitFn func(ao *ActiveObject, sai *ServerAIState) int
+	ActFn  func(ao *ActiveObject, sai *ServerAIState) bool
 }
 
 var aoType2aiPlan = [...]aiplan.PlanList{
@@ -51,4 +51,22 @@ var aoType2aiPlan = [...]aiplan.PlanList{
 		aiplan.MoveStraight3,
 		aiplan.MoveStraight5,
 	},
+}
+
+var allPlanList = []planObj{
+	aiplan.None:           {ai_initPlanNone, ai_actPlanNone},
+	aiplan.Chat:           {ai_initPlanChat, ai_actPlanChat},
+	aiplan.StrollAround:   {ai_initPlanStrollAround, ai_actPlanStrollAround},
+	aiplan.Move2Dest:      {ai_initPlanMove2Dest, ai_actPlanMove2Dest},
+	aiplan.Revenge:        {ai_initPlanRevenge, ai_actPlanRevenge},
+	aiplan.UsePortal:      {ai_initPlanUsePortal, ai_actPlanUsePortal},
+	aiplan.MoveToRecycler: {ai_initPlanMoveToRecycler, ai_actPlanMoveToRecycler},
+	aiplan.RechargeSafe:   {ai_initPlanRechargeSafe, ai_actPlanRechargeSafe},
+	aiplan.RechargeCan:    {ai_initPlanRechargeCan, ai_actPlanRechargeCan},
+	aiplan.PickupCarryObj: {ai_initPlanPickupCarryObj, ai_actPlanPickupCarryObj},
+	aiplan.Equip:          {ai_initPlanEquip, ai_actPlanEquip},
+	aiplan.UsePotion:      {ai_initPlanUsePotion, ai_actPlanUsePotion},
+	aiplan.Attack:         {ai_initPlanAttack, ai_actPlanAttack},
+	aiplan.MoveStraight3:  {ai_initPlanMoveStraight3, ai_actPlanMoveStraight3},
+	aiplan.MoveStraight5:  {ai_initPlanMoveStraight5, ai_actPlanMoveStraight5},
 }

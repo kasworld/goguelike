@@ -41,8 +41,6 @@ type ServerAIState struct {
 	moveDir         way9type.Way9Type
 
 	fieldObjUseTime map[string]time.Time
-
-	allPlanList []planObj
 }
 
 func (sai *ServerAIState) String() string {
@@ -57,24 +55,6 @@ func (ao *ActiveObject) NewServerAI() *ServerAIState {
 	ao.rnd.Shuffle(len(sai.RunningPlanList), func(i, j int) {
 		sai.RunningPlanList[i], sai.RunningPlanList[j] = sai.RunningPlanList[j], sai.RunningPlanList[i]
 	})
-
-	sai.allPlanList = []planObj{
-		aiplan.None:           {ao.initPlanNone, ao.actPlanNone},
-		aiplan.Chat:           {ao.initPlanChat, ao.actPlanChat},
-		aiplan.StrollAround:   {ao.initPlanStrollAround, ao.actPlanStrollAround},
-		aiplan.Move2Dest:      {ao.initPlanMove2Dest, ao.actPlanMove2Dest},
-		aiplan.Revenge:        {ao.initPlanRevenge, ao.actPlanRevenge},
-		aiplan.UsePortal:      {ao.initPlanUsePortal, ao.actPlanUsePortal},
-		aiplan.MoveToRecycler: {ao.initPlanMoveToRecycler, ao.actPlanMoveToRecycler},
-		aiplan.RechargeSafe:   {ao.initPlanRechargeSafe, ao.actPlanRechargeSafe},
-		aiplan.RechargeCan:    {ao.initPlanRechargeCan, ao.actPlanRechargeCan},
-		aiplan.PickupCarryObj: {ao.initPlanPickupCarryObj, ao.actPlanPickupCarryObj},
-		aiplan.Equip:          {ao.initPlanEquip, ao.actPlanEquip},
-		aiplan.UsePotion:      {ao.initPlanUsePotion, ao.actPlanUsePotion},
-		aiplan.Attack:         {ao.initPlanAttack, ao.actPlanAttack},
-		aiplan.MoveStraight3:  {ao.initPlanMoveStraight3, ao.actPlanMoveStraight3},
-		aiplan.MoveStraight5:  {ao.initPlanMoveStraight5, ao.actPlanMoveStraight5},
-	}
 
 	return sai
 }
@@ -128,7 +108,7 @@ func (ao *ActiveObject) actTurn(sai *ServerAIState, turnTime time.Time) {
 		}
 	}
 	if sai.planRemainCount > 0 {
-		continuePlan := sai.allPlanList[sai.RunningPlanList.GetCurrentPlan()].ActFn(sai)
+		continuePlan := allPlanList[sai.RunningPlanList.GetCurrentPlan()].ActFn(ao, sai)
 		if continuePlan {
 			sai.planRemainCount--
 		} else {
@@ -157,7 +137,7 @@ func (ao *ActiveObject) selectPlan(sai *ServerAIState) {
 
 	for tryCount := len(sai.RunningPlanList); tryCount > 0; tryCount-- {
 		sai.RunningPlanList.Front2Last()
-		sai.planRemainCount = sai.allPlanList[sai.RunningPlanList.GetCurrentPlan()].InitFn(sai)
+		sai.planRemainCount = allPlanList[sai.RunningPlanList.GetCurrentPlan()].InitFn(ao, sai)
 		if sai.planRemainCount > 0 {
 			break // init success
 		}
