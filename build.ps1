@@ -64,9 +64,6 @@ const DataVersion = `"${Data_VERSION}`"
 ################################################################################
 $DATESTR=Get-Date -UFormat '+%Y-%m-%dT%H:%M:%S%Z:00'
 $GITSTR=git rev-parse HEAD
-$BUILD_VER="${DATESTR}_${GITSTR}_release_windows"
-Write-Output "Build Version: ${BUILD_VER}"
-
 ################################################################################
 # build bin
 
@@ -74,13 +71,25 @@ $BIN_DIR="bin"
 $SRC_DIR="rundriver"
 
 mkdir -ErrorAction SilentlyContinue "${BIN_DIR}"
-Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 
 # build bin here
+$BUILD_VER="${DATESTR}_${GITSTR}_release_windows"
+Write-Output "Build Version: ${BUILD_VER}"
+Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 go build -o "${BIN_DIR}\towerserver.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserverwin.go"
 go build -o "${BIN_DIR}\multiclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\multiclient.go"
 go build -o "${BIN_DIR}\textclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\textclient.go"
 
+$BUILD_VER="${DATESTR}_${GITSTR}_release_linux"
+Write-Output "Build Version: ${BUILD_VER}"
+Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
+$env:GOOS="linux" 
+go build -o "${BIN_DIR}\towerserver" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserver.go"
+go build -o "${BIN_DIR}\multiclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\multiclient.go"
+go build -o "${BIN_DIR}\textclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\textclient.go"
+$env:GOOS=""
+
+$BUILD_VER="${DATESTR}_${GITSTR}_release_wasm"
 Set-Location rundriver
 ./genwasmclient.ps1 ${BUILD_VER}
 Set-Location ..

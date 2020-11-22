@@ -103,43 +103,34 @@ const DataVersion = \"${Data_VERSION}\"
 " > config/dataversion/dataversion_gen.go 
 
 
-################################################################################
-# build bin
-
-BuildBin() {
-    local srcfile=${1}
-    local dstdir=${2}
-    local dstfile=${3}
-    local args="-X main.Ver=${BUILD_VER}"
-
-    echo "go build -i -o ${dstdir}/${dstfile} -ldflags "${args}" ${srcfile}"
-
-    mkdir -p ${dstdir}
-    go build -i -o ${dstdir}/${dstfile} -ldflags "${args}" ${srcfile}
-
-    if [ ! -f "${dstdir}/${dstfile}" ]; then
-        echo "${dstdir}/${dstfile} build fail, build file: ${srcfile}"
-        exit 1
-    fi
-    strip "${dstdir}/${dstfile}"
-}
 
 DATESTR=`date -Iseconds`
 GITSTR=`git rev-parse HEAD`
-BUILD_VER=${DATESTR}_${GITSTR}_release_linux
-echo "Build Version:" ${BUILD_VER}
 
 BIN_DIR="bin"
 SRC_DIR="rundriver"
 
 mkdir -p ${BIN_DIR}
+
+BUILD_VER=${DATESTR}_${GITSTR}_release_linux
+echo "Build Version:" ${BUILD_VER}
 echo ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
+go build -o "${BIN_DIR}/groundserver" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/groundserver.go"
+go build -o "${BIN_DIR}/towerserver" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/towerserver.go"
+go build -o "${BIN_DIR}/multiclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/multiclient.go"
+go build -o "${BIN_DIR}/textclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/textclient.go"
 
-BuildBin ${SRC_DIR}/towerserver.go ${BIN_DIR} towerserver
-BuildBin ${SRC_DIR}/groundserver.go ${BIN_DIR} groundserver
-BuildBin ${SRC_DIR}/multiclient.go ${BIN_DIR} multiclient
-BuildBin ${SRC_DIR}/textclient.go ${BIN_DIR} textclient
 
+BUILD_VER=${DATESTR}_${GITSTR}_release_windows
+echo "Build Version:" ${BUILD_VER}
+echo ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
+GOOS=windows go build -o "${BIN_DIR}/towerserver.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/towerserverwin.go"
+GOOS=windows go build -o "${BIN_DIR}/multiclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/multiclient.go"
+GOOS=windows go build -o "${BIN_DIR}/textclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}/textclient.go"
+
+
+BUILD_VER=${DATESTR}_${GITSTR}_release_wasm
+echo "Build Version:" ${BUILD_VER}
 cd rundriver
 ./genwasmclient.sh ${BUILD_VER}
 cd ..
