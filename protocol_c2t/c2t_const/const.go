@@ -7,8 +7,6 @@ import "time"
 const (
 	// MaxBodyLen set to max body len, affect send/recv buffer size
 	MaxBodyLen = 0xfffff
-	// PacketBufferPoolSize max size of pool packet buffer
-	PacketBufferPoolSize = 10
 )
 
 const (
