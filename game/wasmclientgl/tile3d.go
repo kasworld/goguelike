@@ -153,15 +153,17 @@ func NewTile3D_Tree(opacity float64) *Tile3D {
 	return t3d
 }
 func makeTreeGeo() js.Value {
+	treeHeight := DstCellSize * 2
+	treeWidth := DstCellSize
 	matrix := ThreeJsNew("Matrix4")
 
-	geo := ThreeJsNew("CylinderGeometry", 1, 3, DstCellSize-1)
+	geo := ThreeJsNew("CylinderGeometry", 1, 3, treeHeight-1)
 	geo.Call("rotateX", math.Pi/2)
 
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
-		0, 0, DstCellSize/3-2,
+		0, 0, treeHeight/3-2,
 	))
-	geo1 := ThreeJsNew("ConeGeometry", DstCellSize/4, DstCellSize/3)
+	geo1 := ThreeJsNew("ConeGeometry", treeWidth/3, treeHeight/3)
 	geo1.Call("rotateX", math.Pi/2)
 	geo.Call("merge", geo1, matrix)
 	geo1.Call("dispose")
@@ -169,7 +171,7 @@ func makeTreeGeo() js.Value {
 	matrix.Call("setPosition", ThreeJsNew("Vector3",
 		0, 0, 2,
 	))
-	geo2 := ThreeJsNew("ConeGeometry", DstCellSize/3, DstCellSize/3)
+	geo2 := ThreeJsNew("ConeGeometry", treeWidth/2, treeHeight/3)
 	geo2.Call("rotateX", math.Pi/2)
 	geo.Call("merge", geo2, matrix)
 	geo2.Call("dispose")
