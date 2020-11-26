@@ -67,7 +67,7 @@ func cmdAddRandRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("Room add insufficient")
+		tr.log.Warn("Room add %v insufficient %v", count, tr)
 		// return false
 	}
 	return nil

@@ -55,10 +55,10 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 				if err := tr.makeCorridor(v, nearRoom, ttile, way8); err == nil {
 					addRoomGraph(roomGraph, v, nearRoom)
 				} else {
-					tr.log.Warn("%v", err)
+					tr.log.Warn("%v %v", err, tr)
 				}
 			} else {
-				tr.log.Warn("fail to find near room %v", v)
+				tr.log.Warn("fail to find near room %v %v", v, tr)
 			}
 		}
 	}
@@ -70,8 +70,8 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 	for try := 1; ; {
 		_, notvisitedRoom := tr.findNotConnectedRooms(roomGraph)
 		if len(notvisitedRoom) != 0 {
-			tr.log.Warn("room not full connected %v %v, connect more",
-				tr, len(notvisitedRoom))
+			tr.log.Warn("%v rooms not fully connected %v, try more",
+				len(notvisitedRoom), tr)
 		} else {
 			break
 		}
@@ -84,10 +84,10 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 					addRoomGraph(roomGraph, v, nearRoom)
 					break
 				} else {
-					tr.log.Warn("%v", err)
+					tr.log.Warn("%v %v", err, tr)
 				}
 			} else {
-				tr.log.Warn("fail to find near room %v", v)
+				tr.log.Warn("fail to find near room %v %v", v, tr)
 			}
 		}
 	}
