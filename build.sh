@@ -15,9 +15,7 @@ PROTOCOL_T2G_VERSION=`makesha256sum ${ProtocolT2GFiles}`
 echo "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
 echo "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
 genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int
-cd protocol_t2g
-goimports -w .
-cd ..
+goimports -w protocol_t2g
 
 ################################################################################
 ProtocolC2TFiles="protocol_c2t/*.enum protocol_c2t/c2t_obj/protocol_*.go"
@@ -25,9 +23,7 @@ PROTOCOL_C2T_VERSION=`makesha256sum ${ProtocolC2TFiles}`
 echo "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
 echo "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
 genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int
-cd protocol_c2t
-goimports -w .
-cd ..
+goimports -w protocol_c2t
 
 ################################################################################
 echo "generate enums"
@@ -54,9 +50,7 @@ genenum -typename=TowerAchieve -packagename=towerachieve -basedir=enum -vectorty
 genenum -typename=TurnResultType -packagename=turnresulttype -basedir=enum
 genenum -typename=Way9Type -packagename=way9type -basedir=enum 
 
-cd enum
-goimports -w .
-cd ..
+goimports -w enum
 
 ################################################################################
 # change to use gob

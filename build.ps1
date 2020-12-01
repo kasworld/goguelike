@@ -1,31 +1,27 @@
 
 ################################################################################
-Set-Location lib
-Write-Output "genlog -leveldatafile ./g2log/g2log.data -packagename g2log "
+cd lib
+echo "genlog -leveldatafile ./g2log/g2log.data -packagename g2log "
 genlog -leveldatafile ./g2log/g2log.data -packagename g2log 
-Set-Location ..
+cd ..
 
 ################################################################################
 $PROTOCOL_T2G_VERSION=makesha256sum protocol_t2g/*.enum protocol_t2g/t2g_obj/protocol_*.go
-Write-Output "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
-Write-Output "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
+echo "Protocol T2G Version: ${PROTOCOL_T2G_VERSION}"
+echo "genprotocol -ver=${PROTOCOL_T2G_VERSION} -basedir=protocol_t2g -prefix=t2g -statstype=int"
 genprotocol -ver="${PROTOCOL_T2G_VERSION}" -basedir=protocol_t2g -prefix=t2g -statstype=int
-Set-Location protocol_t2g
-goimports -w .
-Set-Location ..
+goimports -w protocol_t2g
 
 ################################################################################
 $PROTOCOL_C2T_VERSION=makesha256sum protocol_c2t/*.enum protocol_c2t/c2t_obj/protocol_*.go
-Write-Output "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
-Write-Output "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
+echo "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
+echo "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
 genprotocol -ver="${PROTOCOL_C2T_VERSION}" -basedir=protocol_c2t -prefix=c2t -statstype=int
-Set-Location protocol_c2t
-goimports -w .
-Set-Location ..
+goimports -w protocol_c2t
 
 ################################################################################
 # generate enum
-Write-Output "generate enums"
+echo "generate enums"
 genenum -typename=AchieveType -packagename=achievetype -basedir=enum -vectortype=float64
 genenum -typename=AIPlan -packagename=aiplan -basedir=enum -vectortype=int
 genenum -typename=ActiveObjType -packagename=aotype -basedir=enum -vectortype=int
@@ -49,14 +45,12 @@ genenum -typename=TowerAchieve -packagename=towerachieve -basedir=enum -vectorty
 genenum -typename=TurnResultType -packagename=turnresulttype -basedir=enum
 genenum -typename=Way9Type -packagename=way9type -basedir=enum 
 
-Set-Location enum
-goimports -w .
-Set-Location ..
+goimports -w enum
 
 $Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
-Write-Output "Data Version: ${Data_VERSION}"
+echo "Data Version: ${Data_VERSION}"
 mkdir -ErrorAction SilentlyContinue config/dataversion
-Write-Output "package dataversion
+echo "package dataversion
 const DataVersion = `"${Data_VERSION}`" 
 " > config/dataversion/dataversion_gen.go 
 
@@ -74,15 +68,15 @@ mkdir -ErrorAction SilentlyContinue "${BIN_DIR}"
 
 # build bin here
 $BUILD_VER="${DATESTR}_${GITSTR}_release_windows"
-Write-Output "Build Version: ${BUILD_VER}"
-Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
+echo "Build Version: ${BUILD_VER}"
+echo ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 go build -o "${BIN_DIR}\towerserver.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserverwin.go"
 go build -o "${BIN_DIR}\multiclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\multiclient.go"
 go build -o "${BIN_DIR}\textclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\textclient.go"
 
 $BUILD_VER="${DATESTR}_${GITSTR}_release_linux"
-Write-Output "Build Version: ${BUILD_VER}"
-Write-Output ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
+echo "Build Version: ${BUILD_VER}"
+echo ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
 $env:GOOS="linux" 
 go build -o "${BIN_DIR}\towerserver" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserver.go"
 go build -o "${BIN_DIR}\multiclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\multiclient.go"
@@ -90,12 +84,12 @@ go build -o "${BIN_DIR}\textclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_D
 $env:GOOS=""
 
 $BUILD_VER="${DATESTR}_${GITSTR}_release_wasm"
-Set-Location rundriver
+cd rundriver
 ./genwasmclient.ps1 ${BUILD_VER}
-Set-Location ..
+cd ..
 
-Write-Output "cp -r rundriver/serverdata ${BIN_DIR}"
+echo "cp -r rundriver/serverdata ${BIN_DIR}"
 Copy-Item -Force -r rundriver/serverdata ${BIN_DIR}
-Write-Output "cp -r rundriver/clientdata ${BIN_DIR}"
+echo "cp -r rundriver/clientdata ${BIN_DIR}"
 Copy-Item -Force -r rundriver/clientdata ${BIN_DIR}
 
