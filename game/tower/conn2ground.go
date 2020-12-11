@@ -58,12 +58,7 @@ func NewConn2Ground(addr string) *Conn2Ground {
 	c2g.sendRecvStop = func() {
 		fmt.Printf("Too early sendRecvStop call\n")
 	}
-	c2g.c2sc = t2g_conntcp.New(
-		readTimeoutSec, writeTimeoutSec,
-		t2g_json.MarshalBodyFn,
-		c2g.handleRecvPacket,
-		c2g.handleSentPacket,
-	)
+	c2g.c2sc = t2g_conntcp.New(10)
 	return c2g
 }
 
@@ -80,13 +75,18 @@ func (c2g *Conn2Ground) Run(mainctx context.Context) error {
 	c2g.sendRecvStop = stopFn
 	defer c2g.sendRecvStop()
 	c2g.connected = true
-	err := c2g.c2sc.Run(ctx)
+	err := c2g.c2sc.Run(ctx,
+		readTimeoutSec, writeTimeoutSec,
+		t2g_json.MarshalBodyFn,
+		c2g.handleRecvPacket,
+		c2g.handleSentPacket,
+	)
 	c2g.connected = false
 	return err
 }
 
-func (c2g *Conn2Ground) handleSentPacket(header t2g_packet.Header) error {
-	if err := c2g.apistat.AfterSendReq(header); err != nil {
+func (c2g *Conn2Ground) handleSentPacket(pk *t2g_packet.Packet) error {
+	if err := c2g.apistat.AfterSendReq(pk.Header); err != nil {
 		return err
 	}
 	return nil
@@ -146,7 +146,7 @@ func (c2g *Conn2Ground) ReqWithRspFn(cmd t2g_idcmd.CommandID, body interface{},
 	}
 	c2g.pid2statobj.Add(spk.Header.ID, psobj)
 
-	if err := c2g.c2sc.EnqueueSendPacket(spk); err != nil {
+	if err := c2g.c2sc.EnqueueSendPacket(&spk); err != nil {
 		fmt.Printf("End %v %v %v\n", c2g, spk, err)
 		c2g.sendRecvStop()
 		return fmt.Errorf("Send fail %v %v", c2g, err)

@@ -74,13 +74,7 @@ func New(config ClientAIConfig, l *g2log.LogBase) *ClientAI {
 	cai.sendRecvStop = func() {
 		cai.log.Error("Too early sendRecvStop call %v", cai)
 	}
-	cai.towerConn = c2t_connwsgorilla.New(
-		gameconst.ClientReadTimeoutSec*time.Second,
-		gameconst.ClientWriteTimeoutSec*time.Second,
-		c2t_gob.MarshalBodyFn,
-		cai.handleRecvPacket,
-		cai.handleSentPacket,
-	)
+	cai.towerConn = c2t_connwsgorilla.New(10)
 	return cai
 }
 
@@ -107,7 +101,13 @@ func (cai *ClientAI) Run(mainctx context.Context) {
 	cai.wg.Add(1)
 	go func() {
 		defer cai.wg.Done()
-		err := cai.towerConn.Run(ctx)
+		err := cai.towerConn.Run(ctx,
+			gameconst.ClientReadTimeoutSec*time.Second,
+			gameconst.ClientWriteTimeoutSec*time.Second,
+			c2t_gob.MarshalBodyFn,
+			cai.handleRecvPacket,
+			cai.handleSentPacket,
+		)
 
 		if err != nil {
 			cai.runResult = err
@@ -149,8 +149,8 @@ loop:
 	}
 }
 
-func (cai *ClientAI) handleSentPacket(header c2t_packet.Header) error {
-	cai.log.TraceClient("sent %v", header)
+func (cai *ClientAI) handleSentPacket(pk *c2t_packet.Packet) error {
+	cai.log.TraceClient("sent %v", pk.Header)
 	return nil
 }
 
@@ -188,7 +188,7 @@ func (cai *ClientAI) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 		},
 		Body: body,
 	}
-	if err := cai.towerConn.EnqueueSendPacket(spk); err != nil {
+	if err := cai.towerConn.EnqueueSendPacket(&spk); err != nil {
 		cai.log.Error("End %s %v %+v %v",
 			cai, spk.Header, spk.Body, err)
 		cai.sendRecvStop()
