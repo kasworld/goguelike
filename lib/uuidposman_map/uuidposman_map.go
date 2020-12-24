@@ -42,7 +42,7 @@ func New(x, y int) *UUIDPosMan {
 	rtn := UUIDPosMan{
 		uuid2obj: make(map[string]uuidposmani.UUIDPosI),
 		uuid2pos: make(map[string][2]int),
-		pos2objs: make(map[[2]int]uuidposmani.UUIDPosIList, x),
+		pos2objs: make(map[[2]int]uuidposmani.UUIDPosIList),
 		XWrapper: wrapper.New(x),
 		YWrapper: wrapper.New(y),
 	}
