@@ -1,4 +1,4 @@
-// Copyright 2014,2015,2016,2017,2018,2019,2020 SeukWon Kang (kasworld@gmail.com)
+// Copyright 2014,2015,2016,2017,2018,2019,2020,2021 SeukWon Kang (kasworld@gmail.com)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -28,10 +28,10 @@ func (as ActiveBuff) String() string {
 }
 
 type ActiveBuff struct {
-	Name         string
+	Name           string
 	ClearOnRebirth bool
-	Buff         []statusoptype.OpArg
-	AppliedCount int
+	Buff           []statusoptype.OpArg
+	AppliedCount   int
 }
 
 // GetOpArgToApply return current oparg and exist, inc appliedcount

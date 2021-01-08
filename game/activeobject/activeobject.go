@@ -1,4 +1,4 @@
-// Copyright 2014,2015,2016,2017,2018,2019,2020 SeukWon Kang (kasworld@gmail.com)
+// Copyright 2014,2015,2016,2017,2018,2019,2020,2021 SeukWon Kang (kasworld@gmail.com)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -76,7 +76,7 @@ type ActiveObject struct {
 	respawnType respawntype.RespawnType
 	bornFaction factiontype.FactionType          `prettystring:"simple"`
 	clientConn  *c2t_serveconnbyte.ServeConnByte // for clientConn conn
-	ai          *ServerAIState                        // for server side ai
+	ai          *ServerAIState                   // for server side ai
 	isAIInUse   bool
 
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
