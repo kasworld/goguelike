@@ -149,8 +149,6 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		uuid:         uuidstr.New(),
 		id2ao:        aoid2activeobject.New("ActiveObject working"),
 		id2aoSuspend: aoid2activeobject.New("ActiveObject suspended"),
-		recvRequestCh: make(chan interface{},
-			int(float64(config.ConcurrentConnections*2)*config.TurnPerSec)),
 
 		sconfig: config,
 		log:     g2log.GlobalLogger,
@@ -288,15 +286,23 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 
 	defer closeCtx()
 
+	totalaocount := 0
+	for _, f := range tw.floorMan.GetFloorList() {
+		totalaocount += f.GetTerrain().GetActiveObjCount()
+	}
+	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
+
+	queuesize := (totalaocount + tw.sconfig.ConcurrentConnections) * 2
+	tw.recvRequestCh = make(chan interface{}, queuesize*2)
+
 	go tw.runTower(ctx)
 	for _, f := range tw.floorMan.GetFloorList() {
 		go func(f gamei.FloorI) {
-			f.Run(ctx)
+			f.Run(ctx, queuesize)
 			closeCtx()
 		}(f)
 	}
 
-	totalaocount := 0
 	for _, f := range tw.floorMan.GetFloorList() {
 		for i := 0; i < f.GetTerrain().GetActiveObjCount(); i++ {
 			ao := activeobject.NewSystemActiveObj(tw.rnd.Int63(), f, tw.log, tw.towerAchieveStat)
@@ -308,9 +314,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 				tw.log.Error("%v", err)
 			}
 		}
-		totalaocount += f.GetTerrain().GetActiveObjCount()
 	}
-	tw.log.Monitor("Total system ActiveObj in tower %v", totalaocount)
 
 	tw.initAdminWeb()
 	tw.initServiceWeb(ctx)

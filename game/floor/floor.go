@@ -71,7 +71,6 @@ type Floor struct {
 }
 
 func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
-	queuesize := int(float64(tw.Config().ConcurrentConnections) * tw.Config().TurnPerSec)
 	f := &Floor{
 		log:               tw.Log(),
 		tower:             tw,
@@ -80,7 +79,6 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 		interDur:          intervalduration.New(""),
 		statPacketObjOver: actpersec.New(),
 		floorCmdActStat:   actpersec.New(),
-		recvRequestCh:     make(chan interface{}, queuesize),
 	}
 	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder, f.log)
 	return f
@@ -122,9 +120,11 @@ func (f *Floor) Init() error {
 	return nil
 }
 
-func (f *Floor) Run(ctx context.Context) {
+func (f *Floor) Run(ctx context.Context, queuesize int) {
 	f.log.TraceService("start Run %v", f)
 	defer func() { f.log.TraceService("End Run %v", f) }()
+
+	f.recvRequestCh = make(chan interface{}, queuesize)
 
 	ageingSec := time.Duration(f.terrain.GetMSPerAgeing()) * time.Millisecond
 	if ageingSec == 0 {
