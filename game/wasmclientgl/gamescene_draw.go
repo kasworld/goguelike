@@ -52,6 +52,7 @@ func (vp *GameScene) animateDangerObj(frameProgress float64) {
 		if rr < 0.2 {
 			rr = 0.2
 		}
+		_, frameProgress = math.Modf(frameProgress)
 		dao3d.ScaleX((1 - frameProgress) * rr)
 		dao3d.ScaleY((1 - frameProgress) * rr)
 	}
