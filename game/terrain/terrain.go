@@ -87,6 +87,9 @@ type Terrain struct {
 	MSPerAgeing       int64
 	ResetAfterNAgeing int64
 	Tile2Discover     int
+
+	// ignore same error log
+	knownErrors map[string]bool
 }
 
 func New(seed int64, script []string, dataDir string, l *g2log.LogBase) *Terrain {
@@ -94,6 +97,7 @@ func New(seed int64, script []string, dataDir string, l *g2log.LogBase) *Terrain
 		dataDir:       dataDir,
 		terrainScript: script,
 		log:           l,
+		knownErrors:   make(map[string]bool),
 	}
 	tr.viewportCache = viewportcache.New(tr)
 	tr.seed = seed
@@ -180,10 +184,14 @@ func (tr *Terrain) renderServiceTileArea() {
 			continue
 		}
 		if !tr.serviceTileArea[x][y].CharPlaceable() {
-			if fo.ActType.MustCharPlaceable() {
-				tr.log.Fatal("fieldobj placed at NonCharPlaceable tile %v", fo)
-			} else {
-				tr.log.Warn("fieldobj placed at NonCharPlaceable tile %v", fo)
+			msg := fmt.Sprintf("fieldobj placed at NonCharPlaceable tile %v", fo)
+			if !tr.knownErrors[msg] {
+				tr.knownErrors[msg] = true
+				if fo.ActType.MustCharPlaceable() {
+					g2log.Fatal("%v", msg)
+				} else {
+					g2log.Warn("%v", msg)
+				}
 			}
 		}
 	}
