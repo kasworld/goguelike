@@ -68,14 +68,15 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 	var wg sync.WaitGroup
 	for i, v := range fm.terrainScript {
 		wg.Add(1)
-		go func(i int, v []string) {
+		seed := rnd.Int63()
+		go func(i int, v []string, seed int64) {
 			defer wg.Done()
-			f := floor.New(rnd.Int63(), v, fm.tower)
+			f := floor.New(seed, v, fm.tower)
 			if err := f.Init(); err != nil {
 				fm.log.Fatal("floor init fail, %v", err)
 			}
 			tmpFloorList[i] = f
-		}(i, v)
+		}(i, v, seed)
 	}
 	wg.Wait()
 
