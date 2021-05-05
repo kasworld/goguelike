@@ -15,13 +15,13 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike/config/viewportdata"
-	"github.com/kasworld/goguelike/enum/achievetype_vector"
+	"github.com/kasworld/goguelike/enum/achievetype_vector_float64"
 	"github.com/kasworld/goguelike/enum/aotype"
-	"github.com/kasworld/goguelike/enum/condition_vector"
-	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
-	"github.com/kasworld/goguelike/enum/potiontype_vector"
+	"github.com/kasworld/goguelike/enum/condition_vector_int"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector_int"
+	"github.com/kasworld/goguelike/enum/potiontype_vector_int"
 	"github.com/kasworld/goguelike/enum/respawntype"
-	"github.com/kasworld/goguelike/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike/enum/scrolltype_vector_int"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
@@ -123,12 +123,12 @@ type ActiveObjectI interface {
 	ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjInfo
 	To_ActiveObjScore() *aoscore.ActiveObjScore
 
-	GetAchieveStat() *achievetype_vector.AchieveTypeVector
-	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector
-	GetPotionStat() *potiontype_vector.PotionTypeVector
-	GetScrollStat() *scrolltype_vector.ScrollTypeVector
+	GetAchieveStat() *achievetype_vector_float64.AchieveTypeVector_float64
+	GetFieldObjActStat() *fieldobjacttype_vector_int.FieldObjActTypeVector_int
+	GetPotionStat() *potiontype_vector_int.PotionTypeVector_int
+	GetScrollStat() *scrolltype_vector_int.ScrollTypeVector_int
 	GetActStat() *c2t_idcmd_stats.CommandIDStat
-	GetConditionStat() *condition_vector.ConditionVector
+	GetConditionStat() *condition_vector_int.ConditionVector_int
 
 	UpdateVisitAreaBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)

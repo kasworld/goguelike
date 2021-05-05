@@ -25,7 +25,7 @@ import (
 	"github.com/kasworld/goguelike/config/dataversion"
 	"github.com/kasworld/goguelike/config/gamedata"
 	"github.com/kasworld/goguelike/config/towerconfig"
-	"github.com/kasworld/goguelike/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike/enum/towerachieve_vector_float64"
 	"github.com/kasworld/goguelike/game/activeobject"
 	"github.com/kasworld/goguelike/game/aoexpsort"
 	"github.com/kasworld/goguelike/game/aoid2activeobject"
@@ -100,12 +100,12 @@ type Tower struct {
 	// manage connection
 	connManager *c2t_connbytemanager.Manager
 
-	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
-	sendStat               *actpersec.ActPerSec                    `prettystring:"simple"`
-	recvStat               *actpersec.ActPerSec                    `prettystring:"simple"`
-	protocolStat           *c2t_statserveapi.StatServeAPI          `prettystring:"simple"`
-	notiStat               *c2t_statnoti.StatNotification          `prettystring:"simple"`
-	errorStat              *c2t_statapierror.StatAPIError          `prettystring:"simple"`
+	towerAchieveStat       *towerachieve_vector_float64.TowerAchieveVector_float64 `prettystring:"simple"`
+	sendStat               *actpersec.ActPerSec                                    `prettystring:"simple"`
+	recvStat               *actpersec.ActPerSec                                    `prettystring:"simple"`
+	protocolStat           *c2t_statserveapi.StatServeAPI                          `prettystring:"simple"`
+	notiStat               *c2t_statnoti.StatNotification                          `prettystring:"simple"`
+	errorStat              *c2t_statapierror.StatAPIError                          `prettystring:"simple"`
 	listenClientPaused     bool
 	demuxReq2BytesAPIFnMap [c2t_idcmd.CommandID_Count]func(
 		me interface{}, hd c2t_packet.Header, rbody []byte) (
@@ -160,7 +160,7 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		notiStat:            c2t_statnoti.New(),
 		errorStat:           c2t_statapierror.New(),
 		towerCmdActStat:     actpersec.New(),
-		towerAchieveStat:    new(towerachieve_vector.TowerAchieveVector),
+		towerAchieveStat:    new(towerachieve_vector_float64.TowerAchieveVector_float64),
 	}
 
 	tw.seed = int64(config.Seed)

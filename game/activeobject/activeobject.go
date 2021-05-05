@@ -21,17 +21,17 @@ import (
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/config/gamedata"
 	"github.com/kasworld/goguelike/enum/achievetype"
-	"github.com/kasworld/goguelike/enum/achievetype_vector"
+	"github.com/kasworld/goguelike/enum/achievetype_vector_float64"
 	"github.com/kasworld/goguelike/enum/aotype"
-	"github.com/kasworld/goguelike/enum/condition_vector"
+	"github.com/kasworld/goguelike/enum/condition_vector_int"
 	"github.com/kasworld/goguelike/enum/factiontype"
-	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike/enum/fieldobjacttype_vector_int"
 	"github.com/kasworld/goguelike/enum/potiontype"
-	"github.com/kasworld/goguelike/enum/potiontype_vector"
+	"github.com/kasworld/goguelike/enum/potiontype_vector_int"
 	"github.com/kasworld/goguelike/enum/respawntype"
 	"github.com/kasworld/goguelike/enum/scrolltype"
-	"github.com/kasworld/goguelike/enum/scrolltype_vector"
-	"github.com/kasworld/goguelike/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike/enum/scrolltype_vector_int"
+	"github.com/kasworld/goguelike/enum/towerachieve_vector_float64"
 	"github.com/kasworld/goguelike/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike/game/activeobject/turnresult"
@@ -79,13 +79,13 @@ type ActiveObject struct {
 	ai          *ServerAIState                   // for server side ai
 	isAIInUse   bool
 
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
-	achieveStat      achievetype_vector.AchieveTypeVector         `prettystring:"simple"`
-	potionStat       potiontype_vector.PotionTypeVector           `prettystring:"simple"`
-	scrollStat       scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
-	foActStat        fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
-	aoActionStat     c2t_idcmd_stats.CommandIDStat                `prettystring:"simple"`
-	conditionStat    condition_vector.ConditionVector             `prettystring:"simple"`
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64 `prettystring:"simple"`
+	achieveStat      achievetype_vector_float64.AchieveTypeVector_float64    `prettystring:"simple"`
+	potionStat       potiontype_vector_int.PotionTypeVector_int              `prettystring:"simple"`
+	scrollStat       scrolltype_vector_int.ScrollTypeVector_int              `prettystring:"simple"`
+	foActStat        fieldobjacttype_vector_int.FieldObjActTypeVector_int    `prettystring:"simple"`
+	aoActionStat     c2t_idcmd_stats.CommandIDStat                           `prettystring:"simple"`
+	conditionStat    condition_vector_int.ConditionVector_int                `prettystring:"simple"`
 
 	// info known to activeobject
 	floor4ClientMan *floor4clientman.Floor4ClientMan `prettystring:"simple"`
@@ -120,7 +120,7 @@ func newActiveObj(
 	seed int64,
 	homefloor gamei.FloorI,
 	l *g2log.LogBase,
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64,
 ) *ActiveObject {
 
 	ao := &ActiveObject{
@@ -144,7 +144,7 @@ func newActiveObj(
 
 func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	l *g2log.LogBase,
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64,
 	conn *c2t_serveconnbyte.ServeConnByte) *ActiveObject {
 
 	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
@@ -165,7 +165,7 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 
 func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	l *g2log.LogBase,
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64,
 ) *ActiveObject {
 	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
 	ao.uuid = SysAOIDMaker.New()
