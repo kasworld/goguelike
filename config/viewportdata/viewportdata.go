@@ -15,6 +15,7 @@ import (
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike/config/gameconst"
 	"github.com/kasworld/goguelike/enum/tile_flag"
+	"github.com/kasworld/goguelike/lib/lineofsight"
 )
 
 var ViewportXYLenList = findnear.NewXYLenList(
@@ -23,3 +24,31 @@ var ViewportXYLenList = findnear.NewXYLenList(
 // same order with ViewportXYLenList
 type ViewportSight2 [gameconst.ViewPortWH]float32
 type ViewportTileArea2 [gameconst.ViewPortWH]tile_flag.TileFlag
+
+var SightlinesByXYLenList = makeSightlinesByXYLenList(ViewportXYLenList)
+
+// makeSightlinesByXYLenList make sight lines 0,0 to all xyLenList dst
+func makeSightlinesByXYLenList(xyLenList findnear.XYLenList) []findnear.XYLenList {
+	rtn := make([]findnear.XYLenList, len(xyLenList))
+	for i, v := range xyLenList {
+		// calc to dst near point
+		shiftx := 0.5
+		shifty := 0.5
+		if v.X > 0 {
+			shiftx = 0
+		} else if v.X < 0 {
+			shiftx = 1
+		}
+		if v.Y > 0 {
+			shifty = 0
+		} else if v.Y < 0 {
+			shifty = 1
+		}
+		rtn[i] = lineofsight.MakePosLenList(
+			0+0.5, 0+0.5, // from src center
+			float64(v.X)+shiftx,
+			float64(v.Y)+shifty,
+		).ToCellLenList()
+	}
+	return rtn
+}
